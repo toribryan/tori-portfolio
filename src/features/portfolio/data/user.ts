@@ -14,7 +14,7 @@ export const USER: User = {
   bio: "Product Designer specializing in design systems. Five years building products, component libraries, and the tooling that connects design to production code.",
   flipSentences: [
     "questioning everything, all the time.",
-    "designing systems + products",
+    "designing systems + shipping them",
   ],
   address: "Arizona, United States",
   emailB64: "dG9yaWJyeWFuLmRlc2lnbkBnbWFpbC5jb20=", // toribryan.design@gmail.com
@@ -30,10 +30,8 @@ export const USER: User = {
       experienceId: "proctorio",
     },
   ],
-  about: `- I'm a Product Designer who specializes in design systems, working at the seam where design meets engineering. I design the system, then help build it.
-- I led a legacy design system overhaul at Proctorio: 37 components rebuilt on a semantic token architecture, card variants down 94% and button variants down 59%.
-- I built an agentic design-to-dev pipeline that cut spec production from 3 days–2 weeks to under 30 minutes, with 100% team adoption.
-- Five years in EdTech, plus contract work across senior living, editorial, and brand. These days I ship production front-end in React and Tailwind alongside the design work.
+  about: `- I’m a Product Designer who specializes in design systems and ships the front end I design.
+- Five years building B2B products, component libraries, and the tooling that connects design to production code. 
 - Always exploring new tools and ways to create. Currently learning the drums, and studying the history of the golden ratio and its relevance to design today.
 `,
   avatar: "/images/about/photo-1.jpg",

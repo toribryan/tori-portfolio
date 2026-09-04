@@ -51,7 +51,7 @@ export const EXPERIENCES: Experience[] = [
         icon: <PenToolIcon />,
         description: `- Independent practice partnering with SLV Technologies to deliver web and product design for their clients, alongside direct clients including Proctorio, Hydra Endura, and Mincredo.
 - Contracted with Proctorio as a design system contributor and product designer: designed the Review Center video player, internal tools and dashboards, and 12+ documented design system components.
-- Redesigned Proctorio's [multi-audience help center](/work/proctorio-help-center) from scratch for students, administrators, and IT admins, with article taxonomy and role-based content visibility.
+- Redesigned Proctorio's multi-audience help center from scratch for students, administrators, and IT admins, with article taxonomy and role-based content visibility.
 - Built brand identities for Hydra Endura and Mincredo: logo, brand guidelines, core UI components, and social strategy.`,
         skills: [
           "Design Systems",
