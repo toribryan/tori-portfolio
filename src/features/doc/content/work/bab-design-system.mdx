@@ -93,10 +93,6 @@ meanings into one swatch, and they'd have drifted apart in code anyway.
   caption="The flagship surface: conversation list, thread, and context panel, built from the same components as everything else in the library."
 />
 
-One elevation, everywhere. The content card is the only shadowed surface on a
-page; nested blocks get `--surface-nested` and a hairline border, never a
-second shadow.
-
 ## Dashboard and reports
 
 <StoryEmbed
@@ -113,12 +109,12 @@ second shadow.
   height="620"
 />
 
-Role colour is semantic, not decorative. Student, instructor and admin each own
-a background/foreground pair, and the same three hues carry the chart series:
+Role colour carries meaning. Student, instructor and admin each own a
+background/foreground pair, and the same three hues carry the chart series:
 an orange line on the Overview chart means the same thing an orange badge means
 in the Inbox.
 
-## The token layer is the actual deliverable
+## The token layer is the deliverable
 
 The prototype already had a disciplined `tokens.css`: surfaces, chat row
 states, a series palette for charts. Rather than redraw those decisions in
@@ -142,9 +138,8 @@ the React build.
 
 ### Role pairs
 
-Student, instructor and admin each own a background/foreground pair. The chart
-series reuse the same hues, so a colour carries one meaning across the whole
-product rather than one meaning per view.
+The chart series reuse these hues, so a colour carries one meaning across the
+whole product.
 
 | Role       | Background | Foreground |
 | ---------- | ---------- | ---------- |
