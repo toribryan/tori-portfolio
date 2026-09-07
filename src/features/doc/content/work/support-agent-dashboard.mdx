@@ -16,8 +16,8 @@ skills:
   - "shadcn"
   - "Base UI"
   - "Storybook"
-problem: "Test-takers who hit friction mid-exam needed an easy, accessible way to ask for help without leaving the exam. Support agents needed clear context into the test-taker's situation and a live communication channel to quickly provide actionable help."
-task: "Route test-taker conversations to a human in real time with session and exam context attached: where the test-taker is, exam settings, and what they were doing when they got stuck. That required deep consideration on the test-taker context panel, product/institution-aware suggestions, agent commands, and customizable performance insights."
+problem: "Test-takers who hit friction mid-exam needed an easy, accessible way to ask for help without leaving the exam. Support agents needed clear context on the test-taker's situation and a live channel to help them quickly."
+task: "Route test-taker conversations to a human in real time with session and exam context attached: where the test-taker is, exam settings, and what they were doing when they got stuck. The work covered the test-taker context panel, product and institution-aware suggestions, agent commands, and customizable performance insights."
 process: "The core decision was to route chat with session context attached (where the test-taker is, what they were doing when they got stuck) rather than a blank conversation an agent has to reconstruct by asking. Chat state was designed to persist through a paused exam, so a test-taker stepping away doesn't cost the agent their place in the thread."
 outcome: 'The majority of "I couldn''t finish because ___" tickets no longer exist: they''re resolved in-session, by an agent working from context instead of reconstructing it after the fact.'
 results:
@@ -34,7 +34,7 @@ results:
   <Stage label="Shipped" detail="Inbox, knowledge, reports, review" mark="rocket" />
 </Pipeline>
 
-## Never pull them out of the exam
+## Three principles
 
 - Never pull the test-taker out of the exam to get help.
 - Give the agent context before they ask for it.
@@ -42,8 +42,8 @@ results:
 
 ## What shipped
 
-Shipped surfaces include an Inbox, three Knowledge views, twelve Reports views,
-four Contacts filters, four Settings pages, and a standalone Integrity Review.
+An Inbox, three Knowledge views, twelve Reports views, four Contacts filters,
+four Settings pages, and a standalone Integrity Review.
 
 ## The prototype
 
