@@ -22,14 +22,14 @@ skills:
   - "Claude Code"
 problem: "Plagiarism detectors analyze the document, not the student. A paraphrase, an AI rewrite, or a ghostwriter pass clears every existing check. Instructors had no scalable way to verify authorship inside their Canvas workflow."
 task: "Take a new product from an assigned brief to a shippable MVP inside Canvas, without adding a single step to the instructor's grading workflow."
-process: "Mapped the intended flow step by step and pressure-tested each step against what the platform could actually do. Four constraints came out, each one a design problem in disguise, and the answer was a smaller, faster flow rather than a workaround for each."
+process: "Mapped the intended flow step by step and pressure-tested each step against what the platform could do. Four constraints came out, each one a design problem in disguise, and the answer was a smaller, faster flow rather than a workaround for each."
 outcome: "An MVP that puts the quiz seconds after submission and the result where instructors already grade, with the score shown as confidence rather than a verdict. Prototypes in HTML, CSS, and vanilla JS served as the spec."
 results:
   - value: "Seconds"
     label: "From submission to quiz, instead of about ten minutes"
   - value: "One view"
     label: "The score lands beside the submission the instructor is already grading"
-  - value: "4–6 weeks"
+  - value: "4 to 6 weeks"
     label: "Concept to production-ready MVP"
 ---
 
@@ -54,7 +54,7 @@ results:
 ## Did you write this?
 
 Existing integrity tools answer one question: is this original? None of them
-answer the one instructors actually care about: did you write this?
+answer the one instructors care about: did you write this?
 
 Author Proof asks that question directly. When a student submits written work,
 it generates a short comprehension quiz from the student's own writing, in the
@@ -69,20 +69,20 @@ The product arrived with its architecture already chosen: submit through the
 LMS as normal, generate questions, create a quiz in the LMS's own quiz tooling,
 assign it to that one student, and notify them. Before engineering committed
 time to it, I mapped that flow step by step and tested each step against what
-the platform could actually do.
+the platform could do.
 
-- **Timing.** Fetch, generate, create, assign, notify added up to roughly ten
+- Timing. Fetch, generate, create, assign, notify added up to roughly ten
   minutes between submission and quiz. That gap is exactly the window a student
-  needs to pull their essay back up, so the architecture was quietly undermining
+  needs to pull their essay back up, so the architecture was working against
   the one thing the product is supposed to prove.
-- **The quiz tooling is one-to-many.** It assumes a quiz is authored once and
+- The quiz tooling is one-to-many. It assumes a quiz is authored once and
   assigned to a class. A fresh quiz per submission fights that assumption at
   every step, and gets fragile when a whole class submits at once.
-- **Notifications are not dependable.** Students can turn them off, the inbox
+- Notifications are not dependable. Students can turn them off, the inbox
   is rarely checked, and email timing varies by institution. The fallback would
   have been "instructors remind students," which puts the burden on the exact
   person we were trying to help.
-- **Two disconnected things to grade.** A separate quiz item meant the
+- Two disconnected things to grade. A separate quiz item meant the
   submission and the quiz would live in different places, with no unified view.
 
 ## A smaller flow that kept the promise
@@ -92,7 +92,7 @@ MVP and a longer vision. The MVP embeds Author Proof in the assignment itself:
 the student starts the assignment, uploads their essay, and the quiz appears
 seconds later. That one move collapsed the timing gap, removed the notification
 dependency, and stepped out of the quiz tooling entirely. The result is written
-back beside the submission, so the instructor reads one thing, not two.
+back beside the submission, so the instructor has one thing to read.
 
 I was also clear about what the pitch cost. It excluded short pieces written
 directly in the LMS editor, and it left an open question about how proctoring
@@ -105,12 +105,12 @@ rather than dropped.
 The product had to read as evidence for a human conversation, never an
 automated judgment. Three rules followed from that:
 
-- **No binary pass or fail.** A score is shown with a confidence level, and the
+- No binary pass or fail. A score is shown with a confidence level, and the
   instructor decides what to do with it.
-- **Transparency into what was evaluated.** Every generated question sits next
+- Transparency into what was evaluated. Every generated question sits next
   to the student's own words that prompted it, and next to the assessment of the
   answer, so a score can be traced back to something a person can read.
-- **Never color alone.** The host platform controls the badge color and maps it
+- Never color alone. The host platform controls the badge color and maps it
   the opposite way from the score, so the score, label, and confidence are
   always carried as text.
 

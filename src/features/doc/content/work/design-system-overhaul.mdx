@@ -10,7 +10,7 @@ company: "Proctorio"
 role: "Staff Designer, system owner"
 team: "Two engineers building, across three product suites"
 type: "Design System"
-period: "Q4 2025 – Q1 2026"
+period: "Q4 2025 to Q1 2026"
 skills:
   - "Design Systems"
   - "Design Tokens"
@@ -45,17 +45,17 @@ results:
 The system worked, in the sense that people shipped with it. It had just never
 been told no.
 
-- **No semantic layer.** Tokens named for what they were rather than what they
+- No semantic layer. Tokens named for what they were rather than what they
   meant, so nothing could be themed and every color decision was a lookup.
-- **Product logic inside components.** Components that knew which product they
+- Product logic inside components. Components that knew which product they
   were in. A component that knows that cannot be reused, only copied.
-- **Variants for hypothetical futures.** Hundreds of combinations nobody had
+- Variants for hypothetical futures. Hundreds of combinations nobody had
   ever placed on a screen, each one a thing to maintain.
-- **No shared property vocab.** The same idea named three ways across three
+- No shared property vocab. The same idea named three ways across three
   components, so nothing you learned about one transferred to the next.
-- **Color that had never been contrast-checked.** Accessibility was a review step
+- Color that had never been contrast-checked. Accessibility was a review step
   at the end, when it was expensive, instead of a property of the palette.
-- **No governance.** No answer to "does this belong in the system", which is the
+- No governance. No answer to "does this belong in the system", which is the
   question that decides whether a design system stays one.
 
 ## The variant math
@@ -67,8 +67,8 @@ been told no.
 
 587 card variants is not a card. It is every card anyone ever needed, frozen
 into one component, because the system had no way to compose a new one. The
-number is not a measure of thoroughness. It is a measure of how often people
-had to work around the thing that was supposed to help them.
+number measures how often people had to work around the thing that was supposed
+to help them.
 
 <StoryEmbed
   id="case-study-design-system-overhaul--variant-math"
@@ -100,8 +100,7 @@ architecture was rebuilt before a single component was touched.
 The new layer is semantic: tokens name their role, not their value. That is what
 makes the system theme aware, and it means a product can take a different visual
 treatment without any component knowing about it. Colors were contrast-checked
-as they were defined, so accessibility became a property of the palette instead
-of a thing to catch in review.
+as they were defined, so nothing was left to catch in review.
 
 <StoryEmbed
   id="case-study-design-system-overhaul--token-architecture"
@@ -186,9 +185,8 @@ took spec production from days to minutes.
 
 ## Governance is the deliverable
 
-Owning a design system is not owning a Figma library. It is owning the answer
-to what belongs in it, and that answer has to be given repeatedly, in public,
-to three product suites at once.
+Owning a design system means owning the answer to what belongs in it, and that
+answer has to be given repeatedly, in public, to three product suites at once.
 
 In practice that meant governing component and slot usage across design and
 engineering, mentoring designers through the system rather than gatekeeping
@@ -196,14 +194,13 @@ their work, and keeping the Figma library aligned with the codebase so neither
 one drifted into being decorative.
 
 The design language followed from that. Three product suites converged on one
-visual system not because a document declared it, but because they were building
-from the same foundation and the foundation was maintained.
+visual system because they were building from the same foundation and the
+foundation was maintained. No document had to declare it.
 
 ## What it bought
 
-What changed is the foundation: it answers questions instead of raising them.
-That is the argument for doing this work, and it is the one I would lead with
-next time.
+The foundation now answers questions instead of raising them. That is the
+argument for doing this work, and the one I would lead with next time.
 
 ## What I'd do next
 
