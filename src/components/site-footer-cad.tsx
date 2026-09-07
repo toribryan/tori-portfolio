@@ -3,6 +3,7 @@ import { getBuildInfo, getStack } from "@/lib/build-info"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/base/ui/separator"
 import { LinkedInIcon } from "@/components/icons"
+import { ResumeMenu } from "@/components/resume-menu"
 import { SiteFooterInteractiveLogotype } from "@/components/site-footer-brand"
 import { SOCIAL } from "@/features/portfolio/data/social-links"
 
@@ -168,14 +169,7 @@ export function SiteFooterCad() {
               className="data-vertical:h-4 data-vertical:self-center"
             />
 
-            <a
-              className="link-underline"
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener"
-            >
-              Resume
-            </a>
+            <ResumeMenu className="group/resume inline-flex items-center gap-1 link-underline transition-[color] hover:text-foreground aria-expanded:text-foreground" />
           </div>
         </div>
       </div>
