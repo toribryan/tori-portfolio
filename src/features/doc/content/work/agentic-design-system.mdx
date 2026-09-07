@@ -58,11 +58,11 @@ about it in the abstract.
 
 Three things made it a test rather than a demo:
 
-- **Figma MCP** as the connection between the design file and the model, so the
+- Figma MCP as the connection between the design file and the model, so the
   model was reading the real design rather than a description of one.
-- **Prompt pipelines** with controlled variation, so a difference in the output
+- Prompt pipelines with controlled variation, so a difference in the output
   could be traced to a difference in the input instead of to the weather.
-- **The design system as the variable.** Same design, same prompt, different
+- The design system as the variable. Same design, same prompt, different
   amounts of structure exposed to the model.
 
 The question was deliberately narrow. Given a design and a design system, can a
@@ -84,9 +84,9 @@ Handed a design and a system, it would:
 - hardcode the values it could see rather than the tokens that produced them
 - assemble combinations the system deliberately does not allow
 
-None of that is the model being careless. It is the model being handed a
-picture and asked to infer a contract. The information was not missing from the
-design system. It was missing from what the model could reach.
+None of that is carelessness. The model was handed a picture and asked to
+infer a contract. The information was in the design system the whole time, just
+out of the model's reach.
 
 <StoryEmbed
   id="case-study-agentic-design-system--inference-vs-lookup"
@@ -96,16 +96,15 @@ design system. It was missing from what the model could reach.
   caption="Both outputs came from the same design and the same prompt. The variable is whether the component could be looked up."
 />
 
-That reframed the whole project. The problem was never model capability. It was
-that a design system communicates through convention, apprenticeship and
-review, and none of those survive contact with a machine consumer.
+That reframed the whole project. A design system communicates through
+convention, apprenticeship and review, and none of those survive contact with a
+machine consumer.
 
-## What Code Connect is actually for
+## What Code Connect is for
 
-This is the thing I understood only by testing it: Code Connect exists to solve
-exactly this problem. It is not a documentation convenience. It is the link
-that lets a design point at its implementation, so the model stops inferring
-and starts looking it up.
+I understood this only by testing it: Code Connect exists to solve exactly
+this problem. It is the link that lets a design point at its implementation, so
+the model stops inferring and starts looking it up.
 
 ## Fix 1: Tokens the agent can reason about
 
@@ -113,13 +112,13 @@ Raw values are the first thing that breaks. Hand a model `#008b8b` and it will
 cheerfully hardcode that hex in forty places. The moment you rebrand, every one
 of them is wrong, and no amount of prompting reliably stops it.
 
-- **Primitives** are raw values: `teal-500: #008b8b`, `space-4: 16px`. The agent
+- Primitives are raw values: `teal-500: #008b8b`, `space-4: 16px`. The agent
   should never see these. If it does, it hardcodes them.
-- **Semantics** are intent-named aliases: `color/action/primary`,
+- Semantics are intent-named aliases: `color/action/primary`,
   `color/danger/background`. This is the only layer the agent reads and writes.
   The name describes the job, not the value, so a rebrand updates one alias and
   everything downstream follows.
-- **Component tokens** are optional: `button/background/default →
+- Component tokens are optional: `button/background/default →
   color/action/primary`. Skip them until you are doing multi-brand work.
 
 ![The three-tier token architecture: primitives, semantics, component tokens](/case-studies/agentic-design-system-tokens.svg)
@@ -132,20 +131,20 @@ consensus (surfaced across talks from Indeed, GitHub, and others at the AI
 Design Systems Conference 2026) is JSON metadata per component, covering four
 things:
 
-- **Props**: the states and variants that already exist in Figma. Five states in
+- Props: the states and variants that already exist in Figma. Five states in
   Figma, five states in the metadata. No interpretation.
-- **Relationships**: what the agent must know before placing the component. Is
+- Relationships: what the agent must know before placing the component. Is
   it a form child? A toolbar item? What can it not sit next to? This is the
   context a human infers and an agent cannot.
-- **Tokens**: which semantic tokens the component consumes. Load-bearing in an
-  agentic system, not decorative.
-- **Usage**: what it is for, and the anti-patterns. Not the obvious ones ("don't
+- Tokens: which semantic tokens the component consumes. In an agentic system
+  these are load-bearing.
+- Usage: what it is for, and the anti-patterns. Not the obvious ones ("don't
   put two primary buttons side by side"), but the specific ones only your team
   knows.
 
 An agent can auto-generate the first draft of this metadata, but it comes back
 about 80% right and 20% generic. It will list the obvious anti-patterns and miss
-the ones that actually bite: "never use a destructive button in onboarding,"
+the ones that bite: "never use a destructive button in onboarding,"
 "loading state shows after 200ms, not immediately." The 20% is the part that
 encodes what your team learned the hard way, and it is the part a person has to
 write.
@@ -154,9 +153,9 @@ write.
 
 ## Fix 3: One source of truth
 
-The fix is architectural, not editorial. Pick one canonical source: for us, the
-design system components linked to Figma via Code Connect (or rich component
-descriptions, which do the same job without enterprise tooling).
+The fix is architectural. Pick one canonical source: for us, the design system
+components linked to Figma via Code Connect (or rich component descriptions,
+which do the same job without enterprise tooling).
 
 Everything else derives from it or maps to it:
 
@@ -164,8 +163,7 @@ Everything else derives from it or maps to it:
 - The docs site
 - The token files
 
-None of them are independent truth. They are all projections of the one
-contract.
+Each one is a projection of the one contract.
 
 ## What it changed
 
