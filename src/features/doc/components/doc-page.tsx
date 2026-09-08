@@ -69,6 +69,7 @@ export async function DocPage({
 
   const facts = [
     ["Company", m.company],
+    ["Reach", m.reach],
     ["Role", m.role],
     ["Team", m.team],
     ["Type", m.type],

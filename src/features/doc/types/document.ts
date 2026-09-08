@@ -50,6 +50,8 @@ export type DocMetadata = {
   // --- Work case studies -------------------------------------------------
   /** Client or employer the work was done for. */
   company?: string
+  /** Who the shipped work reaches, e.g. "8 million test takers". */
+  reach?: string
   /** Your role on the project. */
   role?: string
   /** Human-readable run dates, e.g. "04.2025 – 09.2025". Display only. */
