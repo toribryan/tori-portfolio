@@ -18,10 +18,6 @@ export const META_THEME_COLORS = {
 
 export const MAIN_NAV: NavItem<Route>[] = [
   {
-    title: "Components",
-    href: "/components",
-  },
-  {
     title: "Blog",
     href: "/latest",
   },

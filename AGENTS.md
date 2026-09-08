@@ -28,11 +28,15 @@ false `Route` errors until then.
 All page content is file-based under `src/features/doc/content/<category>/*.mdx`.
 The category is derived from the folder name, never declared in frontmatter.
 
-| Folder        | Route                | Holds                           |
-| ------------- | -------------------- | ------------------------------- |
-| `components/` | `/components/[slug]` | One doc per brand design system |
-| `latest/`     | `/latest/[slug]`     | Posts and creative retros       |
-| `work/`       | `/work/[slug]`       | Case studies                    |
+| Folder        | Route            | Holds                           |
+| ------------- | ---------------- | ------------------------------- |
+| `components/` | none (archived)  | One doc per brand design system |
+| `latest/`     | `/latest/[slug]` | Posts and creative retros       |
+| `work/`       | `/work/[slug]`   | Case studies                    |
+
+The Components page is archived: its `/components` list and detail routes and
+the nav link were removed, but the MDX and `getComponentDocs` remain so it can
+be restored by reverting that commit.
 
 `src/features/doc/data/documents.ts` reads them; `src/features/doc/types/document.ts`
 is the frontmatter contract. **To add content, add an MDX file** — there is no
@@ -48,8 +52,8 @@ project content is single-sourced from `content/work/` on purpose.
 
 ## Layout
 
-- `src/app/(app)/(pages)/` — list pages (`/components`, `/latest`)
-- `src/app/(app)/(docs)/` — doc detail routes, all three delegate to
+- `src/app/(app)/(pages)/` — list pages (`/latest`)
+- `src/app/(app)/(docs)/` — doc detail routes, both delegate to
   `features/doc/components/doc-page.tsx` for the reading layout
 - `src/features/doc/` — content layer, cards, doc shell
 - `src/features/portfolio/` — home page sections and their data
@@ -88,12 +92,10 @@ constant-time `safeEqual` rather than `===`.
 
 - No `/work` index route — cards link straight to `/work/[slug]`.
 - A component doc can set `href` in frontmatter to say "my story is told
-  elsewhere". The Components list row links there, and `/components/[slug]`
-  redirects rather than rendering a page. `bab.mdx` uses this: its reference
-  lives in `content/work/bab-design-system.mdx`, and the file remains only so
-  the list has a row to render.
-- `comingSoon: true` renders a list row as a disabled button with a popover
-  instead of a link. `iron.mdx` and `modern.mdx` use it.
+  elsewhere", and `comingSoon: true` marks one as not yet written. `bab.mdx`
+  uses the former (its reference lives in `content/work/bab-design-system.mdx`);
+  `iron.mdx` and `modern.mdx` use the latter. Both only matter once the
+  archived Components page is restored.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

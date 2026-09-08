@@ -63,8 +63,7 @@ export default function Page() {
             page. The layout already draws the side rules, so this only needs
             the bottom one to sit in the same grid. */}
         {/* `-mt-12` cancels the pt-12 the (pages) layout applies, so the banner
-            sits flush under the site header. Scoped here rather than changed in
-            the layout, which /components shares. */}
+            sits flush under the site header. */}
         <figure className="screen-line-bottom relative -mt-12 h-[112px] overflow-hidden bg-[#1A1423]">
           <Image
             className="object-cover object-center"

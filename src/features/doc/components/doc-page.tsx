@@ -17,7 +17,6 @@ import { MDX } from "@/components/mdx"
 import { LinkButton } from "@/components/mdx-link-button"
 import { TOCInline } from "@/components/toc-inline"
 import {
-  COMPONENTS_CATEGORY,
   findNeighbour,
   getDocsByCategory,
   LATEST_CATEGORY,
@@ -29,19 +28,16 @@ import type { Doc } from "@/features/doc/types/document"
 const NEIGHBOUR_NOUN: Record<string, string> = {
   [LATEST_CATEGORY]: "post",
   [WORK_CATEGORY]: "project",
-  [COMPONENTS_CATEGORY]: "doc",
 }
 
 /** Route each category's docs live under, for the neighbour links. */
 const CATEGORY_BASE_PATH: Record<string, string> = {
   [LATEST_CATEGORY]: "/latest",
   [WORK_CATEGORY]: "/work",
-  [COMPONENTS_CATEGORY]: "/components",
 }
 
 /**
- * Shared shell for every MDX doc route — component libraries, Latest posts and
- * case studies. Callers own metadata and JSON-LD; this owns the reading layout.
+ * Shared shell for every MDX doc route — Latest posts and case studies. Callers own metadata and JSON-LD; this owns the reading layout.
  */
 export async function DocPage({
   doc,
