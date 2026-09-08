@@ -1,13 +1,22 @@
 import {
   ClaudeIcon,
   CursorIcon,
+  FigmaIcon,
+  FramerIcon,
   GitHubIcon,
+  LoomIcon,
   NextJsIcon,
+  NotionIcon,
+  ObsidianIcon,
+  PostHogIcon,
   ReactIcon,
   ShadcnIcon,
+  StorybookIcon,
   TailwindCssIcon,
   TsIcon,
   VercelIcon,
+  WebflowIcon,
+  WebStormIcon,
 } from "@/components/icons"
 
 export type TechEntry = {
@@ -17,10 +26,31 @@ export type TechEntry = {
   icon?: React.ReactElement
 }
 
-/** Brand marks that ship as SVGs under /public rather than as icon components. */
+/**
+ * A brand mark that ships as an SVG file under /public rather than as an icon
+ * component.
+ *
+ * Drawn as a CSS mask instead of an `<img>` so the shape takes its color from
+ * the badge like every other mark. An `<img>` paints its own colors and can't
+ * be tinted, which is what used to leave half the Stack panel in full brand
+ * color and the other half muted.
+ *
+ * Only for marks with no monochrome glyph in `@/components/icons`. A file that
+ * draws its logo as a colored tile with the glyph knocked out of it masks into
+ * a solid blob, so those live in `icons.tsx` as single-path components.
+ *
+ * Size and color come from `TechBadge` by way of the `data-mark` attribute,
+ * the same way it sizes and tints an `<svg>` child.
+ */
 function BrandMark({ src }: { src: string }) {
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt="" className="size-3.5 shrink-0" aria-hidden />
+  return (
+    <span
+      data-mark
+      aria-hidden
+      className="block bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
+      style={{ maskImage: `url(${src})`, WebkitMaskImage: `url(${src})` }}
+    />
+  )
 }
 
 /**
@@ -36,7 +66,7 @@ export const TECH = {
   figma: {
     title: "Figma",
     href: "https://figma.com",
-    icon: <BrandMark src="/Figma.svg" />,
+    icon: <FigmaIcon />,
   },
   adobe: {
     title: "Adobe",
@@ -46,12 +76,12 @@ export const TECH = {
   framer: {
     title: "Framer",
     href: "https://framer.com",
-    icon: <BrandMark src="/Framer.svg" />,
+    icon: <FramerIcon />,
   },
   webflow: {
     title: "Webflow",
     href: "https://webflow.com",
-    icon: <BrandMark src="/Webflow.svg" />,
+    icon: <WebflowIcon />,
   },
   "claude-code": {
     title: "Claude Code",
@@ -91,7 +121,7 @@ export const TECH = {
   storybook: {
     title: "Storybook",
     href: "https://storybook.js.org",
-    icon: <BrandMark src="/storybook-icon.svg" />,
+    icon: <StorybookIcon />,
   },
   vercel: {
     title: "Vercel",
@@ -110,7 +140,12 @@ export const TECH = {
   loom: {
     title: "Loom",
     href: "https://loom.com",
-    icon: <BrandMark src="/Loom.svg" />,
+    icon: <LoomIcon />,
+  },
+  posthog: {
+    title: "PostHog",
+    href: "https://posthog.com",
+    icon: <PostHogIcon />,
   },
   github: {
     title: "GitHub",
@@ -120,7 +155,7 @@ export const TECH = {
   webstorm: {
     title: "WebStorm",
     href: "https://www.jetbrains.com/webstorm",
-    icon: <BrandMark src="/webstorm.svg" />,
+    icon: <WebStormIcon />,
   },
   vscode: {
     title: "VS Code",
@@ -130,12 +165,12 @@ export const TECH = {
   notion: {
     title: "Notion",
     href: "https://notion.com",
-    icon: <BrandMark src="/notion.svg" />,
+    icon: <NotionIcon />,
   },
   obsidian: {
     title: "Obsidian",
     href: "https://obsidian.md",
-    icon: <BrandMark src="/obsidian.svg" />,
+    icon: <ObsidianIcon />,
   },
 } satisfies Record<string, TechEntry>
 

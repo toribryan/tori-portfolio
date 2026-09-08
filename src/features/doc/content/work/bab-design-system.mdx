@@ -1,11 +1,11 @@
 ---
 title: "Integrity Console Design System"
-description: "The support dashboard rebuilt as a component library: 40 components, 31 stories, and a token layer the clickthrough and the React build both speak."
+description: "The support dashboard rebuilt as a component library: 40 components, 149 stories, one icon weight, and a token layer the clickthrough and the React build both speak, in light and dark."
 claim: "25 hand-built prototype screens, turned into a component library an engineer can build from."
 image: "/cover-icds.webp"
 order: 4
 createdAt: "2026-07-21"
-updatedAt: "2026-08-21"
+updatedAt: "2026-09-07"
 role: "Staff Designer"
 type: "Design System"
 period: "Q3 2026"
@@ -21,7 +21,7 @@ outcome: "40 components and 12 full page compositions, browsable in Storybook. T
 results:
   - value: "40"
     label: "Components in the library"
-  - value: "31"
+  - value: "149"
     label: "Stories browsable in Storybook"
   - value: "12"
     label: "Full page compositions"
@@ -83,6 +83,31 @@ action. `--red-deep` (`#b20030`) is reserved for the inbox Close button and the
 live-attempt badge, and nothing else. A single `--red` would have blurred two
 meanings into one swatch, and they'd have drifted apart in code anyway.
 
+Badge and button labels sit at normal weight. Bold is a signal, and in this
+product it belongs to unread rows and headings, not to every control.
+
+## Icons
+
+<StoryEmbed
+  id="foundations-icons--weight"
+  title="Foundations / Icons: weight"
+  width="760"
+  height="860"
+/>
+
+One library, one weight. Every glyph is Lucide, and every glyph is drawn at a
+1.5 stroke that does not scale with the icon, so a 12px check in a stat tile
+and a 40px robot on a source card read as the same family. The stroke is set
+once, in a provider the app shell wraps, and never at a call site.
+
+<StoryEmbed
+  id="foundations-icons--selected-state"
+  title="Foundations / Icons: selected state"
+  width="760"
+  height="500"
+  caption="Selection changes fill, not weight. Each destination fills its silhouette and knocks the interior line back out in the chip colour; search is an action, so it never fills."
+/>
+
 ## Inbox
 
 <StoryEmbed
@@ -136,6 +161,12 @@ the React build.
 }
 ```
 
+Every one of those tokens has a dark counterpart, so the warm grey ground, the
+inbox row scale and the role pairs all survive a theme switch, and the brand red
+stays red rather than falling back to a stock white primary. The two blocks
+live inside a managed region, so a token sync from Figma writes there and
+nowhere else.
+
 ### Role pairs
 
 The chart series reuse these hues, so a colour carries one meaning across the
@@ -173,7 +204,8 @@ borrowing `--sel`.
 
 Geist Variable throughout: `--font-heading` is an alias of `--font-sans`, not a
 second family. Headings differentiate by weight and size against Tailwind's
-default scale; there is no bespoke scale to memorise.
+default scale; there is no bespoke scale to memorise, and no component reaches
+for an off-scale size to get there.
 
 ### Radius
 
@@ -193,9 +225,11 @@ One base, everything else derived. Changing `--radius` reshapes the product.
 --shadow-card: 0 0 4px rgba(0, 0, 0, 0.15);
 ```
 
-That is the entire elevation system. The content card is the only shadowed
-surface on a page; anything nested inside it uses `--surface-nested` with a
-hairline border. A second shadow is a bug.
+That is the entire elevation system for surfaces. The content card is the only
+shadowed surface on a page; anything nested inside it uses `--surface-nested`
+with a hairline border. Floating layers, menus, popovers and the command list,
+share one popover treatment and are the only other thing that casts a shadow.
+A second shadow on a surface is a bug.
 
 ## What I'd do next
 

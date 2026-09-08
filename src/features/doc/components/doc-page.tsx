@@ -69,6 +69,7 @@ export async function DocPage({
 
   const facts = [
     ["Company", m.company],
+    ["Reach", m.reach],
     ["Role", m.role],
     ["Team", m.team],
     ["Type", m.type],
@@ -204,7 +205,7 @@ export async function DocPage({
                 >
                   {value}
                 </dt>
-                <dd className="font-mono text-xs leading-relaxed tracking-wide text-muted-foreground text-pretty">
+                <dd className="font-mono text-xs leading-relaxed tracking-wide text-pretty text-muted-foreground">
                   {label}
                 </dd>
               </div>

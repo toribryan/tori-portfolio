@@ -82,7 +82,7 @@ export const EXPERIENCES: Experience[] = [
         },
         employmentType: "Full-time",
         icon: <DraftingCompassIcon />,
-        description: `- Owned the multi-brand design system, its governance, and the technical design standards the design team and the engineering org build from, while leading design across three products.
+        description: `- Owned the multi-brand design system, its governance, and the technical design standards the design team and the engineering org build from, while leading design across three products on a platform serving 8 million test takers.
 - Led a legacy [design system overhaul](/work/design-system-overhaul) with two engineers: 37 components, MVP in 60 days, button variants down 59% (1,160 → 480) and card variants down 94% (587 → 32). v2 Card shipped in 1.5 days against 2 weeks for v1.
 - Rebuilt design-to-engineering handoff around [agentic tooling](/work/agentic-design-system) and prototype-forward delivery: spec production dropped from 3 days–2 weeks to under 30 minutes, returning ~80 hours per cycle to design work, with 100% team adoption.
 - Authored the shared Claude Code skill framework behind it and the hooks that cascade prototype changes into specs and release notes automatically.

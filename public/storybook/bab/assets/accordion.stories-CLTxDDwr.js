@@ -1,0 +1,14 @@
+import{n as e}from"./rolldown-runtime-DkW27tQK.js";import{a as t,i as n,n as r,r as i,t as a}from"./accordion-zagFvFPs.js";import{t as o}from"./jsx-runtime-DeHZSEgm.js";var s,c,l,u,d,f,p,m;function h(){return(h=e((()=>{t(),s=o(),c={title:`UI/Accordion`,component:a,subcomponents:{AccordionItem:i,AccordionTrigger:n,AccordionContent:r},tags:[`autodocs`],args:{defaultValue:[`account`],multiple:!1,disabled:!1,keepMounted:!1,hiddenUntilFound:!1},argTypes:{multiple:{description:`Allow more than one panel open at a time.`,control:`boolean`,table:{category:`Behaviour`,defaultValue:{summary:`false`}}},disabled:{control:`boolean`,table:{category:`State`,defaultValue:{summary:`false`}}},keepMounted:{description:`Leave closed panels in the DOM.`,control:`boolean`,table:{category:`Behaviour`,defaultValue:{summary:`false`}}},hiddenUntilFound:{description:"Let the browser's find-in-page open a closed panel. Overrides `keepMounted`.",control:`boolean`,table:{category:`Behaviour`,defaultValue:{summary:`false`}}},defaultValue:{description:`Item values open on first render.`,control:`check`,options:[`account`,`exam`,`history`],table:{category:`State`}},value:{control:!1,table:{category:`State`}},onValueChange:{table:{category:`Events`}},className:{control:`text`,table:{category:`Content`}}},render:e=>(0,s.jsxs)(a,{...e,className:`w-80`,children:[(0,s.jsxs)(i,{value:`account`,children:[(0,s.jsx)(n,{children:`Account details`}),(0,s.jsx)(r,{children:`Email, institution, and enrollment status.`})]}),(0,s.jsxs)(i,{value:`exam`,children:[(0,s.jsx)(n,{children:`Exam context`}),(0,s.jsx)(r,{children:`BIO 201 Midterm — Ch. 4-7, lockdown browser session.`})]}),(0,s.jsxs)(i,{value:`history`,children:[(0,s.jsx)(n,{children:`Prior conversations`}),(0,s.jsx)(r,{children:`Three conversations in the last 30 days, all resolved.`})]})]})},l={},u={},d={args:{multiple:!0,defaultValue:[`account`,`exam`]}},f={args:{defaultValue:[]}},p={args:{disabled:!0}},l.parameters={...l.parameters,docs:{...l.parameters?.docs,source:{originalSource:`{}`,...l.parameters?.docs?.source},description:{story:`Every prop wired to a control.`,...l.parameters?.docs?.description}}},u.parameters={...u.parameters,docs:{...u.parameters?.docs,source:{originalSource:`{}`,...u.parameters?.docs?.source}}},d.parameters={...d.parameters,docs:{...d.parameters?.docs,source:{originalSource:`{
+  args: {
+    multiple: true,
+    defaultValue: ["account", "exam"]
+  }
+}`,...d.parameters?.docs?.source}}},f.parameters={...f.parameters,docs:{...f.parameters?.docs,source:{originalSource:`{
+  args: {
+    defaultValue: []
+  }
+}`,...f.parameters?.docs?.source}}},p.parameters={...p.parameters,docs:{...p.parameters?.docs,source:{originalSource:`{
+  args: {
+    disabled: true
+  }
+}`,...p.parameters?.docs?.source}}},m=[`Playground`,`Default`,`Multiple`,`AllClosed`,`Disabled`]})))()}h();export{f as AllClosed,u as Default,p as Disabled,d as Multiple,l as Playground,m as __namedExportsOrder,c as default};

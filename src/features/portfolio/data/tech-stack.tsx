@@ -28,6 +28,7 @@ export const TECH_STACK: TechStack[] = [
 
   { key: "usertesting", categories: ["Research"] },
   { key: "loom", categories: ["Research"] },
+  { key: "posthog", categories: ["Research"] },
 
   { key: "github", categories: ["Workflow"] },
   { key: "webstorm", categories: ["Workflow"] },
