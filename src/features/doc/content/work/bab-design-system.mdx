@@ -28,10 +28,22 @@ results:
 ---
 
 <Pipeline>
-  <Stage label="Tokens" detail="One name per surface, state and colour" mark="layers" />
-  <Stage label="Primitives" detail="Button, badge, input, table" mark="component" />
+  <Stage
+    label="Tokens"
+    detail="One name per surface, state and colour"
+    mark="layers"
+  />
+  <Stage
+    label="Primitives"
+    detail="Button, badge, input, table"
+    mark="component"
+  />
   <Stage label="Surfaces" detail="Inbox, dashboard, reports" mark="storybook" />
-  <Stage label="Compositions" detail="12, assembled at real scale" mark="layout" />
+  <Stage
+    label="Compositions"
+    detail="12, assembled at real scale"
+    mark="layout"
+  />
 </Pipeline>
 
 ## Two artefacts, one product
@@ -78,9 +90,9 @@ real scale.
   height="72"
 />
 
-Two reds, one meaning each. `--primary` (`#c70036`) carries every primary
-action. `--red-deep` (`#b20030`) is reserved for the inbox Close button and the
-live-attempt badge, and nothing else. A single `--red` would have blurred two
+Two reds, one meaning each. `--primary` (`oklch(0.525 0.211 18.9)`) carries
+every primary action. `--red-deep` (`oklch(0.484 0.194 18.7)`) is reserved for
+the inbox Close button and the live-attempt badge, and nothing else. A single `--red` would have blurred two
 meanings into one swatch, and they'd have drifted apart in code anyway.
 
 Badge and button labels sit at normal weight. Bold is a signal, and in this
@@ -149,15 +161,19 @@ the React build.
 
 ```css title="src/index.css"
 :root {
-  --primary: #c70036; /* the one red that means "primary action" */
-  --background: #efeceb; /* app ground: cards float on it, no dividers */
-  --surface-nested: #f8f7f6; /* tiles and chart wells inside a white card */
-  --sel: #dbd3d1; /* selected chip, filter pill, received bubble */
+  /* the one red that means "primary action" */
+  --primary: oklch(0.525 0.211 18.9);
+  /* app ground: cards float on it, no dividers */
+  --background: oklch(0.945 0.004 39.5);
+  /* tiles and chart wells inside a white card */
+  --surface-nested: oklch(0.977 0.002 67.8);
+  /* selected chip, filter pill, received bubble */
+  --sel: oklch(0.873 0.009 34.3);
 
   /* Inbox rows carry their own scale, because "unread" has to read as
      lighter than the ground while "read" reads as a step darker. */
-  --unread: #fdfcfc;
-  --chat-read: #e6e1e0;
+  --unread: oklch(0.992 0.001 17.2);
+  --chat-read: oklch(0.913 0.006 31.1);
 }
 ```
 
@@ -172,20 +188,20 @@ nowhere else.
 The chart series reuse these hues, so a colour carries one meaning across the
 whole product.
 
-| Role       | Background | Foreground |
-| ---------- | ---------- | ---------- |
-| Student    | `#fae0d1`  | `#b94513`  |
-| Instructor | `#dbeafe`  | `#1d4ed8`  |
-| Admin      | `#feeeaf`  | `#d97706`  |
+| Role       | Background                 | Foreground                 |
+| ---------- | -------------------------- | -------------------------- |
+| Student    | `oklch(0.924 0.035 52.0)`  | `oklch(0.544 0.160 40.1)`  |
+| Instructor | `oklch(0.932 0.032 255.6)` | `oklch(0.488 0.217 264.4)` |
+| Admin      | `oklch(0.947 0.082 95.6)`  | `oklch(0.666 0.157 58.3)`  |
 
 ### Status
 
-| Token           | Value     | Use                                     |
-| --------------- | --------- | --------------------------------------- |
-| `--success`     | `#047857` | Resolved, healthy, within threshold     |
-| `--warning`     | `#b45309` | Approaching a threshold                 |
-| `--destructive` | `#e7000b` | Failed check, above threshold           |
-| `--readonly`    | `#778ba6` | Fields the agent can see but not change |
+| Token           | Value                      | Use                                     |
+| --------------- | -------------------------- | --------------------------------------- |
+| `--success`     | `oklch(0.508 0.105 165.6)` | Resolved, healthy, within threshold     |
+| `--warning`     | `oklch(0.555 0.146 49.0)`  | Approaching a threshold                 |
+| `--destructive` | `oklch(0.583 0.239 28.5)`  | Failed check, above threshold           |
+| `--readonly`    | `oklch(0.631 0.047 256.0)` | Fields the agent can see but not change |
 
 ### Inbox row states
 
@@ -194,11 +210,11 @@ distinguishable at a glance down a long list. Unread reads _lighter_ than the
 ground; read reads a step darker; selected gets its own warm grey rather than
 borrowing `--sel`.
 
-| State    | Rest      | Hover     |
-| -------- | --------- | --------- |
-| Unread   | `#fdfcfc` | `#f4f0ef` |
-| Read     | `#e6e1e0` | `#dcd6d4` |
-| Selected | `#d2c8c6` | `#c7bab7` |
+| State    | Rest                      | Hover                     |
+| -------- | ------------------------- | ------------------------- |
+| Unread   | `oklch(0.992 0.001 17.2)` | `oklch(0.958 0.005 34.3)` |
+| Read     | `oklch(0.913 0.006 31.1)` | `oklch(0.880 0.007 39.5)` |
+| Selected | `oklch(0.840 0.012 31.1)` | `oklch(0.799 0.015 33.1)` |
 
 ### Type
 
@@ -239,5 +255,3 @@ A second shadow on a surface is a bug.
   layout with a different metric.
 
 <LinkButton href="/storybook/bab/index.html">Open Storybook</LinkButton>
-
-
