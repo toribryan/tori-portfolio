@@ -594,7 +594,7 @@
 <main>
   <div class="wrap">
     <div class="note ok" style="margin-bottom: 16px;">
-              Using <code>react-docgen-typescript</code>. Generation took <strong>3.7s</strong>.
+              Using <code>react-docgen-typescript</code>. Generation took <strong>2.4s</strong>.
             </div>
     <h2 class="section-title">Components</h2>
     <div class="grid" role="list">
@@ -5627,9 +5627,9 @@ export const Weight: Story = {
 }
 
 /**
- * Selection changes weight, not the glyph. Every destination steps from the
- * base stroke to the selected stroke on the same outline, so all of them gain
- * the same amount. Actions like search never change.
+ * Selection changes colour, not the glyph. Unselected destinations sit in the
+ * muted foreground; the selected one steps to the full foreground on its chip.
+ * Weight and fill never change, so every icon reads the same.
  */
 export const SelectedState: Story = {
   render: () =&gt; (
@@ -5707,9 +5707,9 @@ stroke-to-size ratio and read as the same family.</div>
                 <span class="badge ok">story ok</span>
               </div>
               
-              <div class="hint">Selection changes weight, not the glyph. Every destination steps from the
-base stroke to the selected stroke on the same outline, so all of them gain
-the same amount. Actions like search never change.</div>
+              <div class="hint">Selection changes colour, not the glyph. Unselected destinations sit in the
+muted foreground; the selected one steps to the full foreground on its chip.
+Weight and fill never change, so every icon reads the same.</div>
               <pre><code>const SelectedState = () =&gt; (
   &lt;div className=&quot;flex h-120 gap-6 rounded-2xl bg-background p-2&quot;&gt;
     {([&quot;inbox&quot;, &quot;knowledge&quot;, &quot;reports&quot;, &quot;contacts&quot;, &quot;settings&quot;] as const).map((key) =&gt; (
@@ -12092,9 +12092,9 @@ export const Weight: Story = {
 }
 
 /**
- * Selection changes weight, not the glyph. Every destination steps from the
- * base stroke to the selected stroke on the same outline, so all of them gain
- * the same amount. Actions like search never change.
+ * Selection changes colour, not the glyph. Unselected destinations sit in the
+ * muted foreground; the selected one steps to the full foreground on its chip.
+ * Weight and fill never change, so every icon reads the same.
  */
 export const SelectedState: Story = {
   render: () =&gt; (
@@ -12172,9 +12172,9 @@ stroke-to-size ratio and read as the same family.</div>
                 <span class="badge ok">story ok</span>
               </div>
               
-              <div class="hint">Selection changes weight, not the glyph. Every destination steps from the
-base stroke to the selected stroke on the same outline, so all of them gain
-the same amount. Actions like search never change.</div>
+              <div class="hint">Selection changes colour, not the glyph. Unselected destinations sit in the
+muted foreground; the selected one steps to the full foreground on its chip.
+Weight and fill never change, so every icon reads the same.</div>
               <pre><code>const SelectedState = () =&gt; (
   &lt;div className=&quot;flex h-120 gap-6 rounded-2xl bg-background p-2&quot;&gt;
     {([&quot;inbox&quot;, &quot;knowledge&quot;, &quot;reports&quot;, &quot;contacts&quot;, &quot;settings&quot;] as const).map((key) =&gt; (
