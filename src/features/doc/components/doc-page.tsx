@@ -205,7 +205,7 @@ export async function DocPage({
                 >
                   {value}
                 </dt>
-                <dd className="font-mono text-xs leading-relaxed tracking-wide text-muted-foreground text-pretty">
+                <dd className="font-mono text-xs leading-relaxed tracking-wide text-pretty text-muted-foreground">
                   {label}
                 </dd>
               </div>
