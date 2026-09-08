@@ -5,10 +5,10 @@ claim: "The first product to ship on the new design system, and the two componen
 image: "/cover-websweep.webp"
 order: 3
 createdAt: "2026-02-01"
-updatedAt: "2026-09-06"
+updatedAt: "2026-09-08"
 company: "Proctorio"
 role: "Staff Designer, design system and product design language"
-team: "Product design by Tory Barden"
+team: "In partnership with the product designer"
 type: "New Product Suite"
 period: "Q1 to Q2 2026"
 skills:
@@ -20,16 +20,29 @@ skills:
   - "Figma"
 problem: "WebSweep had been designed on the legacy design system. When the overhaul shipped in January 2026, a brand-new product was about to launch on a system we had just retired, and the new system had never carried a real product."
 task: "As the system owner, bring WebSweep onto the overhauled design system without losing its launch window, establish the product design language on a real surface, and build what the product needed that the system did not yet have."
-process: "Worked alongside the product designer, Tory Barden, who owned the flows and product decisions. I owned the system side: mapping the redesign onto the new tokens and components, then designing a graph component and a responsive table that collapses to cards on mobile, both built as system components rather than product one-offs."
+process: "Worked alongside the product designer, who owned the flows and product decisions. I owned the system side: mapping the redesign onto the new tokens and components, then designing a graph component and a responsive table that collapses to cards on mobile, both built as system components rather than product one-offs."
 outcome: "The redesign ran February through an April beta, and the first tier launched to customers in May 2026 as one half of Vault by Proctorio. The graph and responsive table are now shared system components, and WebSweep became the reference for how the design language looks on a product."
 results:
   - value: "First"
     label: "Product surface shipped on the overhauled design system"
   - value: "2"
-    label: "System components it gave back: a graph, and a table that becomes cards"
+    label: "System components it gave back, a graph and a table that becomes cards"
   - value: "May 2026"
     label: "First tier live to customers, after an April beta"
 ---
+
+A design system is only ever a promise until a real product ships on it.
+WebSweep is where the promise got tested.
+
+Exam content leaks. It ends up in places the institution can't see, and they're
+usually the last to know. WebSweep surfaces assessment content that has escaped
+and turns a find into an action: a takedown, or swapping the affected questions
+so the exam stays usable. It ships as one half of Vault by Proctorio, alongside
+ScreenBlock.
+
+The product design, the flows, and the product decisions belonged to the
+product designer I worked alongside. This case study is about my part, which is
+the system underneath it.
 
 <Pipeline>
   <Stage label="Legacy to new" detail="Redesigned on the overhauled system" mark="layers" />
@@ -38,80 +51,93 @@ results:
   <Stage label="Table to cards" detail="One component, two presentations" mark="rocket" />
 </Pipeline>
 
-## What WebSweep is, briefly
+## Making the language hold under real pressure
 
-Exam content leaks to homework-help sites, forums, and file-shares, and the
-institution is usually the last to know. WebSweep scans the open web for leaked
-assessment content, surfaces what has already escaped, and turns a find into an
-action: a takedown notice, or swapping the affected questions so the exam stays
-usable. It ships as one half of Vault by Proctorio, alongside ScreenBlock.
+The overhaul had set its principles on paper. No product logic in components.
+No variants for hypothetical use. Start from the foundation and let the
+foundation grow.
 
-The product design, the flows, and the product decisions were Tory Barden's.
-This case study is about my part: the design system underneath it.
+WebSweep is where those principles first met a product with its own needs.
 
-## Why the system owner was hands-on
+My job was to make sure the language held. That the dashboard composed from the
+system's tokens and components without forking them. That the spacing, type,
+and color were the system's decisions and not the product's. And that when the
+product needed something the system didn't have, the answer was a system
+component, not a one-off.
 
-WebSweep was first designed on the legacy design system, the one with 587 card
-variants and no semantic token layer. I was leading the
-[overhaul of that system](/work/design-system-overhaul) at the same time, and
-the overhaul shipped in January 2026, before WebSweep did.
-
-That left a choice: launch a new product on a system we had just retired, or
-redesign it on the new one and hold the launch window. We redesigned it. The
-work ran from February, went to beta with real customers in April, and the first
-tier launched in May 2026.
-
-It was the first new product surface released on the overhauled system, which
-made it the first real test of the design language. A system proves itself on a
-product, not in a library, and I wanted to be in the room for the first one.
-
-## Establishing the design language on a real surface
-
-The overhaul had set principles on paper: no product logic in components, no
-variants for hypothetical use, start from the foundation and let the foundation
-grow. WebSweep is where those principles first met a product with its own needs.
-
-My job was to make sure the new language held under real pressure: that the
-dashboard composed from the system's tokens and components without forking
-them, that the spacing, type, and color decisions were the system's decisions
-and not the product's, and that when the product needed something the system
-did not have, the answer was a system component rather than a one-off.
-
-Most of the dashboard composed cleanly. Two things did not exist yet.
+Most of the dashboard composed cleanly. Two things didn't exist yet.
 
 <Figure
   src="/cover-websweep.webp"
-  alt="The WebSweep dashboard: a resolution-rate ring, an activity-over-time chart, a compromised content table, and a question details panel listing compromised links with their sources selected for takedown"
-  caption="The shipped dashboard. The ring and line chart are the graph component; the compromised content list is the responsive table."
+  alt="The WebSweep dashboard: a resolution-rate ring, an activity-over-time chart, a findings table, and a question details panel listing compromised links with their sources selected for takedown"
+  caption="The shipped dashboard. The ring and line chart are the graph component; the findings list is the responsive table."
 />
 
-## The graph component
+## The graph
 
 The resolution-rate ring and the activity-over-time chart were the first data
-visualizations the system had to carry. I designed them as a system component
-on the semantic token layer, so chart color, typography, and spacing come from
-the same tokens as everything else. The graph themes with the rest of the
-product instead of carrying its own palette, and the next product that needs a
-chart starts from a component rather than from scratch.
+visualizations the system had to carry. Which meant deciding how charts get
+their color and type before anyone else needed one.
+
+The tempting shortcut is to reach straight for the semantic tokens the rest of
+the product uses. It's the wrong move, and it's a common one. A semantic token
+maps a value to product meaning: warning, positive, disabled. A chart needs
+tokens that map to a data role instead: series one, series two, a midpoint, a
+missing value. The same red that means "error" in a form means "downward trend"
+in a chart, and if both pull from the same token, the two meanings eventually
+collide.
+
+So I added a chart-token layer that inherits from the foundation rather than
+forking a second palette off to the side. Chart color, type, and spacing
+resolve through their own tokens, but those tokens still trace back to the same
+primitives as everything else. The graph themes with the product without
+borrowing tokens that were never meant to describe data. It's the approach
+Carbon and the US Web Design System both land on, and it's the version that
+survives a second and third chart type showing up later.
+
+The payoff is quiet but real. The next product that needs a chart starts from a
+component and a token layer instead of from scratch, and it starts already in
+theme.
 
 ## The table that becomes cards
 
-The compromised content table is dense by nature: course, quiz, content, link
-counts, status. It reads well on a wide screen and falls apart on a phone.
+The findings table is dense by nature. Course, quiz, item, counts, status. It
+reads well on a wide screen and falls apart on a phone.
 
-Rather than a separate mobile component, I designed it as one component with
-two presentations: rows on desktop, and on mobile each row collapses into a card
-that keeps the same data and the same actions. One data model and one set of
-behaviours, with no fork. It is the "let the foundation grow" principle doing
-its job: a real pattern showed up in a real product, and the system absorbed
-it.
+There are two usual answers to that, and both are worse than they look.
+Horizontal scroll hides half the data off the edge of the screen. A separate
+mobile component means two things to build, two things to keep in sync, and two
+places for them to drift apart.
+
+The pattern that actually holds is collapsing each row into a card. That's the
+well-worn move for dense tables on small screens, and the reason it works is
+that cards keep every field for one item visible at a glance instead of
+scrolled away. But there's a catch most versions miss: cards quietly drop the
+header-to-value relationship a table gives you for free. On desktop the column
+header says what a number means. On a card, that context has to travel with
+the value, or a screen reader reads a bare figure with nothing attached.
+
+So it's one component with two presentations. Rows on desktop. On mobile, each
+row collapses into a card that keeps the same data, the same actions, and the
+label-to-value pairing the table row had. One data model, one set of
+behaviours, no fork.
+
+This is the "let the foundation grow" principle actually doing its job. A real
+pattern showed up in a real product, and the system absorbed it instead of
+routing around it.
 
 ## What it proved
 
 Both components went back into the library, so WebSweep left the system larger
-than it found it. More importantly, it left a reference: the first shipped
-answer to "what does the design language look like on a product," which every
-surface after it could build from.
+than it found it.
+
+The bigger thing it left is a reference. The first shipped answer to the
+question every design system eventually has to answer out loud: what does the
+language actually look like on a product? Every surface after this one gets to
+start from that answer instead of guessing at it.
+
+That's the version of proof I care about. Not that the system is finished, but
+that it holds.
 
 <LinkButton href="https://proctorio.com/solutions/vault">
   See Vault on Proctorio
