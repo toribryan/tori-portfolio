@@ -17,7 +17,7 @@ skills:
   - "Design tokens"
 problem: "A clickthrough prototype proves an interaction and then stops being useful. The Integrity Console existed as 25 hand-built screens of vanilla HTML: convincing to click through, impossible to hand to an engineer as anything but a picture."
 task: "Turn the prototype's decisions into a component library an engineer could build from: every surface, state and colour named once, and every component demonstrable in isolation."
-outcome: "40 components and 12 full page compositions, browsable in Storybook. The token names carried over from the prototype unchanged, so the two artefacts describe the same product rather than two drawings of it."
+outcome: "40 components and 12 full page compositions, browsable in Storybook. The token names carried over from the prototype unchanged, so the two artefacts describe the same product."
 results:
   - value: "40"
     label: "Components in the library"
@@ -51,8 +51,8 @@ results:
 The [Support Agent Dashboard](/work/support-agent-dashboard) shipped as a
 25-screen clickthrough: vanilla HTML, CSS and JavaScript, no framework, no build
 step. Right shape for proving an interaction, wrong shape for handing to
-engineering, since a prototype has no components in it. It has markup that
-happens to look like components.
+engineering, since a prototype has no components in it, only markup that looks
+like components.
 
 This is the other half: the same product expressed as a library.
 
@@ -92,11 +92,12 @@ real scale.
 
 Two reds, one meaning each. `--primary` (`oklch(0.525 0.211 18.9)`) carries
 every primary action. `--red-deep` (`oklch(0.484 0.194 18.7)`) is reserved for
-the inbox Close button and the live-attempt badge, and nothing else. A single `--red` would have blurred two
-meanings into one swatch, and they'd have drifted apart in code anyway.
+the inbox Close button and the live-attempt badge, and nothing else. A single
+`--red` would have blurred two meanings into one swatch, and they'd have drifted
+apart in code anyway.
 
 Badge and button labels sit at normal weight. Bold is a signal, and in this
-product it belongs to unread rows and headings, not to every control.
+product only unread rows and headings carry it.
 
 ## Icons
 
@@ -118,7 +119,7 @@ never at a call site.
   title="Foundations / Icons: selected state"
   width="760"
   height="500"
-  caption="Selection changes colour, not the glyph. Unselected destinations sit in the muted foreground and the selected one steps to the full foreground on its chip; weight and fill never change, so every icon reads the same. Search is an action, so it is never selected."
+  caption="Selection is a colour step. Unselected destinations sit in the muted foreground and the selected one moves to the full foreground on its chip, at the same stroke, so every icon reads the same weight. Search is an action and is never selected."
 />
 
 ## Inbox
@@ -244,7 +245,7 @@ One base, everything else derived. Changing `--radius` reshapes the product.
 
 That is the entire elevation system for surfaces. The content card is the only
 shadowed surface on a page; anything nested inside it uses `--surface-nested`
-with a hairline border. Floating layers, menus, popovers and the command list,
+with a hairline border. Floating layers (menus, popovers and the command list)
 share one popover treatment and are the only other thing that casts a shadow.
 A second shadow on a surface is a bug.
 
