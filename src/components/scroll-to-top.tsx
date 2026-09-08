@@ -37,10 +37,9 @@ export function ScrollToTop({
         "bottom-[calc(var(--bottom,0.5rem)+env(safe-area-inset-bottom,0))] z-50",
         "transition-[background-color,opacity] duration-300 data-[scroll-direction=down]:opacity-30 data-[scroll-direction=up]:opacity-100 data-[visible=false]:opacity-0",
         "data-[scroll-direction=down]:hover:opacity-100",
-        "border-none shadow-[inset_0_0_1px] shadow-foreground/20",
         className
       )}
-      variant="secondary"
+      variant="outline"
       size="icon-sm"
       aria-label="Scroll to top"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
