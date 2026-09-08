@@ -1,0 +1,13 @@
+import{n as e}from"./rolldown-runtime-DkW27tQK.js";import{t}from"./jsx-runtime-DeHZSEgm.js";import{n,t as r}from"./button-a6ntTyBe.js";import{a as i,c as a,i as o,n as s,o as c,r as l,s as u,t as d}from"./card-Ce-plkPU.js";var f,p,m,h,g,_,v,y;function b(){return(b=e((()=>{a(),n(),f=t(),p={title:`UI/Card`,component:d,subcomponents:{CardHeader:c,CardTitle:u,CardDescription:o,CardAction:s,CardContent:l,CardFooter:i},tags:[`autodocs`],args:{size:`default`,title:`Escalated conversations`,description:`Last 7 days across all institutions`,withFooter:!0,withAction:!1},argTypes:{size:{description:"Drives `--card-spacing`, which every card part reads for its padding — so one prop resizes the whole card.",control:`inline-radio`,options:[`default`,`sm`],table:{category:`Appearance`,type:{summary:`default | sm`},defaultValue:{summary:`default`}}},title:{control:`text`,table:{category:`Content`}},description:{control:`text`,table:{category:`Content`}},withFooter:{control:`boolean`,table:{category:`Content`}},withAction:{control:`boolean`,table:{category:`Content`}},className:{control:`text`,table:{category:`Content`}}},render:({title:e,description:t,withFooter:n,withAction:a,...p})=>(0,f.jsxs)(d,{...p,className:`w-80`,children:[(0,f.jsxs)(c,{children:[(0,f.jsx)(u,{children:e}),(0,f.jsx)(o,{children:t}),a&&(0,f.jsx)(s,{children:(0,f.jsx)(r,{variant:`ghost`,size:`sm`,children:`View`})})]}),(0,f.jsx)(l,{children:(0,f.jsx)(`p`,{className:`text-sm text-muted-foreground`,children:`14 conversations were escalated, up 3 from the prior period.`})}),n&&(0,f.jsx)(i,{children:(0,f.jsx)(r,{size:`sm`,children:`View report`})})]})},m={},h={},g={args:{size:`sm`}},_={args:{withAction:!0}},v={args:{withFooter:!1}},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{}`,...m.parameters?.docs?.source},description:{story:`Every prop wired to a control.`,...m.parameters?.docs?.description}}},h.parameters={...h.parameters,docs:{...h.parameters?.docs,source:{originalSource:`{}`,...h.parameters?.docs?.source}}},g.parameters={...g.parameters,docs:{...g.parameters?.docs,source:{originalSource:`{
+  args: {
+    size: "sm"
+  }
+}`,...g.parameters?.docs?.source}}},_.parameters={..._.parameters,docs:{..._.parameters?.docs,source:{originalSource:`{
+  args: {
+    withAction: true
+  }
+}`,..._.parameters?.docs?.source}}},v.parameters={...v.parameters,docs:{...v.parameters?.docs,source:{originalSource:`{
+  args: {
+    withFooter: false
+  }
+}`,...v.parameters?.docs?.source}}},y=[`Playground`,`Default`,`Small`,`WithAction`,`NoFooter`]})))()}b();export{h as Default,v as NoFooter,m as Playground,g as Small,_ as WithAction,y as __namedExportsOrder,p as default};

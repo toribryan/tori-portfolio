@@ -92,6 +92,12 @@ export async function DocPage({
   // their `outcome` prose, so every case study leads with what changed.
   const results = m.results?.filter((r) => r.value && r.label) ?? []
 
+  // One size for the whole strip. Short values are figures and get display
+  // size; a phrase would wrap badly set that large, so any phrase in the strip
+  // brings every value down a step rather than sitting small beside its
+  // neighbours.
+  const resultsAreFigures = results.every(({ value }) => value.length <= 10)
+
   return (
     <>
       <div className="screen-line-bottom flex items-center justify-between p-2 pl-4">
@@ -195,12 +201,10 @@ export async function DocPage({
               <div key={label} className="flex flex-col gap-1">
                 <dt
                   className={cn(
-                    "font-heading tabular-nums",
-                    // A short value is a figure and gets display size. A longer
-                    // one is a phrase, and would wrap badly if set that large.
-                    value.length <= 10
-                      ? "text-3xl leading-none font-medium"
-                      : "text-lg leading-tight font-medium text-balance"
+                    "font-heading font-medium tabular-nums",
+                    resultsAreFigures
+                      ? "text-3xl leading-none"
+                      : "text-2xl leading-tight text-balance"
                   )}
                 >
                   {value}

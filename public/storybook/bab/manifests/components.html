@@ -594,7 +594,7 @@
 <main>
   <div class="wrap">
     <div class="note ok" style="margin-bottom: 16px;">
-              Using <code>react-docgen-typescript</code>. Generation took <strong>3.1s</strong>.
+              Using <code>react-docgen-typescript</code>. Generation took <strong>2.4s</strong>.
             </div>
     <h2 class="section-title">Components</h2>
     <div class="grid" role="list">
@@ -5593,15 +5593,15 @@ export default meta
 type Story = StoryObj&lt;typeof meta&gt;
 
 /**
- * One library, one weight. Every glyph is Lucide, drawn at a constant
- * device-pixel stroke regardless of size, so a 12px check and a 40px robot
- * read as the same family.
+ * One library, one weight. Every glyph is Lucide, drawn at one stroke that
+ * scales with the icon, so a 12px check and a 40px robot keep the same
+ * stroke-to-size ratio and read as the same family.
  */
 export const Weight: Story = {
   render: () =&gt; (
     &lt;div className=&quot;flex flex-col gap-6&quot;&gt;
       &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
-        Lucide, stroke {ICON_STROKE_WIDTH}, non-scaling. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
+        Lucide, stroke {ICON_STROKE_WIDTH}, scaling with the icon. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
         &lt;code&gt;strokeWidth&lt;/code&gt; at a call site.
       &lt;/p&gt;
       &lt;div className=&quot;grid gap-x-6 gap-y-3&quot; style={{ gridTemplateColumns: `8rem repeat(${SIZES.length}, minmax(3rem, auto))` }}&gt;
@@ -5627,8 +5627,9 @@ export const Weight: Story = {
 }
 
 /**
- * Selection changes fill, not weight. Destinations fill in their selected state
- * with interior detail knocked out in the chip colour; actions like search never fill.
+ * Selection changes colour, not the glyph. Unselected destinations sit in the
+ * muted foreground; the selected one steps to the full foreground on its chip.
+ * Weight and fill never change, so every icon reads the same.
  */
 export const SelectedState: Story = {
   render: () =&gt; (
@@ -5670,13 +5671,13 @@ export const SelectedState: Story = {
                 <span class="badge ok">story ok</span>
               </div>
               
-              <div class="hint">One library, one weight. Every glyph is Lucide, drawn at a constant
-device-pixel stroke regardless of size, so a 12px check and a 40px robot
-read as the same family.</div>
+              <div class="hint">One library, one weight. Every glyph is Lucide, drawn at one stroke that
+scales with the icon, so a 12px check and a 40px robot keep the same
+stroke-to-size ratio and read as the same family.</div>
               <pre><code>const Weight = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-6&quot;&gt;
     &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
-      Lucide, stroke {ICON_STROKE_WIDTH}, non-scaling. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
+      Lucide, stroke {ICON_STROKE_WIDTH}, scaling with the icon. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
       &lt;code&gt;strokeWidth&lt;/code&gt; at a call site.
     &lt;/p&gt;
     &lt;div className=&quot;grid gap-x-6 gap-y-3&quot; style={{ gridTemplateColumns: `8rem repeat(${SIZES.length}, minmax(3rem, auto))` }}&gt;
@@ -5706,8 +5707,9 @@ read as the same family.</div>
                 <span class="badge ok">story ok</span>
               </div>
               
-              <div class="hint">Selection changes fill, not weight. Destinations fill in their selected state
-with interior detail knocked out in the chip colour; actions like search never fill.</div>
+              <div class="hint">Selection changes colour, not the glyph. Unselected destinations sit in the
+muted foreground; the selected one steps to the full foreground on its chip.
+Weight and fill never change, so every icon reads the same.</div>
               <pre><code>const SelectedState = () =&gt; (
   &lt;div className=&quot;flex h-120 gap-6 rounded-2xl bg-background p-2&quot;&gt;
     {([&quot;inbox&quot;, &quot;knowledge&quot;, &quot;reports&quot;, &quot;contacts&quot;, &quot;settings&quot;] as const).map((key) =&gt; (
@@ -12056,15 +12058,15 @@ export default meta
 type Story = StoryObj&lt;typeof meta&gt;
 
 /**
- * One library, one weight. Every glyph is Lucide, drawn at a constant
- * device-pixel stroke regardless of size, so a 12px check and a 40px robot
- * read as the same family.
+ * One library, one weight. Every glyph is Lucide, drawn at one stroke that
+ * scales with the icon, so a 12px check and a 40px robot keep the same
+ * stroke-to-size ratio and read as the same family.
  */
 export const Weight: Story = {
   render: () =&gt; (
     &lt;div className=&quot;flex flex-col gap-6&quot;&gt;
       &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
-        Lucide, stroke {ICON_STROKE_WIDTH}, non-scaling. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
+        Lucide, stroke {ICON_STROKE_WIDTH}, scaling with the icon. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
         &lt;code&gt;strokeWidth&lt;/code&gt; at a call site.
       &lt;/p&gt;
       &lt;div className=&quot;grid gap-x-6 gap-y-3&quot; style={{ gridTemplateColumns: `8rem repeat(${SIZES.length}, minmax(3rem, auto))` }}&gt;
@@ -12090,8 +12092,9 @@ export const Weight: Story = {
 }
 
 /**
- * Selection changes fill, not weight. Destinations fill in their selected state
- * with interior detail knocked out in the chip colour; actions like search never fill.
+ * Selection changes colour, not the glyph. Unselected destinations sit in the
+ * muted foreground; the selected one steps to the full foreground on its chip.
+ * Weight and fill never change, so every icon reads the same.
  */
 export const SelectedState: Story = {
   render: () =&gt; (
@@ -12133,13 +12136,13 @@ export const SelectedState: Story = {
                 <span class="badge ok">story ok</span>
               </div>
               
-              <div class="hint">One library, one weight. Every glyph is Lucide, drawn at a constant
-device-pixel stroke regardless of size, so a 12px check and a 40px robot
-read as the same family.</div>
+              <div class="hint">One library, one weight. Every glyph is Lucide, drawn at one stroke that
+scales with the icon, so a 12px check and a 40px robot keep the same
+stroke-to-size ratio and read as the same family.</div>
               <pre><code>const Weight = () =&gt; (
   &lt;div className=&quot;flex flex-col gap-6&quot;&gt;
     &lt;p className=&quot;text-sm text-muted-foreground&quot;&gt;
-      Lucide, stroke {ICON_STROKE_WIDTH}, non-scaling. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
+      Lucide, stroke {ICON_STROKE_WIDTH}, scaling with the icon. Set once in &lt;code&gt;src/lib/icons.tsx&lt;/code&gt;; never pass{&quot; &quot;}
       &lt;code&gt;strokeWidth&lt;/code&gt; at a call site.
     &lt;/p&gt;
     &lt;div className=&quot;grid gap-x-6 gap-y-3&quot; style={{ gridTemplateColumns: `8rem repeat(${SIZES.length}, minmax(3rem, auto))` }}&gt;
@@ -12169,8 +12172,9 @@ read as the same family.</div>
                 <span class="badge ok">story ok</span>
               </div>
               
-              <div class="hint">Selection changes fill, not weight. Destinations fill in their selected state
-with interior detail knocked out in the chip colour; actions like search never fill.</div>
+              <div class="hint">Selection changes colour, not the glyph. Unselected destinations sit in the
+muted foreground; the selected one steps to the full foreground on its chip.
+Weight and fill never change, so every icon reads the same.</div>
               <pre><code>const SelectedState = () =&gt; (
   &lt;div className=&quot;flex h-120 gap-6 rounded-2xl bg-background p-2&quot;&gt;
     {([&quot;inbox&quot;, &quot;knowledge&quot;, &quot;reports&quot;, &quot;contacts&quot;, &quot;settings&quot;] as const).map((key) =&gt; (

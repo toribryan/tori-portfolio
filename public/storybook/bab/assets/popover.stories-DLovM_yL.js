@@ -1,0 +1,15 @@
+import{n as e}from"./rolldown-runtime-DkW27tQK.js";import{t}from"./jsx-runtime-DeHZSEgm.js";import{n,t as r}from"./button-a6ntTyBe.js";import{a as i,i as a,n as o,o as s,r as c,s as l,t as u}from"./popover-CiiYX-wa.js";var d,f,p,m,h,g,_,v;function y(){return(y=e((()=>{l(),n(),d=t(),f={title:`UI/Popover`,component:u,subcomponents:{PopoverTrigger:s,PopoverContent:o,PopoverHeader:a,PopoverTitle:i,PopoverDescription:c},tags:[`autodocs`],args:{defaultOpen:!1,modal:!1,side:`bottom`,align:`center`,sideOffset:4},argTypes:{side:{description:`Which edge of the trigger the popup sits against.`,control:`inline-radio`,options:[`top`,`bottom`,`left`,`right`],table:{category:`Position`,defaultValue:{summary:`bottom`}}},align:{control:`inline-radio`,options:[`start`,`center`,`end`],table:{category:`Position`,defaultValue:{summary:`center`}}},sideOffset:{description:`Gap between trigger and popup, in pixels.`,control:{type:`range`,min:0,max:24,step:1},table:{category:`Position`,defaultValue:{summary:`4`}}},defaultOpen:{control:`boolean`,table:{category:`State`,defaultValue:{summary:`false`}}},open:{control:!1,table:{category:`State`}},modal:{control:`boolean`,table:{category:`Behaviour`,defaultValue:{summary:`false`}}},onOpenChange:{table:{category:`Events`}}},render:({side:e,align:t,sideOffset:n,...l})=>(0,d.jsxs)(u,{...l,children:[(0,d.jsx)(s,{render:(0,d.jsx)(r,{variant:`outline`,children:`Exam context`})}),(0,d.jsxs)(o,{side:e,align:t,sideOffset:n,children:[(0,d.jsxs)(a,{children:[(0,d.jsx)(i,{children:`BIO 201 Midterm`}),(0,d.jsx)(c,{children:`Chapters 4-7, 90 minutes, lockdown browser required.`})]}),(0,d.jsx)(r,{size:`sm`,className:`self-start`,children:`Open attempt`})]})]})},p={},m={},h={args:{defaultOpen:!0}},g={args:{defaultOpen:!0,side:`top`}},_={args:{defaultOpen:!0,align:`start`}},p.parameters={...p.parameters,docs:{...p.parameters?.docs,source:{originalSource:`{}`,...p.parameters?.docs?.source},description:{story:`Every prop wired to a control — including placement.`,...p.parameters?.docs?.description}}},m.parameters={...m.parameters,docs:{...m.parameters?.docs,source:{originalSource:`{}`,...m.parameters?.docs?.source}}},h.parameters={...h.parameters,docs:{...h.parameters?.docs,source:{originalSource:`{
+  args: {
+    defaultOpen: true
+  }
+}`,...h.parameters?.docs?.source}}},g.parameters={...g.parameters,docs:{...g.parameters?.docs,source:{originalSource:`{
+  args: {
+    defaultOpen: true,
+    side: "top"
+  }
+}`,...g.parameters?.docs?.source}}},_.parameters={..._.parameters,docs:{..._.parameters?.docs,source:{originalSource:`{
+  args: {
+    defaultOpen: true,
+    align: "start"
+  }
+}`,..._.parameters?.docs?.source}}},v=[`Playground`,`Default`,`Open`,`Top`,`AlignedStart`]})))()}y();export{_ as AlignedStart,m as Default,h as Open,p as Playground,g as Top,v as __namedExportsOrder,f as default};
