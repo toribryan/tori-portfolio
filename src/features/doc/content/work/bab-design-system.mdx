@@ -108,16 +108,17 @@ product it belongs to unread rows and headings, not to every control.
 />
 
 One library, one weight. Every glyph is Lucide, and every glyph is drawn at a
-1.5 stroke that does not scale with the icon, so a 12px check in a stat tile
-and a 40px robot on a source card read as the same family. The stroke is set
-once, in a provider the app shell wraps, and never at a call site.
+1.5 stroke that scales with the icon, so a 12px check in a stat tile and a
+40px robot on a source card keep the same stroke-to-size ratio and read as the
+same family. The stroke is set once, in a provider the app shell wraps, and
+never at a call site.
 
 <StoryEmbed
   id="foundations-icons--selected-state"
   title="Foundations / Icons: selected state"
   width="760"
   height="500"
-  caption="Selection changes fill, not weight. Each destination fills its silhouette and knocks the interior line back out in the chip colour; search is an action, so it never fills."
+  caption="Selection changes weight, not the glyph. Each destination steps from the 1.5 stroke to 2.25 on the same outline, so every icon gains exactly the same amount; search is an action, so it never changes."
 />
 
 ## Inbox
