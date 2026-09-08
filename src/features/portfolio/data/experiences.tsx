@@ -38,7 +38,7 @@ export const EXPERIENCES: Experience[] = [
         employmentType: "Self-employed",
         icon: <CodeIcon />,
         description: `- Intentional career pivot towards hardening front-end technical skills through independent design engineering work.
-- Independent practice, full time since August 2026: design systems, product design, and the production front end that ships them, mainly through SLV Technologies for their clients.
+- Full time since August 2026: design systems, product design, and the production front end that ships them, mainly through SLV Technologies for their clients.
 - Contribute production code to the SLV Technologies codebase through GitHub PR review, deployed to production: Next.js, React, Tailwind, shadcn, Base UI, Astro, and Storybook.
 - Built and ship [this site](/latest/portfolio-website) as a live Next.js codebase in React, Tailwind, shadcn, and Base UI.`,
         skills: [
