@@ -106,7 +106,7 @@ export const EXPERIENCES: Experience[] = [
       },
       {
         id: "proctorio-visual-designer",
-        title: "Visual Designer",
+        title: "Multimedia Designer",
         employmentPeriod: {
           start: "2022",
           end: "08.2023",
