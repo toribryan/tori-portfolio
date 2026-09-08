@@ -1,4 +1,3 @@
-import type { BuildInfo } from "@/lib/build-info"
 import { getBuildInfo, getStack } from "@/lib/build-info"
 import { cn } from "@/lib/utils"
 import { Separator } from "@/components/base/ui/separator"
@@ -66,10 +65,6 @@ export function SiteFooterCad() {
               </a>
             </Field>
 
-            <Field label="Build">
-              <BuildValue build={build} />
-            </Field>
-
             <Field label="Date">
               <time dateTime={build.date}>{build.date}</time>
             </Field>
@@ -89,7 +84,7 @@ export function SiteFooterCad() {
               </a>
             </Field>
 
-            <Field className="col-span-2" label="Stack">
+            <Field className="md:col-span-3" label="Stack">
               <ul className="flex flex-col gap-0.5">
                 {stack.map((entry) => (
                   <li key={entry}>{entry}</li>
@@ -179,36 +174,6 @@ export function SiteFooterCad() {
       <div className="h-(--fade-bottom-height)" />
       <div className="pb-[env(safe-area-inset-bottom,0)]" />
     </footer>
-  )
-}
-
-function BuildValue({ build }: { build: BuildInfo }) {
-  if (!build.commitShortSha) {
-    return <span className="text-muted-foreground">unavailable</span>
-  }
-
-  return (
-    <>
-      {build.commitUrl ? (
-        <a
-          className="link-underline"
-          href={build.commitUrl}
-          target="_blank"
-          rel="noopener"
-        >
-          {build.commitShortSha}
-        </a>
-      ) : (
-        build.commitShortSha
-      )}
-
-      {build.environment !== "production" && (
-        <span className="text-muted-foreground">
-          {" "}
-          ({build.environment === "development" ? "local" : build.environment})
-        </span>
-      )}
-    </>
   )
 }
 
