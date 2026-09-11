@@ -75,7 +75,9 @@ Import alias is `@/*` → `./src/*`.
 - New sections follow the `Panel` / `PanelHeader` / `PanelTitle` pattern from
   `features/portfolio/components/panel.tsx`.
 - Analytics events are a closed enum in `src/lib/events.ts`; add the name there
-  before calling `trackEvent`.
+  before calling `trackEvent`. It forwards to OpenPanel and PostHog; PostHog
+  initialises in `src/instrumentation-client.ts` and is inert without
+  `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`.
 
 ## Password gate
 
