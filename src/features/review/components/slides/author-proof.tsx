@@ -7,6 +7,7 @@ import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 import { Typewriter } from "@/components/ui/typewriter-text"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
+import { PinnedFlow } from "@/features/review/components/pinned-flow"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
@@ -174,24 +175,25 @@ function Thesis() {
   )
 }
 
+const BRIEFED_FLOW = [
+  { title: "Student submits the completed written assignment" },
+  { title: "Assignment content is extracted to generate questions" },
+  { title: "AuthorProof uses the Canvas Quiz API to create and assign a quiz" },
+  { title: "Student is notified via Canvas inbox and AuthorProof email" },
+  { title: "Student navigates to the quiz and completes it" },
+  {
+    title: "AuthorProof generates a report card of results and answer analysis",
+  },
+]
+
 function Brief() {
   return (
     <Slide>
       <Kicker>AuthorProof / the brief as it arrived</Kicker>
       <Title>The architecture was already chosen.</Title>
-      <Lede>
-        Submit through the LMS as normal, generate questions, create a quiz in
-        the LMS’s own quiz tooling, assign it to that one student, notify them.
-        Before engineering committed time, I mapped every step against what the
-        platform could do.
-      </Lede>
-      <Shot
-        src="/case-studies/author-proof-flow.webp"
-        alt="The six-step flow as briefed: submit, extract, create and assign a Canvas quiz, notify, student completes, report card"
-        width={1468}
-        height={186}
-        imageClassName="bg-[#f7f6f2] p-2 dark:bg-[#f7f6f2]"
-      />
+      <Reveal>
+        <PinnedFlow steps={BRIEFED_FLOW} />
+      </Reveal>
       <StatRow>
         <Stat value="6" label="Steps between submission and quiz" />
         <Stat value="~10 min" label="Latency the steps add up to" />
