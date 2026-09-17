@@ -101,7 +101,7 @@ export function AuthorProofRadar({ className }: { className?: string }) {
         />
         <Radar
           dataKey="origin"
-          stroke="var(--foreground)"
+          stroke="var(--color-origin)"
           strokeWidth={1.5}
           fill="var(--color-origin)"
           fillOpacity={0.3}
