@@ -66,7 +66,7 @@ export function TokenFlow({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-line bg-background",
+        "relative overflow-hidden rounded-xl border border-line bg-muted/60",
         className
       )}
       style={{ aspectRatio: `${W} / ${H}` }}
@@ -129,7 +129,7 @@ export function TokenFlow({
               size="sm"
               variant="tertiary"
               startContent={swatch}
-              className="absolute -translate-x-1/2 -translate-y-1/2 bg-background font-mono"
+              className="absolute -translate-x-1/2 -translate-y-1/2 bg-white font-mono dark:bg-card"
               style={{ left: `${COLS[0] * 100}%`, top }}
             >
               {row.base}
@@ -138,7 +138,7 @@ export function TokenFlow({
               size="sm"
               variant="tertiary"
               startContent={swatch}
-              className="absolute -translate-x-1/2 -translate-y-1/2 bg-background font-mono"
+              className="absolute -translate-x-1/2 -translate-y-1/2 bg-white font-mono dark:bg-card"
               style={{ left: `${COLS[1] * 100}%`, top }}
             >
               {row.primitive}
@@ -151,7 +151,7 @@ export function TokenFlow({
                 size="sm"
                 variant="dot"
                 startContent={swatch}
-                className="font-mono"
+                className="bg-white font-mono dark:bg-card"
               >
                 {row.semantic}
               </Chip>
