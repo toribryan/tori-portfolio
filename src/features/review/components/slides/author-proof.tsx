@@ -127,10 +127,7 @@ function Task() {
         A new product in the Origin suite: verify authorship of written work,
         inside the instructor’s existing Canvas workflow.
       </Lede>
-      <Split className="items-center">
-        <Reveal>
-          <AuthorProofRadar className="w-full text-foreground" />
-        </Reveal>
+      <Split ratio="art" className="items-center">
         <Reveal className="flex flex-col gap-3">
           <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
             The gap
@@ -142,6 +139,9 @@ function Task() {
             None of them answer the question instructors actually have: did you
             write this?
           </p>
+        </Reveal>
+        <Reveal>
+          <AuthorProofRadar className="aspect-[4/3] w-full" />
         </Reveal>
       </Split>
     </Slide>
