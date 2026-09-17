@@ -19,6 +19,7 @@ import { REVIEW_LINKS } from "@/features/review/data/links"
 import {
   Card,
   CardGrid,
+  Clip,
   Flow,
   Kicker,
   Lede,
@@ -144,6 +145,10 @@ function Foundations() {
         <Stat value="AA" label="Contrast floor on every surface" />
         <Stat value="1:1" label="Figma variables to CSS custom properties" />
       </StatRow>
+      <Clip
+        src="/case-studies/foundations-mch.mp4"
+        label="The foundations: tokens, type, spacing and radius, as they live in the system"
+      />
       <Split>
         <Card label="Tokens">
           Foundations are locked. Colour, type, spacing and radius live as CSS
