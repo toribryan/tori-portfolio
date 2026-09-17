@@ -105,7 +105,7 @@ export function AuthorProofRadar({ className }: { className?: string }) {
           strokeWidth={1.5}
           fill="var(--color-origin)"
           fillOpacity={0.3}
-          dot={{ r: 3.5, fill: "var(--background)", strokeWidth: 1.5 }}
+          dot={{ r: 3.5, fill: "var(--color-origin)", strokeWidth: 0 }}
           animationDuration={1500}
           animationBegin={400}
         />
