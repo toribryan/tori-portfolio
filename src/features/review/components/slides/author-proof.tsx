@@ -2,6 +2,7 @@
 
 import type { ComponentType } from "react"
 
+import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
@@ -57,21 +58,12 @@ function Cover() {
   )
 }
 
-const INTEGRITY_VECTORS = [
-  "Prevent content theft",
-  "Block AI assistance",
-  "Track leaked content",
-  "Prevent impersonation",
-  "Detect AI use",
-  "Monitor behaviour",
-]
-
 function Task() {
   return (
     <Slide>
       <Kicker>AuthorProof / task</Kicker>
       <Title>Three products protecting the integrity of online learning.</Title>
-      <Split ratio="copy">
+      <Split ratio="art">
         <CardGrid className="sm:grid-cols-1">
           <Card
             label="Origin · my task"
@@ -84,25 +76,14 @@ function Task() {
           <Card label="Integrity" title="Proctor an exam securely" />
           <Card label="Vault" title="Protect your exam" />
         </CardGrid>
-        <Stack>
-          <Reveal>
-            <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-              What the suite has to cover
-            </p>
-          </Reveal>
-          <ul className="grid grid-cols-2 gap-x-6 divide-y divide-line border-y border-line">
-            {INTEGRITY_VECTORS.map((vector) => (
-              <Reveal key={vector}>
-                <li className="py-3 text-sm md:text-base">{vector}</li>
-              </Reveal>
-            ))}
-          </ul>
-          <Lede className="text-base md:text-lg">
-            Every existing tool answers “is this original?”. None of them answer
-            the question instructors actually have.
-          </Lede>
-        </Stack>
+        <Reveal>
+          <AuthorProofRadar className="w-full text-foreground" />
+        </Reveal>
       </Split>
+      <Lede className="text-base md:text-lg">
+        Every existing tool answers “is this original?”. None of them answer the
+        question instructors actually have.
+      </Lede>
     </Slide>
   )
 }
