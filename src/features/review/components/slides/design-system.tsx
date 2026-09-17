@@ -20,7 +20,6 @@ import { REVIEW_LINKS } from "@/features/review/data/links"
 import {
   Card,
   CardGrid,
-  Clip,
   Flow,
   Kicker,
   Lede,
@@ -30,7 +29,6 @@ import {
   Shot,
   Slide,
   Split,
-  Stack,
   Stat,
   StatRow,
   Tags,
@@ -52,38 +50,37 @@ function StorybookLink({
 function Cover() {
   return (
     <Slide>
-      <Split ratio="copy">
-        <Stack>
-          <Kicker>02 · Design system</Kicker>
-          <Title size="xl">Senior Living Marketplace</Title>
-          <Lede>
-            Modern Care Homes: the site families search, and the platform agents
-            run it from. I design both, and I ship the front end for both, on
-            one design system.
-          </Lede>
-          <Tags
-            items={[
-              "Design Engineer",
-              "2024 to now",
-              "Next.js",
-              "Tailwind",
-              "shadcn",
-              "Storybook",
-              "Figma",
-            ]}
-          />
-          <LinkRow>
-            <LinkOut href={REVIEW_LINKS.modernCareHomes.live}>
-              Visit Modern Care Homes
-            </LinkOut>
-            <StorybookLink />
-          </LinkRow>
-        </Stack>
-        <Clip
-          src="/case-studies/home-grid-mch.mp4"
-          label="Browsing homes: the grid families land on after a search"
-        />
-      </Split>
+      <Kicker>02 · Design system</Kicker>
+      <Title size="xl">Senior Living Marketplace</Title>
+      <Tags
+        items={[
+          "Design Engineer",
+          "2024 to now",
+          "Next.js",
+          "Tailwind",
+          "shadcn",
+          "Storybook",
+          "Figma",
+        ]}
+      />
+      <CardGrid>
+        <Job number="01" title="Building the design system" items={BUILD_STACK}>
+          Tokens, foundations and components, each built and argued with in
+          isolation before it lands on a page. The accessibility floor lives in
+          the component, not in a checklist.
+        </Job>
+        <Job number="02" title="Using it in context" items={USE_STACK}>
+          The marketplace families search and the platform agents run it from,
+          shipped on the same library: search and map, listing creation, and the
+          pages in between.
+        </Job>
+      </CardGrid>
+      <LinkRow>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.live}>
+          Visit Modern Care Homes
+        </LinkOut>
+        <StorybookLink />
+      </LinkRow>
     </Slide>
   )
 }
@@ -199,32 +196,6 @@ function Job({
         </p>
       </div>
     </Reveal>
-  )
-}
-
-function TwoJobs() {
-  return (
-    <Slide>
-      <Kicker>Design system / the work</Kicker>
-      <Title>Two jobs: build the system, then use it in context.</Title>
-      <Lede>
-        A change to a button is a change in two products. The system is the part
-        that keeps a decision made on one screen from quietly breaking the
-        moment it leaves that screen.
-      </Lede>
-      <CardGrid>
-        <Job number="01" title="Building the design system" items={BUILD_STACK}>
-          Tokens, foundations and components, each built and argued with in
-          isolation before it lands on a page. The accessibility floor lives in
-          the component, not in a checklist.
-        </Job>
-        <Job number="02" title="Using it in context" items={USE_STACK}>
-          The marketplace families search and the platform agents run it from,
-          shipped on the same library: search and map, listing creation, and the
-          pages in between.
-        </Job>
-      </CardGrid>
-    </Slide>
   )
 }
 
@@ -431,7 +402,6 @@ function Next() {
 export const DESIGN_SYSTEM_CONTENT: Record<string, ComponentType> = {
   cover: Cover,
   "two-people": TwoPeople,
-  "two-jobs": TwoJobs,
   foundations: Foundations,
   storybook: Storybook,
   "home-card": HomeCard,
