@@ -1,8 +1,11 @@
 "use client"
 
 import type { ComponentType } from "react"
+import { useState } from "react"
+import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
+import { Typewriter } from "@/components/ui/typewriter-text"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
@@ -10,6 +13,7 @@ import type { Slide as SlideType } from "@/features/review/types"
 import {
   Card,
   CardGrid,
+  EASE,
   Flow,
   Kicker,
   Lede,
@@ -136,22 +140,36 @@ function Task() {
   )
 }
 
+const THESIS =
+  "If a student submits an essay, they should be able to answer questions about what they wrote."
+
 function Thesis() {
+  const [typed, setTyped] = useState(false)
+
   return (
     <Slide className="gap-6">
       <Kicker>AuthorProof / statement</Kicker>
       <Reveal>
         <p className="font-mono text-sm text-muted-foreground">thesis:</p>
       </Reveal>
-      <Title size="xl">
-        If a student submits an essay, they should be able to answer questions
-        about what they wrote.
-      </Title>
       <Reveal>
-        <p className="font-serif text-3xl text-muted-foreground italic md:text-4xl">
-          right?
-        </p>
+        <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
+          <Typewriter
+            text={THESIS}
+            speed={38}
+            delay={0.6}
+            onComplete={() => setTyped(true)}
+          />
+        </h2>
       </Reveal>
+      <motion.p
+        className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
+        initial={{ opacity: 0, y: 8 }}
+        animate={typed ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+        transition={{ duration: 0.5, delay: 0.5, ease: EASE }}
+      >
+        right?
+      </motion.p>
     </Slide>
   )
 }
