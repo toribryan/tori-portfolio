@@ -481,6 +481,36 @@ export function PostHogIcon(props: IconProps) {
   )
 }
 
+// Traced from the Base UI brand mark: a tall lobe and a half disc.
+export function BaseUiIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden {...props}>
+      <path
+        d="M11.45 1.0A7.94 7.94 0 0 0 3.51 8.94V23.0A7.53 7.53 0 0 0 11.45 15.47Z"
+        fill="currentColor"
+      />
+      <path d="M12.55 1.0A7.94 7.94 0 0 1 12.55 16.87Z" fill="currentColor" />
+    </svg>
+  )
+}
+
+// Source: Mapbox brand assets
+export function MapboxIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 180 180" aria-hidden {...props}>
+      <path
+        d="M90.9 1.1001C41.8 1.1001 2 40.9001 2 90.0001C2 139.1 41.8 178.9 90.9 178.9C140 178.9 179.8 139.1 179.8 90.0001C179.8 40.9001 140 1.1001 90.9 1.1001ZM133.1 111.8C102.7 142.2 48.4 132.5 48.4 132.5C48.4 132.5 38.6 78.3001 69.1 47.8001C86 30.9001 114 31.6001 131.7 49.2001C149.4 66.8001 150 94.9001 133.1 111.8Z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+      <path
+        d="M101.1 53.2002L92.4 71.1002L74.5 79.8002L92.4 88.5002L101.1 106.4L109.8 88.5002L127.7 79.8002L109.8 71.1002L101.1 53.2002Z"
+        fill="currentColor"
+      />
+    </svg>
+  )
+}
+
 export function TailwindCssIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden {...props}>

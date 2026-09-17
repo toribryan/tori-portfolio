@@ -1,0 +1,441 @@
+"use client"
+
+import type { ComponentType } from "react"
+
+import { AvatarHoverCard } from "@/components/ui/avatar-hover-card"
+import {
+  BaseUiIcon,
+  FigmaIcon,
+  MapboxIcon,
+  NextJsIcon,
+  ShadcnIcon,
+  StorybookIcon,
+  TailwindCssIcon,
+  VercelIcon,
+} from "@/components/icons"
+import type { IntegrationItem } from "@/features/review/components/integration-visual"
+import { IntegrationVisual } from "@/features/review/components/integration-visual"
+import { REVIEW_LINKS } from "@/features/review/data/links"
+
+import {
+  Card,
+  CardGrid,
+  Clip,
+  Flow,
+  Kicker,
+  Lede,
+  LinkOut,
+  LinkRow,
+  Reveal,
+  Shot,
+  Slide,
+  Split,
+  Stack,
+  Stat,
+  StatRow,
+  Tags,
+  Title,
+} from "../slide-primitives"
+
+function StorybookLink({
+  variant = "outline",
+}: {
+  variant?: "outline" | "default"
+}) {
+  return (
+    <LinkOut href={REVIEW_LINKS.modernCareHomes.storybook} variant={variant}>
+      Open Storybook
+    </LinkOut>
+  )
+}
+
+function Cover() {
+  return (
+    <Slide>
+      <Split ratio="copy">
+        <Stack>
+          <Kicker>02 · Design system</Kicker>
+          <Title size="xl">Senior Living Marketplace</Title>
+          <Lede>
+            Modern Care Homes: the site families search, and the platform agents
+            run it from. I design both, and I ship the front end for both, on
+            one design system.
+          </Lede>
+          <Tags
+            items={[
+              "Design Engineer",
+              "2024 to now",
+              "Next.js",
+              "Tailwind",
+              "shadcn",
+              "Storybook",
+              "Figma",
+            ]}
+          />
+          <LinkRow>
+            <LinkOut href={REVIEW_LINKS.modernCareHomes.live}>
+              Visit Modern Care Homes
+            </LinkOut>
+            <StorybookLink />
+          </LinkRow>
+        </Stack>
+        <Clip
+          src="/case-studies/home-grid-mch.mp4"
+          label="Browsing homes: the grid families land on after a search"
+        />
+      </Split>
+    </Slide>
+  )
+}
+
+const PEOPLE = [
+  {
+    name: "The resident",
+    subtitle: "Over 70, on a tablet, browser zoomed way in",
+    description:
+      "Trying to work out whether a place looks like somewhere they could live. Reads slowly, taps carefully, and gives up on anything that moves.",
+    src: undefined,
+    tags: ["200% zoom", "Tablet", "Photos first"],
+  },
+  {
+    name: "Their adult child",
+    subtitle: "On a phone, mid-crisis, comparing six homes",
+    description:
+      "Trying to find cost and care level fast, often for the first time, under stress. Rules homes out in seconds and needs the numbers up front.",
+    src: undefined,
+    tags: ["Phone", "In a hurry", "Cost and care level"],
+  },
+]
+
+function TwoPeople() {
+  return (
+    <Slide>
+      <Kicker>Design system / who it is for</Kicker>
+      <Title>Two people, one search.</Title>
+      <Reveal className="relative z-10">
+        <div className="grid gap-px border-y border-line bg-line sm:grid-cols-2">
+          {PEOPLE.map((person) => (
+            <div
+              key={person.name}
+              className="flex flex-col items-start gap-3 bg-background p-5"
+            >
+              <AvatarHoverCard
+                src={person.src}
+                name={person.name}
+                subtitle={person.subtitle}
+                description={person.description}
+                size="sm"
+                footer={
+                  <ul className="flex flex-wrap gap-1.5">
+                    {person.tags.map((tag) => (
+                      <li
+                        key={tag}
+                        className="rounded-md bg-surface-warm px-2 py-0.5 font-mono text-xs text-muted-foreground inset-ring-1 inset-ring-border/64"
+                      >
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                }
+              />
+              <p className="font-heading text-lg/tight font-medium">
+                {person.name}
+              </p>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+      <Lede>
+        They have nothing in common except that neither has any patience for an
+        interface that gets in the way. Nearly every decision on this project
+        comes back to that, and the only way to honour it on every screen is to
+        build it into the system.
+      </Lede>
+    </Slide>
+  )
+}
+
+const BUILD_STACK: IntegrationItem[] = [
+  { title: "Storybook", Icon: StorybookIcon },
+  { title: "shadcn", Icon: ShadcnIcon },
+  { title: "Tailwind", Icon: TailwindCssIcon },
+  { title: "Base UI", Icon: BaseUiIcon },
+]
+
+const USE_STACK: IntegrationItem[] = [
+  { title: "Vercel", Icon: VercelIcon },
+  { title: "Next.js", Icon: NextJsIcon },
+  { title: "Figma", Icon: FigmaIcon },
+  { title: "Mapbox", Icon: MapboxIcon },
+]
+
+function Job({
+  number,
+  title,
+  items,
+  children,
+}: {
+  number: string
+  title: string
+  items: IntegrationItem[]
+  children: React.ReactNode
+}) {
+  return (
+    <Reveal className="flex flex-col bg-background">
+      <IntegrationVisual
+        items={items}
+        center={
+          <span className="font-heading text-base font-medium tabular-nums">
+            {number}
+          </span>
+        }
+      />
+      <div className="flex flex-col gap-2 p-4">
+        <p className="font-heading text-lg/tight font-medium text-balance md:text-xl/tight">
+          {title}
+        </p>
+        <p className="text-sm/relaxed text-pretty text-muted-foreground md:text-base/relaxed">
+          {children}
+        </p>
+      </div>
+    </Reveal>
+  )
+}
+
+function TwoJobs() {
+  return (
+    <Slide>
+      <Kicker>Design system / the work</Kicker>
+      <Title>Two jobs: build the system, then use it in context.</Title>
+      <Lede>
+        A change to a button is a change in two products. The system is the part
+        that keeps a decision made on one screen from quietly breaking the
+        moment it leaves that screen.
+      </Lede>
+      <CardGrid>
+        <Job number="01" title="Building the design system" items={BUILD_STACK}>
+          Tokens, foundations and components, each built and argued with in
+          isolation before it lands on a page. The accessibility floor lives in
+          the component, not in a checklist.
+        </Job>
+        <Job number="02" title="Using it in context" items={USE_STACK}>
+          The marketplace families search and the platform agents run it from,
+          shipped on the same library: search and map, listing creation, and the
+          pages in between.
+        </Job>
+      </CardGrid>
+    </Slide>
+  )
+}
+
+function Foundations() {
+  return (
+    <Slide>
+      <Kicker>Design system / foundations</Kicker>
+      <Title>
+        The accessibility floor lives in the components, not in a checklist.
+      </Title>
+      <StatRow>
+        <Stat value="18px" label="Base type size, everywhere" />
+        <Stat value="48×48" label="Minimum target, every control" />
+        <Stat value="AA" label="Contrast floor on every surface" />
+        <Stat value="1:1" label="Figma variables to CSS custom properties" />
+      </StatRow>
+      <Split>
+        <Card label="Tokens">
+          Foundations are locked. Colour, type, spacing and radius live as CSS
+          variables that map one to one with the Figma variables, so a system
+          change is one edit instead of forty.
+        </Card>
+        <Card label="Why it holds">
+          Because the floor is baked into the component, I cannot accidentally
+          undo it on page eleven. Designing from a floor instead of toward one
+          is the difference between a checklist and a system.
+        </Card>
+      </Split>
+    </Slide>
+  )
+}
+
+function Storybook() {
+  return (
+    <Slide>
+      <Kicker>Design system / Storybook</Kicker>
+      <Title>The library, live.</Title>
+      <Reveal className="flex flex-col gap-2">
+        <div className="overflow-hidden rounded-xl border border-line bg-background">
+          <div className="flex h-9 items-center justify-between border-b border-line px-3">
+            <p className="font-mono text-xs text-muted-foreground">
+              design.moderncarehomes.com
+            </p>
+            <a
+              className="text-xs text-muted-foreground link-underline"
+              href={REVIEW_LINKS.modernCareHomes.storybook}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open full screen
+            </a>
+          </div>
+          <iframe
+            className="block h-[62vh] w-full bg-white"
+            src={REVIEW_LINKS.modernCareHomes.storybook}
+            title="Modern Care Homes Storybook"
+            loading="lazy"
+            allow="fullscreen"
+          />
+        </div>
+      </Reveal>
+      <LinkRow>
+        <LinkOut href={REVIEW_LINKS.integrityConsole.storybook}>
+          Also: Integrity Console Storybook, 40 components
+        </LinkOut>
+      </LinkRow>
+    </Slide>
+  )
+}
+
+function HomeCard() {
+  return (
+    <Slide>
+      <Kicker>Design system / a component in practice</Kicker>
+      <Title>The home card should spend its space on what differs.</Title>
+      <Split>
+        <Shot
+          src="/case-studies/old-homecard-mch.png"
+          alt="The old home card: photo, price above the name in grey, address, and a paragraph of generic marketing copy"
+          width={978}
+          height={786}
+          fit="viewport"
+          label="Before: the widest line went to copy that read the same on every listing"
+        />
+        <Shot
+          src="/case-studies/new-homecard-mch.png"
+          alt="The reworked home card: an Available Now badge, a save control, photo carousel dots, then name, address and price"
+          width={978}
+          height={786}
+          fit="viewport"
+          label="After: availability, more than one photo, and a way to keep it for later"
+        />
+      </Split>
+      <Lede className="text-base md:text-lg">
+        A family is mostly trying to rule homes out. Once the card is a system
+        component, that decision is made once and holds on every listing, search
+        result and saved comparison.
+      </Lede>
+    </Slide>
+  )
+}
+
+function Dashboard() {
+  return (
+    <Slide>
+      <Kicker>Design system / the other product</Kicker>
+      <Title>The agent dashboard should be the listing.</Title>
+      <Split>
+        <Shot
+          src="/case-studies/old-dashboard-mch.png"
+          alt="The old agent dashboard shell: a wide sidebar holding only Home Details and Settings, next to an empty content area"
+          width={1241}
+          height={1241}
+          fit="viewport"
+          label="Before: two nav items and a blank canvas"
+        />
+        <Shot
+          src="/case-studies/new-dashboard-mch.png"
+          alt="The reworked shell: an icon rail, then a column listing Availability, Photos, About, Amenities, Care services and Contact, each with its current state underneath"
+          width={1241}
+          height={1241}
+          fit="viewport"
+          label="After: every section carries its own state, so what is thin is visible before you open anything"
+        />
+      </Split>
+      <Lede className="text-base md:text-lg">
+        Straight out of the Airbnb listing-creation teardown: show the state of
+        every stage. The same shell, rail and section components ship on the
+        marketplace side.
+      </Lede>
+    </Slide>
+  )
+}
+
+function Shipping() {
+  return (
+    <Slide>
+      <Kicker>Design system / shipping</Kicker>
+      <Title>I build what I design.</Title>
+      <Flow
+        stages={[
+          { label: "Pattern research", detail: "marketplaces, in Mobbin" },
+          { label: "Figma", detail: "foundations, tokens, components" },
+          { label: "Storybook", detail: "every state, in isolation" },
+          { label: "Pull request", detail: "reviewed, typed, tested" },
+          { label: "Vercel preview", detail: "on a real phone" },
+          { label: "Shipped", detail: "both products" },
+        ]}
+      />
+      <CardGrid>
+        <Card label="What the handoff is for">
+          The handoff between design and engineering exists for complex
+          contributions that touch the data layer. Components, layout,
+          responsive behaviour and motion ship as code from me.
+        </Card>
+        <Card label="What that removes">
+          Nothing gets defended in a handoff meeting. If something needs to
+          change, I change it. Whatever I learn shipping goes back into the
+          system, so the next screen starts further along.
+        </Card>
+      </CardGrid>
+      <Reveal>
+        <p className="text-sm text-muted-foreground">
+          Built with Spencer Grzincich, Software Engineer, who owns the data
+          layer and infrastructure.
+        </p>
+      </Reveal>
+    </Slide>
+  )
+}
+
+function Next() {
+  return (
+    <Slide>
+      <Kicker>Design system / where it is</Kicker>
+      <Title>Live, and still going.</Title>
+      <StatRow>
+        <Stat value="Live" label="Shipping in the Phoenix metro" />
+        <Stat value="2" label="Products running on one design system" />
+        <Stat value="AA" label="Floor on every surface, holding" />
+      </StatRow>
+      <CardGrid>
+        <Card label="Next" title="Publish the component library">
+          Foundations are locked; components are landing as they are done.
+        </Card>
+        <Card label="Next" title="Better comparison">
+          Cost and care level side by side is the decision families make, and it
+          is not solved yet.
+        </Card>
+      </CardGrid>
+      <LinkRow>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.live} variant="default">
+          Visit Modern Care Homes
+        </LinkOut>
+        <StorybookLink />
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.caseStudy}>
+          Full case study
+        </LinkOut>
+      </LinkRow>
+    </Slide>
+  )
+}
+
+export const DESIGN_SYSTEM_CONTENT: Record<string, ComponentType> = {
+  cover: Cover,
+  "two-people": TwoPeople,
+  "two-jobs": TwoJobs,
+  foundations: Foundations,
+  storybook: Storybook,
+  "home-card": HomeCard,
+  dashboard: Dashboard,
+  shipping: Shipping,
+  next: Next,
+}
