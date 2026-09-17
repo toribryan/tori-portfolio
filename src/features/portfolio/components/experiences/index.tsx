@@ -1,5 +1,5 @@
 import { differenceInYears, parse } from "date-fns"
-import { ChevronDownIcon } from "lucide-react"
+import { ChevronDownOutline24 } from "@/components/icons/pixel"
 
 import { Button } from "@/components/base/ui/button"
 import {
@@ -67,7 +67,7 @@ export function Experiences() {
                     Show less
                   </span>
 
-                  <ChevronDownIcon className="group-data-open/collapsible:rotate-180" />
+                  <ChevronDownOutline24 className="group-data-open/collapsible:rotate-180" />
                 </Button>
               }
             />

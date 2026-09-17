@@ -1,11 +1,11 @@
 import {
-  CodeIcon,
-  DraftingCompassIcon,
-  GraduationCapIcon,
-  LayoutGridIcon,
-  PaletteIcon,
-  PenToolIcon,
-} from "lucide-react"
+  CodeOutline24,
+  DrawCompassOutline24,
+  GraduationCapOutline24,
+  GridLayoutOutline24,
+  PenNibOutline24,
+  SquarePaintbrushOutline24,
+} from "@/components/icons/pixel"
 
 import type { Experience } from "@/features/portfolio/types/experiences"
 
@@ -36,7 +36,7 @@ export const EXPERIENCES: Experience[] = [
           start: "08.2026",
         },
         employmentType: "Self-employed",
-        icon: <CodeIcon />,
+        icon: <CodeOutline24 />,
         description: `- Intentional career pivot towards hardening front-end technical skills through independent design engineering work.
 - Full time since August 2026: design systems, product design, and the production front end that ships them, mainly through SLV Technologies for their clients.
 - Contribute production code to the SLV Technologies codebase through GitHub PR review, deployed to production: Next.js, React, Tailwind, shadcn, Base UI, Astro, and Storybook.
@@ -59,7 +59,7 @@ export const EXPERIENCES: Experience[] = [
           end: "07.2026",
         },
         employmentType: "Self-employed",
-        icon: <PenToolIcon />,
+        icon: <PenNibOutline24 />,
         description: `- Independent practice partnering with SLV Technologies to deliver web and product design for their clients, alongside direct clients including Proctorio, Hydra Endura, and Mincredo.
 - Contracted with Proctorio as a design system contributor and product designer: designed the Review Center video player and action bar, internal tools and dashboards, and 12+ documented design system components.
 - Redesigned Proctorio's multi-audience help center from scratch for students, administrators, and IT admins, with article taxonomy, role-based content visibility, and an internal CMS.
@@ -92,7 +92,7 @@ export const EXPERIENCES: Experience[] = [
           end: "08.2026",
         },
         employmentType: "Full-time",
-        icon: <DraftingCompassIcon />,
+        icon: <DrawCompassOutline24 />,
         description: `- Owned the multi-brand design system, its governance, and the technical design standards the design team and the engineering org build from, while leading design across three products and eight surfaces on a platform serving 8 million test takers.
 - Led a legacy [design system overhaul](/work/design-system-overhaul) with two engineers: 37 components, MVP in 60 days, button variants down 59% (1,160 to 480) and card variants down 94% (587 to 32). Contrast went from roughly 40% of button variants failing WCAG to a 100% AAA pass. The v2 Card shipped in 1.5 days against 2 weeks for v1.
 - Rebuilt design-to-engineering handoff around [agentic tooling](/work/agentic-design-system) and prototype-forward delivery: spec production and review dropped from 3 days to 2 weeks down to under 30 minutes, returning roughly 80 hours per cycle to design work, with 100% team adoption.
@@ -126,7 +126,7 @@ export const EXPERIENCES: Experience[] = [
           end: "09.2025",
         },
         employmentType: "Full-time",
-        icon: <PenToolIcon />,
+        icon: <PenNibOutline24 />,
         description: `- Rejoined Proctorio after two years of contracting with them, and stepped into the Staff role 90 days later.
 - In those 90 days, designed and shipped two product surfaces, designed the ProctorioX conference agenda interface, and wrote the 60-day strategy proposal that became the design system overhaul.`,
         skills: [
@@ -144,7 +144,7 @@ export const EXPERIENCES: Experience[] = [
           end: "08.2023",
         },
         employmentType: "Full-time",
-        icon: <PaletteIcon />,
+        icon: <SquarePaintbrushOutline24 />,
         description: `- Led the full Proctorio rebrand (logo, color palette, visual language, and asset library), grounded in user personas, market strategy, user research, and EdTech competitive analysis.
 - Built a first design system from scratch, then moved into product UI: components and screens for the product design system, guide sites reaching thousands of test-takers and institutions, and interfaces for internal tools and dashboards.
 - Designed ProctorioX conference branding and managed material production across departments and attendees.`,
@@ -166,7 +166,7 @@ export const EXPERIENCES: Experience[] = [
           end: "2022",
         },
         employmentType: "Internship",
-        icon: <GraduationCapIcon />,
+        icon: <GraduationCapOutline24 />,
         description: `- First full-time design intern, helping kickstart Proctorio's design internship program.
 - Designed landing pages for conferences and sales, print and conference collateral, and the digital brand template system, managing production vendors end to end.`,
         skills: [
@@ -191,7 +191,7 @@ export const EXPERIENCES: Experience[] = [
           start: "2024",
         },
         employmentType: "Contract",
-        icon: <LayoutGridIcon />,
+        icon: <GridLayoutOutline24 />,
         description: `- Via SLV Technologies: defined the design system for the agent platform and redesigned the [senior living search and discovery marketplace](/work/modern-care-homes), partnering with engineering.
 - Designed the family-facing search end to end, for a tool that did not previously exist: multi-criteria filtering, facility listings, and profiles.
 - Own the visual language: type scale, colour, components, and page templates.`,
@@ -218,7 +218,7 @@ export const EXPERIENCES: Experience[] = [
           start: "2024",
         },
         employmentType: "Contract",
-        icon: <LayoutGridIcon />,
+        icon: <GridLayoutOutline24 />,
         description: `- Via SLV Technologies: partnered with engineering on a redesign of the editorial website and vendor platform across seven sister brands, starting with [Arizona Bride](/work/arizona-bride) and Minnesota Bride.
 - Built one themed design system the seven publications share, and shipped its front-end styling and markup.
 - Designed a two-sided dashboard connecting vendors and couples, and standardised ad placements to industry sizing.`,

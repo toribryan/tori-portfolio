@@ -1,4 +1,7 @@
-import { GraduationCapIcon, InfinityIcon } from "lucide-react"
+import {
+  GraduationCapOutline24,
+  InfinityOutline24,
+} from "@/components/icons/pixel"
 
 import { cn } from "@/lib/utils"
 import { IconTile } from "@/components/ui/icon-tile"
@@ -39,7 +42,7 @@ export function EducationItem({ item }: { item: Education }) {
         >
           <div className="relative z-1 mb-1 flex items-start gap-3 text-base">
             <IconTile>
-              <GraduationCapIcon />
+              <GraduationCapOutline24 />
             </IconTile>
 
             <h3 className="flex-1 font-medium text-balance">{item.school}</h3>
@@ -56,7 +59,7 @@ export function EducationItem({ item }: { item: Education }) {
                 <span>{start}</span>
                 <span className="font-mono">—</span>
                 {isOngoing ? (
-                  <InfinityIcon
+                  <InfinityOutline24
                     className="size-4.5 translate-y-[0.5px]"
                     aria-label="Present"
                     strokeWidth={1.5}

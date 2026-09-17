@@ -1,6 +1,10 @@
 import { Fragment } from "react"
 import { urlToName } from "@/utils/url"
-import { BriefcaseBusinessIcon, LinkIcon, MapPinIcon } from "lucide-react"
+import {
+  LinkOutline24,
+  PinOutline24,
+  SuitcaseOutline24,
+} from "@/components/icons/pixel"
 
 import { SOCIAL_ICONS } from "@/features/portfolio/components/social-link-icons"
 import { SOCIAL_LINKS } from "@/features/portfolio/data/social-links"
@@ -28,7 +32,7 @@ export function Overview() {
   const left = [
     <IntroItem key="address">
       <IntroItemIcon>
-        <MapPinIcon />
+        <PinOutline24 />
       </IntroItemIcon>
       <IntroItemContent>
         <IntroItemLink
@@ -44,7 +48,7 @@ export function Overview() {
 
     <IntroItem key="website">
       <IntroItemIcon>
-        <LinkIcon />
+        <LinkOutline24 />
       </IntroItemIcon>
       <IntroItemContent>
         <IntroItemLink
@@ -80,7 +84,7 @@ export function Overview() {
       <PanelContent className="grid gap-x-4 gap-y-2.5 sm:grid-cols-2">
         <IntroItem className="sm:col-span-2">
           <IntroItemIcon>
-            <BriefcaseBusinessIcon />
+            <SuitcaseOutline24 />
           </IntroItemIcon>
           <IntroItemContent>{USER.discipline}</IntroItemContent>
         </IntroItem>

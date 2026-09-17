@@ -1,10 +1,10 @@
 import Image from "next/image"
 
 import { USER } from "@/features/portfolio/data/user"
+import { BadgeCheck2Outline24 } from "@/components/icons/pixel"
 
 import { Banner } from "./banner"
 import { FlipSentences } from "./flip-sentences"
-import { VerifiedIcon } from "./verified-icon"
 
 /**
  * Name, role, and the two images that open the page.
@@ -50,7 +50,7 @@ export function ProfileHeader() {
               {USER.displayName}
             </h1>
 
-            <VerifiedIcon className="size-4.5 select-none" aria-hidden />
+            <BadgeCheck2Outline24 className="size-4.5 select-none" aria-hidden />
           </div>
 
           <FlipSentences className="h-12.5 border-t border-line py-1 pl-4 sm:h-9">

@@ -2,7 +2,11 @@ import type { Route } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { getTableOfContents } from "fumadocs-core/content/toc"
-import { ArrowLeftIcon, ArrowRightIcon, ExternalLinkIcon } from "lucide-react"
+import {
+  ArrowLeftOutline24,
+  ArrowRightOutline24,
+  ExternalLinkOutline24,
+} from "@/components/icons/pixel"
 
 import { cleanTableOfContents } from "@/lib/toc"
 import { cn } from "@/lib/utils"
@@ -104,7 +108,7 @@ export async function DocPage({
           nativeButton={false}
           render={
             <Link href={backHref as Route}>
-              <ArrowLeftIcon />
+              <ArrowLeftOutline24 />
               {backLabel}
             </Link>
           }
@@ -120,7 +124,7 @@ export async function DocPage({
               render={
                 <a href={m.liveUrl} target="_blank" rel="noopener">
                   {liveLabel}
-                  <ExternalLinkIcon />
+                  <ExternalLinkOutline24 />
                 </a>
               }
             />
@@ -131,7 +135,7 @@ export async function DocPage({
               doc={previous}
               basePath={basePath}
               label={`Previous ${noun}`}
-              icon={<ArrowLeftIcon />}
+              icon={<ArrowLeftOutline24 />}
             />
           )}
 
@@ -140,7 +144,7 @@ export async function DocPage({
               doc={next}
               basePath={basePath}
               label={`Next ${noun}`}
-              icon={<ArrowRightIcon />}
+              icon={<ArrowRightOutline24 />}
             />
           )}
         </div>

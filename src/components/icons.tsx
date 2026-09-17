@@ -1,4 +1,7 @@
-import { FileIcon, TerminalSquareIcon } from "lucide-react"
+import {
+  FileOutline24,
+  SquareTerminalOutline24,
+} from "@/components/icons/pixel"
 
 type IconProps = React.ComponentProps<"svg">
 
@@ -397,10 +400,7 @@ export function FigmaIcon(props: IconProps) {
 export function FramerIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden {...props}>
-      <path
-        d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z"
-        fill="currentColor"
-      />
+      <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z" fill="currentColor" />
     </svg>
   )
 }
@@ -658,42 +658,6 @@ export function FolderIcon(props: React.SVGProps<SVGSVGElement>) {
   )
 }
 
-export function FolderOpenIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      strokeWidth="1.5"
-      stroke="currentColor"
-      strokeLinejoin="round"
-      aria-hidden
-      {...props}
-    >
-      <path
-        d="M2 19V7.54902C2 6.10516 2 5.38322 2.24332 4.81647C2.5467 4.10985 3.10985 3.5467 3.81647 3.24332C4.38322 3 5.09805 3 6.54902 3H7.04311C7.64819 3 8.22075 3.27394 8.60041 3.74509L10.4175 6M10.4175 6H16C17.4001 6 18.1002 6 18.635 6.27248C19.1054 6.51217 19.4878 6.89462 19.7275 7.36502C20 7.8998 20 8.59987 20 10V11M10.4175 6H7"
-        strokeLinecap="round"
-      />
-      <path d="M3.15802 15.5144L3.45643 14.7717C4.19029 12.9449 4.55723 12.0316 5.3224 11.5158C6.08757 11 7.07557 11 9.05157 11H17.1119C19.8004 11 21.1446 11 21.7422 11.8787C22.3397 12.7575 21.8405 14.0002 20.842 16.4856L20.5436 17.2283C19.8097 19.0551 19.4428 19.9684 18.6776 20.4842C17.9124 21 16.9244 21 14.9484 21H6.88812C4.19961 21 2.85535 21 2.25782 20.1213C1.66029 19.2425 2.15953 17.9998 3.15802 15.5144Z" />
-    </svg>
-  )
-}
-
-export function TerminalIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden
-      {...props}
-    >
-      <path d="M3.29301 4.29301C3.68354 3.90249 4.31655 3.90249 4.70708 4.29301L10.7071 10.293C11.0976 10.6835 11.0976 11.3166 10.7071 11.7071L4.70708 17.7071C4.31655 18.0976 3.68353 18.0976 3.29301 17.7071C2.90252 17.3166 2.90252 16.6835 3.29301 16.293L8.58598 11L3.29301 5.70708C2.90249 5.31655 2.90249 4.68354 3.29301 4.29301Z" />
-      <path d="M20 18C20.5523 18 21 18.4477 21 19C21 19.5523 20.5523 20 20 20H12C11.4477 20 11 19.5523 11 19C11 18.4477 11.4477 18 12 18H20Z" />
-    </svg>
-  )
-}
-
 export function GridViewIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -828,7 +792,7 @@ export function getIconForLanguageExtension(language: string) {
     case "tsx":
       return <ReactIcon />
     default:
-      return <FileIcon />
+      return <FileOutline24 />
   }
 }
 
@@ -843,7 +807,7 @@ export function getIconForPackageManager(manager: string) {
     case "bun":
       return <BunIcon />
     default:
-      return <TerminalSquareIcon />
+      return <SquareTerminalOutline24 />
   }
 }
 

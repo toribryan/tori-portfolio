@@ -1,0 +1,9 @@
+import type { SVGProps } from "react";
+
+export type DrawCompassOutline24Props = SVGProps<SVGSVGElement>;
+
+export function DrawCompassOutline24(props: DrawCompassOutline24Props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" shapeRendering="crispEdges" {...props}><path d="M12 2V4" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M11 4L13 4" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M11 10H13" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M15 6L15 8" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M9 6L9 8" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M15 12V13" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M9 12V13" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M5 19V22" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M19 19V22" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M9 18H15" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M5 14V14.01" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M7 16V16.01" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M17 16V16.01" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M19 14V14.01" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path></svg>
+  );
+}

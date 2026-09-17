@@ -1,0 +1,9 @@
+import type { SVGProps } from "react";
+
+export type CodeOutline24Props = SVGProps<SVGSVGElement>;
+
+export function CodeOutline24(props: CodeOutline24Props) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" shapeRendering="crispEdges" {...props}><path d="M2.00001 12L2.01001 12" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M4.00001 14L4.01001 14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M6.00001 16L6.01001 16" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M6.00001 8L6.01001 8" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M8.00001 6L8.01001 6" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M8.00001 18L8.01001 18" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M4.00001 10L4.01001 10" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M22.01 12L22 12" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M20.01 14L20 14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M18.01 16L18 16" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M18.01 8L18 8" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M16.01 6L16 6" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M16.01 18L16 18" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M20.01 10L20 10" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path></svg>
+  );
+}
