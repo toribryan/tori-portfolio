@@ -2,6 +2,7 @@
 
 import type { ComponentType } from "react"
 
+import { cn } from "@/lib/utils"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
@@ -58,32 +59,79 @@ function Cover() {
   )
 }
 
+const SUITE = [
+  {
+    name: "Origin",
+    line: "Prove the work is theirs",
+    mine: true,
+  },
+  {
+    name: "Integrity",
+    line: "Proctor an exam securely",
+    mine: false,
+  },
+  {
+    name: "Vault",
+    line: "Protect your exam",
+    mine: false,
+  },
+]
+
 function Task() {
   return (
     <Slide>
       <Kicker>AuthorProof / task</Kicker>
       <Title>Three products protecting the integrity of online learning.</Title>
-      <Split ratio="art">
-        <CardGrid className="sm:grid-cols-1">
-          <Card
-            label="Origin · my task"
-            title="Prove the work is theirs"
-            emphasis
-          >
-            A new product. Verify authorship of written work, inside the
-            instructor’s existing Canvas workflow.
-          </Card>
-          <Card label="Integrity" title="Proctor an exam securely" />
-          <Card label="Vault" title="Protect your exam" />
-        </CardGrid>
+      <Split className="items-center">
         <Reveal>
           <AuthorProofRadar className="w-full text-foreground" />
         </Reveal>
+        <Reveal className="flex flex-col gap-3">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+            The gap
+          </p>
+          <p className="font-heading text-2xl/tight font-medium text-balance md:text-3xl/tight">
+            Every existing tool answers “is this original?”
+          </p>
+          <p className="text-base/relaxed text-pretty text-muted-foreground md:text-lg/relaxed">
+            None of them answer the question instructors actually have: did you
+            write this?
+          </p>
+        </Reveal>
       </Split>
-      <Lede className="text-base md:text-lg">
-        Every existing tool answers “is this original?”. None of them answer the
-        question instructors actually have.
-      </Lede>
+      <Reveal>
+        <ul className="grid gap-px border-y border-line bg-line sm:grid-cols-3">
+          {SUITE.map((product) => (
+            <li
+              key={product.name}
+              className="flex flex-col gap-2 bg-background p-4"
+            >
+              <div className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    "size-3 shrink-0 rounded-sm border",
+                    product.mine
+                      ? "border-foreground bg-success/25"
+                      : "border-dashed border-muted-foreground bg-surface-warm"
+                  )}
+                  aria-hidden
+                />
+                <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                  {product.name}
+                </p>
+                {product.mine && (
+                  <span className="rounded-md bg-success/15 px-1.5 py-px font-mono text-[0.65rem] tracking-wide text-foreground uppercase">
+                    My task
+                  </span>
+                )}
+              </div>
+              <p className="font-heading text-lg/tight font-medium md:text-xl/tight">
+                {product.line}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Reveal>
     </Slide>
   )
 }
