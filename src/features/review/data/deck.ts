@@ -59,6 +59,16 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
+    slug: "suite",
+    section: "product",
+    title: "where it sits",
+    notes: [
+      "Set the scene before the product: at Proctorio I led cross-product design across three suites, for institutions and for proctoring agencies, and led the implementation of the refactored design system underneath all three.",
+      "Integrity proctors the exam, Vault protects the exam content, Origin proves authorship.",
+      "Hover each one if you want to show it moving on its own. Today's walkthrough is Origin: AuthorProof.",
+    ],
+  },
+  {
     slug: "cover",
     section: "product",
     title: "AuthorProof",

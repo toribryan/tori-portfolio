@@ -9,6 +9,8 @@ import { Typewriter } from "@/components/ui/typewriter-text"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { PinnedFlow } from "@/features/review/components/pinned-flow"
 import { ProctorioLogo } from "@/features/review/components/proctorio-logo"
+import type { SuiteItem } from "@/features/review/components/suite-reel"
+import { SuiteReel } from "@/features/review/components/suite-reel"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
@@ -32,6 +34,43 @@ import {
   Tags,
   Title,
 } from "../slide-primitives"
+
+const SUITES: SuiteItem[] = [
+  {
+    name: "Integrity",
+    line: "Proctor an exam securely",
+    src: "/images/review/suite-integrity.webm",
+  },
+  {
+    name: "Vault",
+    line: "Protect your exam",
+    src: "/images/review/suite-vault.webm",
+  },
+  {
+    name: "Origin",
+    line: "Prove the work is theirs",
+    src: "/images/review/suite-origin.webm",
+    featured: true,
+  },
+]
+
+function Suite() {
+  return (
+    <Slide>
+      <Kicker>01 · Product / where it sits</Kicker>
+      <Title>Three product suites, one design system.</Title>
+      <Lede>
+        At Proctorio I led cross-product design across three suites for
+        institutions and proctoring agencies, and led the implementation of a
+        refactored design system underneath all of them. The product I chose to
+        walk through today comes from the Origin suite: AuthorProof.
+      </Lede>
+      <Reveal>
+        <SuiteReel items={SUITES} />
+      </Reveal>
+    </Slide>
+  )
+}
 
 function Cover() {
   return (
@@ -407,6 +446,7 @@ export const AUTHOR_PROOF_CONTENT: Record<
   string,
   ComponentType<{ slide: SlideType }>
 > = {
+  suite: Suite,
   cover: Cover,
   task: Task,
   thesis: Thesis,
