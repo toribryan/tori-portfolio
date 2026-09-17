@@ -1,6 +1,7 @@
 "use client"
 
 import type { ComponentType } from "react"
+import Image from "next/image"
 
 import {
   BaseUiIcon,
@@ -52,6 +53,16 @@ function Cover() {
   return (
     <Slide>
       <Kicker>02 · Design system</Kicker>
+      <Reveal>
+        <Image
+          className="h-7 w-auto"
+          src="/images/review/modern-care-homes-logo.png"
+          alt="Modern Care Homes"
+          width={148}
+          height={40}
+          unoptimized
+        />
+      </Reveal>
       <Title size="xl">Senior Living Marketplace</Title>
       <Tags
         items={[
