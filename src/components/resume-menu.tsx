@@ -2,7 +2,11 @@
 
 import { copyText } from "@/utils/copy"
 import { useTiks } from "@rexa-developer/tiks/react"
-import { ChevronDownIcon, CopyIcon, FileTextIcon } from "lucide-react"
+import {
+  ChevronDownOutline24,
+  CopyOutline24,
+  File2Outline24,
+} from "@/components/icons/pixel"
 import { toast } from "sonner"
 
 import { trackEvent } from "@/lib/events"
@@ -68,7 +72,7 @@ export function ResumeMenu({ className }: { className?: string }) {
     <DropdownMenu>
       <DropdownMenuTrigger className={className} aria-label="Resume formats">
         Resume
-        <ChevronDownIcon
+        <ChevronDownOutline24
           className="size-3.5 text-muted-foreground transition-transform group-aria-expanded/resume:rotate-180"
           aria-hidden
         />
@@ -86,7 +90,7 @@ export function ResumeMenu({ className }: { className?: string }) {
             })
           }
         >
-          <FileTextIcon />
+          <File2Outline24 />
           Open PDF
         </DropdownMenuLinkItem>
 
@@ -106,7 +110,7 @@ export function ResumeMenu({ className }: { className?: string }) {
         </DropdownMenuLinkItem>
 
         <DropdownMenuItem onClick={copyMarkdown}>
-          <CopyIcon />
+          <CopyOutline24 />
           Copy as Markdown
         </DropdownMenuItem>
       </DropdownMenuContent>

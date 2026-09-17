@@ -1,6 +1,6 @@
 "use client"
 
-import { LinkIcon } from "lucide-react"
+import { LinkOutline24 } from "@/components/icons/pixel"
 
 import { cn } from "@/lib/utils"
 import { CopyButton } from "@/components/copy-button"
@@ -21,7 +21,7 @@ export function PanelTitleCopy({
       )}
       variant="ghost"
       text={() => createHeadingUrl(id || "")}
-      idleIcon={<LinkIcon />}
+      idleIcon={<LinkOutline24 />}
       aria-label="Copy link to section"
       {...props}
     />

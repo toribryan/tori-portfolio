@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ArrowUpRightIcon } from "lucide-react"
+import { ArrowUpRightOutline24 } from "@/components/icons/pixel"
 
 import { cn } from "@/lib/utils"
 
@@ -159,7 +159,7 @@ export function Embed({
             rel="noopener noreferrer"
           >
             Full screen
-            <ArrowUpRightIcon className="size-3.5" />
+            <ArrowUpRightOutline24 className="size-3.5" />
           </a>
         </div>
 

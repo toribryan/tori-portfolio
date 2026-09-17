@@ -1,21 +1,22 @@
 import { Children, isValidElement } from "react"
 import {
-  ArrowRightIcon,
-  CircleHelpIcon,
-  ComponentIcon,
-  LayersIcon,
-  LayoutTemplateIcon,
-  PencilLineIcon,
-  RocketIcon,
-  SearchIcon,
-  SplitIcon,
-  ShieldIcon,
-  UsersIcon,
-  WrenchIcon,
-} from "lucide-react"
+  ConsoleOutline24,
+  ArrowRightOutline24,
+  CircleQuestionOutline24,
+  LayersOutline24,
+  LayoutTopOutline24,
+  MagnifierOutline24,
+  PencilOutline24,
+  PuzzlePieceOutline24,
+  RocketOutline24,
+  ShieldOutline24,
+  SplitObjXOutline24,
+  Users2Outline24,
+  WrenchOutline24,
+} from "@/components/icons/pixel"
 
 import { cn } from "@/lib/utils"
-import { ClaudeIcon, ReactIcon, TerminalIcon } from "@/components/icons"
+import { ClaudeIcon, ReactIcon } from "@/components/icons"
 import { IconTile } from "@/components/ui/icon-tile"
 
 /**
@@ -29,23 +30,23 @@ import { IconTile } from "@/components/ui/icon-tile"
  */
 const STAGE_MARKS = {
   claude: <ClaudeIcon className="size-5" />,
-  component: <ComponentIcon className="size-5" />,
+  component: <PuzzlePieceOutline24 className="size-5" />,
   figma: <img src="/Figma.svg" alt="" aria-hidden className="size-5" />,
-  layers: <LayersIcon className="size-5" />,
-  layout: <LayoutTemplateIcon className="size-5" />,
-  pencil: <PencilLineIcon className="size-5" />,
-  question: <CircleHelpIcon className="size-5" />,
+  layers: <LayersOutline24 className="size-5" />,
+  layout: <LayoutTopOutline24 className="size-5" />,
+  pencil: <PencilOutline24 className="size-5" />,
+  question: <CircleQuestionOutline24 className="size-5" />,
   react: <ReactIcon className="size-5" />,
-  rocket: <RocketIcon className="size-5" />,
-  search: <SearchIcon className="size-5" />,
-  shield: <ShieldIcon className="size-5" />,
-  split: <SplitIcon className="size-5" />,
+  rocket: <RocketOutline24 className="size-5" />,
+  search: <MagnifierOutline24 className="size-5" />,
+  shield: <ShieldOutline24 className="size-5" />,
+  split: <SplitObjXOutline24 className="size-5" />,
   storybook: (
     <img src="/storybook-icon.svg" alt="" aria-hidden className="size-5" />
   ),
-  terminal: <TerminalIcon className="size-5" />,
-  users: <UsersIcon className="size-5" />,
-  wrench: <WrenchIcon className="size-5" />,
+  terminal: <ConsoleOutline24 className="size-5" />,
+  users: <Users2Outline24 className="size-5" />,
+  wrench: <WrenchOutline24 className="size-5" />,
 } satisfies Record<string, React.ReactElement>
 
 export type StageMark = keyof typeof STAGE_MARKS
@@ -116,7 +117,7 @@ export function Pipeline({ children }: { children?: React.ReactNode }) {
             {stage}
 
             {index < stages.length - 1 && (
-              <ArrowRightIcon
+              <ArrowRightOutline24
                 className="pointer-events-none absolute top-1/2 -right-3 z-1 hidden size-4 -translate-y-1/2 text-muted-foreground/50 sm:block"
                 aria-hidden
               />

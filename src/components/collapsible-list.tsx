@@ -1,5 +1,5 @@
 import React from "react"
-import { ChevronDownIcon } from "lucide-react"
+import { ChevronDownOutline24 } from "@/components/icons/pixel"
 
 import { Button } from "@/components/base/ui/button"
 import {
@@ -68,7 +68,7 @@ export function CollapsibleList<T>({
                   Show less
                 </span>
 
-                <ChevronDownIcon className="group-data-open/collapsible:rotate-180" />
+                <ChevronDownOutline24 className="group-data-open/collapsible:rotate-180" />
               </Button>
             }
           />
