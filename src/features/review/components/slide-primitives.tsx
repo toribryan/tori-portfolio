@@ -258,8 +258,8 @@ export function Steps({
 }
 
 /**
- * Stages in a row with pixel arrows between them. `tone="fade"` renders the
- * whole row muted, for a flow the slide is about to replace.
+ * Stages in one row of equal cells, an arrow between each. `tone="fade"`
+ * renders the whole row muted, for a flow the slide is about to replace.
  */
 export function Flow({
   stages,
@@ -272,16 +272,17 @@ export function Flow({
 }) {
   return (
     <ol
-      className={cn(
-        "flex flex-wrap items-stretch gap-2",
-        tone === "fade" && "opacity-60",
-        className
-      )}
+      className={cn("grid", tone === "fade" && "opacity-60", className)}
+      style={{
+        gridTemplateColumns: `repeat(${stages.length}, minmax(0, 1fr))`,
+      }}
     >
       {stages.map((stage, i) => (
-        <Reveal key={stage.label} className="flex items-center gap-2">
-          <li className="flex min-w-28 flex-1 flex-col gap-0.5 border border-line px-3 py-2.5">
-            <p className="text-sm font-medium text-pretty">{stage.label}</p>
+        <Reveal key={stage.label} className="relative flex">
+          <li className="flex min-w-0 flex-1 flex-col gap-0.5 border-y border-l border-line px-3 py-2.5 last:border-r">
+            <p className="text-sm/snug font-medium text-pretty">
+              {stage.label}
+            </p>
             {stage.detail && (
               <p className="font-mono text-xs text-muted-foreground">
                 {stage.detail}
@@ -290,7 +291,7 @@ export function Flow({
           </li>
           {i < stages.length - 1 && (
             <ArrowRightIcon
-              className="size-5 shrink-0 text-muted-foreground"
+              className="absolute top-1/2 -right-2.5 z-10 size-5 -translate-y-1/2 rounded-full bg-background p-0.5 text-muted-foreground"
               aria-hidden
             />
           )}

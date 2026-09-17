@@ -103,7 +103,7 @@ export const SLIDES: Slide[] = [
     notes: [
       "Walk them clockwise. Timing is the killer; the other three make the briefed flow fragile even if timing were fine.",
       "Say why I call them design problems: each one changes where the product should live, not how a screen looks.",
-      "This is the slide that shows how I push back: with a map of the platform, not an opinion.",
+      "This is the slide that shows how I push back: with a map of the platform.",
     ],
   },
   {
@@ -113,7 +113,7 @@ export const SLIDES: Slide[] = [
     notes: [
       "Rather than report blockers, I pitched an alternative and split it into an MVP and a longer vision.",
       "MVP: embed AuthorProof in the assignment itself. Student starts the assignment, uploads, the quiz appears seconds later, the result writes back beside the submission.",
-      "Be explicit about cost: LMS-editor short pieces excluded, the proctoring question left open. I would rather name the hole than have engineering find it. Longer-vision pieces went on the roadmap, not in the bin.",
+      "Be explicit about cost: LMS-editor short pieces excluded, the proctoring question left open. I would rather name the hole than have engineering find it. Longer-vision pieces went on the roadmap.",
     ],
   },
   {
@@ -163,7 +163,7 @@ export const SLIDES: Slide[] = [
     section: "design-system",
     title: "Storybook",
     notes: [
-      "This is the live library, not a screenshot. Click into a component and walk its states: hover, focus, disabled, empty, loading, error.",
+      "This is the live library. Click into a component and walk its states: hover, focus, disabled, empty, loading, error.",
       "The two-product test: a component is ready when it reads correctly outside both the marketplace and the agent platform. Storybook is how I look at it outside either one.",
       "If it loads slowly, open it full screen in a new tab and keep talking. The Integrity Console Storybook is the second, complete example: 40 components, 149 stories.",
     ],
@@ -174,7 +174,7 @@ export const SLIDES: Slide[] = [
     title: "foundations",
     notes: [
       "Read the strip: 18px base, 48 by 48 targets, AA minimum, tokens one to one between Figma variables and CSS custom properties.",
-      "'Design from a floor instead of toward one' is the line. Because it is in the component, page eleven cannot undo it.",
+      "The line to land: because the floor is in the component, page eleven cannot undo it.",
       "If asked about token structure: shadcn conventions, CSS variables as the single source, Figma variables named to match.",
     ],
   },

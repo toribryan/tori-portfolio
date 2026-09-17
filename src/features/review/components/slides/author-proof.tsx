@@ -35,10 +35,10 @@ import {
 function Cover() {
   return (
     <Slide>
-      <Split ratio="copy">
+      <Kicker>01 · Product</Kicker>
+      <Title size="xl">AuthorProof</Title>
+      <Split className="items-start">
         <Stack>
-          <Kicker>01 · Product</Kicker>
-          <Title size="xl">AuthorProof</Title>
           <Lede>
             Plagiarism checkers read the document. This one asks the student
             about the paper they turned in.
@@ -51,6 +51,14 @@ function Cover() {
               "Canvas LMS",
             ]}
           />
+          <LinkRow>
+            <LinkOut href={REVIEW_LINKS.authorProof.product}>
+              Product page
+            </LinkOut>
+            <LinkOut href={REVIEW_LINKS.authorProof.caseStudy}>
+              Full case study
+            </LinkOut>
+          </LinkRow>
         </Stack>
         <Shot
           src="/cover-authorproof.webp"
