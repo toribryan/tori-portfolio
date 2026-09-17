@@ -19,6 +19,7 @@ export const SLIDES: Slide[] = [
   {
     slug: "cover",
     section: "background",
+    stage: "background-intro",
     title: "cover",
     notes: [
       "Thank them for the second round. Say what the next 30 minutes are: a short bit about me, one product project, one design systems project, then what I took from both.",
@@ -28,6 +29,7 @@ export const SLIDES: Slide[] = [
   {
     slug: "bio",
     section: "background",
+    stage: "background-intro",
     title: "bio",
     notes: [
       "Three people's words for me, mine last. The through-line is the same: I ask why before I build.",
@@ -38,6 +40,7 @@ export const SLIDES: Slide[] = [
   {
     slug: "pillars",
     section: "background",
+    stage: "background-intro",
     title: "my pillars of inspiration",
     notes: [
       "Creative technologist: I prototype in code, I ship the front end. That is why a design system is where I want to spend my time.",

@@ -22,6 +22,7 @@ import {
   slideHref,
   SLIDES,
 } from "@/features/review/data/deck"
+import { stageKey } from "@/features/review/types"
 
 import { Greeting } from "./greeting"
 import { EASE } from "./slide-primitives"
@@ -300,7 +301,7 @@ export function Deck({
                   initial={greeting}
                 >
                   <motion.section
-                    key={slide.slug + slide.section}
+                    key={stageKey(slide)}
                     className="absolute inset-0 overflow-y-auto px-4 md:px-8"
                     data-slide-scroll
                     custom={direction}

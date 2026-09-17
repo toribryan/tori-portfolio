@@ -15,6 +15,7 @@ import {
 import type { IntegrationItem } from "@/features/review/components/integration-visual"
 import { IntegrationVisual } from "@/features/review/components/integration-visual"
 import { REVIEW_LINKS } from "@/features/review/data/links"
+import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
@@ -336,7 +337,10 @@ function Next() {
   )
 }
 
-export const DESIGN_SYSTEM_CONTENT: Record<string, ComponentType> = {
+export const DESIGN_SYSTEM_CONTENT: Record<
+  string,
+  ComponentType<{ slide: SlideType }>
+> = {
   cover: Cover,
   foundations: Foundations,
   storybook: Storybook,
