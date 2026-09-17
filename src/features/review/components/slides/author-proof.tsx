@@ -103,13 +103,17 @@ function Cover() {
             </LinkOut>
           </LinkRow>
         </Stack>
-        <Shot
-          src="/cover-authorproof.webp"
-          alt="AuthorProof cover"
-          width={2400}
-          height={1260}
-          priority
-        />
+        <Reveal>
+          <video
+            className="aspect-square w-full rounded-xl bg-surface-warm object-cover inset-ring-1 inset-ring-border/64"
+            src="/images/review/authorproof-cover.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label="AuthorProof in motion"
+          />
+        </Reveal>
       </Split>
     </Slide>
   )
