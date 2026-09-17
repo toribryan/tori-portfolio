@@ -66,7 +66,7 @@ export function TokenFlow({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-line bg-muted/60",
+        "relative overflow-hidden rounded-xl border border-line bg-background",
         className
       )}
       style={{ aspectRatio: `${W} / ${H}` }}
