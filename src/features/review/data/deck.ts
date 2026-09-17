@@ -156,15 +156,6 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
-    slug: "two-people",
-    section: "design-system",
-    title: "who it is for",
-    notes: [
-      "The resident at 200% zoom and the adult child on a phone in a parking lot. Neither has patience.",
-      "The point for a design systems role: you cannot honour that on every screen by remembering to. It has to be a property of the components.",
-    ],
-  },
-  {
     slug: "storybook",
     section: "design-system",
     title: "Storybook",

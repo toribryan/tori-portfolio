@@ -2,7 +2,6 @@
 
 import type { ComponentType } from "react"
 
-import { AvatarHoverCard } from "@/components/ui/avatar-hover-card"
 import {
   BaseUiIcon,
   FigmaIcon,
@@ -81,73 +80,6 @@ function Cover() {
         </LinkOut>
         <StorybookLink />
       </LinkRow>
-    </Slide>
-  )
-}
-
-const PEOPLE = [
-  {
-    name: "The resident",
-    subtitle: "Over 70, on a tablet, browser zoomed way in",
-    description:
-      "Trying to work out whether a place looks like somewhere they could live. Reads slowly, taps carefully, and gives up on anything that moves.",
-    src: undefined,
-    tags: ["200% zoom", "Tablet", "Photos first"],
-  },
-  {
-    name: "Their adult child",
-    subtitle: "On a phone, mid-crisis, comparing six homes",
-    description:
-      "Trying to find cost and care level fast, often for the first time, under stress. Rules homes out in seconds and needs the numbers up front.",
-    src: undefined,
-    tags: ["Phone", "In a hurry", "Cost and care level"],
-  },
-]
-
-function TwoPeople() {
-  return (
-    <Slide>
-      <Kicker>Design system / who it is for</Kicker>
-      <Title>Two people, one search.</Title>
-      <Reveal className="relative z-10">
-        <div className="grid gap-px border-y border-line bg-line sm:grid-cols-2">
-          {PEOPLE.map((person) => (
-            <div
-              key={person.name}
-              className="flex flex-col items-start gap-3 bg-background p-5"
-            >
-              <AvatarHoverCard
-                src={person.src}
-                name={person.name}
-                subtitle={person.subtitle}
-                description={person.description}
-                size="sm"
-                footer={
-                  <ul className="flex flex-wrap gap-1.5">
-                    {person.tags.map((tag) => (
-                      <li
-                        key={tag}
-                        className="rounded-md bg-surface-warm px-2 py-0.5 font-mono text-xs text-muted-foreground inset-ring-1 inset-ring-border/64"
-                      >
-                        {tag}
-                      </li>
-                    ))}
-                  </ul>
-                }
-              />
-              <p className="font-heading text-lg/tight font-medium">
-                {person.name}
-              </p>
-            </div>
-          ))}
-        </div>
-      </Reveal>
-      <Lede>
-        They have nothing in common except that neither has any patience for an
-        interface that gets in the way. Nearly every decision on this project
-        comes back to that, and the only way to honour it on every screen is to
-        build it into the system.
-      </Lede>
     </Slide>
   )
 }
@@ -401,7 +333,6 @@ function Next() {
 
 export const DESIGN_SYSTEM_CONTENT: Record<string, ComponentType> = {
   cover: Cover,
-  "two-people": TwoPeople,
   foundations: Foundations,
   storybook: Storybook,
   "home-card": HomeCard,
