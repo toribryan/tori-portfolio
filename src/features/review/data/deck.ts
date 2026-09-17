@@ -189,6 +189,12 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
+    slug: "components",
+    section: "design-system",
+    title: "Atomic Design Inspired Components",
+    notes: ["Placeholder. Content to come."],
+  },
+  {
     slug: "home-card",
     section: "design-system",
     title: "the home card",
