@@ -837,6 +837,9 @@
   --link: #d16fa0;
 
   --surface: #1f1a15;
+  /* Without this the light :root value leaks through and the metadata
+     plates render light-on-light in dark mode. */
+  --surface-warm: #1f1a15;
   --surface-foreground: #f5f4f2;
 
   --selection: #f5f4f2;
