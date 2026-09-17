@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { Typewriter } from "@/components/ui/typewriter-text"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { PinnedFlow } from "@/features/review/components/pinned-flow"
+import { ProctorioLogo } from "@/features/review/components/proctorio-logo"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
@@ -36,6 +37,9 @@ function Cover() {
   return (
     <Slide>
       <Kicker>01 · Product</Kicker>
+      <Reveal>
+        <ProctorioLogo className="h-7 w-auto text-foreground" />
+      </Reveal>
       <Title size="xl">AuthorProof</Title>
       <Split className="items-start">
         <Stack>
