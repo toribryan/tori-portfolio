@@ -182,7 +182,7 @@ function Foundations() {
         <TokenFlow rows={TOKEN_ROWS} />
       </Reveal>
       <Clip
-        className="[&_video]:max-h-[18vh] [&_video]:object-cover"
+        className="[&_video]:max-h-[15vh] [&_video]:object-cover"
         src="/case-studies/foundations-mch.mp4"
         label="The foundations: tokens, type, spacing and radius, as they live in the system"
       />

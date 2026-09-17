@@ -1,10 +1,20 @@
 "use client"
 
-import { useId } from "react"
 import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
-import { Chip } from "@/components/ui/chip"
+import { Chip as BaseChip } from "@/components/ui/chip"
+
+function Chip(props: React.ComponentProps<typeof BaseChip>) {
+  return (
+    <BaseChip
+      size="sm"
+      variant="tertiary"
+      {...props}
+      className={cn("bg-white dark:bg-card", props.className)}
+    />
+  )
+}
 
 export type TokenRow = {
   /** The raw value, as written in CSS. */
@@ -17,40 +27,59 @@ export type TokenRow = {
   use: string
 }
 
-const W = 900
-const ROW_H = 52
-const PAD = 50
-const COLS = [0.16, 0.5, 0.84]
-
-function Wire({ d, id, delay }: { d: string; id: string; delay: number }) {
+/** A hairline with a pulse travelling along it. Fills whatever cell it is in. */
+function Wire({ delay }: { delay: number }) {
   return (
-    <>
-      <path d={d} className="text-border" stroke="currentColor" fill="none" />
-      <motion.path
-        d={d}
-        stroke={`url(#${id})`}
-        strokeWidth="2"
-        fill="none"
-        strokeDasharray="40 160"
-        initial={{ strokeDashoffset: 200 }}
-        animate={{ strokeDashoffset: -200 }}
-        transition={{ duration: 4, repeat: Infinity, ease: "linear", delay }}
+    <svg
+      className="h-2 w-full"
+      viewBox="0 0 100 8"
+      preserveAspectRatio="none"
+      aria-hidden
+    >
+      <line
+        x1="0"
+        y1="4"
+        x2="100"
+        y2="4"
+        className="text-border"
+        stroke="currentColor"
+        vectorEffect="non-scaling-stroke"
       />
-      <defs>
-        <linearGradient id={id} gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="transparent" />
-          <stop offset="50%" stopColor="var(--foreground)" stopOpacity="0.6" />
-          <stop offset="100%" stopColor="transparent" />
-        </linearGradient>
-      </defs>
-    </>
+      <motion.line
+        x1="0"
+        y1="4"
+        x2="100"
+        y2="4"
+        className="text-foreground/60"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        vectorEffect="non-scaling-stroke"
+        pathLength={1}
+        strokeDasharray="0.25 1"
+        initial={{ strokeDashoffset: 1.25 }}
+        animate={{ strokeDashoffset: -1.25 }}
+        transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay }}
+      />
+    </svg>
+  )
+}
+
+function Swatch({ color }: { color: string }) {
+  return (
+    <span
+      className="ml-1 size-2.5 shrink-0 rounded-full ring-1 ring-border/60"
+      style={{ background: color }}
+      aria-hidden
+    />
   )
 }
 
 /**
  * How a colour travels through the token tiers: a raw value, the primitive
  * that names it, and the semantic role that uses it. One row per colour,
- * wired left to right on the same dotted plate as the suite diagram.
+ * wired left to right across a dotted plate, with a pulse travelling along
+ * each wire.
  */
 export function TokenFlow({
   rows,
@@ -59,20 +88,15 @@ export function TokenFlow({
   rows: TokenRow[]
   className?: string
 }) {
-  const id = useId()
-  const H = PAD * 2 + ROW_H * (rows.length - 1)
-  const y = (i: number) => PAD + i * ROW_H
-
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-line bg-muted/60",
+        "relative overflow-hidden rounded-xl border border-border/60 bg-muted/60 px-6 py-4",
         className
       )}
-      style={{ aspectRatio: `${W} / ${H}` }}
     >
       <div
-        className="absolute inset-0 opacity-20"
+        className="pointer-events-none absolute inset-0 opacity-20"
         style={{
           backgroundImage:
             "radial-gradient(circle, var(--foreground) 1px, transparent 1px)",
@@ -81,87 +105,52 @@ export function TokenFlow({
         aria-hidden
       />
 
-      <svg
-        className="pointer-events-none absolute inset-0 size-full"
-        viewBox={`0 0 ${W} ${H}`}
-        fill="none"
-        aria-hidden
-      >
-        {rows.map((row, i) => (
-          <Wire
-            key={row.semantic}
-            id={`${id}-${i}`}
-            delay={i * 0.5}
-            d={`M ${COLS[0] * W} ${y(i)} H ${COLS[2] * W}`}
-          />
-        ))}
-      </svg>
-
-      <div className="absolute inset-x-0 top-3 grid grid-cols-3 px-2 text-center">
-        {["Base", "Primitive", "Semantic"].map((tier) => (
+      <div className="relative grid grid-cols-[auto_minmax(2rem,1fr)_auto_minmax(2rem,1fr)_auto] items-center gap-x-3 gap-y-3">
+        {["Base", "", "Primitive", "", "Semantic"].map((tier, i) => (
           <p
-            key={tier}
-            className="font-mono text-[10px] tracking-wide text-muted-foreground uppercase"
+            key={i}
+            className="text-center font-mono text-[10px] tracking-wide text-muted-foreground uppercase"
           >
             {tier}
           </p>
         ))}
-      </div>
 
-      {rows.map((row, i) => {
-        const top = `${(y(i) / H) * 100}%`
-        const swatch = (
-          <span
-            className="ml-1 size-2.5 shrink-0 rounded-full ring-1 ring-border/64"
-            style={{ background: row.base }}
-            aria-hidden
-          />
-        )
-        return (
+        {rows.map((row, i) => (
           <motion.div
             key={row.semantic}
-            className="contents"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 + i * 0.12 }}
+            className="col-span-5 grid grid-cols-subgrid items-center"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 + i * 0.12, duration: 0.4 }}
           >
             <Chip
-              size="sm"
-              variant="tertiary"
-              startContent={swatch}
-              className="absolute -translate-x-1/2 -translate-y-1/2 bg-white font-mono dark:bg-card"
-              style={{ left: `${COLS[0] * 100}%`, top }}
+              startContent={<Swatch color={row.base} />}
+              className="justify-self-center font-mono"
             >
               {row.base}
             </Chip>
+            <Wire delay={i * 0.5} />
             <Chip
-              size="sm"
-              variant="tertiary"
-              startContent={swatch}
-              className="absolute -translate-x-1/2 -translate-y-1/2 bg-white font-mono dark:bg-card"
-              style={{ left: `${COLS[1] * 100}%`, top }}
+              startContent={<Swatch color={row.base} />}
+              className="justify-self-center font-mono"
             >
               {row.primitive}
             </Chip>
-            <span
-              className="absolute flex -translate-x-1/2 -translate-y-[40%] flex-col items-center gap-0.5"
-              style={{ left: `${COLS[2] * 100}%`, top }}
-            >
+            <Wire delay={i * 0.5 + 0.8} />
+            <div className="flex flex-col items-center gap-1 justify-self-center">
               <Chip
-                size="sm"
-                variant="dot"
-                startContent={swatch}
-                className="bg-white font-mono dark:bg-card"
+                startContent={<Swatch color={row.base} />}
+                className="font-mono"
               >
                 {row.semantic}
               </Chip>
               <span className="font-mono text-[9px] whitespace-nowrap text-muted-foreground">
                 {row.use}
               </span>
-            </span>
+            </div>
           </motion.div>
-        )
-      })}
+        ))}
+      </div>
     </div>
   )
 }
