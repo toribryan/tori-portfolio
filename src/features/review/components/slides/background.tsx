@@ -92,47 +92,53 @@ function Bio() {
 const PILLARS = [
   {
     title: "Creative technologist",
-    body: "Always exploring new tools and ways to make things. Currently learning the drums, and studying the history of the golden ratio and why it still matters to design.",
-    src: "/images/review/config.webp",
-    alt: "Tori at Figma Config",
+    src: "/images/review/creative-technologist.mp4",
+    alt: "Tori building with hardware and code",
   },
   {
     title: "Bonzo",
-    body: "The pug. Chief morale officer, occasional snack thief, and the reason there is a dog in the site's error page.",
-    src: "/images/review/bonzo.webp",
-    alt: "Bonzo the pug sitting on a bed",
+    src: "/images/review/bonzo-headphones.webp",
+    alt: "Bonzo the pug lying on a green sofa wearing headphones, beside a Miffy figure",
   },
   {
     title: "Chronic learner",
-    body: "Reads the manual, then the source. Every project here started with a teardown of the products that already solved the problem.",
-    src: "/images/review/run.webp",
-    alt: "Tori after a race",
+    src: "/images/review/chronic-learner.mp4",
+    alt: "Tori reading and taking notes",
   },
 ]
 
 function Pillars() {
   return (
-    <Slide>
+    <Slide className="min-h-full justify-center">
       <Kicker>Background / my pillars of inspiration</Kicker>
       <div className="grid gap-px border-y border-line bg-line md:grid-cols-3">
         {PILLARS.map((pillar) => (
           <Reveal
-            key={pillar.title}
+            key={pillar.src}
             className="flex flex-col gap-3 bg-background p-4"
           >
-            <Image
-              className="aspect-square w-full rounded-xl object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-              src={pillar.src}
-              alt={pillar.alt}
-              width={900}
-              height={900}
-              unoptimized
-            />
+            {pillar.src.endsWith(".mp4") ? (
+              <video
+                className="aspect-[4/5] w-full rounded-xl bg-black object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
+                src={pillar.src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                aria-label={pillar.alt}
+              />
+            ) : (
+              <Image
+                className="aspect-[4/5] w-full rounded-xl object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
+                src={pillar.src}
+                alt={pillar.alt}
+                width={1200}
+                height={1445}
+                unoptimized
+              />
+            )}
             <p className="font-heading text-xl/tight font-medium">
               {pillar.title}
-            </p>
-            <p className="text-sm/relaxed text-pretty text-muted-foreground md:text-base/relaxed">
-              {pillar.body}
             </p>
           </Reveal>
         ))}
