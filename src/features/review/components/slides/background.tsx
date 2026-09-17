@@ -16,7 +16,6 @@ import {
   Lede,
   LinkOut,
   LinkRow,
-  Quote,
   Slide,
   Title,
 } from "../slide-primitives"
@@ -58,6 +57,15 @@ const PILLARS = [
   },
 ]
 
+const QUOTES = [
+  ["My dad would tell you I am a", "“question artist”"],
+  [
+    "My colleagues would say",
+    "“she goes far beyond simply completing the task”",
+  ],
+  ["I call myself a", "curious design engineer"],
+]
+
 const swap = {
   initial: { opacity: 0, y: 16, filter: "blur(4px)" },
   animate: {
@@ -91,13 +99,16 @@ function Bio() {
         ))}
       </div>
       <div className="flex flex-col gap-6">
-        <Quote attribution="My dad would tell you I am a">
-          “question artist”
-        </Quote>
-        <Quote attribution="My colleagues would say">
-          “she goes far beyond simply completing the task”
-        </Quote>
-        <Quote attribution="I call myself a">curious design engineer</Quote>
+        {QUOTES.map(([attribution, quote]) => (
+          <div key={quote} className="flex flex-col gap-1.5">
+            <p className="font-mono text-xs tracking-wide text-muted-foreground">
+              {attribution}
+            </p>
+            <p className="font-heading text-xl/tight font-medium text-balance md:text-2xl/tight">
+              {quote}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   )
