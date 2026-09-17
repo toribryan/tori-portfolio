@@ -150,7 +150,8 @@ export const SLIDES: Slide[] = [
     title: "Senior Living Marketplace",
     notes: [
       "One line: a senior living marketplace for the Phoenix metro, plus the agent platform that runs it. I own everything a family or agent sees.",
-      "Why it is the design systems project: two products, one library, and I design it, build it in Storybook, and ship it.",
+      "Two jobs, and the slide shows both. One: build the system. Storybook, shadcn conventions, Tailwind tokens, Base UI primitives. Two: use it in context, across the marketplace and the agent platform, on Vercel and Next.js, designed in Figma, with Mapbox for search.",
+      "Why the split matters: a change to a button is a change in two products. The system is what makes a decision hold.",
       "Offer the live site and the Storybook now; they can click while I talk.",
     ],
   },
@@ -161,15 +162,6 @@ export const SLIDES: Slide[] = [
     notes: [
       "The resident at 200% zoom and the adult child on a phone in a parking lot. Neither has patience.",
       "The point for a design systems role: you cannot honour that on every screen by remembering to. It has to be a property of the components.",
-    ],
-  },
-  {
-    slug: "two-jobs",
-    section: "design-system",
-    title: "the work",
-    notes: [
-      "Two jobs. One: build the system. Storybook, shadcn conventions, Tailwind tokens, Base UI primitives. Two: use it in context, across the marketplace and the agent platform, on Vercel and Next.js, designed in Figma, with Mapbox for search.",
-      "The reason the split matters: a change to a button is a change in two products. The system is what makes a decision hold.",
     ],
   },
   {
