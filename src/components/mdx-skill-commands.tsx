@@ -1,4 +1,4 @@
-import { FolderOpenOutline24 } from "@/components/icons/pixel"
+import { FolderOpenIcon } from "@/components/icons"
 import { IconTile } from "@/components/ui/icon-tile"
 import { Kbd } from "@/components/ui/kbd"
 
@@ -31,7 +31,7 @@ export function SkillCommandsVisual() {
     <div className="not-prose my-8 rounded-xl bg-surface-warm p-5 inset-ring-1 inset-ring-border/64">
       <div className="mb-4 flex items-center gap-2 font-mono text-xs font-medium tracking-wide text-muted-foreground uppercase">
         <IconTile>
-          <FolderOpenOutline24 />
+          <FolderOpenIcon />
         </IconTile>
         skills/: one command per phase
       </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { LinkOutline24 } from "@/components/icons/pixel"
+import { LinkIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { CopyButton } from "@/components/copy-button"
@@ -51,7 +51,7 @@ export function Heading<T extends HeadingTypes = "h1">({
         className="size-7 shrink-0 text-muted-foreground opacity-0 group-hover/heading:opacity-100"
         variant="ghost"
         text={() => createHeadingUrl(props.id || "")}
-        idleIcon={<LinkOutline24 />}
+        idleIcon={<LinkIcon />}
         aria-label="Copy link to section"
       />
     </Comp>

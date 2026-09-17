@@ -1,9 +1,6 @@
 import Image from "next/image"
 import { format } from "date-fns"
-import {
-  ArrowUpRightOutline24,
-  CircleCheckOutline24,
-} from "@/components/icons/pixel"
+import { ArrowUpRightIcon, CircleCheckBigIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { IconTile } from "@/components/ui/icon-tile"
@@ -64,7 +61,7 @@ export function CertificationItem({
         <IconTile className="mx-4">
           {(certification.issuerIconName
             ? ISSUER_ICONS[certification.issuerIconName]
-            : null) ?? <CircleCheckOutline24 />}
+            : null) ?? <CircleCheckBigIcon />}
         </IconTile>
       )}
 
@@ -103,7 +100,7 @@ export function CertificationItem({
       </div>
 
       {certification.credentialURL && (
-        <ArrowUpRightOutline24 className="size-4 text-muted-foreground" />
+        <ArrowUpRightIcon className="size-4 text-muted-foreground" />
       )}
     </div>
   )

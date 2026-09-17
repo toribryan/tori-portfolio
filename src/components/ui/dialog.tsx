@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { XmarkOutline24 } from "@/components/icons/pixel"
+import { XIcon } from "lucide-react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
@@ -76,7 +76,7 @@ function DialogContent({
               className="absolute top-4 right-4"
               size="icon-sm"
             >
-              <XmarkOutline24 />
+              <XIcon />
               <span className="sr-only">Close</span>
             </Button>
           </DialogPrimitive.Close>

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { ArrowRightOutline24 } from "@/components/icons/pixel"
+import { ArrowRightIcon } from "lucide-react"
 
 import { Button } from "@/components/base/ui/button"
 
@@ -14,7 +14,7 @@ export function NotFound() {
           render={
             <Link href="/">
               Go to Home
-              <ArrowRightOutline24 />
+              <ArrowRightIcon />
             </Link>
           }
         />

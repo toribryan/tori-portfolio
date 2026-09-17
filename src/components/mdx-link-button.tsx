@@ -1,4 +1,4 @@
-import { ArrowUpRightOutline24 } from "@/components/icons/pixel"
+import { ArrowUpRightIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/base/ui/button"
@@ -34,7 +34,7 @@ export function LinkButton({
               : {})}
           >
             {children}
-            <ArrowUpRightOutline24 data-icon="inline-end" />
+            <ArrowUpRightIcon data-icon="inline-end" />
           </a>
         }
       />

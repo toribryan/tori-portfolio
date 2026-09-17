@@ -1,9 +1,0 @@
-import type { SVGProps } from "react";
-
-export type SquarePaintbrushOutline24Props = SVGProps<SVGSVGElement>;
-
-export function SquarePaintbrushOutline24(props: SquarePaintbrushOutline24Props) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" shapeRendering="crispEdges" {...props}><path d="M14 8L12 8" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M13 3L5 3" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M19 21L5 21" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M16 10L16 12" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M3 5L3 19" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M21 11L21 19" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M10 10V14H14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M16.01 6L16 6" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M18.01 4L18 4" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M18.01 8L18 8" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M20.01 6L20 6" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M22.01 4L22 4" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M20.01 2L20 2" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path></svg>
-  );
-}

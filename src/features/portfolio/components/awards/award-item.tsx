@@ -1,8 +1,5 @@
 import { format } from "date-fns"
-import {
-  Crown2Outline24,
-  PaperclipOutline24,
-} from "@/components/icons/pixel"
+import { Crown, Paperclip } from "lucide-react"
 
 import { IconTile } from "@/components/ui/icon-tile"
 import {
@@ -34,7 +31,7 @@ export function AwardItem({
   return (
     <Collapsible className={className} disabled={!canExpand}>
       <div className="flex items-center hover:bg-accent-muted">
-        <IconTile className="mx-4">{award.icon ?? <Crown2Outline24 />}</IconTile>
+        <IconTile className="mx-4">{award.icon ?? <Crown />}</IconTile>
 
         <div className="flex-1 border-l border-dashed border-line">
           <CollapsibleTrigger className="flex w-full items-center gap-2 p-4 pr-2 text-left">
@@ -88,7 +85,7 @@ export function AwardItem({
                       rel="noopener"
                       aria-label="Open reference attachment"
                     >
-                      <PaperclipOutline24 />
+                      <Paperclip />
                     </a>
                   }
                 />

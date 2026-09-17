@@ -2,7 +2,7 @@
 
 import { copyText } from "@/utils/copy"
 import { useTiks } from "@rexa-developer/tiks/react"
-import { TypeScaleOutline24 } from "@/components/icons/pixel"
+import { Type } from "lucide-react"
 import { toast } from "sonner"
 
 import {
@@ -41,7 +41,7 @@ export function BrandContextMenu({ children }: { children: React.ReactNode }) {
             success()
           }}
         >
-          <TypeScaleOutline24 />
+          <Type />
           Copy Logotype as SVG
         </ContextMenuItem>
 

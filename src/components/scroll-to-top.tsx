@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowUpOutline24 } from "@/components/icons/pixel"
+import { ArrowUpIcon } from "lucide-react"
 import { useMotionValueEvent, useScroll } from "motion/react"
 
 import { cn } from "@/lib/utils"
@@ -45,7 +45,7 @@ export function ScrollToTop({
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       {...props}
     >
-      <ArrowUpOutline24 />
+      <ArrowUpIcon />
     </Button>
   )
 }

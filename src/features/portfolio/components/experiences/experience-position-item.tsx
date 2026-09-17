@@ -1,8 +1,5 @@
 import { differenceInMonths, parse } from "date-fns"
-import {
-  InfinityOutline24,
-  SuitcaseOutline24,
-} from "@/components/icons/pixel"
+import { BriefcaseBusinessIcon, InfinityIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { IconTile } from "@/components/ui/icon-tile"
@@ -47,7 +44,7 @@ export function ExperiencePositionItem({
         )}
       >
         <div className="relative z-1 mb-1 flex items-start gap-3 text-base">
-          <IconTile>{position.icon ?? <SuitcaseOutline24 />}</IconTile>
+          <IconTile>{position.icon ?? <BriefcaseBusinessIcon />}</IconTile>
 
           <h4 className="flex-1 font-medium text-balance">{position.title}</h4>
 
@@ -76,7 +73,7 @@ export function ExperiencePositionItem({
               <span>{start}</span>
               <span className="font-mono">—</span>
               {isOngoing ? (
-                <InfinityOutline24
+                <InfinityIcon
                   className="size-4.5 translate-y-[0.5px]"
                   aria-label="Present"
                   strokeWidth={1.5}

@@ -16,23 +16,6 @@ export type MoonIconProps = React.ComponentPropsWithoutRef<"div"> & {
   size?: number
 }
 
-const CRESCENT = [
-  "M13 9L13 9.01",
-  "M15 11L15 11.01",
-  "M21 17L21 17.01",
-  "M23 15L23 15.01",
-  "M9 1L9 1.01",
-  "M7 3L7 3.01",
-  "M9 19H7",
-  "M21 13H17",
-  "M11 3L11 7",
-  "M3 10L3 13",
-  "M14 21L11 21",
-  "M5 5L5 8",
-  "M19 19L16 19",
-  "M5 15L5 17",
-]
-
 const svgVariants: Variants = {
   normal: {
     rotate: 0,
@@ -103,15 +86,13 @@ export function MoonIcon({
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        strokeLinecap="square"
-        shapeRendering="crispEdges"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         variants={svgVariants}
         animate={controls}
         transition={svgTransition}
       >
-        {CRESCENT.map((d) => (
-          <path key={d} d={d} />
-        ))}
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
       </motion.svg>
     </div>
   )

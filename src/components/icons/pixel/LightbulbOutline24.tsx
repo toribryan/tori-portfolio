@@ -1,9 +1,0 @@
-import type { SVGProps } from "react";
-
-export type LightbulbOutline24Props = SVGProps<SVGSVGElement>;
-
-export function LightbulbOutline24(props: LightbulbOutline24Props) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" shapeRendering="crispEdges" {...props}><path d="M8.01001 12L8.00001 12" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M10.01 14L10 14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M12.01 12L12 12" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M14.01 14L14 14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M16.01 12L16 12" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M8 2L16 2" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M8 20V18L16 18L16 20" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path> <path d="M20 6L20 14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M4 6L4 14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M18.01 4L18 4" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M6.01001 4L6.00001 4" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M6.01001 16L6.00001 16" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M18.01 16L18 16" stroke="currentColor" strokeWidth={2} strokeLinecap="square" data-color="color-2" fill="none"></path> <path d="M10 22H14" stroke="currentColor" strokeWidth={2} strokeLinecap="square" fill="none"></path></svg>
-  );
-}
