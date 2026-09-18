@@ -17,12 +17,12 @@ import {
 
 const BIO_PHOTOS = [
   {
-    src: "/images/review/mum.webp",
-    alt: "Tori and her mum inside a gilt picture frame",
+    src: "/images/review/mum-frame.webp",
+    alt: "Tori and her mum laughing inside a gilt picture frame against a teal door",
   },
   {
-    src: "/images/review/run.webp",
-    alt: "Tori biting a race medal beside a friend after a run",
+    src: "/images/review/vancouver.webp",
+    alt: "Tori and a friend in a selfie on a city street, buildings behind",
   },
   {
     src: "/images/review/dad.webp",
