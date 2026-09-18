@@ -150,19 +150,19 @@ const TOKEN_ROWS: TokenRow[] = [
   {
     base: "oklch(0.141 0.005 285.823)",
     primitive: "zinc-950",
-    semantic: "--primary",
+    semantic: "bg-primary",
     use: "Primary actions, headings",
   },
   {
     base: "oklch(0.723 0.219 149.579)",
     primitive: "green-500",
-    semantic: "--success",
+    semantic: "text-success",
     use: "Resolved, healthy, within threshold",
   },
   {
     base: "oklch(0.92 0.004 286.32)",
     primitive: "zinc-200",
-    semantic: "--border",
+    semantic: "border-border",
     use: "Hairlines and inputs",
   },
 ]
