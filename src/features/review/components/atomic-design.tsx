@@ -6,7 +6,7 @@ import { REVIEW_LINKS } from "@/features/review/data/links"
 import { Frame, Reveal } from "./slide-primitives"
 
 type Story = {
-  /** Storybook story id, as `index.json` lists it. */
+  /** Storybook story id, as `index.json` lists it, or a full URL to frame. */
   id: string
   label: string
 }
@@ -39,20 +39,15 @@ const LEVELS: Level[] = [
     line: "Atoms that only make sense together.",
     height: 170,
     stories: [
-      { id: "ui-inputgroup--with-button", label: "Input group" },
       { id: "ui-field--input", label: "Field" },
       { id: "ui-buttongroup--pill-buttons", label: "Button group · pill" },
     ],
   },
   {
     name: "Organisms",
-    line: "Molecules doing a job: search on the marketplace, the availability table on the agent platform.",
+    line: "Molecules doing a job: the availability table an agent keeps up to date.",
     height: 320,
     stories: [
-      {
-        id: "components-search-homeherosearch--with-suggestions",
-        label: "Hero search · suggestions",
-      },
       { id: "ui-table--rooms-availability", label: "Rooms · availability" },
     ],
   },
@@ -60,24 +55,32 @@ const LEVELS: Level[] = [
     name: "Templates",
     line: "Filters, results and the map, before any listing is real.",
     height: 480,
-    stories: [
-      { id: "search-filterform--default", label: "Filter form" },
-      {
-        id: "search-filterform--with-active-filters",
-        label: "Filter form · active filters",
-      },
-    ],
+    stories: [{ id: "search-filterform--default", label: "Filter form" }],
   },
   {
     name: "Pages",
-    line: "The hero a family lands on, made of everything above.",
-    height: 520,
-    stories: [{ id: "components-homehero--default", label: "Home hero" }],
+    line: "The marketplace itself, live, made of everything above.",
+    height: 560,
+    stories: [
+      { id: REVIEW_LINKS.modernCareHomes.live, label: "moderncarehomes.com" },
+    ],
   },
 ]
 
-function storyUrl(id: string) {
-  return `${REVIEW_LINKS.modernCareHomes.storybook}/iframe.html?id=${id}&viewMode=story`
+function isUrl(id: string) {
+  return /^https?:/.test(id)
+}
+
+function frameUrl(id: string) {
+  return isUrl(id)
+    ? id
+    : `${REVIEW_LINKS.modernCareHomes.storybook}/iframe.html?id=${id}&viewMode=story`
+}
+
+function openUrl(id: string) {
+  return isUrl(id)
+    ? id
+    : `${REVIEW_LINKS.modernCareHomes.storybook}/?path=/story/${id}`
 }
 
 function StoryFrame({ story, height }: { story: Story; height: number }) {
@@ -87,7 +90,7 @@ function StoryFrame({ story, height }: { story: Story; height: number }) {
         <iframe
           className="block w-full rounded-xl bg-white"
           style={{ height }}
-          src={storyUrl(story.id)}
+          src={frameUrl(story.id)}
           title={story.label}
           loading="lazy"
         />
@@ -96,7 +99,7 @@ function StoryFrame({ story, height }: { story: Story; height: number }) {
         <span>{story.label}</span>
         <a
           className="link-underline"
-          href={`${REVIEW_LINKS.modernCareHomes.storybook}/?path=/story/${story.id}`}
+          href={openUrl(story.id)}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -109,7 +112,7 @@ function StoryFrame({ story, height }: { story: Story; height: number }) {
 
 /**
  * Atomic design, walked with Modern Care Homes' own Storybook: each level a
- * row, its stories live on the right, from a button up to the page hero.
+ * row, its stories live on the right, from a button up to the live site.
  * Rows reveal in order so the build-up reads as one.
  */
 export function AtomicDesign({ className }: { className?: string }) {
