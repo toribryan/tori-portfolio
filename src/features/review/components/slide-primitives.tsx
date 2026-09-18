@@ -523,20 +523,3 @@ export function LinkRow({ children }: { children: React.ReactNode }) {
     <Reveal className="flex flex-wrap items-center gap-2">{children}</Reveal>
   )
 }
-
-export function Tags({ items }: { items: string[] }) {
-  return (
-    <Reveal>
-      <ul className="flex flex-wrap gap-1.5">
-        {items.map((item) => (
-          <li
-            key={item}
-            className="rounded-md bg-surface-warm px-2 py-0.5 font-mono text-xs text-muted-foreground inset-ring-1 inset-ring-border/64"
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
-    </Reveal>
-  )
-}

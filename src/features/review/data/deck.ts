@@ -159,16 +159,6 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
-    slug: "storybook",
-    section: "design-system",
-    title: "Storybook",
-    notes: [
-      "This is the live library. Click into a component and walk its states: hover, focus, disabled, empty, loading, error.",
-      "The two-product test: a component is ready when it reads correctly outside both the marketplace and the agent platform. Storybook is how I look at it outside either one.",
-      "If it loads slowly, open it full screen in a new tab and keep talking. The Integrity Console Storybook is the second, complete example: 40 components, 149 stories.",
-    ],
-  },
-  {
     slug: "foundations",
     section: "design-system",
     title: "foundations",
@@ -182,8 +172,23 @@ export const SLIDES: Slide[] = [
   {
     slug: "components",
     section: "design-system",
-    title: "Atomic Design Inspired Components",
-    notes: ["Placeholder. Content to come."],
+    title: "atomic design",
+    notes: [
+      "Walk it top to bottom. Atoms carry the floor: 18px type, 48px targets, the one green that means available. Molecules are atoms that only make sense together, like the search bar.",
+      "Organisms: hero search with suggestions on the marketplace, the rooms availability table on the agent platform. Same atoms, both products. (The home card story needs a Clerk provider decorator before it renders on the published Storybook; the card is on the next slide.)",
+      "Templates: the filter form empty and with eight active filters, content-agnostic. The page is the home hero, made of everything above. Every frame is live: click into one if they want to see a state change.",
+      "If asked why atomic: it gives a contribution a home. A new piece has to say which level it lives at, which is most of the governance conversation.",
+    ],
+  },
+  {
+    slug: "storybook",
+    section: "design-system",
+    title: "Storybook",
+    notes: [
+      "This is the live library. Click into a component and walk its states: hover, focus, disabled, empty, loading, error.",
+      "The two-product test: a component is ready when it reads correctly outside both the marketplace and the agent platform. Storybook is how I look at it outside either one.",
+      "If it loads slowly, open it full screen in a new tab and keep talking. The Integrity Console Storybook is the second, complete example: 40 components, 149 stories.",
+    ],
   },
   {
     slug: "home-card",

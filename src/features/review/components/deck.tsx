@@ -166,10 +166,12 @@ export function Deck({
   }, [count, go, index, started])
 
   // Scrolling past the end of a slide turns the page. A slide that is taller
-  // than the stage scrolls normally first; only a wheel at its edge advances,
-  // and a cooldown keeps trackpad inertia from turning several pages at once.
+  // than the stage scrolls normally first. Reaching the edge does not count:
+  // the gesture that brought the slide there is swallowed, so the page only
+  // turns on a fresh wheel once it is already at the edge, and a cooldown
+  // keeps trackpad inertia from turning several pages at once.
   const stageRef = useRef<HTMLDivElement>(null)
-  const wheelRef = useRef({ sum: 0, lockedUntil: 0 })
+  const wheelRef = useRef({ sum: 0, lockedUntil: 0, lastMoving: 0 })
 
   useEffect(() => {
     const stage = stageRef.current
@@ -190,6 +192,13 @@ export function Deck({
 
       if (!atEnd) {
         state.sum = 0
+        state.lastMoving = now
+        return
+      }
+
+      if (now - state.lastMoving < 600) {
+        state.lockedUntil = now + 1000
+        state.sum = 0
         return
       }
 
@@ -199,7 +208,7 @@ export function Deck({
       }
 
       state.sum += event.deltaY
-      if (Math.abs(state.sum) < 80) return
+      if (Math.abs(state.sum) < 120) return
 
       state.sum = 0
       state.lockedUntil = now + 900

@@ -15,15 +15,17 @@ import {
   VercelIcon,
 } from "@/components/icons"
 import { TOKEN_ROWS } from "@/features/portfolio/data/token-flow"
+import { AtomicDesign } from "@/features/review/components/atomic-design"
 import type { IntegrationItem } from "@/features/review/components/integration-visual"
 import { IntegrationVisual } from "@/features/review/components/integration-visual"
+import { PrThread } from "@/features/review/components/pr-thread"
+import { ShippingPipeline } from "@/features/review/components/shipping-pipeline"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
   Clip,
-  Flow,
   HairlineGrid,
   Kicker,
   Lede,
@@ -34,7 +36,6 @@ import {
   Slide,
   Stat,
   StatRow,
-  Tags,
   Title,
 } from "../slide-primitives"
 
@@ -65,17 +66,6 @@ function Cover() {
         />
       </Reveal>
       <Title size="xl">Senior Living Marketplace</Title>
-      <Tags
-        items={[
-          "Design Engineer",
-          "2024 to now",
-          "Next.js",
-          "Tailwind",
-          "shadcn",
-          "Storybook",
-          "Figma",
-        ]}
-      />
       <HairlineGrid>
         <Job number="01" title="Building the design system" items={BUILD_STACK}>
           Tokens, foundations and components, each built and argued with in
@@ -167,7 +157,6 @@ function Foundations() {
         <TokenFlow rows={TOKEN_ROWS} showUse />
       </Reveal>
       <Clip
-        className="[&_video]:max-h-[15vh] [&_video]:object-cover"
         src="/case-studies/foundations-mch.mp4"
         label="The foundations: tokens, type, spacing and radius, as they live in the system"
       />
@@ -179,7 +168,12 @@ function Components() {
   return (
     <Slide>
       <Kicker>Design system / components</Kicker>
-      <Title>Atomic Design Inspired Components</Title>
+      <Title>Atoms to pages, straight from the Storybook.</Title>
+      <Lede>
+        The library is organised the atomic way, so a rule set at the bottom is
+        still holding at the top. Every frame below is a live story.
+      </Lede>
+      <AtomicDesign />
     </Slide>
   )
 }
@@ -291,27 +285,39 @@ function Shipping() {
     <Slide>
       <Kicker>Design system / shipping</Kicker>
       <Title>I build what I design.</Title>
-      <Flow
-        stages={[
-          { label: "Pattern research", detail: "marketplaces, in Mobbin" },
-          { label: "Figma", detail: "foundations, tokens, components" },
-          { label: "Storybook", detail: "every state, in isolation" },
-          { label: "Pull request", detail: "reviewed, typed, tested" },
-          { label: "Vercel preview", detail: "on a real phone" },
-          { label: "Shipped", detail: "both products" },
-        ]}
-      />
-      <HairlineGrid>
-        <Card label="What the handoff is for">
-          The handoff between design and engineering exists for complex
-          contributions that touch the data layer. Components, layout,
-          responsive behaviour and motion ship as code from me.
-        </Card>
-        <Card label="What that removes">
-          Nothing gets defended in a handoff meeting. If something needs to
-          change, I change it. Whatever I learn shipping goes back into the
-          system, so the next screen starts further along.
-        </Card>
+      <HairlineGrid columns="minmax(0, 1.15fr) minmax(0, 1fr)">
+        <Reveal className="p-2">
+          <ShippingPipeline />
+        </Reveal>
+        <div className="flex flex-col">
+          <Card label="What the handoff is for">
+            The handoff between design and engineering exists for complex
+            contributions that touch the data layer. Components, layout,
+            responsive behaviour and motion ship as code from me.
+          </Card>
+          <Card label="What that removes">
+            Nothing gets defended in a handoff meeting. If something needs to
+            change, I change it. Whatever I learn shipping goes back into the
+            system, so the next screen starts further along.
+          </Card>
+          <Reveal className="p-2">
+            <PrThread
+              comments={[
+                {
+                  handle: "sgrzincich",
+                  when: "2 weeks ago",
+                  body: "don't commit images. We will add a brand-based config later. for now it can just be empty.",
+                },
+                {
+                  handle: "toribryan",
+                  when: "2 weeks ago",
+                  body: "ok captain",
+                  author: true,
+                },
+              ]}
+            />
+          </Reveal>
+        </div>
       </HairlineGrid>
       <Reveal>
         <p className="text-sm text-muted-foreground">
