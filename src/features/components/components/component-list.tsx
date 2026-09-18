@@ -16,6 +16,12 @@ import {
   UPCOMING_COMPONENTS,
 } from "@/features/components/data/registry"
 
+export type ComponentListItem = {
+  slug: string
+  name: string
+  isNew?: boolean
+}
+
 const CELL =
   "flex h-full items-center gap-4 px-4 py-5 text-lg font-medium select-none"
 
@@ -50,11 +56,16 @@ function Mark({
 /**
  * The components as a three-across grid of marks and names, hairlines
  * between, like the registry sites. Published ones link to their page;
- * upcoming ones sit muted with a note on hover. Reads the registry itself
- * because icons are components and cannot cross from a server parent.
+ * upcoming ones sit muted with a note on hover. Names come from the caller
+ * and marks from the registry, since icons cannot cross from a server parent.
  */
-export function ComponentList({ className }: { className?: string }) {
-  const components = COMPONENTS
+export function ComponentList({
+  items,
+  className,
+}: {
+  items: ComponentListItem[]
+  className?: string
+}) {
   const upcoming = UPCOMING_COMPONENTS
   return (
     <ul
@@ -63,17 +74,17 @@ export function ComponentList({ className }: { className?: string }) {
         className
       )}
     >
-      {components.map((entry) => (
-        <li key={entry.slug} className="bg-background">
+      {items.map((item) => (
+        <li key={item.slug} className="bg-background">
           <Link
-            href={`/components/${entry.slug}` as Route}
+            href={`/components/${item.slug}` as Route}
             className={cn(
               CELL,
               "transition-[background-color] ease-out hover:bg-accent-muted"
             )}
           >
-            <Mark icon={entry.icon} isNew={entry.new} />
-            {entry.name}
+            <Mark icon={COMPONENTS[item.slug].icon} isNew={item.isNew} />
+            {item.name}
           </Link>
         </li>
       ))}

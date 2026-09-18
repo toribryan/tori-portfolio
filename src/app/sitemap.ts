@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 
 import { SITE_INFO } from "@/config/site"
+import { getComponentDocs } from "@/features/components/data/docs"
 import { getLatestPosts, getWorkDocs } from "@/features/doc/data/documents"
 
 export const revalidate = false
@@ -15,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const docRoutes = [
     ...getLatestPosts().map((doc) => ["/latest", doc] as const),
     ...getWorkDocs().map((doc) => ["/work", doc] as const),
+    ...getComponentDocs().map((doc) => ["/components", doc] as const),
   ].map(([base, doc]) => ({
     url: `${SITE_INFO.url}${base}/${doc.slug}`,
     lastModified: new Date(doc.metadata.updatedAt).toISOString(),
