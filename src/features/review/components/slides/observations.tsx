@@ -37,7 +37,7 @@ function Threads() {
         </Card>
         <Card label="03" title="Ship what you design.">
           Prototypes as the spec on AuthorProof. Storybook to pull request to
-          preview to production on Modern Care Homes. Fewer handoffs, fewer
+          preview to production on Modern Care Homes. Fewer handoffs means fewer
           places for a decision to drift.
         </Card>
       </HairlineGrid>

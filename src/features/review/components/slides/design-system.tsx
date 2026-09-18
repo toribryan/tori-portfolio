@@ -156,6 +156,21 @@ function Foundations() {
       <Reveal>
         <TokenFlow rows={TOKEN_ROWS} showUse />
       </Reveal>
+      <HairlineGrid columns={3}>
+        <Card label="Primitive" title="Named for what it is">
+          zinc-950, green-500, zinc-200. The raw palette. Nothing on a page asks
+          for one of these directly.
+        </Card>
+        <Card label="Semantic" title="Named for the job">
+          bg-primary, text-success, border-border. A component only ever asks
+          for one of these, so a theme change is a change to values and no
+          component gets touched.
+        </Card>
+        <Card label="Figma" title="The same names, one to one">
+          Every CSS custom property has a Figma variable with the same name.
+          What I pick in a mockup is what the component reads in code.
+        </Card>
+      </HairlineGrid>
       <Clip
         src="/case-studies/foundations-mch.mp4"
         label="The foundations: tokens, type, spacing and radius, as they live in the system"
