@@ -110,7 +110,7 @@ function Bio() {
           </Frame>
         ))}
       </div>
-      <div className="flex flex-col justify-center gap-6 px-6 py-2">
+      <div className="flex flex-col justify-center gap-8 px-6 py-2">
         {QUOTES.map((item) => (
           <Testimonial
             key={item.quote}
