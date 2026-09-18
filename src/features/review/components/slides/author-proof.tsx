@@ -343,39 +343,6 @@ function Pivot() {
   )
 }
 
-function Model() {
-  return (
-    <Slide>
-      <Kicker>AuthorProof / model</Kicker>
-      <Title>Instructor sets it up. Questions come from the essay.</Title>
-      <HairlineGrid>
-        <Shot
-          src="/case-studies/author-proof-proctorio-quiz-settings.webp"
-          alt="AuthorProof quiz settings inside the assignment editor: proctoring level, completion window, and an Engage AuthorProof button"
-          width={1080}
-          height={1080}
-          fit="viewport"
-          label="Quiz settings, inside the assignment editor"
-        />
-        <Shot
-          src="/case-studies/author-proof-proctorio-generated-questions.webp"
-          alt="A student's essay beside four comprehension questions generated from it"
-          width={1080}
-          height={1080}
-          fit="viewport"
-          label="The student’s quiz, generated from their own writing"
-        />
-      </HairlineGrid>
-      <Reveal>
-        <p className="text-xs text-muted-foreground">
-          Product imagery © Proctorio, from the AuthorProof product page. Used
-          with credit.
-        </p>
-      </Reveal>
-    </Slide>
-  )
-}
-
 function Principles() {
   return (
     <Slide>
@@ -454,7 +421,6 @@ export const AUTHOR_PROOF_CONTENT: Record<
   brief: Brief,
   constraints: Constraints,
   pivot: Pivot,
-  model: Model,
   principles: Principles,
   shipped: Shipped,
 }

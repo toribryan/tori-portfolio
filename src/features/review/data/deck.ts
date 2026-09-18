@@ -107,16 +107,6 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
-    slug: "model",
-    section: "product",
-    title: "model",
-    notes: [
-      "Left: the instructor's side. Proctoring level, completion window, one button. Nothing new to learn in Canvas.",
-      "Right: the student's side. Their essay beside questions generated from it, in the submission's own language.",
-      "If they want the full session view, the case study has the badge-to-detail pathway.",
-    ],
-  },
-  {
     slug: "principles",
     section: "product",
     title: "principles",
