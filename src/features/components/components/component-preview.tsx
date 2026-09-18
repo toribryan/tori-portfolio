@@ -30,7 +30,7 @@ export function ComponentPreview({ name }: { name: string }) {
 
   return (
     <Tabs defaultValue="preview" className="not-prose my-6">
-      <TabsList className="w-fit">
+      <TabsList>
         <TabsTrigger value="preview">Preview</TabsTrigger>
         <TabsTrigger value="code">Code</TabsTrigger>
       </TabsList>

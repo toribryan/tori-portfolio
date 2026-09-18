@@ -34,12 +34,12 @@ export function InstallCommand({
       defaultValue="pnpm"
       className="not-prose my-6 gap-0 overflow-hidden rounded-[9px] border bg-code"
     >
-      <TabsList className="h-auto rounded-none border-b border-line bg-transparent p-0 px-2">
+      <TabsList className="gap-0 px-2">
         {MANAGERS.map((manager) => (
           <TabsTrigger
             key={manager}
             value={manager}
-            className="relative h-auto rounded-none px-2.5 py-2.5 font-mono text-xs data-active:bg-transparent data-active:shadow-none data-active:after:absolute data-active:after:inset-x-2.5 data-active:after:-bottom-px data-active:after:h-px data-active:after:bg-foreground"
+            className="px-2.5 font-mono text-xs after:inset-x-2.5"
           >
             {manager}
           </TabsTrigger>
