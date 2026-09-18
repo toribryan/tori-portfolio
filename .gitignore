@@ -42,5 +42,3 @@ pnpm-workspace.yaml
 # career docs, not for publication
 _career/
 
-# 21st.dev publish staging
-.21st/

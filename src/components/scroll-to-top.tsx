@@ -33,7 +33,7 @@ export function ScrollToTop({
         // Left on mobile so it clears NavMobileBar, which occupies the right
         // corner below `sm`. That bar is gone from `sm` up, where the button
         // returns to the right.
-        "fixed left-4 sm:left-auto sm:right-4 lg:right-8",
+        "fixed left-4 sm:right-4 sm:left-auto lg:right-8",
         "bottom-[calc(var(--bottom,0.5rem)+env(safe-area-inset-bottom,0))] z-50",
         "transition-[background-color,opacity] duration-300 data-[scroll-direction=down]:opacity-30 data-[scroll-direction=up]:opacity-100 data-[visible=false]:opacity-0",
         "data-[scroll-direction=down]:hover:opacity-100",

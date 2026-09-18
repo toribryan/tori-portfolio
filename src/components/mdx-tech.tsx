@@ -25,7 +25,7 @@ export function Tech({ name }: { name: TechKey }) {
       href={entry.href}
       icon={entry.icon}
       title={entry.title}
-      className="not-prose inline-flex w-fit [--badge-height:--spacing(6)] no-underline"
+      className="not-prose inline-flex w-fit no-underline [--badge-height:--spacing(6)]"
     />
   )
 }

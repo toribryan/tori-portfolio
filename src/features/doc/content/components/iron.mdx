@@ -18,9 +18,9 @@ The system's whole job is to make that sustainable: **primitives are shared and
 theme-agnostic; brands supply a token file and nothing else.**
 
 <Callout title="Component library in progress">
-The theming contract below is settled. Components publish here once they pass
-the seven-brand check: every primitive has to survive all seven themes before
-it ships.
+  The theming contract below is settled. Components publish here once they pass
+  the seven-brand check: every primitive has to survive all seven themes before
+  it ships.
 </Callout>
 
 ## The theming contract
@@ -75,22 +75,29 @@ selector anywhere in the codebase is a bug, not a feature.
 Radius does more identity work here than color does. The editorial brands run
 near-square; the vendor-facing platform rounds off.
 
-| Brand group | `sm` | `md` | `lg` | Reads as |
-| --- | --- | --- | --- | --- |
-| Editorial (5) | 2px | 4px | 8px | Print, considered |
-| Vendor platform | 6px | 10px | 16px | Software, approachable |
+| Brand group     | `sm` | `md` | `lg` | Reads as               |
+| --------------- | ---- | ---- | ---- | ---------------------- |
+| Editorial (5)   | 2px  | 4px  | 8px  | Print, considered      |
+| Vendor platform | 6px  | 10px | 16px | Software, approachable |
 
 ### The seven-brand check
 
 <Steps>
 
-<Step>Build the primitive against the base theme only, no brand in the file.</Step>
+<Step>
+  Build the primitive against the base theme only, no brand in the file.
+</Step>
 
 <Step>Render it in all seven themes side by side at three breakpoints.</Step>
 
-<Step>Any theme that needs a component-level override fails the check. Fix the contract or fix the primitive.</Step>
+<Step>
+  Any theme that needs a component-level override fails the check. Fix the
+  contract or fix the primitive.
+</Step>
 
-<Step>Publish, then add the changelog entry with the contract version it targets.</Step>
+<Step>
+  Publish, then add the changelog entry with the contract version it targets.
+</Step>
 
 </Steps>
 
@@ -98,13 +105,13 @@ near-square; the vendor-facing platform rounds off.
 
 Nothing published yet. Build order follows what all seven brands share most:
 
-| Component | Status | Themes passing |
-| --- | --- | --- |
-| Article card | In Figma | 5 / 7 |
-| Section rule | In Figma | 7 / 7 |
-| Byline | Design | – |
-| Vendor listing | Design | – |
-| Newsletter capture | Not started | – |
+| Component          | Status      | Themes passing |
+| ------------------ | ----------- | -------------- |
+| Article card       | In Figma    | 5 / 7          |
+| Section rule       | In Figma    | 7 / 7          |
+| Byline             | Design      | –              |
+| Vendor listing     | Design      | –              |
+| Newsletter capture | Not started | –              |
 
 Article card fails on the two vendor-platform themes: the radius jump breaks
 the image crop. That's a contract problem, not a card problem.

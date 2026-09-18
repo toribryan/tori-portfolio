@@ -26,9 +26,7 @@ export function Callout({
       )}
 
       <div className="flex min-w-0 flex-col gap-1">
-        {title && (
-          <p className="font-medium [&_a]:link-underline">{title}</p>
-        )}
+        {title && <p className="font-medium [&_a]:link-underline">{title}</p>}
         <div className="text-surface-foreground/80 [&_a]:link-underline [&_strong]:font-medium">
           {children}
         </div>

@@ -49,8 +49,8 @@ Peoria, Paradise Valley, Queen Creek and Surprise, compare what they find, and
 contact a home directly.
 
 <Video
-    src="/case-studies/home-grid-mch.mp4"
-    caption="Browsing homes: the comparison grid families land on after a search."
+  src="/case-studies/home-grid-mch.mp4"
+  caption="Browsing homes: the comparison grid families land on after a search."
 />
 
 What makes it a hard design problem is that two very different people use it
@@ -71,10 +71,18 @@ Ruling homes out fast is the whole job, so that's where the work goes.
 ## Studying the marketplaces that already solved it
 
 <Pipeline>
-    <Stage label="Pattern research" detail="Marketplaces, in Mobbin" mark="search" />
-    <Stage label="Figma" detail="Foundations, tokens, components" mark="figma" />
-    <Stage label="Storybook" detail="Every state, in isolation" mark="storybook" />
-    <Stage label="Shipped" detail="Marketplace and agent platform" mark="react" />
+  <Stage
+    label="Pattern research"
+    detail="Marketplaces, in Mobbin"
+    mark="search"
+  />
+  <Stage label="Figma" detail="Foundations, tokens, components" mark="figma" />
+  <Stage
+    label="Storybook"
+    detail="Every state, in isolation"
+    mark="storybook"
+  />
+  <Stage label="Shipped" detail="Marketplace and agent platform" mark="react" />
 </Pipeline>
 
 Senior living is a marketplace problem before it's a healthcare one. That
@@ -215,19 +223,19 @@ has to stay up. I own everything a family or agent sees and interacts with.
 
 ## The stack
 
-| Tool | Layer | Why |
-| --- | --- | --- |
-| <Tech name="nextjs" /> | Framework | Server rendering, because a lot of this traffic is a phone on cell service. Typed routes help as the directory grows. |
-| <Tech name="react" /> <Tech name="typescript" /> | UI | TypeScript catches the things I'd otherwise find in the browser. |
-| <Tech name="tailwindcss" /> | Styling | Tokens live as CSS variables, so a system change is one edit instead of forty. |
-| <Tech name="shadcn-ui" /> | Components | I own the source instead of importing it, so when I need to fix an accessibility issue I fix it inside the component. |
-| <Tech name="figma" /> | Design | Where foundations and components live. Tokens map one to one with the CSS variables. |
-| <Tech name="storybook" /> | Components | Where components get built and tested in isolation, in every state, before they land in either product. |
-| <Tech name="vercel" /> | Deployment | A preview build per branch, so I can look at a change on a real phone before it merges. |
-| <Tech name="github" /> | Version control | Where the design and the code meet. |
-| <Tech name="mobbin" /> | Research | Search and discovery patterns from real estate marketplaces, which are further along on this problem than senior living is. |
-| <Tech name="posthog" /> | Analytics | Events and funnels for the search, compare, contact flow, so I can see where families stop. Session replay for the part the numbers only hint at. |
-| Spencer's side | Data and infrastructure | Home data, integrations, and everything that has to stay up. |
+| Tool                                             | Layer                   | Why                                                                                                                                               |
+| ------------------------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <Tech name="nextjs" />                           | Framework               | Server rendering, because a lot of this traffic is a phone on cell service. Typed routes help as the directory grows.                             |
+| <Tech name="react" /> <Tech name="typescript" /> | UI                      | TypeScript catches the things I'd otherwise find in the browser.                                                                                  |
+| <Tech name="tailwindcss" />                      | Styling                 | Tokens live as CSS variables, so a system change is one edit instead of forty.                                                                    |
+| <Tech name="shadcn-ui" />                        | Components              | I own the source instead of importing it, so when I need to fix an accessibility issue I fix it inside the component.                             |
+| <Tech name="figma" />                            | Design                  | Where foundations and components live. Tokens map one to one with the CSS variables.                                                              |
+| <Tech name="storybook" />                        | Components              | Where components get built and tested in isolation, in every state, before they land in either product.                                           |
+| <Tech name="vercel" />                           | Deployment              | A preview build per branch, so I can look at a change on a real phone before it merges.                                                           |
+| <Tech name="github" />                           | Version control         | Where the design and the code meet.                                                                                                               |
+| <Tech name="mobbin" />                           | Research                | Search and discovery patterns from real estate marketplaces, which are further along on this problem than senior living is.                       |
+| <Tech name="posthog" />                          | Analytics               | Events and funnels for the search, compare, contact flow, so I can see where families stop. Session replay for the part the numbers only hint at. |
+| Spencer's side                                   | Data and infrastructure | Home data, integrations, and everything that has to stay up.                                                                                      |
 
 ## What's next
 

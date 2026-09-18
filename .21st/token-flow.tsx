@@ -1,19 +1,33 @@
 "use client"
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
-import { motion, useReducedMotion } from "motion/react"
+import { motion, useInView, useReducedMotion } from "motion/react"
 
-import { cn } from "@/lib/utils"
-import { Chip as BaseChip } from "@/components/ui/chip"
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ")
+}
 
-function Chip(props: React.ComponentProps<typeof BaseChip>) {
+/** A small labelled pill with something, usually a swatch, before the label. */
+function Chip({
+  children,
+  className,
+  startContent,
+}: {
+  children: React.ReactNode
+  className?: string
+  startContent?: React.ReactNode
+}) {
   return (
-    <BaseChip
-      size="sm"
-      variant="tertiary"
-      {...props}
-      className={cn("bg-white dark:bg-card", props.className)}
-    />
+    <span
+      className={cn(
+        "relative box-border inline-flex h-6 max-w-fit min-w-min items-center rounded-full border border-border bg-white px-1 text-xs whitespace-nowrap text-foreground dark:bg-card",
+        className
+      )}
+      data-slot="chip"
+    >
+      {startContent}
+      <span className="flex-1 px-1 pl-0.5">{children}</span>
+    </span>
   )
 }
 
@@ -33,6 +47,8 @@ export type TokenRow = {
   }
 }
 
+const TIERS = ["Base", "Primitive", "Semantic"] as const
+
 const SCRAMBLE_CHARS = "_!X$0-+*#"
 
 function randomChar() {
@@ -48,34 +64,61 @@ function subscribeToTheme(onChange: () => void) {
   return () => observer.disconnect()
 }
 
-/** Whether the `dark` class is on the document, the way next-themes and 21st set it. */
+/**
+ * Whether the `dark` class is on the document, the way next-themes and 21st
+ * set it. `null` until the client has looked, so the first real value is
+ * taken as a baseline rather than a change.
+ */
 function useIsDark() {
-  return useSyncExternalStore(
+  return useSyncExternalStore<boolean | null>(
     subscribeToTheme,
     () => document.documentElement.classList.contains("dark"),
+    () => null
+  )
+}
+
+const NARROW = "(max-width: 639px)"
+
+function subscribeToNarrow(onChange: () => void) {
+  const query = window.matchMedia(NARROW)
+  query.addEventListener("change", onChange)
+  return () => query.removeEventListener("change", onChange)
+}
+
+/** Whether the rows are stacked, so one wire per gap runs in the right direction. */
+function useIsNarrow() {
+  return useSyncExternalStore(
+    subscribeToNarrow,
+    () => window.matchMedia(NARROW).matches,
     () => false
   )
 }
 
 /**
  * Text that holds still until it changes, then spends a moment as noise
- * before settling on the new value, resolving left to right.
+ * before settling on the new value, resolving left to right. Until `live`
+ * is set the text is only a placeholder, so no change is played.
  */
 function ScrambleText({
   text,
+  live,
   duration = 1000,
 }: {
   text: string
+  /** Whether `text` is the real value rather than a server-side guess. */
+  live: boolean
   /** Milliseconds the noise runs for after a change. */
   duration?: number
 }) {
   const reduceMotion = useReducedMotion()
-  const settled = useRef(text)
-  const [display, setDisplay] = useState(text)
+  const settled = useRef<string | null>(null)
+  const [noise, setNoise] = useState<string | null>(null)
 
   useEffect(() => {
-    if (settled.current === text || reduceMotion) return
+    if (!live) return
+    const previous = settled.current
     settled.current = text
+    if (previous === null || previous === text || reduceMotion) return
 
     const startedAt = performance.now()
     let frame = 0
@@ -90,17 +133,17 @@ function ScrambleText({
         for (let i = revealed; i < text.length; i++) {
           next += text[i] === " " ? " " : randomChar()
         }
-        setDisplay(next)
+        setNoise(next)
       }
       if (progress < 1) {
         frame = window.requestAnimationFrame(loop)
       } else {
-        setDisplay(text)
+        setNoise(null)
       }
     }
     frame = window.requestAnimationFrame(loop)
     return () => window.cancelAnimationFrame(frame)
-  }, [text, duration, reduceMotion])
+  }, [text, live, duration, reduceMotion])
 
   return (
     <span className="relative inline-block whitespace-pre">
@@ -108,7 +151,7 @@ function ScrambleText({
         {text}
       </span>
       <span className="absolute inset-0" aria-hidden>
-        {reduceMotion ? text : display}
+        {noise ?? text}
       </span>
       <span className="sr-only">{text}</span>
     </span>
@@ -117,22 +160,25 @@ function ScrambleText({
 
 /**
  * A hairline with a pulse travelling along it. Fills whatever cell it is
- * in; `vertical` runs it top to bottom for the stacked layout.
+ * in; `vertical` runs it top to bottom for the stacked layout. The pulse
+ * only runs while the plate is on screen and stays still under reduced
+ * motion.
  */
 function Wire({
   delay,
-  vertical = false,
-  className,
+  vertical,
+  active,
 }: {
   delay: number
-  vertical?: boolean
-  className?: string
+  vertical: boolean
+  /** Whether the pulse should be running. */
+  active: boolean
 }) {
   const end = vertical ? { x2: 4, y2: 100 } : { x2: 100, y2: 4 }
   const start = vertical ? { x1: 4, y1: 0 } : { x1: 0, y1: 4 }
   return (
     <svg
-      className={cn(vertical ? "h-6 w-2" : "h-2 w-full", className)}
+      className={vertical ? "h-6 w-2" : "h-2 w-full"}
       viewBox={vertical ? "0 0 8 100" : "0 0 100 8"}
       preserveAspectRatio="none"
       aria-hidden
@@ -144,20 +190,27 @@ function Wire({
         stroke="currentColor"
         vectorEffect="non-scaling-stroke"
       />
-      <motion.line
-        {...start}
-        {...end}
-        className="text-foreground/60"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        vectorEffect="non-scaling-stroke"
-        pathLength={1}
-        strokeDasharray="0.25 1"
-        initial={{ strokeDashoffset: 1.25 }}
-        animate={{ strokeDashoffset: -1.25 }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "linear", delay }}
-      />
+      {active && (
+        <motion.line
+          {...start}
+          {...end}
+          className="text-foreground/60"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+          pathLength={1}
+          strokeDasharray="0.25 1"
+          initial={{ strokeDashoffset: 1.25 }}
+          animate={{ strokeDashoffset: -1.25 }}
+          transition={{
+            duration: 3.5,
+            repeat: Infinity,
+            ease: "linear",
+            delay,
+          }}
+        />
+      )}
     </svg>
   )
 }
@@ -173,8 +226,8 @@ function Swatch({ color }: { color: string }) {
 }
 
 /**
- * How a colour travels through the token tiers: a raw value, the primitive
- * that names it, and the semantic role that uses it. One row per colour,
+ * How a color travels through the token tiers: a raw value, the primitive
+ * that names it, and the semantic role that uses it. One row per color,
  * wired left to right across a dotted plate, with a pulse travelling along
  * each wire. Rows that carry a `dark` value swap to it when the theme
  * changes, scrambling for a moment on the way. The theme follows the
@@ -194,10 +247,17 @@ export function TokenFlow({
   className?: string
 }) {
   const documentDark = useIsDark()
-  const isDark = theme ? theme === "dark" : documentDark
+  const isDark = theme ? theme === "dark" : documentDark === true
+  const live = theme !== undefined || documentDark !== null
+  const narrow = useIsNarrow()
+  const reduceMotion = useReducedMotion()
+  const plate = useRef<HTMLDivElement>(null)
+  const inView = useInView(plate)
+  const pulse = inView && !reduceMotion
 
   return (
     <div
+      ref={plate}
       className={cn(
         "relative overflow-hidden rounded-xl border border-border/60 bg-muted/60 px-6 py-4",
         className
@@ -214,14 +274,16 @@ export function TokenFlow({
       />
 
       <div className="relative grid grid-cols-1 items-center gap-y-6 sm:grid-cols-[auto_minmax(2rem,1fr)_auto_minmax(2rem,1fr)_auto] sm:gap-x-3 sm:gap-y-3">
-        {["Base", "", "Primitive", "", "Semantic"].map((tier, i) => (
-          <p
-            key={i}
-            className="hidden text-center font-mono text-[10px] tracking-wide text-muted-foreground uppercase sm:block"
-          >
-            {tier}
-          </p>
-        ))}
+        <div className="contents" aria-hidden>
+          {TIERS.map((tier, i) => (
+            <div key={tier} className="contents">
+              {i > 0 && <div className="hidden sm:block" />}
+              <p className="hidden text-center font-mono text-[10px] tracking-wide text-muted-foreground uppercase sm:block">
+                {tier}
+              </p>
+            </div>
+          ))}
+        </div>
 
         {rows.map((row, i) => {
           const value = isDark && row.dark ? row.dark : row
@@ -234,23 +296,24 @@ export function TokenFlow({
                 startContent={<Swatch color={value.base} />}
                 className="justify-self-center font-mono"
               >
-                <ScrambleText text={value.base} />
+                <span className="sr-only">{TIERS[0]} </span>
+                <ScrambleText text={value.base} live={live} />
               </Chip>
-              <Wire delay={i * 0.5} className="max-sm:hidden" />
-              <Wire delay={i * 0.5} vertical className="sm:hidden" />
+              <Wire delay={i * 0.5} vertical={narrow} active={pulse} />
               <Chip
                 startContent={<Swatch color={value.base} />}
                 className="justify-self-center font-mono"
               >
-                <ScrambleText text={value.primitive} />
+                <span className="sr-only">{TIERS[1]} </span>
+                <ScrambleText text={value.primitive} live={live} />
               </Chip>
-              <Wire delay={i * 0.5 + 0.8} className="max-sm:hidden" />
-              <Wire delay={i * 0.5 + 0.8} vertical className="sm:hidden" />
+              <Wire delay={i * 0.5 + 0.8} vertical={narrow} active={pulse} />
               <div className="flex flex-col items-center gap-1 justify-self-center">
                 <Chip
                   startContent={<Swatch color={value.base} />}
                   className="font-mono"
                 >
+                  <span className="sr-only">{TIERS[2]} </span>
                   {row.semantic}
                 </Chip>
                 {showUse && row.use && (

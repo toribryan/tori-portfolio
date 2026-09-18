@@ -1,7 +1,7 @@
 "use client"
 
-import { flushSync } from "react-dom"
 import { useTheme } from "next-themes"
+import { flushSync } from "react-dom"
 import { useHotkeys } from "react-hotkeys-hook"
 
 import { META_THEME_COLORS } from "@/config/site"

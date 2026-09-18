@@ -102,6 +102,19 @@ const options: MDXRemoteProps["options"] = {
   },
 }
 
-export function MDX({ code }: { code: string }) {
-  return <MDXRemote source={code} components={components} options={options} />
+export function MDX({
+  code,
+  components: extra,
+}: {
+  code: string
+  /** Components only this doc's MDX may use, on top of the shared set. */
+  components?: MDXRemoteProps["components"]
+}) {
+  return (
+    <MDXRemote
+      source={code}
+      components={extra ? { ...components, ...extra } : components}
+      options={options}
+    />
+  )
 }

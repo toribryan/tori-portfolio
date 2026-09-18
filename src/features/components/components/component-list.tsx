@@ -1,0 +1,121 @@
+"use client"
+
+import type { Route } from "next"
+import Link from "next/link"
+import type { LucideIcon } from "lucide-react"
+import { WaypointsIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { IconTile } from "@/components/ui/icon-tile"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/base/ui/tooltip"
+import {
+  COMPONENT_MARKS,
+  UPCOMING_COMPONENTS,
+} from "@/features/components/data/marks"
+
+export type ComponentListItem = {
+  slug: string
+  name: string
+  isNew?: boolean
+}
+
+const CELL =
+  "flex h-full items-center gap-4 px-4 py-5 text-lg font-medium select-none"
+
+function Mark({
+  icon: Icon,
+  isNew,
+  muted = false,
+}: {
+  icon: LucideIcon
+  isNew?: boolean
+  muted?: boolean
+}) {
+  return (
+    <span className="relative shrink-0">
+      <IconTile
+        className={cn(
+          "size-10 rounded-lg [&_svg]:size-5",
+          muted && "opacity-60"
+        )}
+      >
+        <Icon aria-hidden />
+      </IconTile>
+      {isNew && (
+        <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-info ring-2 ring-background">
+          <span className="sr-only">New</span>
+        </span>
+      )}
+    </span>
+  )
+}
+
+/**
+ * The components as a three-across grid of marks and names, hairlines
+ * between, like the registry sites. Published ones link to their page;
+ * upcoming ones sit muted with a note on hover and focus. Names come from
+ * the caller and marks from `marks.ts`, since icons cannot cross from a
+ * server parent.
+ */
+export function ComponentList({
+  items,
+  className,
+}: {
+  items: ComponentListItem[]
+  className?: string
+}) {
+  const upcoming = UPCOMING_COMPONENTS
+  return (
+    <ul
+      className={cn(
+        "grid gap-px bg-line sm:grid-cols-2 md:grid-cols-3",
+        className
+      )}
+    >
+      {items.map((item) => (
+        <li key={item.slug} className="bg-background">
+          <Link
+            href={`/components/${item.slug}` as Route}
+            className={cn(
+              CELL,
+              "transition-[background-color] ease-out hover:bg-accent-muted"
+            )}
+          >
+            <Mark
+              icon={COMPONENT_MARKS[item.slug] ?? WaypointsIcon}
+              isNew={item.isNew}
+            />
+            {item.name}
+          </Link>
+        </li>
+      ))}
+
+      {upcoming.map((entry) => (
+        <li key={entry.name} className="bg-background">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <button
+                  type="button"
+                  className={cn(
+                    CELL,
+                    "w-full cursor-not-allowed text-left text-muted-foreground"
+                  )}
+                  aria-disabled
+                />
+              }
+            >
+              <Mark icon={entry.icon} muted />
+              {entry.name}
+            </TooltipTrigger>
+            <TooltipContent>Coming soon</TooltipContent>
+          </Tooltip>
+        </li>
+      ))}
+    </ul>
+  )
+}

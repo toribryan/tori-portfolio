@@ -397,10 +397,7 @@ export function FigmaIcon(props: IconProps) {
 export function FramerIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden {...props}>
-      <path
-        d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z"
-        fill="currentColor"
-      />
+      <path d="M4 0h16v8h-8zM4 8h8l8 8H4zM4 16h8v8z" fill="currentColor" />
     </svg>
   )
 }

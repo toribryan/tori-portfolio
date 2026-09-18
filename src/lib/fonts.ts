@@ -1,5 +1,5 @@
-import localFont from "next/font/local"
 import { Caveat, Fraunces } from "next/font/google"
+import localFont from "next/font/local"
 import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
 

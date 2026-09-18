@@ -34,10 +34,26 @@ results:
 ---
 
 <Pipeline>
-  <Stage label="The question" detail="Can a model use a design system" mark="search" />
-  <Stage label="Figma MCP" detail="The model reads the real design" mark="figma" />
-  <Stage label="Controlled prompts" detail="Same design, varied structure" mark="terminal" />
-  <Stage label="Code Connect" detail="Lookup instead of inference" mark="layers" />
+  <Stage
+    label="The question"
+    detail="Can a model use a design system"
+    mark="search"
+  />
+  <Stage
+    label="Figma MCP"
+    detail="The model reads the real design"
+    mark="figma"
+  />
+  <Stage
+    label="Controlled prompts"
+    detail="Same design, varied structure"
+    mark="terminal"
+  />
+  <Stage
+    label="Code Connect"
+    detail="Lookup instead of inference"
+    mark="layers"
+  />
 </Pipeline>
 
 ## Where this starts
@@ -120,7 +136,7 @@ of them is wrong, and no amount of prompting reliably stops it.
   The name describes the job, not the value, so a rebrand updates one alias and
   everything downstream follows.
 - Component tokens are optional: `button/background/default →
-  color/action/primary`. Skip them until you are doing multi-brand work.
+color/action/primary`. Skip them until you are doing multi-brand work.
 
 ![The three-tier token architecture: primitives, semantics, component tokens](/case-studies/agentic-design-system-tokens.svg)
 

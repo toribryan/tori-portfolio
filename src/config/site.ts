@@ -35,6 +35,10 @@ export const MOBILE_NAV: NavItem<Route>[] = [
     // typed routes describe pathnames, not fragments.
     href: "/#projects" as Route,
   },
+  {
+    title: "Components",
+    href: "/#components" as Route,
+  },
   ...MAIN_NAV,
 ]
 
