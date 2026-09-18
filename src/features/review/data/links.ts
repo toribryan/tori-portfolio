@@ -12,13 +12,15 @@ export const REVIEW_LINKS = {
   modernCareHomes: {
     caseStudy: "/work/modern-care-homes",
     live: "https://www.moderncarehomes.com/",
+    /** The search results page: the marketplace made of everything in the library. */
+    findHomes: "https://www.moderncarehomes.com/find-homes",
     storybook: "https://design.moderncarehomes.com",
   },
   integrityConsole: {
     caseStudy: "/work/bab-design-system",
     storybook: "/storybook/bab/index.html",
   },
-  /** The token visualiser from the foundations slide, published as a component. */
+  /** The token visualizer from the foundations slide, published as a component. */
   tokenFlow: "https://21st.dev/@iamtoribryan/components/token-flow",
   designSystemOverhaul: "/work/design-system-overhaul",
   agenticDesignSystem: "/work/agentic-design-system",

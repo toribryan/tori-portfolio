@@ -5,18 +5,23 @@ import Image from "next/image"
 import { motion } from "motion/react"
 
 import { TextReveal } from "@/components/ui/text-reveal"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/base/ui/tabs"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { PinnedFlow } from "@/features/review/components/pinned-flow"
 import { ProctorioLogo } from "@/features/review/components/proctorio-logo"
 import type { SuiteItem } from "@/features/review/components/suite-reel"
 import { SuiteReel } from "@/features/review/components/suite-reel"
 import { REVIEW_LINKS } from "@/features/review/data/links"
-import type { Slide as SlideType } from "@/features/review/types"
+import type { SlideData, Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
   EASE,
-  Flow,
   Frame,
   HairlineGrid,
   Kicker,
@@ -56,12 +61,12 @@ function Suite() {
   return (
     <Slide>
       <Kicker>01 · Product / where it sits</Kicker>
-      <Title>Three product suites, one design system.</Title>
+      <Title>Defining product design language through one design system.</Title>
       <Lede>
-        At Proctorio I led cross-product design across three suites for
-        institutions and proctoring agencies, and led the implementation of a
-        refactored design system underneath all of them. The product I chose to
-        walk through today comes from the Origin suite: AuthorProof.
+        At Proctorio I led cross-product design across three suites, for
+        institutions and for proctoring agencies, and led the implementation of
+        the refactored design system underneath all three. The product I chose
+        to walk through today comes from the Origin suite: AuthorProof.
       </Lede>
       <Reveal>
         <SuiteReel items={SUITES} />
@@ -72,7 +77,7 @@ function Suite() {
 
 function Cover() {
   return (
-    <Slide>
+    <Slide className="flex-1 justify-center">
       <div className="grid items-center gap-8 md:grid-cols-[3fr_2fr]">
         <Stack>
           <Kicker>01 · Product</Kicker>
@@ -115,13 +120,17 @@ function Task() {
   return (
     <Slide>
       <Kicker>AuthorProof / task</Kicker>
-      <Title>Prove the work is theirs.</Title>
-      <Lede>
-        A new product in the Origin suite: verify authorship of written work,
-        inside the instructor’s existing Canvas workflow.
-      </Lede>
+      <Stack className="gap-2">
+        <Title>
+          The task that landed on my desk: prove the work is theirs.
+        </Title>
+        <Lede>
+          A new product in the Origin suite: verify authorship of written work,
+          inside the instructor’s existing Canvas workflow.
+        </Lede>
+      </Stack>
       <HairlineGrid columns="1fr 1.4fr">
-        <Reveal className="flex flex-col justify-center gap-3 px-6 py-4">
+        <Reveal className="flex flex-col justify-center gap-2 px-6 py-4">
           <p className="text-xs tracking-wide text-muted-foreground uppercase">
             The gap
           </p>
@@ -137,6 +146,18 @@ function Task() {
           <AuthorProofRadar className="aspect-[4/3] w-full" />
         </Reveal>
       </HairlineGrid>
+      <Steps
+        items={[
+          {
+            title: "No binary pass or fail.",
+            body: "A score ships with a confidence level. The instructor decides what to do with it.",
+          },
+          {
+            title: "Transparency into what was evaluated.",
+            body: "Every generated question sits beside the student’s own words that prompted it and beside the assessment of the answer, so a score traces back to something a person can read.",
+          },
+        ]}
+      />
     </Slide>
   )
 }
@@ -159,7 +180,7 @@ function Thesis() {
           <Reveal>
             <p className="text-sm text-muted-foreground">thesis:</p>
           </Reveal>
-          <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
+          <h2 className="font-heading text-3xl/tight font-medium tracking-normal text-balance md:text-4xl/tight">
             <TextReveal
               text={THESIS}
               startOnView={false}
@@ -169,12 +190,12 @@ function Thesis() {
             />
           </h2>
           <motion.p
-            className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
+            className="font-heading text-3xl text-muted-foreground md:text-4xl"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: settled, ease: EASE }}
           >
-            right?
+            …right?
           </motion.p>
         </div>
         <motion.div
@@ -197,25 +218,53 @@ function Thesis() {
   )
 }
 
-const BRIEFED_FLOW = [
-  { title: "Student submits the completed written assignment" },
-  { title: "Assignment content is extracted to generate questions" },
-  { title: "AuthorProof uses the Canvas Quiz API to create and assign a quiz" },
-  { title: "Student is notified via Canvas inbox and AuthorProof email" },
-  { title: "Student navigates to the quiz and completes it" },
+/** The three journeys the first concept was built on, as they were handed over. */
+const BRIEFED_JOURNEYS = [
   {
-    title: "AuthorProof generates a report card of results and answer analysis",
+    label: "01 · Instructor configures",
+    steps: [
+      { title: "Opens the assignment in the assignment editor" },
+      { title: "Enables AuthorProof and configures the quiz" },
+      { title: "Publishes the assignment" },
+    ],
+  },
+  {
+    label: "02 · Student submits and answers",
+    steps: [
+      { title: "Navigates to the assignment" },
+      { title: "Submits the completed written assignment" },
+      {
+        title:
+          "AuthorProof generates questions from the submission and the instructor’s quiz settings",
+      },
+      { title: "Takes a quiz on their own writing" },
+    ],
+  },
+  {
+    label: "03 · Instructor grades",
+    steps: [
+      { title: "Continues the usual grading workflow inside the LMS" },
+      { title: "Opens SpeedGrader" },
+      {
+        title:
+          "Reviews the AuthorProof result, the plagiarism check, and the original submission in one place",
+      },
+    ],
   },
 ]
 
 function Brief() {
   return (
-    <Slide className="flex-1">
+    <Slide>
       <Kicker>AuthorProof / the brief as it arrived</Kicker>
-      <Title>The architecture was already chosen.</Title>
-      <Reveal className="flex min-h-0 flex-1 flex-col">
-        <PinnedFlow className="md:flex-1" steps={BRIEFED_FLOW} />
-      </Reveal>
+      <Title>The architecture I was handed for the first concept.</Title>
+      <Stack className="gap-3">
+        {BRIEFED_JOURNEYS.map((journey) => (
+          <Reveal key={journey.label}>
+            <PinnedFlow label={journey.label} steps={journey.steps} />
+          </Reveal>
+        ))}
+      </Stack>
     </Slide>
   )
 }
@@ -224,32 +273,24 @@ function Constraints() {
   return (
     <Slide>
       <Kicker>AuthorProof / four constraints</Kicker>
-      <Title>Four constraints, each a design problem in disguise.</Title>
-      <StatRow>
-        <Stat value="6" label="Steps between submission and quiz" />
-        <Stat value="~10 min" label="Latency the steps add up to" />
-        <Stat
-          value="Per student"
-          label="A fresh quiz each, in tooling built for one per class"
-        />
-      </StatRow>
+      <Title>Sounded great, but I identified a few problems…</Title>
       <HairlineGrid>
+        <Card label="01 · Tooling" title="Quiz tooling is one-to-many">
+          A quiz is authored once and assigned to a class. A fresh quiz per
+          submission fights that at every step and gets fragile when a whole
+          class submits at once.
+        </Card>
         <Card
-          label="01 · Timing"
+          label="02 · Timing"
           title="Ten minutes is the whole attack window"
         >
           Fetch, generate, create, assign, notify. The gap is exactly the time a
           student needs to pull the essay back up, so the architecture worked
           against the one thing the product had to prove.
         </Card>
-        <Card label="02 · Tooling" title="Quiz tooling is one-to-many">
-          A quiz is authored once and assigned to a class. A fresh quiz per
-          submission fights that at every step and gets fragile when a whole
-          class submits at once.
-        </Card>
         <Card label="03 · Notifications" title="Students turn them off">
-          Inboxes go unchecked and email timing varies by institution. The
-          fallback would have been “instructors remind students”, which lands
+          Inboxes go unchecked, and email timing varies by institution. The
+          fallback would have been “instructors remind students,” which lands
           the burden on the person we were trying to help.
         </Card>
         <Card label="04 · Grading" title="Two disconnected things to grade">
@@ -257,50 +298,60 @@ function Constraints() {
           different places, with no unified view for the instructor.
         </Card>
       </HairlineGrid>
+      <StatRow>
+        <Stat value="6" label="Steps between submission and quiz" />
+        <Stat value="~10 min" label="Latency those steps add up to" />
+        <Stat
+          value="Per student"
+          label="A fresh quiz each, in tooling built for one per class"
+        />
+      </StatRow>
     </Slide>
   )
 }
+
+/** The student's path as it was briefed, and as it was pitched instead. */
+const BRIEFED_STEPS = [
+  { title: "Student submits the assignment" },
+  { title: "Content is extracted to generate questions" },
+  { title: "A quiz is created and assigned through the Canvas Quiz API" },
+  { title: "Student is notified by Canvas inbox and email" },
+  { title: "Student finds the quiz, about ten minutes later" },
+  { title: "AuthorProof generates a report card of the results" },
+]
+
+const PITCHED_STEPS = [
+  { title: "Student starts the assignment" },
+  { title: "Uploads the essay into the AuthorProof LTI" },
+  { title: "The quiz appears, seconds later" },
+  { title: "The assignment shows as completed once the quiz is done" },
+]
 
 function Pivot() {
   return (
     <Slide>
       <Kicker>AuthorProof / the pivot</Kicker>
-      <Title>A smaller flow that kept the promise.</Title>
-      <Stack className="gap-3">
-        <Reveal>
-          <p className="text-xs tracking-wide text-muted-foreground uppercase">
-            As briefed
-          </p>
-        </Reveal>
-        <Flow
-          tone="fade"
-          stages={[
-            { label: "Submit" },
-            { label: "Generate" },
-            { label: "Create quiz" },
-            { label: "Assign" },
-            { label: "Notify" },
-            { label: "Student finds it", detail: "~10 min later" },
-          ]}
-        />
-        <Reveal>
-          <p className="mt-3 text-xs tracking-wide text-muted-foreground uppercase">
-            As pitched
-          </p>
-        </Reveal>
-        <Flow
-          stages={[
-            { label: "Start the assignment" },
-            { label: "Upload the essay" },
-            { label: "Quiz appears", detail: "seconds later" },
-            { label: "Result beside the submission" },
-          ]}
-        />
-      </Stack>
+      <Title>
+        A revised solution: a smaller, tighter flow that kept the promise.
+      </Title>
+      <Reveal>
+        <Tabs defaultValue="pitched">
+          <TabsList>
+            <TabsTrigger value="briefed">As briefed</TabsTrigger>
+            <TabsTrigger value="pitched">As pitched</TabsTrigger>
+          </TabsList>
+          <TabsContent value="briefed">
+            <PinnedFlow steps={BRIEFED_STEPS} />
+          </TabsContent>
+          <TabsContent value="pitched">
+            <PinnedFlow steps={PITCHED_STEPS} />
+          </TabsContent>
+        </Tabs>
+      </Reveal>
       <HairlineGrid>
         <Shot
           src="/images/review/pivot-config-before.png"
-          alt="Quiz configuration as briefed: a Plagiarism Detection dropdown set to AuthorProof, with quiz type, number of questions, time limit and proctored environment stacked underneath in the assignment form"
+          alt="Quiz configuration as briefed: a Plagiarism Detection dropdown set to AuthorProof, with quiz type, number of questions, time limit, and proctored environment stacked underneath in the assignment form"
           width={1336}
           height={798}
           label="As briefed: settings inline in the assignment form"
@@ -314,7 +365,7 @@ function Pivot() {
         />
         <Shot
           src="/images/review/pivot-notify-before.png"
-          alt="An email in the student's inbox: Your comprehension quiz is ready, with a deadline and an Open Quiz in Canvas button"
+          alt="An email in the student’s inbox: Your comprehension quiz is ready, with a deadline and an Open Quiz in Canvas button"
           width={1334}
           height={750}
           label="As briefed: the student is told by email, later"
@@ -329,45 +380,16 @@ function Pivot() {
       </HairlineGrid>
       <HairlineGrid>
         <Card label="What the pivot bought">
-          Collapsed the timing gap, removed the notification dependency, and
+          It collapsed the timing gap, removed the notification dependency, and
           stepped out of the quiz tooling entirely, which left the instructor
           one thing to read.
         </Card>
         <Card label="What it cost, said out loud">
           Short pieces written directly in the LMS editor were excluded, and how
-          proctoring coexists with the embedded flow stayed open. I flagged the
-          hole rather than let engineering find it.
+          proctoring coexists with the embedded flow stayed an open question. I
+          flagged the hole rather than let engineering find it.
         </Card>
       </HairlineGrid>
-    </Slide>
-  )
-}
-
-function Principles() {
-  return (
-    <Slide>
-      <Kicker>AuthorProof / principles</Kicker>
-      <Title>Confidence, not verdict.</Title>
-      <Lede>
-        The result had to read as evidence for a conversation between an
-        instructor and a student. Three rules followed.
-      </Lede>
-      <Steps
-        items={[
-          {
-            title: "No binary pass or fail.",
-            body: "A score ships with a confidence level. The instructor decides what to do with it.",
-          },
-          {
-            title: "Transparency into what was evaluated.",
-            body: "Every generated question sits beside the student's own words that prompted it, and beside the assessment of the answer, so a score traces back to something a person can read.",
-          },
-          {
-            title: "Never colour alone.",
-            body: "The host platform controls the badge colour and maps it the opposite way from the score. Score, label and confidence are always carried as text.",
-          },
-        ]}
-      />
     </Slide>
   )
 }
@@ -376,28 +398,69 @@ function Shipped() {
   return (
     <Slide>
       <Kicker>AuthorProof / shipped</Kicker>
-      <Title>The prototype was the spec.</Title>
-      <Lede>
-        Concept to production-ready MVP in four to six weeks. Engineering got
-        working prototypes in HTML, CSS and vanilla JS rather than a document
-        about them: the settings panel, the student quiz flow, and the results
-        pathway from badge to session detail.
-      </Lede>
+      <div className="grid items-center gap-8 md:grid-cols-[3fr_2fr]">
+        <Stack>
+          <Title>The prototype was the spec.</Title>
+          <Lede>
+            Concept to production-ready MVP in four to six weeks. I designed the
+            settings model for quiz configuration and built its interface,
+            designed the report card, the quiz results, and the emails students
+            receive, and built the front end for all of it in HTML, CSS, and
+            vanilla JavaScript on our design system. Engineering got working
+            prototypes rather than a document about them.
+          </Lede>
+        </Stack>
+        <Reveal>
+          <Frame>
+            <video
+              className="aspect-square w-full rounded-xl bg-surface object-cover"
+              src="/images/review/authorproof-shipped.webm"
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-label="AuthorProof, as shipped"
+            />
+          </Frame>
+        </Reveal>
+      </div>
+      <HairlineGrid>
+        <Card label="Proof of concept" title="The briefed idea shipped first">
+          The Canvas quiz architecture from the brief became the proof of
+          concept: the fastest way to put a working product in front of pilot
+          instructors.
+        </Card>
+        <Card label="Long-term vision" title="The pivot became the roadmap">
+          The embedded flow I proposed was adopted as the official long-term
+          vision for the product, with the quiz appearing inside the assignment
+          seconds after upload.
+        </Card>
+      </HairlineGrid>
+      <Shot
+        src="/images/review/authorproof-artifacts.webp"
+        alt="Two AuthorProof screens side by side: the instructor’s report card, with an overview of the student’s score, confidence level, and time used beside a question-by-question breakdown of answers and assessments, and the student’s email saying their comprehension quiz is ready, with its deadline and course"
+        width={1600}
+        height={871}
+        label="The report card instructors read, and the email students receive"
+        className="p-0"
+      />
       <StatRow>
         <Stat
-          value="Seconds"
-          label="From submission to quiz, instead of about ten minutes"
+          value="95%"
+          label="Quiz completion rate among pilot test takers"
         />
-        <Stat
-          value="One view"
-          label="The score lands beside the submission being graded"
-        />
-        <Stat value="4 to 6 wks" label="Concept to production-ready MVP" />
+        <Stat value="<5%" label="False-positive rate in the pilot" />
         <Stat
           value="0"
-          label="Steps added to the instructor's grading workflow"
+          label="Steps added to the instructor’s grading workflow"
         />
+        <Stat value="4 to 6 wks" label="Concept to production-ready MVP" />
       </StatRow>
+      <Reveal>
+        <p className="max-w-2xl font-heading text-xl/tight font-medium text-balance md:text-2xl/tight">
+          Sweeping positive feedback from customers on the new product concept.
+        </p>
+      </Reveal>
       <LinkRow>
         <LinkOut href={REVIEW_LINKS.authorProof.product} variant="default">
           Product page
@@ -412,7 +475,7 @@ function Shipped() {
 
 export const AUTHOR_PROOF_CONTENT: Record<
   string,
-  ComponentType<{ slide: SlideType }>
+  ComponentType<{ slide: SlideType; data: SlideData }>
 > = {
   suite: Suite,
   cover: Cover,
@@ -421,6 +484,5 @@ export const AUTHOR_PROOF_CONTENT: Record<
   brief: Brief,
   constraints: Constraints,
   pivot: Pivot,
-  principles: Principles,
   shipped: Shipped,
 }

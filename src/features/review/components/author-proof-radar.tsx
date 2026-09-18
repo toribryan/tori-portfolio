@@ -20,7 +20,7 @@ const DATA = [
   { vector: "Track leaked content", integrity: 60, vault: 100, origin: 10 },
   { vector: "Prevent impersonation", integrity: 100, vault: 100, origin: 10 },
   { vector: "Detect AI use", integrity: 100, vault: 10, origin: 100 },
-  { vector: "Monitor behaviour", integrity: 100, vault: 60, origin: 100 },
+  { vector: "Monitor behavior", integrity: 100, vault: 60, origin: 100 },
 ]
 
 const CONFIG = {
@@ -34,7 +34,7 @@ const LINE_HEIGHT = 12
 /**
  * Axis labels in the deck's small mono style, broken over two lines. Each
  * label grows away from the chart: a top label stacks upward from its
- * anchor, a bottom one downward, and the side ones centre on it, so no
+ * anchor, a bottom one downward, and the side ones center on it, so no
  * line of text runs back into the grid.
  */
 function AxisTick({
@@ -82,7 +82,7 @@ function AxisTick({
 /**
  * The integrity suite as a radar. Integrity and Vault sit back as dashed
  * outlines; Origin, the task, fills in green. Each area grows out of the
- * centre when the chart mounts.
+ * center when the chart mounts.
  */
 export function AuthorProofRadar({ className }: { className?: string }) {
   return (

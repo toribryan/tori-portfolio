@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
+import { getTweet } from "react-tweet/api"
 
 import { SITE_INFO } from "@/config/site"
 import { USER } from "@/features/portfolio/data/user"
@@ -8,6 +9,9 @@ import { findSlideIndex, SECTIONS, SLIDES } from "@/features/review/data/deck"
 
 /** Who the hello screen greets. */
 const AUDIENCE = "Assembled"
+
+/** The post quoted on the observations slide. */
+const TWEET_ID = "2097051500044513414"
 
 export const revalidate = false
 export const dynamic = "force-static"
@@ -62,7 +66,17 @@ export default async function Page({
     notFound()
   }
 
+  const tweet = await getTweet(TWEET_ID).catch((error) => {
+    console.warn(`Could not fetch tweet ${TWEET_ID}:`, error)
+    return null
+  })
+
   return (
-    <Deck initialIndex={index} greeting={!path?.length} audience={AUDIENCE} />
+    <Deck
+      initialIndex={index}
+      greeting={!path?.length}
+      audience={AUDIENCE}
+      data={{ tweet: tweet ?? null }}
+    />
   )
 }

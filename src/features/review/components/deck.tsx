@@ -22,6 +22,7 @@ import {
   slideHref,
   SLIDES,
 } from "@/features/review/data/deck"
+import type { SlideData } from "@/features/review/types"
 import { stageKey } from "@/features/review/types"
 
 import { Greeting } from "./greeting"
@@ -81,11 +82,13 @@ export function Deck({
   initialIndex,
   greeting,
   audience,
+  data,
 }: {
   initialIndex: number
   /** Open on the hello screen instead of a slide. */
   greeting: boolean
   audience: string
+  data: SlideData
 }) {
   const [[index, direction], setPosition] = useState([initialIndex, 0])
   const [started, setStarted] = useState(!greeting)
@@ -312,7 +315,7 @@ export function Deck({
                     key={stageKey(slide)}
                     // As wide as the viewport, not the column, so a slide's
                     // hairlines can run across the screen the way the
-                    // site's do. The column is re-centred inside.
+                    // site's do. The column is re-centered inside.
                     className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 overflow-x-hidden overflow-y-auto"
                     data-slide-scroll
                     custom={direction}
@@ -323,7 +326,7 @@ export function Deck({
                     aria-label={`${section.title}: ${slide.title}`}
                   >
                     <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-4 md:px-8">
-                      {renderSlide(slide)}
+                      {renderSlide(slide, data)}
                     </div>
                   </motion.section>
                 </AnimatePresence>
@@ -373,7 +376,7 @@ export function Deck({
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: 16, filter: "blur(4px)" }}
                 transition={{ duration: 0.35, ease: EASE }}
-                aria-label="Speaker notes"
+                aria-label="Notes"
               >
                 <div className="flex flex-col gap-3 rounded-xl border border-line bg-background p-4 shadow-lg">
                   <div className="flex items-center justify-between">
