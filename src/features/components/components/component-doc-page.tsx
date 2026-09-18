@@ -16,7 +16,7 @@ import type { ComponentEntry } from "@/features/components/data/registry"
 /**
  * The reading layout for a component doc: the header row with the way back
  * and the registry link, the title, the lead, the table of contents, the MDX
- * body, and the announcement post if there is one.
+ * body, with the announcement post up top if there is one.
  */
 export async function ComponentDocPage({
   doc,
@@ -69,17 +69,17 @@ export async function ComponentDocPage({
       <Prose className="px-4 pt-8 pb-4">
         <p className="lead text-muted-foreground">{doc.metadata.description}</p>
 
+        {post && (
+          <div className="not-prose mb-6">
+            <TweetQuote tweet={post} />
+          </div>
+        )}
+
         <TOCInline items={toc} />
 
         <div>
           <MDX code={doc.content} />
         </div>
-
-        {post && (
-          <div className="not-prose mt-10">
-            <TweetQuote tweet={post} />
-          </div>
-        )}
       </Prose>
     </>
   )
