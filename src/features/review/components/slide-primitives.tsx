@@ -166,9 +166,15 @@ export function HairlineGrid({
   children,
   ...props
 }: React.ComponentProps<"div"> & {
-  columns?: 2 | 3 | 4
+  /** A count of equal columns, or a `grid-template-columns` value. */
+  columns?: 2 | 3 | 4 | string
 }) {
-  const template = `repeat(${columns}, minmax(0, 1fr))`
+  const template =
+    typeof columns === "number" ? `repeat(${columns}, minmax(0, 1fr))` : columns
+  const count =
+    typeof columns === "number"
+      ? columns
+      : columns.split(/\s+(?![^(]*\))/).length
   return (
     <div
       className={cn(
@@ -181,13 +187,13 @@ export function HairlineGrid({
         className="pointer-events-none absolute inset-0 -z-1 grid gap-4 max-md:hidden md:grid-cols-(--cols)"
         aria-hidden
       >
-        {Array.from({ length: columns }, (_, i) => (
+        {Array.from({ length: count }, (_, i) => (
           <div
             key={i}
             className={cn(
               "border-line",
               i > 0 && "border-l",
-              i < columns - 1 && "border-r"
+              i < count - 1 && "border-r"
             )}
           />
         ))}

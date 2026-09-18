@@ -7,7 +7,13 @@ import { AnimatePresence, motion } from "motion/react"
 import { Testimonial } from "@/components/ui/testimonial"
 import type { Slide as SlideType } from "@/features/review/types"
 
-import { EASE, HairlineGrid, MediaCard, Slide } from "../slide-primitives"
+import {
+  EASE,
+  Frame,
+  HairlineGrid,
+  MediaCard,
+  Slide,
+} from "../slide-primitives"
 
 const BIO_PHOTOS = [
   {
@@ -47,12 +53,12 @@ const PILLARS = [
 ]
 
 const QUOTES = [
-  { quote: "A question artist.", author: "My dad" },
+  { quote: "question artist", author: "My dad would tell you I am a" },
   {
-    quote: "She goes far beyond simply completing the task.",
-    author: "My colleagues",
+    quote: "she goes far beyond simply completing the task",
+    author: "My colleagues would say",
   },
-  { quote: "A curious design engineer.", author: "Me" },
+  { quote: "curious design engineer", author: "I call myself a" },
 ]
 
 const swap = {
@@ -73,30 +79,32 @@ const swap = {
 
 function Bio() {
   return (
-    <div className="grid items-center gap-8 md:grid-cols-[minmax(0,24rem)_1fr]">
-      <div className="grid grid-cols-2 gap-2">
+    <HairlineGrid columns="minmax(0, 24rem) 1fr" className="items-center">
+      <div className="grid grid-cols-2 gap-2 p-2">
         {BIO_PHOTOS.map((photo) => (
-          <Image
-            key={photo.src}
-            className="aspect-square w-full rounded-lg object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-            src={photo.src}
-            alt={photo.alt}
-            width={900}
-            height={900}
-            unoptimized
-          />
+          <Frame key={photo.src}>
+            <Image
+              className="aspect-square w-full rounded-xl object-cover"
+              src={photo.src}
+              alt={photo.alt}
+              width={900}
+              height={900}
+              unoptimized
+            />
+          </Frame>
         ))}
       </div>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-8 px-6 py-4">
         {QUOTES.map((item) => (
           <Testimonial
             key={item.quote}
             quote={item.quote}
             authorName={item.author}
+            lead
           />
         ))}
       </div>
-    </div>
+    </HairlineGrid>
   )
 }
 
