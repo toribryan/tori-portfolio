@@ -55,7 +55,7 @@ export function Testimonial({
       <figcaption
         className={cn(
           "flex w-full items-center gap-3 md:w-2/3",
-          lead ? "-ml-3 flex-row-reverse" : "ml-auto"
+          lead ? "flex-row-reverse" : "ml-auto"
         )}
       >
         <div className="h-px grow translate-y-px bg-line" />

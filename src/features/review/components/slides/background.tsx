@@ -88,8 +88,10 @@ const swap = {
 
 function Bio() {
   return (
-    <HairlineGrid columns="minmax(0, 24rem) 1fr" className="items-center">
-      <div className="grid grid-cols-2 gap-2 p-2">
+    <HairlineGrid columns="minmax(0, 24rem) 1fr">
+      {/* Photos start on the title's line; the quotes span the photos' height
+          so the first sits on their top edge and the last on their bottom. */}
+      <div className="grid grid-cols-2 gap-2 py-2 pr-2 md:pl-6">
         {BIO_PHOTOS.map((photo) => (
           <Frame key={photo.src}>
             <Image
@@ -103,7 +105,7 @@ function Bio() {
           </Frame>
         ))}
       </div>
-      <div className="flex flex-col gap-8 px-6 py-4">
+      <div className="flex flex-col justify-between gap-8 px-6 py-2">
         {QUOTES.map((item) => (
           <Testimonial
             key={item.quote}
