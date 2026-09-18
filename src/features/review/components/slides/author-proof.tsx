@@ -16,6 +16,7 @@ import {
   Card,
   EASE,
   Flow,
+  Frame,
   HairlineGrid,
   Kicker,
   Lede,
@@ -24,7 +25,6 @@ import {
   Reveal,
   Shot,
   Slide,
-  Split,
   Stack,
   Stat,
   StatRow,
@@ -77,8 +77,8 @@ function Cover() {
         <ProctorioLogo className="h-7 w-auto text-foreground" />
       </Reveal>
       <Title size="xl">AuthorProof</Title>
-      <Split className="items-start">
-        <Stack>
+      <HairlineGrid>
+        <Stack className="justify-center px-6 py-4">
           <Lede>
             Plagiarism checkers read the document. This one asks the student
             about the paper they turned in.
@@ -92,18 +92,20 @@ function Cover() {
             </LinkOut>
           </LinkRow>
         </Stack>
-        <Reveal>
-          <video
-            className="aspect-square w-full rounded-xl bg-surface-warm object-cover inset-ring-1 inset-ring-border/64"
-            src="/images/review/authorproof-cover.webm"
-            autoPlay
-            loop
-            muted
-            playsInline
-            aria-label="AuthorProof in motion"
-          />
+        <Reveal className="p-2">
+          <Frame>
+            <video
+              className="aspect-square w-full rounded-xl bg-surface object-cover"
+              src="/images/review/authorproof-cover.webm"
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-label="AuthorProof in motion"
+            />
+          </Frame>
         </Reveal>
-      </Split>
+      </HairlineGrid>
     </Slide>
   )
 }
@@ -117,8 +119,8 @@ function Task() {
         A new product in the Origin suite: verify authorship of written work,
         inside the instructor’s existing Canvas workflow.
       </Lede>
-      <Split ratio="art" className="items-center">
-        <Reveal className="flex flex-col gap-3">
+      <HairlineGrid columns="1fr 1.4fr">
+        <Reveal className="flex flex-col justify-center gap-3 px-6 py-4">
           <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
             The gap
           </p>
@@ -130,10 +132,10 @@ function Task() {
             write this?
           </p>
         </Reveal>
-        <Reveal>
+        <Reveal className="p-2">
           <AuthorProofRadar className="aspect-[4/3] w-full" />
         </Reveal>
-      </Split>
+      </HairlineGrid>
     </Slide>
   )
 }

@@ -472,31 +472,6 @@ export function Quote({
   )
 }
 
-/** Two columns from `md` up: copy on the left, artefact on the right. */
-export function Split({
-  className,
-  children,
-  ratio = "even",
-}: {
-  className?: string
-  children: React.ReactNode
-  ratio?: "even" | "copy" | "art"
-}) {
-  return (
-    <div
-      className={cn(
-        "grid items-start gap-6 md:gap-8",
-        ratio === "even" && "md:grid-cols-2",
-        ratio === "copy" && "md:grid-cols-[1.2fr_1fr]",
-        ratio === "art" && "md:grid-cols-[1fr_1.4fr]",
-        className
-      )}
-    >
-      {children}
-    </div>
-  )
-}
-
 export function Stack({
   className,
   children,
