@@ -3,17 +3,31 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { motion, useInView, useReducedMotion } from "motion/react"
 
-import { cn } from "@/lib/utils"
-import { Chip as BaseChip } from "@/components/ui/chip"
+function cn(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ")
+}
 
-function Chip(props: React.ComponentProps<typeof BaseChip>) {
+/** A small labelled pill with something, usually a swatch, before the label. */
+function Chip({
+  children,
+  className,
+  startContent,
+}: {
+  children: React.ReactNode
+  className?: string
+  startContent?: React.ReactNode
+}) {
   return (
-    <BaseChip
-      size="sm"
-      variant="tertiary"
-      {...props}
-      className={cn("bg-white dark:bg-card", props.className)}
-    />
+    <span
+      className={cn(
+        "relative box-border inline-flex h-6 max-w-fit min-w-min items-center rounded-full border border-border bg-white px-1 text-xs whitespace-nowrap text-foreground dark:bg-card",
+        className
+      )}
+      data-slot="chip"
+    >
+      {startContent}
+      <span className="flex-1 px-1 pl-0.5">{children}</span>
+    </span>
   )
 }
 

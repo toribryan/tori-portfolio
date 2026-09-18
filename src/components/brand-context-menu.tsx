@@ -44,7 +44,6 @@ export function BrandContextMenu({ children }: { children: React.ReactNode }) {
           <Type />
           Copy Logotype as SVG
         </ContextMenuItem>
-
       </ContextMenuContent>
     </ContextMenu>
   )

@@ -8,15 +8,15 @@ import {
   PencilLineIcon,
   RocketIcon,
   SearchIcon,
-  SplitIcon,
   ShieldIcon,
+  SplitIcon,
   UsersIcon,
   WrenchIcon,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { ClaudeIcon, ReactIcon, TerminalIcon } from "@/components/icons"
 import { IconTile } from "@/components/ui/icon-tile"
+import { ClaudeIcon, ReactIcon, TerminalIcon } from "@/components/icons"
 
 /**
  * The marks a `<Stage>` can show, already sized for the 40px tile.

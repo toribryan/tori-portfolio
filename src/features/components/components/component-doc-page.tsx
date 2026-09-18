@@ -10,9 +10,12 @@ import { Button } from "@/components/base/ui/button"
 import { Prose } from "@/components/base/ui/typography"
 import { MDX } from "@/components/mdx"
 import { TOCInline } from "@/components/toc-inline"
-import type { ComponentDoc } from "@/features/components/data/docs"
 import type { ComponentEntry } from "@/features/components/data/registry"
+import type { RegistryDoc } from "@/features/components/data/registry-docs"
 import { USER } from "@/features/portfolio/data/user"
+
+import { ComponentPreview } from "./component-preview"
+import { InstallCommand } from "./install-command"
 
 /**
  * The reading layout for a component doc: the header row with the way back
@@ -23,7 +26,7 @@ export async function ComponentDocPage({
   doc,
   entry,
 }: {
-  doc: ComponentDoc
+  doc: RegistryDoc
   entry: ComponentEntry
 }) {
   const toc = cleanTableOfContents(await getTableOfContents(doc.content))
@@ -79,7 +82,10 @@ export async function ComponentDocPage({
         <TOCInline items={toc} />
 
         <div>
-          <MDX code={doc.content} />
+          <MDX
+            code={doc.content}
+            components={{ ComponentPreview, InstallCommand }}
+          />
         </div>
       </Prose>
     </>

@@ -3,7 +3,7 @@ import path from "path"
 import { cache } from "react"
 import matter from "gray-matter"
 
-export type ComponentDocMetadata = {
+export type RegistryDocMetadata = {
   title: string
   description: string
   createdAt: string
@@ -11,16 +11,16 @@ export type ComponentDocMetadata = {
   new?: boolean
 }
 
-export type ComponentDoc = {
+export type RegistryDoc = {
   slug: string
-  metadata: ComponentDocMetadata
+  metadata: RegistryDocMetadata
   content: string
 }
 
 const CONTENT_DIR = path.join(process.cwd(), "src/features/components/content")
 
-/** Every component doc under `content/`, newest first. */
-export const getComponentDocs = cache((): ComponentDoc[] =>
+/** Every published component's doc under `content/`, newest first. */
+export const getRegistryDocs = cache((): RegistryDoc[] =>
   fs
     .readdirSync(CONTENT_DIR)
     .filter((file) => path.extname(file) === ".mdx")
@@ -29,7 +29,7 @@ export const getComponentDocs = cache((): ComponentDoc[] =>
       const parsed = matter(raw)
       return {
         slug: path.basename(file, ".mdx"),
-        metadata: parsed.data as ComponentDocMetadata,
+        metadata: parsed.data as RegistryDocMetadata,
         content: parsed.content,
       }
     })
@@ -40,6 +40,6 @@ export const getComponentDocs = cache((): ComponentDoc[] =>
     )
 )
 
-export function getComponentDoc(slug: string) {
-  return getComponentDocs().find((doc) => doc.slug === slug)
+export function getRegistryDoc(slug: string) {
+  return getRegistryDocs().find((doc) => doc.slug === slug)
 }

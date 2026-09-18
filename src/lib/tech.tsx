@@ -47,7 +47,7 @@ function BrandMark({ src }: { src: string }) {
     <span
       data-mark
       aria-hidden
-      className="block bg-current [mask-position:center] [mask-repeat:no-repeat] [mask-size:contain]"
+      className="block bg-current [mask-size:contain] [mask-position:center] [mask-repeat:no-repeat]"
       style={{ maskImage: `url(${src})`, WebkitMaskImage: `url(${src})` }}
     />
   )

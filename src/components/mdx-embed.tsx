@@ -200,7 +200,11 @@ export function Embed({
             title={title}
             loading="lazy"
             onLoad={postFocus}
-            style={{ width, height: effectiveHeight, transform: `scale(${scale})` }}
+            style={{
+              width,
+              height: effectiveHeight,
+              transform: `scale(${scale})`,
+            }}
           />
         </div>
       </div>

@@ -34,9 +34,21 @@ The category is derived from the folder name, never declared in frontmatter.
 | `latest/`     | `/latest/[slug]` | Posts and creative retros       |
 | `work/`       | `/work/[slug]`   | Case studies                    |
 
-The Components page is archived: its `/components` list and detail routes and
-the nav link were removed, but the MDX and `getComponentDocs` remain so it can
-be restored by reverting that commit.
+Published UI components are a separate feature: `src/features/components/`.
+`content/<slug>.mdx` is the doc body (preview, install, usage, API tables),
+`data/registry.tsx` wires the live preview, published source and 21st.dev
+link, and `data/marks.ts` holds the icon for the home page grid. Pages are at
+`/components/[slug]` and the home page section lists them. Adding one means
+an MDX file plus a registry entry and a mark; a doc without a registry entry
+is skipped rather than rendered. `.21st/token-flow.tsx` is generated from
+`src/components/ui/token-flow.tsx` by `npm run sync:token-flow`; edit the
+source, not the copy.
+
+The brand design system docs under `components/` are archived: their list
+and detail routes and the nav link were removed, but the MDX and
+`getComponentDocs` remain so they can be restored by reverting that commit.
+They are unrelated to the published UI components, which now own the
+`/components/[slug]` route.
 
 `src/features/doc/data/documents.ts` reads them; `src/features/doc/types/document.ts`
 is the frontmatter contract. **To add content, add an MDX file** — there is no

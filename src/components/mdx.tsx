@@ -14,8 +14,6 @@ import {
 } from "@/lib/rehype-code-block"
 import { cn } from "@/lib/utils"
 import { Code } from "@/components/base/ui/typography"
-import { ComponentPreview } from "@/features/components/components/component-preview"
-import { InstallCommand } from "@/features/components/components/install-command"
 
 import { Callout } from "./callout"
 import { Heading } from "./heading"
@@ -61,8 +59,6 @@ const components: MDXRemoteProps["components"] = {
 
   BrandLink,
   Callout,
-  ComponentPreview,
-  InstallCommand,
   Embed,
   Compare,
   Figure,
@@ -106,6 +102,19 @@ const options: MDXRemoteProps["options"] = {
   },
 }
 
-export function MDX({ code }: { code: string }) {
-  return <MDXRemote source={code} components={components} options={options} />
+export function MDX({
+  code,
+  components: extra,
+}: {
+  code: string
+  /** Components only this doc's MDX may use, on top of the shared set. */
+  components?: MDXRemoteProps["components"]
+}) {
+  return (
+    <MDXRemote
+      source={code}
+      components={extra ? { ...components, ...extra } : components}
+      options={options}
+    />
+  )
 }

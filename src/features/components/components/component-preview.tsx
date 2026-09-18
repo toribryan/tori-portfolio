@@ -10,12 +10,12 @@ import {
 import { MDX } from "@/components/mdx"
 import { COMPONENTS } from "@/features/components/data/registry"
 
-const SOURCE_DIR = path.join(process.cwd(), "src/components/ui")
+const PUBLISHED_DIR = path.join(process.cwd(), ".21st")
 
 /**
  * The live component and its source behind two tabs, the way registry sites
- * show a demo. The source is read from disk at build and highlighted through
- * the same pipeline as a fenced block.
+ * show a demo. The source is the published file, read from disk at build and
+ * highlighted through the same pipeline as a fenced block.
  */
 export function ComponentPreview({ name }: { name: string }) {
   const entry = COMPONENTS[name]
@@ -23,7 +23,10 @@ export function ComponentPreview({ name }: { name: string }) {
     throw new Error(`No component registered as "${name}"`)
   }
 
-  const source = fs.readFileSync(path.join(SOURCE_DIR, entry.source), "utf-8")
+  const source = fs.readFileSync(
+    path.join(PUBLISHED_DIR, entry.source),
+    "utf-8"
+  )
 
   return (
     <Tabs defaultValue="preview" className="not-prose my-6">

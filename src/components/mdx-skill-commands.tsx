@@ -1,6 +1,6 @@
-import { FolderOpenIcon } from "@/components/icons"
 import { IconTile } from "@/components/ui/icon-tile"
 import { Kbd } from "@/components/ui/kbd"
+import { FolderOpenIcon } from "@/components/icons"
 
 const COMMANDS = [
   {

@@ -2,8 +2,8 @@ import { getTweet } from "react-tweet/api"
 
 import { TweetQuote } from "@/components/ui/tweet-card"
 import { ComponentList } from "@/features/components/components/component-list"
-import { getComponentDocs } from "@/features/components/data/docs"
 import { COMPONENTS } from "@/features/components/data/registry"
+import { getRegistryDocs } from "@/features/components/data/registry-docs"
 import { USER } from "@/features/portfolio/data/user"
 
 import { Panel, PanelHeader, PanelTitle, PanelTitleSup } from "./panel"
@@ -17,7 +17,7 @@ const ID = "components"
  * then every component as a cell into its page.
  */
 export async function Components() {
-  const docs = getComponentDocs()
+  const docs = getRegistryDocs().filter((doc) => doc.slug in COMPONENTS)
   const featured = docs
     .map((doc) => COMPONENTS[doc.slug]?.links.post)
     .find(Boolean)

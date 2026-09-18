@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
 import { BRAND_LINKS } from "@/lib/brand-links"
+import { cn } from "@/lib/utils"
 
 /**
  * A small linked brand mark, dropped next to a heading or an inline tool

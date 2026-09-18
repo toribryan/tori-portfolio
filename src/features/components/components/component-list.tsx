@@ -2,6 +2,8 @@
 
 import type { Route } from "next"
 import Link from "next/link"
+import type { LucideIcon } from "lucide-react"
+import { WaypointsIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { IconTile } from "@/components/ui/icon-tile"
@@ -10,11 +12,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/base/ui/tooltip"
-import type { ComponentEntry } from "@/features/components/data/registry"
 import {
-  COMPONENTS,
+  COMPONENT_MARKS,
   UPCOMING_COMPONENTS,
-} from "@/features/components/data/registry"
+} from "@/features/components/data/marks"
 
 export type ComponentListItem = {
   slug: string
@@ -30,7 +31,7 @@ function Mark({
   isNew,
   muted = false,
 }: {
-  icon: ComponentEntry["icon"]
+  icon: LucideIcon
   isNew?: boolean
   muted?: boolean
 }) {
@@ -56,8 +57,9 @@ function Mark({
 /**
  * The components as a three-across grid of marks and names, hairlines
  * between, like the registry sites. Published ones link to their page;
- * upcoming ones sit muted with a note on hover. Names come from the caller
- * and marks from the registry, since icons cannot cross from a server parent.
+ * upcoming ones sit muted with a note on hover and focus. Names come from
+ * the caller and marks from `marks.ts`, since icons cannot cross from a
+ * server parent.
  */
 export function ComponentList({
   items,
@@ -83,7 +85,10 @@ export function ComponentList({
               "transition-[background-color] ease-out hover:bg-accent-muted"
             )}
           >
-            <Mark icon={COMPONENTS[item.slug].icon} isNew={item.isNew} />
+            <Mark
+              icon={COMPONENT_MARKS[item.slug] ?? WaypointsIcon}
+              isNew={item.isNew}
+            />
             {item.name}
           </Link>
         </li>
@@ -94,10 +99,11 @@ export function ComponentList({
           <Tooltip>
             <TooltipTrigger
               render={
-                <div
+                <button
+                  type="button"
                   className={cn(
                     CELL,
-                    "cursor-not-allowed text-muted-foreground"
+                    "w-full cursor-not-allowed text-left text-muted-foreground"
                   )}
                   aria-disabled
                 />
