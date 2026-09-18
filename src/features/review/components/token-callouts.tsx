@@ -110,7 +110,7 @@ export function TokenCallouts({ className }: { className?: string }) {
           {CALLOUTS.map((callout, i) => (
             <span
               key={callout.part}
-              className="absolute flex size-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-foreground text-xs font-medium text-background tabular-nums ring-2 ring-background"
+              className="absolute flex size-5 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-foreground text-[11px] font-medium text-background tabular-nums ring-2 ring-background"
               style={{ left: `${callout.x}%`, top: `${callout.y}%` }}
               aria-hidden
             >
@@ -125,7 +125,7 @@ export function TokenCallouts({ className }: { className?: string }) {
             key={callout.part}
             className="grid grid-cols-[1.5rem_1fr] gap-3 py-2.5"
           >
-            <span className="inline-flex size-6 items-center justify-center rounded-full bg-foreground text-xs font-medium text-background tabular-nums">
+            <span className="inline-flex size-5 items-center justify-center rounded-full bg-foreground text-[11px] font-medium text-background tabular-nums">
               {i + 1}
             </span>
             <div className="flex flex-col gap-1">
