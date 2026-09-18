@@ -26,6 +26,7 @@ const eventSchema = z.object({
     "block_viewer_theme_change",
     "doc_sponsors_close",
     "resume_menu_action",
+    "component_page_action",
   ]),
   // declare type AllowedPropertyValues = string | number | boolean | null
   properties: z
