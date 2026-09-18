@@ -429,14 +429,14 @@ function DeckScrubber({
   }))
 
   return (
-    <div className="absolute top-1/2 left-full ml-4 hidden -translate-y-1/2 xl:block">
+    <div className="absolute top-1/2 left-full ml-6 hidden -translate-y-1/2 rounded-xl border border-line bg-background px-3 py-2 xl:block">
       <ChapterScrubber
         chapters={chapters}
-        side="left"
+        side="right"
         currentIndex={index}
         rowHeight={9}
         restLength={12}
-        peakLength={44}
+        peakLength={32}
         label="Slides"
         onSelect={(_, i) => onSelect(i)}
       />
