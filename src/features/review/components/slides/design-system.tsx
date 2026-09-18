@@ -283,31 +283,19 @@ function Dashboard() {
 function Shipping() {
   return (
     <Slide>
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <Kicker>Design system / shipping</Kicker>
-        <LinkRow>
-          <LinkOut
-            href={REVIEW_LINKS.modernCareHomes.live}
-            variant="default"
-            className="h-7 text-xs"
-          >
-            Visit Modern Care Homes
-          </LinkOut>
-          <LinkOut
-            href={REVIEW_LINKS.modernCareHomes.storybook}
-            className="h-7 text-xs"
-          >
-            Open Storybook
-          </LinkOut>
-          <LinkOut
-            href={REVIEW_LINKS.modernCareHomes.caseStudy}
-            className="h-7 text-xs"
-          >
-            Full case study
-          </LinkOut>
-        </LinkRow>
-      </div>
+      <Kicker>Design system / shipping</Kicker>
       <Title>I build what I design.</Title>
+      <LinkRow>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.live} variant="default">
+          Visit Modern Care Homes
+        </LinkOut>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.storybook}>
+          Open Storybook
+        </LinkOut>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.caseStudy}>
+          Full case study
+        </LinkOut>
+      </LinkRow>
       <HairlineGrid columns="minmax(0, 1.15fr) minmax(0, 1fr)">
         <Reveal className="p-2">
           <ShippingPipeline />
