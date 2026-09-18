@@ -99,7 +99,7 @@ const LineNavItem = memo(function LineNavItem({
       <motion.a
         ref={ref}
         aria-current={active ? "page" : undefined}
-        className="group relative flex h-px items-center gap-3 after:absolute after:top-1/2 after:left-0 after:size-full after:-translate-y-1/2 after:p-3.5"
+        className="group relative flex h-0.5 items-center gap-3 after:absolute after:top-1/2 after:left-0 after:size-full after:-translate-y-1/2 after:p-3.5"
         href={href}
         initial={false}
         animate={active ? "active" : "normal"}
@@ -107,7 +107,7 @@ const LineNavItem = memo(function LineNavItem({
         onClick={onClick}
       >
         <motion.span
-          className="block h-px shrink-0 bg-foreground/20 transition-[background-color] ease-out group-hover:bg-foreground group-aria-[current=page]:bg-foreground"
+          className="block h-0.5 shrink-0 bg-foreground/20 transition-[background-color] ease-out group-hover:bg-foreground group-aria-[current=page]:bg-foreground"
           variants={lineVariants}
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
         />
@@ -118,8 +118,8 @@ const LineNavItem = memo(function LineNavItem({
 
       {!isLast && (
         <>
-          <span className="block h-px w-(--line-nav-width) bg-foreground/20" />
-          <span className="block h-px w-(--line-nav-width) bg-foreground/20" />
+          <span className="block h-0.5 w-(--line-nav-width) bg-foreground/20" />
+          <span className="block h-0.5 w-(--line-nav-width) bg-foreground/20" />
         </>
       )}
     </>
