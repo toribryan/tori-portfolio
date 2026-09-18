@@ -279,7 +279,7 @@ function Shipping() {
     <Slide>
       <Kicker>Design system / shipping</Kicker>
       <Title>I build what I design.</Title>
-      <HairlineGrid columns="1.15fr 1fr">
+      <HairlineGrid columns="minmax(0, 1.15fr) minmax(0, 1fr)">
         <Reveal className="p-2">
           <ShippingPipeline />
         </Reveal>
@@ -296,7 +296,6 @@ function Shipping() {
           </Card>
           <Reveal className="p-2">
             <PrThread
-              title="One of the first pull requests"
               comments={[
                 {
                   handle: "sgrzincich",

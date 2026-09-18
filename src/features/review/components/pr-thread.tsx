@@ -15,11 +15,9 @@ export type PrComment = {
  * by the thread line.
  */
 export function PrThread({
-  title,
   comments,
   className,
 }: {
-  title: string
   comments: PrComment[]
   className?: string
 }) {
@@ -30,9 +28,6 @@ export function PrThread({
         className
       )}
     >
-      <p className="border-b border-line px-4 py-2.5 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
-        {title}
-      </p>
       <ol className="flex flex-col px-4 py-3">
         {comments.map((comment, i) => (
           <li key={comment.body} className="relative flex gap-3">
@@ -45,7 +40,7 @@ export function PrThread({
             <span className="relative z-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-surface font-mono text-[0.65rem] tracking-wide uppercase inset-ring-1 inset-ring-border/64">
               {comment.handle.slice(0, 2)}
             </span>
-            <div className="flex min-w-0 flex-1 flex-col gap-2 pb-5 last:pb-0">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5 pb-4 last:pb-0">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-1 pt-1.5">
                 <span className="text-sm font-medium">{comment.handle}</span>
                 <span className="text-xs text-muted-foreground">

@@ -1,21 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { AnimatePresence, motion } from "motion/react"
+import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
-
-/** What the pipeline reports as it runs, one line at a time. */
-const LOG = [
-  "Teardown: marketplace search and listing creation, in Mobbin",
-  "Figma: home-card v3, foundations locked, tokens named to match CSS",
-  "Storybook: HomeCard · 6 states · 200% zoom · AA passes",
-  "Pull request: feat(home-card): availability badge, save, carousel",
-  "Vercel preview ready · opened on a phone in a parking lot",
-  "Merged. Marketplace and agent platform pick up the change together.",
-  "Learned shipping: carousel dots need 48px targets. Back into the system.",
-  "Idle. Listening for the next screen...",
-]
 
 const STAGES = [
   { label: "Research", name: "Pattern teardown", meta: "Mobbin" },
@@ -23,7 +10,7 @@ const STAGES = [
   {
     label: "Build",
     name: "Storybook",
-    meta: "every state, every size, 200% zoom",
+    meta: "every state, 200% zoom",
     focus: true,
   },
   { label: "Review", name: "Pull request", meta: "typed, tested, reviewed" },
@@ -60,19 +47,10 @@ function RailDot({ delay }: { delay: number }) {
 
 /**
  * How a screen gets from a teardown to two products: the stages down a
- * rail with work travelling along it, a log line ticking underneath.
- * Storybook is the lit stage because it is where the two-product test runs.
+ * rail with work travelling along it. Storybook is the lit stage because
+ * it is where the two-product test runs.
  */
 export function ShippingPipeline({ className }: { className?: string }) {
-  const [line, setLine] = useState(0)
-
-  useEffect(() => {
-    const lines = setInterval(() => {
-      setLine((current) => (current + 1) % LOG.length)
-    }, 2700)
-    return () => clearInterval(lines)
-  }, [])
-
   return (
     <div
       className={cn(
@@ -80,25 +58,9 @@ export function ShippingPipeline({ className }: { className?: string }) {
         className
       )}
     >
-      <div className="flex items-center justify-between border-b border-line px-4 py-2.5">
-        <div className="flex items-center gap-2">
-          <motion.span
-            className="inline-block size-1.5 rounded-full bg-success"
-            animate={{ opacity: [1, 0.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <span className="font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
-            Shipping pipeline · live
-          </span>
-        </div>
-        <span className="font-mono text-[0.65rem] tracking-wide text-muted-foreground/70 uppercase">
-          1 library · 2 products
-        </span>
-      </div>
-
-      <ol className="relative flex flex-col gap-2 p-4 pl-11">
+      <ol className="relative flex flex-col gap-1.5 p-3 pl-10">
         <div
-          className="absolute top-6 bottom-6 left-6 w-px bg-line"
+          className="absolute top-5 bottom-5 left-5 w-px bg-line"
           aria-hidden
         >
           <RailDot delay={0} />
@@ -117,14 +79,14 @@ export function ShippingPipeline({ className }: { className?: string }) {
             />
             <div
               className={cn(
-                "flex items-baseline justify-between gap-4 rounded-lg px-3 py-2.5",
+                "flex min-w-0 items-baseline justify-between gap-4 rounded-lg px-3 py-2",
                 stage.focus
                   ? "bg-surface inset-ring-1 inset-ring-foreground/80"
                   : "inset-ring-1 inset-ring-border/64"
               )}
             >
-              <div className="flex items-baseline gap-3">
-                <span className="w-16 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
+              <div className="flex min-w-0 items-baseline gap-3">
+                <span className="w-14 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
                   {stage.label}
                 </span>
                 <span className="text-sm font-medium">{stage.name}</span>
@@ -141,8 +103,8 @@ export function ShippingPipeline({ className }: { className?: string }) {
             className="absolute top-1/2 -left-[1.3125rem] size-2 -translate-y-1/2 rounded-full bg-success ring-4 ring-background"
             aria-hidden
           />
-          <div className="flex items-baseline gap-3 px-3 py-2.5">
-            <span className="w-16 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
+          <div className="flex items-baseline gap-3 px-3 py-2">
+            <span className="w-14 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
               Shipped
             </span>
             <ul className="flex flex-wrap gap-2">
@@ -163,27 +125,7 @@ export function ShippingPipeline({ className }: { className?: string }) {
         </li>
       </ol>
 
-      <div className="flex h-11 items-start gap-2 border-t border-line px-4 py-2.5">
-        <span className="shrink-0 font-mono text-sm/snug text-muted-foreground">
-          ›
-        </span>
-        <div className="relative h-full flex-1 overflow-hidden">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={line}
-              className="absolute inset-0 truncate font-mono text-xs/snug text-muted-foreground"
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.25 }}
-            >
-              {LOG[line]}
-            </motion.p>
-          </AnimatePresence>
-        </div>
-      </div>
-
-      <dl className="grid grid-cols-4 gap-4 border-t border-line px-4 py-2.5">
+      <dl className="grid grid-cols-4 gap-4 border-t border-line px-3 py-2">
         {STATS.map(([label, value]) => (
           <div key={label}>
             <dt className="font-mono text-[0.6rem] tracking-wide whitespace-nowrap text-muted-foreground uppercase">
