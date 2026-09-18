@@ -109,9 +109,9 @@ export function ComponentPageActions({
       />
 
       <div className="flex items-center gap-2">
-        <div className="flex h-7 items-center overflow-hidden rounded-lg bg-secondary text-secondary-foreground">
+        <div className="flex h-7 items-center overflow-hidden rounded-lg bg-foreground/6 text-foreground inset-ring-1 inset-ring-foreground/6">
           <Button
-            className="h-full gap-2 rounded-none bg-transparent pr-3 pl-2.5 hover:bg-foreground/5"
+            className="h-full gap-2 rounded-none bg-transparent pr-3 pl-2.5 hover:bg-foreground/6"
             variant="secondary"
             size="sm"
             onClick={copyPage}
@@ -119,11 +119,11 @@ export function ComponentPageActions({
             {state === "done" ? <CheckIcon /> : <CopyIcon />}
             Copy page
           </Button>
-          <div className="h-4 w-px bg-foreground/15" aria-hidden />
+          <div className="h-4 w-px bg-foreground/20" aria-hidden />
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
-                "inline-flex h-full items-center px-2 transition-colors hover:bg-foreground/5 aria-expanded:bg-foreground/5",
+                "inline-flex h-full items-center px-2 transition-colors hover:bg-foreground/6 aria-expanded:bg-foreground/6",
                 "[&_svg]:size-4 [&_svg]:transition-transform aria-expanded:[&_svg]:rotate-180"
               )}
               aria-label="More ways to read this page"
@@ -184,7 +184,7 @@ export function ComponentPageActions({
           <TooltipTrigger
             render={
               <Button
-                className="size-7"
+                className="size-7 bg-foreground/6 inset-ring-1 inset-ring-foreground/6 hover:bg-foreground/10"
                 variant="secondary"
                 size="icon-sm"
                 onClick={share}
@@ -234,7 +234,7 @@ function NeighbourLink({
       <TooltipTrigger
         render={
           <Button
-            className="size-7"
+            className="size-7 bg-foreground/6 inset-ring-1 inset-ring-foreground/6 hover:bg-foreground/10"
             variant="secondary"
             size="icon-sm"
             nativeButton={false}
