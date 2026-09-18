@@ -4,6 +4,8 @@ import { useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
+import { Frame, HairlineGrid } from "./slide-primitives"
+
 export type SuiteItem = {
   name: string
   line: string
@@ -14,10 +16,9 @@ export type SuiteItem = {
 }
 
 /**
- * The product suites side by side, set like the project cards on the home
- * page: a looping clip in a ringed frame, name and one line under it,
- * hairlines between the columns. Hovering one pauses the other two and
- * drops them back, so the one under the pointer is the only thing moving.
+ * The product suites side by side, each a looping clip set like a project
+ * card. Hovering one pauses the other two and drops them back, so the one
+ * under the pointer is the only thing moving.
  */
 export function SuiteReel({
   items,
@@ -42,25 +43,8 @@ export function SuiteReel({
   }
 
   return (
-    <div
-      className={cn(
-        "screen-line-top screen-line-bottom relative py-4",
-        className
-      )}
-    >
-      <div
-        className="pointer-events-none absolute inset-0 -z-1 grid gap-4 max-md:hidden md:grid-cols-3"
-        aria-hidden
-      >
-        <div className="border-r border-line" />
-        <div className="border-x border-line" />
-        <div className="border-l border-line" />
-      </div>
-
-      <ul
-        className="grid gap-4 md:grid-cols-3"
-        onMouseLeave={() => focus(null)}
-      >
+    <HairlineGrid columns={3} className={className}>
+      <ul className="contents" onMouseLeave={() => focus(null)}>
         {items.map((item, i) => {
           const dimmed = active !== null && active !== i
           return (
@@ -76,7 +60,7 @@ export function SuiteReel({
               tabIndex={0}
               aria-label={`${item.name}: ${item.line}`}
             >
-              <div className="relative select-none">
+              <Frame>
                 <video
                   ref={(el) => {
                     videos.current[i] = el
@@ -89,10 +73,9 @@ export function SuiteReel({
                   playsInline
                   aria-hidden
                 />
-                <div className="pointer-events-none absolute inset-0 rounded-xl inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15" />
-              </div>
+              </Frame>
 
-              <div className="flex flex-col gap-1 p-2">
+              <div className="flex flex-col gap-1 px-4 py-2">
                 <p className="text-lg leading-snug font-medium">{item.name}</p>
                 <p className="text-sm leading-snug text-pretty text-muted-foreground">
                   {item.line}
@@ -105,6 +88,6 @@ export function SuiteReel({
           )
         })}
       </ul>
-    </div>
+    </HairlineGrid>
   )
 }

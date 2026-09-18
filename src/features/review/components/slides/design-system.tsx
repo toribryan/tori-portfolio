@@ -22,9 +22,9 @@ import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
-  CardGrid,
   Clip,
   Flow,
+  HairlineGrid,
   Kicker,
   Lede,
   LinkOut,
@@ -32,7 +32,6 @@ import {
   Reveal,
   Shot,
   Slide,
-  Split,
   Stat,
   StatRow,
   Tags,
@@ -77,7 +76,7 @@ function Cover() {
           "Figma",
         ]}
       />
-      <CardGrid>
+      <HairlineGrid>
         <Job number="01" title="Building the design system" items={BUILD_STACK}>
           Tokens, foundations and components, each built and argued with in
           isolation before it lands on a page. The accessibility floor is built
@@ -88,7 +87,7 @@ function Cover() {
           shipped on the same library: search and map, listing creation, and the
           pages in between.
         </Job>
-      </CardGrid>
+      </HairlineGrid>
       <LinkRow>
         <LinkOut href={REVIEW_LINKS.modernCareHomes.live}>
           Visit Modern Care Homes
@@ -125,7 +124,7 @@ function Job({
   children: React.ReactNode
 }) {
   return (
-    <Reveal className="flex flex-col bg-background">
+    <Reveal className="flex flex-col">
       <IntegrationVisual
         items={items}
         center={
@@ -134,7 +133,7 @@ function Job({
           </span>
         }
       />
-      <div className="flex flex-col gap-2 p-4">
+      <div className="flex flex-col gap-2 px-6 py-4">
         <p className="font-heading text-lg/tight font-medium text-balance md:text-xl/tight">
           {title}
         </p>
@@ -228,7 +227,7 @@ function HomeCard() {
     <Slide>
       <Kicker>Design system / a component in practice</Kicker>
       <Title>The home card should spend its space on what differs.</Title>
-      <Split>
+      <HairlineGrid>
         <Shot
           src="/case-studies/old-homecard-mch.png"
           alt="The old home card: photo, price above the name in grey, address, and a paragraph of generic marketing copy"
@@ -245,7 +244,7 @@ function HomeCard() {
           fit="viewport"
           label="After: availability, more than one photo, and a way to keep it for later"
         />
-      </Split>
+      </HairlineGrid>
       <Lede className="text-base md:text-lg">
         A family is mostly trying to rule homes out. Once the card is a system
         component, that decision is made once and holds on every listing, search
@@ -260,7 +259,7 @@ function Dashboard() {
     <Slide>
       <Kicker>Design system / the other product</Kicker>
       <Title>The agent dashboard should be the listing.</Title>
-      <Split>
+      <HairlineGrid>
         <Shot
           src="/case-studies/old-dashboard-mch.png"
           alt="The old agent dashboard shell: a wide sidebar holding only Home Details and Settings, next to an empty content area"
@@ -277,7 +276,7 @@ function Dashboard() {
           fit="viewport"
           label="After: every section carries its own state, so what is thin is visible before you open anything"
         />
-      </Split>
+      </HairlineGrid>
       <Lede className="text-base md:text-lg">
         Straight out of the Airbnb listing-creation teardown: show the state of
         every stage. The same shell, rail and section components ship on the
@@ -302,7 +301,7 @@ function Shipping() {
           { label: "Shipped", detail: "both products" },
         ]}
       />
-      <CardGrid>
+      <HairlineGrid>
         <Card label="What the handoff is for">
           The handoff between design and engineering exists for complex
           contributions that touch the data layer. Components, layout,
@@ -313,7 +312,7 @@ function Shipping() {
           change, I change it. Whatever I learn shipping goes back into the
           system, so the next screen starts further along.
         </Card>
-      </CardGrid>
+      </HairlineGrid>
       <Reveal>
         <p className="text-sm text-muted-foreground">
           Built with Spencer Grzincich, Software Engineer, who owns the data
@@ -334,7 +333,7 @@ function Next() {
         <Stat value="2" label="Products running on one design system" />
         <Stat value="AA" label="Floor on every surface, holding" />
       </StatRow>
-      <CardGrid>
+      <HairlineGrid>
         <Card label="Next" title="Publish the component library">
           Foundations are locked; components are landing as they are done.
         </Card>
@@ -342,7 +341,7 @@ function Next() {
           Cost and care level side by side is the decision families make, and it
           is not solved yet.
         </Card>
-      </CardGrid>
+      </HairlineGrid>
       <LinkRow>
         <LinkOut href={REVIEW_LINKS.modernCareHomes.live} variant="default">
           Visit Modern Care Homes

@@ -14,9 +14,9 @@ import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
-  CardGrid,
   EASE,
   Flow,
+  HairlineGrid,
   Kicker,
   Lede,
   LinkOut,
@@ -226,7 +226,7 @@ function Constraints() {
     <Slide>
       <Kicker>AuthorProof / four constraints</Kicker>
       <Title>Four constraints, each a design problem in disguise.</Title>
-      <CardGrid>
+      <HairlineGrid>
         <Card
           label="01 · Timing"
           title="Ten minutes is the whole attack window"
@@ -249,7 +249,7 @@ function Constraints() {
           A separate quiz item means the submission and the quiz live in
           different places, with no unified view for the instructor.
         </Card>
-      </CardGrid>
+      </HairlineGrid>
     </Slide>
   )
 }
@@ -290,7 +290,7 @@ function Pivot() {
           ]}
         />
       </Stack>
-      <CardGrid>
+      <HairlineGrid>
         <Card label="What the pivot bought">
           Collapsed the timing gap, removed the notification dependency, and
           stepped out of the quiz tooling entirely. One thing for the instructor
@@ -301,7 +301,7 @@ function Pivot() {
           proctoring coexists with the embedded flow stayed open. I flagged the
           hole rather than let engineering find it.
         </Card>
-      </CardGrid>
+      </HairlineGrid>
     </Slide>
   )
 }
@@ -311,7 +311,7 @@ function Model() {
     <Slide>
       <Kicker>AuthorProof / model</Kicker>
       <Title>Instructor sets it up. Questions come from the essay.</Title>
-      <Split>
+      <HairlineGrid>
         <Shot
           src="/case-studies/author-proof-proctorio-quiz-settings.webp"
           alt="AuthorProof quiz settings inside the assignment editor: proctoring level, completion window, and an Engage AuthorProof button"
@@ -328,7 +328,7 @@ function Model() {
           fit="viewport"
           label="The student’s quiz, generated from their own writing"
         />
-      </Split>
+      </HairlineGrid>
       <Reveal>
         <p className="text-xs text-muted-foreground">
           Product imagery © Proctorio, from the AuthorProof product page. Used

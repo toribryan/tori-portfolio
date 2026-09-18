@@ -155,39 +155,66 @@ export function StatRow({ children }: { children: React.ReactNode }) {
 }
 
 /**
- * One cell of a hairline grid, the way the home page panels divide space.
- * Meant to sit inside `CardGrid`, which draws the lines between cells and
- * runs the top and bottom ones across the screen like the site does.
+ * A grid ruled the way the home page panels are: the top and bottom lines
+ * run across the screen, a pair of hairlines sits in each gutter, and the
+ * cells bleed past the slide's side padding to the column's own border.
+ * Below `md` it stacks and the gutters go.
  */
+export function HairlineGrid({
+  columns = 2,
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div"> & {
+  columns?: 2 | 3 | 4
+}) {
+  const template = `repeat(${columns}, minmax(0, 1fr))`
+  return (
+    <div
+      className={cn(
+        "screen-line-top screen-line-bottom relative -mx-2 py-4 md:-mx-6",
+        className
+      )}
+      style={{ "--cols": template } as React.CSSProperties}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 -z-1 grid gap-4 max-md:hidden md:grid-cols-(--cols)"
+        aria-hidden
+      >
+        {Array.from({ length: columns }, (_, i) => (
+          <div
+            key={i}
+            className={cn(
+              "border-line",
+              i > 0 && "border-l",
+              i < columns - 1 && "border-r"
+            )}
+          />
+        ))}
+      </div>
+      <div className="grid gap-4 md:grid-cols-(--cols)" {...props}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/** A cell of `HairlineGrid` that is words: a label, a title, a paragraph. */
 export function Card({
   label,
   title,
   className,
   children,
-  emphasis = false,
 }: {
   label?: string
   title?: React.ReactNode
   className?: string
   children?: React.ReactNode
-  /** Lifts the card to the foreground: the one that matters on the slide. */
-  emphasis?: boolean
 }) {
   return (
-    <Reveal
-      className={cn(
-        "flex flex-col gap-2 p-4",
-        emphasis ? "bg-foreground text-background" : "bg-background",
-        className
-      )}
-    >
+    <Reveal className={cn("flex flex-col gap-2 px-6 py-4", className)}>
       {label && (
-        <p
-          className={cn(
-            "font-mono text-xs tracking-wide uppercase",
-            emphasis ? "text-background/60" : "text-muted-foreground"
-          )}
-        >
+        <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
           {label}
         </p>
       )}
@@ -197,12 +224,7 @@ export function Card({
         </p>
       )}
       {children && (
-        <div
-          className={cn(
-            "text-sm/relaxed text-pretty md:text-base/relaxed",
-            emphasis ? "text-background/80" : "text-muted-foreground"
-          )}
-        >
+        <div className="text-sm/relaxed text-pretty text-muted-foreground md:text-base/relaxed">
           {children}
         </div>
       )}
@@ -210,7 +232,8 @@ export function Card({
   )
 }
 
-export function CardGrid({
+/** The ringed, rounded frame the site's cards put their picture in. */
+export function Frame({
   className,
   children,
 }: {
@@ -218,14 +241,48 @@ export function CardGrid({
   children: React.ReactNode
 }) {
   return (
-    <div
-      className={cn(
-        "screen-line-top screen-line-bottom grid gap-px bg-line py-px sm:grid-cols-2",
-        className
-      )}
-    >
+    <div className={cn("relative select-none", className)}>
       {children}
+      <div className="pointer-events-none absolute inset-0 rounded-xl inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15" />
     </div>
+  )
+}
+
+/**
+ * A cell of `HairlineGrid` that is a picture: the media in a `Frame`, then
+ * a name, a line and a mono note, set like the project cards on the home
+ * page. Media should fill its width and round its own corners.
+ */
+export function MediaCard({
+  media,
+  title,
+  line,
+  meta,
+  className,
+}: {
+  media: React.ReactNode
+  title: React.ReactNode
+  line?: React.ReactNode
+  meta?: React.ReactNode
+  className?: string
+}) {
+  return (
+    <Reveal className={cn("flex flex-col gap-2 p-2", className)}>
+      <Frame>{media}</Frame>
+      <div className="flex flex-col gap-1 px-4 py-2">
+        <p className="text-lg leading-snug font-medium">{title}</p>
+        {line && (
+          <p className="text-sm leading-snug text-pretty text-muted-foreground">
+            {line}
+          </p>
+        )}
+        {meta && (
+          <p className="font-mono text-xs tracking-wide text-muted-foreground">
+            {meta}
+          </p>
+        )}
+      </div>
+    </Reveal>
   )
 }
 
@@ -329,27 +386,29 @@ export function Shot({
   fit?: "width" | "viewport"
 }) {
   return (
-    <Reveal className={cn("flex flex-col gap-2", className)}>
-      <Image
-        className={cn(
-          "rounded-xl object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15",
-          fit === "width" && "w-full",
-          fit === "viewport" && "mx-auto h-auto max-h-[42vh] w-auto",
-          imageClassName
-        )}
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        quality={100}
-        priority={priority}
-        // A width-auto image has no box until it loads, so lazy loading never
-        // sees it enter the viewport. Fetch it up front instead.
-        loading={fit === "viewport" ? "eager" : undefined}
-        unoptimized
-      />
+    <Reveal className={cn("flex flex-col gap-2 p-2", className)}>
+      <Frame className={cn(fit === "viewport" && "mx-auto w-fit")}>
+        <Image
+          className={cn(
+            "rounded-xl object-cover",
+            fit === "width" && "w-full",
+            fit === "viewport" && "h-auto max-h-[42vh] w-auto",
+            imageClassName
+          )}
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          quality={100}
+          priority={priority}
+          // A width-auto image has no box until it loads, so lazy loading never
+          // sees it enter the viewport. Fetch it up front instead.
+          loading={fit === "viewport" ? "eager" : undefined}
+          unoptimized
+        />
+      </Frame>
       {label && (
-        <p className="font-mono text-xs tracking-wide text-muted-foreground">
+        <p className="px-4 py-2 font-mono text-xs tracking-wide text-muted-foreground">
           {label}
         </p>
       )}
@@ -369,14 +428,16 @@ export function Clip({
 }) {
   return (
     <Reveal className={cn("flex flex-col gap-2", className)}>
-      <video
-        className="w-full rounded-xl bg-black inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-        src={src}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
+      <Frame>
+        <video
+          className="w-full rounded-xl bg-black"
+          src={src}
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      </Frame>
       {label && (
         <p className="font-mono text-xs tracking-wide text-muted-foreground">
           {label}

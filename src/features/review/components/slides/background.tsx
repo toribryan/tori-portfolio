@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { Testimonial } from "@/components/ui/testimonial"
 import type { Slide as SlideType } from "@/features/review/types"
 
-import { EASE, Slide } from "../slide-primitives"
+import { EASE, HairlineGrid, MediaCard, Slide } from "../slide-primitives"
 
 const BIO_PHOTOS = [
   {
@@ -102,35 +102,36 @@ function Bio() {
 
 function Pillars() {
   return (
-    <div className="screen-line-top screen-line-bottom grid gap-px bg-line py-px md:grid-cols-3">
+    <HairlineGrid columns={3}>
       {PILLARS.map((pillar) => (
-        <div key={pillar.src} className="flex flex-col gap-3 bg-background p-4">
-          {pillar.src.endsWith(".mp4") ? (
-            <video
-              className="aspect-[4/5] w-full rounded-xl bg-black object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-              src={pillar.src}
-              autoPlay
-              loop
-              muted
-              playsInline
-              aria-label={pillar.alt}
-            />
-          ) : (
-            <Image
-              className="aspect-[4/5] w-full rounded-xl object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-              src={pillar.src}
-              alt={pillar.alt}
-              width={1200}
-              height={1445}
-              unoptimized
-            />
-          )}
-          <p className="font-heading text-xl/tight font-medium">
-            {pillar.title}
-          </p>
-        </div>
+        <MediaCard
+          key={pillar.src}
+          title={pillar.title}
+          media={
+            pillar.src.endsWith(".mp4") ? (
+              <video
+                className="aspect-[4/5] w-full rounded-xl bg-black object-cover"
+                src={pillar.src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                aria-label={pillar.alt}
+              />
+            ) : (
+              <Image
+                className="aspect-[4/5] w-full rounded-xl object-cover"
+                src={pillar.src}
+                alt={pillar.alt}
+                width={1200}
+                height={1445}
+                unoptimized
+              />
+            )
+          }
+        />
       ))}
-    </div>
+    </HairlineGrid>
   )
 }
 
