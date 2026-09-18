@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+
 import { cn } from "@/lib/utils"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 
@@ -9,6 +11,11 @@ type Story = {
   /** Storybook story id, as `index.json` lists it, or a full URL to frame. */
   id: string
   label: string
+  /**
+   * A still instead of a frame, for a story the published Storybook cannot
+   * render yet.
+   */
+  image?: { src: string; alt: string; width: number; height: number }
 }
 
 type Level = {
@@ -45,9 +52,19 @@ const LEVELS: Level[] = [
   },
   {
     name: "Organisms",
-    line: "Molecules doing a job: the availability table an agent keeps up to date.",
+    line: "The home card: decided once, holds on every listing.",
     height: 320,
     stories: [
+      {
+        id: "components-cards-hometablecard--default",
+        label: "Home card",
+        image: {
+          src: "/case-studies/new-homecard-mch.png",
+          alt: "The home card: an Available Now badge, a save control, photo carousel dots, then name, address and price",
+          width: 978,
+          height: 786,
+        },
+      },
       { id: "ui-table--rooms-availability", label: "Rooms · availability" },
     ],
   },
@@ -87,13 +104,25 @@ function StoryFrame({ story, height }: { story: Story; height: number }) {
   return (
     <figure className="flex min-w-0 flex-1 flex-col gap-2">
       <Frame>
-        <iframe
-          className="block w-full rounded-xl bg-white"
-          style={{ height }}
-          src={frameUrl(story.id)}
-          title={story.label}
-          loading="lazy"
-        />
+        {story.image ? (
+          <Image
+            className="block w-full rounded-xl bg-white object-cover"
+            style={{ height }}
+            src={story.image.src}
+            alt={story.image.alt}
+            width={story.image.width}
+            height={story.image.height}
+            unoptimized
+          />
+        ) : (
+          <iframe
+            className="block w-full rounded-xl bg-white"
+            style={{ height }}
+            src={frameUrl(story.id)}
+            title={story.label}
+            loading="lazy"
+          />
+        )}
       </Frame>
       <figcaption className="flex items-center justify-between gap-2 px-1 text-xs text-muted-foreground">
         <span>{story.label}</span>

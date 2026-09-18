@@ -145,6 +145,7 @@ export const SLIDES: Slide[] = [
     notes: [
       "Read the strip: 18px base, 48 by 48 targets, AA minimum, tokens one to one between Figma variables and CSS custom properties.",
       "The line to land: because the floor is in the component, page eleven cannot undo it.",
+      "Under the tiers, the other layers, read off the live stylesheet: DM Sans on a 12 to 40px scale with 18 as base, one hairline and six radii stepping off 10px, five shadows.",
       "The tiers under the diagram: primitives are named for what they are and nothing on a page uses them directly; semantics are named for the job, so a theme is a values change; Figma variables carry the same names one to one.",
       "The token diagram is published as a component on 21st.dev; the button opens it if they want to see the code.",
     ],
@@ -155,7 +156,7 @@ export const SLIDES: Slide[] = [
     title: "atomic design",
     notes: [
       "Walk it top to bottom. Atoms carry the floor: 18px type, 48px targets, the one green that means available. Molecules are atoms that only make sense together, like the search bar.",
-      "Organisms: the rooms availability table from the agent platform. Same atoms as the marketplace. (The home card story needs a Clerk provider decorator before it renders on the published Storybook; the card is two slides on.)",
+      "Organisms: the home card and the rooms availability table from the agent platform. Same atoms, both products. (The home card is a still: its story needs a Clerk provider decorator before it renders on the published Storybook.)",
       "Templates: the filter form, content-agnostic. The page is moderncarehomes.com itself, live in the frame; scroll it if they want to see the cards. Every frame is live: click into one if they want to see a state change.",
       "If asked why atomic: it gives a contribution a home. A new piece has to say which level it lives at, which is most of the governance conversation.",
     ],
