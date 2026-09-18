@@ -34,7 +34,6 @@ import {
   Slide,
   Stat,
   StatRow,
-  Tags,
   Title,
 } from "../slide-primitives"
 
@@ -65,17 +64,6 @@ function Cover() {
         />
       </Reveal>
       <Title size="xl">Senior Living Marketplace</Title>
-      <Tags
-        items={[
-          "Design Engineer",
-          "2024 to now",
-          "Next.js",
-          "Tailwind",
-          "shadcn",
-          "Storybook",
-          "Figma",
-        ]}
-      />
       <HairlineGrid>
         <Job number="01" title="Building the design system" items={BUILD_STACK}>
           Tokens, foundations and components, each built and argued with in
