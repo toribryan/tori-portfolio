@@ -298,6 +298,36 @@ function Pivot() {
         />
       </Stack>
       <HairlineGrid>
+        <Shot
+          src="/images/review/pivot-config-before.png"
+          alt="Quiz configuration as briefed: a Plagiarism Detection dropdown set to AuthorProof, with quiz type, number of questions, time limit and proctored environment stacked underneath in the assignment form"
+          width={1336}
+          height={798}
+          label="As briefed: settings inline in the assignment form"
+        />
+        <Shot
+          src="/images/review/pivot-config-after.png"
+          alt="Proposed quiz configuration: an AuthorProof dialog with basic controls, each explained, and advanced toggles for multiple attempts and written answers"
+          width={1336}
+          height={798}
+          label="Proposed: one AuthorProof dialog, each control explained"
+        />
+        <Shot
+          src="/images/review/pivot-notify-before.png"
+          alt="An email in the student's inbox: Your comprehension quiz is ready, with a deadline and an Open Quiz in Canvas button"
+          width={1334}
+          height={750}
+          label="As briefed: the student is told by email, later"
+        />
+        <Shot
+          src="/images/review/pivot-notify-after.png"
+          alt="The assignment page in Canvas with an Upload Documents panel embedded directly under the brief"
+          width={1252}
+          height={751}
+          label="Proposed: the quiz appears inside the assignment, immediately"
+        />
+      </HairlineGrid>
+      <HairlineGrid>
         <Card label="What the pivot bought">
           Collapsed the timing gap, removed the notification dependency, and
           stepped out of the quiz tooling entirely. One thing for the instructor
