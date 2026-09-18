@@ -325,29 +325,6 @@ function Shipping() {
           layer and infrastructure.
         </p>
       </Reveal>
-    </Slide>
-  )
-}
-
-function Next() {
-  return (
-    <Slide>
-      <Kicker>Design system / where it is</Kicker>
-      <Title>Live, and still going.</Title>
-      <StatRow>
-        <Stat value="Live" label="Shipping in the Phoenix metro" />
-        <Stat value="2" label="Products running on one design system" />
-        <Stat value="AA" label="Floor on every surface, holding" />
-      </StatRow>
-      <HairlineGrid>
-        <Card label="Next" title="Publish the component library">
-          Foundations are locked; components are landing as they are done.
-        </Card>
-        <Card label="Next" title="Better comparison">
-          Cost and care level side by side is the decision families make, and it
-          is not solved yet.
-        </Card>
-      </HairlineGrid>
       <LinkRow>
         <LinkOut href={REVIEW_LINKS.modernCareHomes.live} variant="default">
           Visit Modern Care Homes
@@ -372,5 +349,4 @@ export const DESIGN_SYSTEM_CONTENT: Record<
   "home-card": HomeCard,
   dashboard: Dashboard,
   shipping: Shipping,
-  next: Next,
 }

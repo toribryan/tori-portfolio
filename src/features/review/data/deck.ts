@@ -198,15 +198,7 @@ export const SLIDES: Slide[] = [
       "The pipeline: research, Figma, Storybook, PR, Vercel preview on a real phone, shipped.",
       "The handoff exists for data-layer work. Everything else ships as code from me, and what I learn shipping goes back into the system.",
       "Credit Spencer: he owns data and infrastructure.",
-    ],
-  },
-  {
-    slug: "next",
-    section: "design-system",
-    title: "where it is",
-    notes: [
-      "Live, two products, AA holding. What's next: publishing the library, better comparison.",
-      "Transition: 'Two projects. Here is what they have in common, and what it means for a design systems role.'",
+      "Offer the live site, the Storybook and the case study, then transition: 'Two projects. Here is what they have in common, and what it means for a design systems role.'",
     ],
   },
   {
