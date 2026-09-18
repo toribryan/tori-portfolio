@@ -186,7 +186,7 @@ function Foundations() {
         <Stat value="1:1" label="Figma variables to CSS custom properties" />
       </StatRow>
       <Reveal>
-        <TokenFlow rows={TOKEN_ROWS} />
+        <TokenFlow rows={TOKEN_ROWS} showUse />
       </Reveal>
       <Clip
         className="[&_video]:max-h-[15vh] [&_video]:object-cover"

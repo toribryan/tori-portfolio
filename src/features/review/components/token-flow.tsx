@@ -23,33 +23,42 @@ export type TokenRow = {
   primitive: string
   /** The semantic role that points at the primitive. */
   semantic: string
-  /** What the role is for, shown under the semantic chip. */
-  use: string
+  /** What the role is for, shown under the semantic chip when `showUse` is set. */
+  use?: string
 }
 
-/** A hairline with a pulse travelling along it. Fills whatever cell it is in. */
-function Wire({ delay }: { delay: number }) {
+/**
+ * A hairline with a pulse travelling along it. Fills whatever cell it is
+ * in; `vertical` runs it top to bottom for the stacked layout.
+ */
+function Wire({
+  delay,
+  vertical = false,
+  className,
+}: {
+  delay: number
+  vertical?: boolean
+  className?: string
+}) {
+  const end = vertical ? { x2: 4, y2: 100 } : { x2: 100, y2: 4 }
+  const start = vertical ? { x1: 4, y1: 0 } : { x1: 0, y1: 4 }
   return (
     <svg
-      className="h-2 w-full"
-      viewBox="0 0 100 8"
+      className={cn(vertical ? "h-6 w-2" : "h-2 w-full", className)}
+      viewBox={vertical ? "0 0 8 100" : "0 0 100 8"}
       preserveAspectRatio="none"
       aria-hidden
     >
       <line
-        x1="0"
-        y1="4"
-        x2="100"
-        y2="4"
+        {...start}
+        {...end}
         className="text-border"
         stroke="currentColor"
         vectorEffect="non-scaling-stroke"
       />
       <motion.line
-        x1="0"
-        y1="4"
-        x2="100"
-        y2="4"
+        {...start}
+        {...end}
         className="text-foreground/60"
         stroke="currentColor"
         strokeWidth="2"
@@ -83,9 +92,12 @@ function Swatch({ color }: { color: string }) {
  */
 export function TokenFlow({
   rows,
+  showUse = false,
   className,
 }: {
   rows: TokenRow[]
+  /** Print each row's `use` under its semantic chip. */
+  showUse?: boolean
   className?: string
 }) {
   return (
@@ -105,11 +117,11 @@ export function TokenFlow({
         aria-hidden
       />
 
-      <div className="relative grid grid-cols-[auto_minmax(2rem,1fr)_auto_minmax(2rem,1fr)_auto] items-center gap-x-3 gap-y-3">
+      <div className="relative grid grid-cols-1 items-center gap-y-6 sm:grid-cols-[auto_minmax(2rem,1fr)_auto_minmax(2rem,1fr)_auto] sm:gap-x-3 sm:gap-y-3">
         {["Base", "", "Primitive", "", "Semantic"].map((tier, i) => (
           <p
             key={i}
-            className="text-center font-mono text-[10px] tracking-wide text-muted-foreground uppercase"
+            className="hidden text-center font-mono text-[10px] tracking-wide text-muted-foreground uppercase sm:block"
           >
             {tier}
           </p>
@@ -118,7 +130,7 @@ export function TokenFlow({
         {rows.map((row, i) => (
           <div
             key={row.semantic}
-            className="col-span-5 grid grid-cols-subgrid items-center"
+            className="flex flex-col items-center gap-1.5 sm:col-span-5 sm:grid sm:grid-cols-subgrid sm:gap-0"
           >
             <Chip
               startContent={<Swatch color={row.base} />}
@@ -126,14 +138,16 @@ export function TokenFlow({
             >
               {row.base}
             </Chip>
-            <Wire delay={i * 0.5} />
+            <Wire delay={i * 0.5} className="max-sm:hidden" />
+            <Wire delay={i * 0.5} vertical className="sm:hidden" />
             <Chip
               startContent={<Swatch color={row.base} />}
               className="justify-self-center font-mono"
             >
               {row.primitive}
             </Chip>
-            <Wire delay={i * 0.5 + 0.8} />
+            <Wire delay={i * 0.5 + 0.8} className="max-sm:hidden" />
+            <Wire delay={i * 0.5 + 0.8} vertical className="sm:hidden" />
             <div className="flex flex-col items-center gap-1 justify-self-center">
               <Chip
                 startContent={<Swatch color={row.base} />}
@@ -141,9 +155,11 @@ export function TokenFlow({
               >
                 {row.semantic}
               </Chip>
-              <span className="font-mono text-[9px] whitespace-nowrap text-muted-foreground">
-                {row.use}
-              </span>
+              {showUse && row.use && (
+                <span className="font-mono text-[9px] whitespace-nowrap text-muted-foreground">
+                  {row.use}
+                </span>
+              )}
             </div>
           </div>
         ))}
