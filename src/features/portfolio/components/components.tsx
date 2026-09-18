@@ -12,9 +12,9 @@ import { PanelTitleCopy } from "./panel-title-copy"
 const ID = "components"
 
 /**
- * Components published on their own. The newest one's announcement leads as
- * a quote, fetched once at build so the section renders without a request,
- * then every component as a cell into its page.
+ * Components published on their own: every component as a cell into its
+ * page, then the newest one's announcement as a quote, fetched once at build
+ * so the section renders without a request.
  */
 export async function Components() {
   const docs = getRegistryDocs().filter((doc) => doc.slug in COMPONENTS)
@@ -38,12 +38,6 @@ export async function Components() {
         </PanelTitle>
       </PanelHeader>
 
-      {post && (
-        <div className="screen-line-bottom p-4">
-          <TweetQuote tweet={post} avatar={USER.headerAvatar} />
-        </div>
-      )}
-
       <div className="screen-line-bottom h-4" />
       <ComponentList
         items={docs.map((doc) => ({
@@ -53,6 +47,12 @@ export async function Components() {
         }))}
       />
       <div className="screen-line-top h-4" />
+
+      {post && (
+        <div className="screen-line-top p-4">
+          <TweetQuote tweet={post} avatar={USER.headerAvatar} />
+        </div>
+      )}
     </Panel>
   )
 }
