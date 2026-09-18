@@ -220,15 +220,11 @@ function Brief() {
   )
 }
 
-function Latency() {
+function Constraints() {
   return (
     <Slide>
-      <Kicker>AuthorProof / what it added up to</Kicker>
-      <Title>Six steps. About ten minutes. One quiz per student.</Title>
-      <Lede>
-        Timed against what the platform could actually do, the briefed flow
-        handed the student exactly the gap they would need to reopen the essay.
-      </Lede>
+      <Kicker>AuthorProof / four constraints</Kicker>
+      <Title>Four constraints, each a design problem in disguise.</Title>
       <StatRow>
         <Stat value="6" label="Steps between submission and quiz" />
         <Stat value="~10 min" label="Latency the steps add up to" />
@@ -237,15 +233,6 @@ function Latency() {
           label="A fresh quiz each, in tooling built for one per class"
         />
       </StatRow>
-    </Slide>
-  )
-}
-
-function Constraints() {
-  return (
-    <Slide>
-      <Kicker>AuthorProof / four constraints</Kicker>
-      <Title>Four constraints, each a design problem in disguise.</Title>
       <HairlineGrid>
         <Card
           label="01 · Timing"
@@ -435,7 +422,6 @@ export const AUTHOR_PROOF_CONTENT: Record<
   task: Task,
   thesis: Thesis,
   brief: Brief,
-  latency: Latency,
   constraints: Constraints,
   pivot: Pivot,
   model: Model,

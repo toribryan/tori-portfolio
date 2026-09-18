@@ -96,19 +96,11 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
-    slug: "latency",
-    section: "product",
-    title: "what it added up to",
-    notes: [
-      "Six steps, roughly ten minutes. Ten minutes is exactly the time a student needs to reopen the essay. The architecture was working against the product's promise.",
-      "Per student is the quieter problem: Canvas quiz tooling is built for one quiz per class, not one per submission.",
-    ],
-  },
-  {
     slug: "constraints",
     section: "product",
     title: "four constraints",
     notes: [
+      "Read the strip first: six steps, roughly ten minutes, a fresh quiz per student in tooling built for one per class. Ten minutes is exactly the time a student needs to reopen the essay.",
       "Walk them clockwise. Timing is the killer; the other three make the briefed flow fragile even if timing were fine.",
       "Say why I call them design problems: each one changes where the product should live, not how a screen looks.",
       "This is the slide that shows how I push back: with a map of the platform.",
