@@ -16,6 +16,7 @@ import {
 } from "@/components/icons"
 import { TOKEN_ROWS } from "@/features/portfolio/data/token-flow"
 import { AtomicDesign } from "@/features/review/components/atomic-design"
+import { FoundationLayers } from "@/features/review/components/foundation-layers"
 import type { IntegrationItem } from "@/features/review/components/integration-visual"
 import { IntegrationVisual } from "@/features/review/components/integration-visual"
 import { PrThread } from "@/features/review/components/pr-thread"
@@ -171,6 +172,7 @@ function Foundations() {
           What I pick in a mockup is what the component reads in code.
         </Card>
       </HairlineGrid>
+      <FoundationLayers />
       <Clip
         src="/case-studies/foundations-mch.mp4"
         label="The foundations: tokens, type, spacing and radius, as they live in the system"
