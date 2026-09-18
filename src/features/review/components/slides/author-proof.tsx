@@ -1,10 +1,9 @@
 "use client"
 
 import type { ComponentType } from "react"
-import { useState } from "react"
 import { motion } from "motion/react"
 
-import { Typewriter } from "@/components/ui/typewriter-text"
+import { TextReveal } from "@/components/ui/text-reveal"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { PinnedFlow } from "@/features/review/components/pinned-flow"
 import { ProctorioLogo } from "@/features/review/components/proctorio-logo"
@@ -30,7 +29,6 @@ import {
   Stat,
   StatRow,
   Steps,
-  Tags,
   Title,
 } from "../slide-primitives"
 
@@ -85,14 +83,6 @@ function Cover() {
             Plagiarism checkers read the document. This one asks the student
             about the paper they turned in.
           </Lede>
-          <Tags
-            items={[
-              "Proctorio",
-              "Staff Product Designer, end to end",
-              "Q2 2026",
-              "Canvas LMS",
-            ]}
-          />
           <LinkRow>
             <LinkOut href={REVIEW_LINKS.authorProof.product}>
               Product page
@@ -151,30 +141,35 @@ function Task() {
 const THESIS =
   "If a student submits an essay, they should be able to answer questions about what they wrote."
 
-function Thesis() {
-  const [typed, setTyped] = useState(false)
+/** When the thesis starts arriving, and how long the words take to land. */
+const THESIS_DELAY = 0.6
+const THESIS_DURATION = 2.4
 
+function Thesis() {
   return (
     <Slide className="gap-6">
       <Kicker>AuthorProof / statement</Kicker>
       <Reveal>
         <p className="font-mono text-sm text-muted-foreground">thesis:</p>
       </Reveal>
-      <Reveal>
-        <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
-          <Typewriter
-            text={THESIS}
-            speed={38}
-            delay={0.6}
-            onComplete={() => setTyped(true)}
-          />
-        </h2>
-      </Reveal>
+      <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
+        <TextReveal
+          text={THESIS}
+          startOnView={false}
+          delay={THESIS_DELAY}
+          stagger={0.09}
+          maxDuration={THESIS_DURATION}
+        />
+      </h2>
       <motion.p
         className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
         initial={{ opacity: 0, y: 8 }}
-        animate={typed ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
-        transition={{ duration: 0.5, delay: 0.5, ease: EASE }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{
+          duration: 0.5,
+          delay: THESIS_DELAY + THESIS_DURATION + 0.4,
+          ease: EASE,
+        }}
       >
         right?
       </motion.p>
@@ -195,12 +190,25 @@ const BRIEFED_FLOW = [
 
 function Brief() {
   return (
-    <Slide>
+    <Slide className="flex-1">
       <Kicker>AuthorProof / the brief as it arrived</Kicker>
       <Title>The architecture was already chosen.</Title>
-      <Reveal>
-        <PinnedFlow steps={BRIEFED_FLOW} />
+      <Reveal className="flex min-h-0 flex-1 flex-col">
+        <PinnedFlow className="md:flex-1" steps={BRIEFED_FLOW} />
       </Reveal>
+    </Slide>
+  )
+}
+
+function Latency() {
+  return (
+    <Slide>
+      <Kicker>AuthorProof / what it added up to</Kicker>
+      <Title>Six steps. About ten minutes. One quiz per student.</Title>
+      <Lede>
+        Timed against what the platform could actually do, the briefed flow
+        handed the student exactly the gap they would need to reopen the essay.
+      </Lede>
       <StatRow>
         <Stat value="6" label="Steps between submission and quiz" />
         <Stat value="~10 min" label="Latency the steps add up to" />
@@ -407,6 +415,7 @@ export const AUTHOR_PROOF_CONTENT: Record<
   task: Task,
   thesis: Thesis,
   brief: Brief,
+  latency: Latency,
   constraints: Constraints,
   pivot: Pivot,
   model: Model,

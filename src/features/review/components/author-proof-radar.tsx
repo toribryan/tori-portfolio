@@ -29,24 +29,40 @@ const CONFIG = {
   origin: { label: "Origin", color: "var(--success)" },
 } satisfies ChartConfig
 
+const LINE_HEIGHT = 12
+
 /**
- * Axis labels in the deck's small mono style, broken over two lines so they
- * sit close to the grid without running into the edge of the chart.
+ * Axis labels in the deck's small mono style, broken over two lines. Each
+ * label grows away from the chart: a top label stacks upward from its
+ * anchor, a bottom one downward, and the side ones centre on it, so no
+ * line of text runs back into the grid.
  */
 function AxisTick({
   x,
   y,
+  cy,
   payload,
   textAnchor,
 }: {
   x?: number
   y?: number
+  cy?: number
   payload?: { value: string }
   textAnchor?: "start" | "middle" | "end"
 }) {
   const words = (payload?.value ?? "").split(" ")
   const split = Math.ceil(words.length / 2)
   const lines = [words.slice(0, split).join(" "), words.slice(split).join(" ")]
+
+  const offset = (y ?? 0) - (cy ?? 0)
+  const side = Math.abs(offset) < 4 ? "middle" : offset < 0 ? "top" : "bottom"
+  const first =
+    side === "top"
+      ? -LINE_HEIGHT
+      : side === "bottom"
+        ? LINE_HEIGHT
+        : -LINE_HEIGHT / 2 + 4
+
   return (
     <text
       x={x}
@@ -55,7 +71,7 @@ function AxisTick({
       className="fill-muted-foreground font-mono text-[10px] tracking-wide uppercase"
     >
       {lines.map((line, i) => (
-        <tspan key={line} x={x} dy={i === 0 ? -2 : 12}>
+        <tspan key={line} x={x} dy={i === 0 ? first : LINE_HEIGHT}>
           {line}
         </tspan>
       ))}
@@ -76,11 +92,11 @@ export function AuthorProofRadar({ className }: { className?: string }) {
     >
       <RadarChart
         data={DATA}
-        outerRadius="78%"
-        margin={{ top: 16, right: 24, bottom: 16, left: 24 }}
+        outerRadius="72%"
+        margin={{ top: 24, right: 32, bottom: 24, left: 32 }}
       >
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-        <PolarAngleAxis dataKey="vector" tick={<AxisTick />} />
+        <PolarAngleAxis dataKey="vector" tick={<AxisTick />} tickSize={14} />
         <PolarGrid stroke="var(--border)" />
         <Radar
           dataKey="integrity"

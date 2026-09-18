@@ -49,16 +49,6 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
-    slug: "today",
-    section: "background",
-    title: "today",
-    notes: [
-      "Say the argument out loud: product shows how I decide, the system shows how I make a decision hold.",
-      "Why these two: AuthorProof is the clearest example of changing a brief with evidence. Modern Care Homes is the system I own end to end, in public, with a Storybook they can open.",
-      "Offer the links now so they know they exist, then move on.",
-    ],
-  },
-  {
     slug: "suite",
     section: "product",
     title: "where it sits",
@@ -103,7 +93,15 @@ export const SLIDES: Slide[] = [
     notes: [
       "The brief came with an architecture: use Canvas's own quiz tooling, one quiz per submission, notify the student.",
       "What I did before anyone built anything: mapped every step against platform capability and timed it.",
+    ],
+  },
+  {
+    slug: "latency",
+    section: "product",
+    title: "what it added up to",
+    notes: [
       "Six steps, roughly ten minutes. Ten minutes is exactly the time a student needs to reopen the essay. The architecture was working against the product's promise.",
+      "Per student is the quieter problem: Canvas quiz tooling is built for one quiz per class, not one per submission.",
     ],
   },
   {

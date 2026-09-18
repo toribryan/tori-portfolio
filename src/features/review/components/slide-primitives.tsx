@@ -148,7 +148,7 @@ export function Stat({
 
 export function StatRow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-2 gap-x-6 gap-y-5 border-y border-line py-5 sm:grid-cols-3 md:grid-cols-4">
+    <div className="screen-line-top screen-line-bottom grid grid-cols-2 gap-x-6 gap-y-5 py-5 sm:grid-cols-3 md:grid-cols-4">
       {children}
     </div>
   )
@@ -156,7 +156,8 @@ export function StatRow({ children }: { children: React.ReactNode }) {
 
 /**
  * One cell of a hairline grid, the way the home page panels divide space.
- * Meant to sit inside `CardGrid`, which draws the lines between cells.
+ * Meant to sit inside `CardGrid`, which draws the lines between cells and
+ * runs the top and bottom ones across the screen like the site does.
  */
 export function Card({
   label,
@@ -219,7 +220,7 @@ export function CardGrid({
   return (
     <div
       className={cn(
-        "grid gap-px border-y border-line bg-line sm:grid-cols-2",
+        "screen-line-top screen-line-bottom grid gap-px bg-line py-px sm:grid-cols-2",
         className
       )}
     >
@@ -235,7 +236,7 @@ export function Steps({
   items: { title: string; body?: string }[]
 }) {
   return (
-    <ol className="flex flex-col divide-y divide-line border-y border-line">
+    <ol className="screen-line-top screen-line-bottom flex flex-col divide-y divide-line">
       {items.map((item, i) => (
         <Reveal key={item.title}>
           <li className="grid grid-cols-[2rem_1fr] gap-4 py-4">
