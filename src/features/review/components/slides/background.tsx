@@ -127,7 +127,7 @@ function Bio() {
 
 function Pillars() {
   return (
-    <HairlineGrid columns={3} className="flex-1">
+    <HairlineGrid columns={3} className="flex-1 md:max-h-[30rem]">
       {PILLARS.map((pillar) => (
         <MediaCard
           key={pillar.src}
