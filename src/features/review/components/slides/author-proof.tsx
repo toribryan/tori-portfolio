@@ -1,6 +1,7 @@
 "use client"
 
 import type { ComponentType } from "react"
+import Image from "next/image"
 import { motion } from "motion/react"
 
 import { TextReveal } from "@/components/ui/text-reveal"
@@ -148,33 +149,50 @@ const THESIS_DELAY = 0.6
 const THESIS_DURATION = 2.4
 
 function Thesis() {
+  const settled = THESIS_DELAY + THESIS_DURATION + 0.4
+
   return (
     <Slide className="flex-1 justify-center gap-6">
       <Kicker>AuthorProof / statement</Kicker>
-      <Reveal>
-        <p className="font-mono text-sm text-muted-foreground">thesis:</p>
-      </Reveal>
-      <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
-        <TextReveal
-          text={THESIS}
-          startOnView={false}
-          delay={THESIS_DELAY}
-          stagger={0.09}
-          maxDuration={THESIS_DURATION}
-        />
-      </h2>
-      <motion.p
-        className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.5,
-          delay: THESIS_DELAY + THESIS_DURATION + 0.4,
-          ease: EASE,
-        }}
-      >
-        right?
-      </motion.p>
+      <HairlineGrid columns="3fr 2fr">
+        <div className="flex flex-col justify-center gap-6 px-6 py-4">
+          <Reveal>
+            <p className="font-mono text-sm text-muted-foreground">thesis:</p>
+          </Reveal>
+          <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
+            <TextReveal
+              text={THESIS}
+              startOnView={false}
+              delay={THESIS_DELAY}
+              stagger={0.09}
+              maxDuration={THESIS_DURATION}
+            />
+          </h2>
+          <motion.p
+            className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: settled, ease: EASE }}
+          >
+            right?
+          </motion.p>
+        </div>
+        <motion.div
+          className="flex items-center justify-center p-6"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: settled + 0.2, ease: EASE }}
+        >
+          <Image
+            className="w-full max-w-72"
+            src="/images/review/thesis-visual.svg"
+            alt="A pixel-art pug with a lit bulb over its head, beside a small crab"
+            width={400}
+            height={329}
+            unoptimized
+          />
+        </motion.div>
+      </HairlineGrid>
     </Slide>
   )
 }
