@@ -18,6 +18,8 @@ export const REVIEW_LINKS = {
     caseStudy: "/work/bab-design-system",
     storybook: "/storybook/bab/index.html",
   },
+  /** The token visualiser from the foundations slide, published as a component. */
+  tokenFlow: "https://21st.dev/@iamtoribryan/components/token-flow",
   designSystemOverhaul: "/work/design-system-overhaul",
   agenticDesignSystem: "/work/agentic-design-system",
 } as const
