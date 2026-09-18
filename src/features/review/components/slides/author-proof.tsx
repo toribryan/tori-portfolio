@@ -78,7 +78,7 @@ function Cover() {
         <ProctorioLogo className="h-7 w-auto text-foreground" />
       </Reveal>
       <Title size="xl">AuthorProof</Title>
-      <HairlineGrid>
+      <HairlineGrid columns="3fr 2fr">
         <Stack className="justify-center px-6 py-4">
           <Lede>
             Plagiarism checkers read the document. This one asks the student
