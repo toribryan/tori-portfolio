@@ -15,6 +15,8 @@ import {
 } from "@/components/icons"
 import type { IntegrationItem } from "@/features/review/components/integration-visual"
 import { IntegrationVisual } from "@/features/review/components/integration-visual"
+import type { TokenRow } from "@/features/review/components/token-flow"
+import { TokenFlow } from "@/features/review/components/token-flow"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
@@ -144,10 +146,40 @@ function Job({
   )
 }
 
+const TOKEN_ROWS: TokenRow[] = [
+  {
+    base: "oklch(0.141 0.005 285.823)",
+    primitive: "zinc-950",
+    semantic: "bg-primary",
+    use: "Primary actions, headings",
+    dark: { base: "oklch(0.985 0 0)", primitive: "zinc-50" },
+  },
+  {
+    base: "oklch(0.723 0.219 149.579)",
+    primitive: "green-500",
+    semantic: "text-success",
+    use: "Resolved, healthy, within threshold",
+  },
+  {
+    base: "oklch(0.92 0.004 286.32)",
+    primitive: "zinc-200",
+    semantic: "border-border",
+    use: "Hairlines and inputs",
+    dark: { base: "oklch(0.274 0.006 286.033)", primitive: "zinc-800" },
+  },
+]
+
 function Foundations() {
   return (
     <Slide>
-      <Kicker>Design system / foundations</Kicker>
+      <div className="flex items-center justify-between gap-4">
+        <Kicker>Design system / foundations</Kicker>
+        <LinkRow>
+          <LinkOut href={REVIEW_LINKS.tokenFlow} className="h-7 text-xs">
+            Token diagram on 21st.dev
+          </LinkOut>
+        </LinkRow>
+      </div>
       <Title>The accessibility floor is built into the components.</Title>
       <StatRow>
         <Stat value="18px" label="Base type size, everywhere" />
@@ -155,22 +187,23 @@ function Foundations() {
         <Stat value="AA" label="Contrast floor on every surface" />
         <Stat value="1:1" label="Figma variables to CSS custom properties" />
       </StatRow>
+      <Reveal>
+        <TokenFlow rows={TOKEN_ROWS} showUse />
+      </Reveal>
       <Clip
+        className="[&_video]:max-h-[15vh] [&_video]:object-cover"
         src="/case-studies/foundations-mch.mp4"
         label="The foundations: tokens, type, spacing and radius, as they live in the system"
       />
-      <Split>
-        <Card label="Tokens">
-          Foundations are locked. Colour, type, spacing and radius live as CSS
-          variables that map one to one with the Figma variables, so a system
-          change is one edit instead of forty.
-        </Card>
-        <Card label="Why it holds">
-          Because the floor is baked into the component, I cannot accidentally
-          undo it on page eleven. A checklist gets checked once, at the end. The
-          component holds the floor on every screen.
-        </Card>
-      </Split>
+    </Slide>
+  )
+}
+
+function Components() {
+  return (
+    <Slide>
+      <Kicker>Design system / components</Kicker>
+      <Title>Atomic Design Inspired Components</Title>
     </Slide>
   )
 }
@@ -352,6 +385,7 @@ export const DESIGN_SYSTEM_CONTENT: Record<
 > = {
   cover: Cover,
   foundations: Foundations,
+  components: Components,
   storybook: Storybook,
   "home-card": HomeCard,
   dashboard: Dashboard,

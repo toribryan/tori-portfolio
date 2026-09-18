@@ -186,7 +186,14 @@ export const SLIDES: Slide[] = [
       "Read the strip: 18px base, 48 by 48 targets, AA minimum, tokens one to one between Figma variables and CSS custom properties.",
       "The line to land: because the floor is in the component, page eleven cannot undo it.",
       "If asked about token structure: shadcn conventions, CSS variables as the single source, Figma variables named to match.",
+      "The token diagram is published as a component on 21st.dev; the button opens it if they want to see the code.",
     ],
+  },
+  {
+    slug: "components",
+    section: "design-system",
+    title: "Atomic Design Inspired Components",
+    notes: ["Placeholder. Content to come."],
   },
   {
     slug: "home-card",
