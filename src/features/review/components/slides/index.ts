@@ -8,7 +8,10 @@ import { BACKGROUND_CONTENT } from "./background"
 import { DESIGN_SYSTEM_CONTENT } from "./design-system"
 import { OBSERVATIONS_CONTENT } from "./observations"
 
-const CONTENT: Record<Slide["section"], Record<string, ComponentType>> = {
+const CONTENT: Record<
+  Slide["section"],
+  Record<string, ComponentType<{ slide: Slide }>>
+> = {
   background: BACKGROUND_CONTENT,
   product: AUTHOR_PROOF_CONTENT,
   "design-system": DESIGN_SYSTEM_CONTENT,
@@ -21,5 +24,5 @@ export function renderSlide(slide: Slide) {
   if (!Content) {
     throw new Error(`No slide content for ${slide.section}/${slide.slug}`)
   }
-  return createElement(Content)
+  return createElement(Content, { slide })
 }

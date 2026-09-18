@@ -3,6 +3,7 @@
 import type { ComponentType } from "react"
 
 import { REVIEW_LINKS } from "@/features/review/data/links"
+import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
@@ -341,7 +342,10 @@ function Shipped() {
   )
 }
 
-export const AUTHOR_PROOF_CONTENT: Record<string, ComponentType> = {
+export const AUTHOR_PROOF_CONTENT: Record<
+  string,
+  ComponentType<{ slide: SlideType }>
+> = {
   cover: Cover,
   task: Task,
   thesis: Thesis,

@@ -3,6 +3,7 @@
 import type { ComponentType } from "react"
 
 import { REVIEW_LINKS } from "@/features/review/data/links"
+import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
@@ -148,7 +149,10 @@ function Thanks() {
   )
 }
 
-export const OBSERVATIONS_CONTENT: Record<string, ComponentType> = {
+export const OBSERVATIONS_CONTENT: Record<
+  string,
+  ComponentType<{ slide: SlideType }>
+> = {
   threads: Threads,
   role: Role,
   thanks: Thanks,

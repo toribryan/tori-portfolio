@@ -19,6 +19,7 @@ export const SLIDES: Slide[] = [
   {
     slug: "cover",
     section: "background",
+    stage: "background-intro",
     title: "cover",
     notes: [
       "Thank them for the second round. Say what the next 30 minutes are: a short bit about me, one product project, one design systems project, then what I took from both.",
@@ -28,6 +29,7 @@ export const SLIDES: Slide[] = [
   {
     slug: "bio",
     section: "background",
+    stage: "background-intro",
     title: "bio",
     notes: [
       "Three people's words for me, mine last. The through-line is the same: I ask why before I build.",
@@ -38,6 +40,7 @@ export const SLIDES: Slide[] = [
   {
     slug: "pillars",
     section: "background",
+    stage: "background-intro",
     title: "my pillars of inspiration",
     notes: [
       "Creative technologist: I prototype in code, I ship the front end. That is why a design system is where I want to spend my time.",
@@ -153,15 +156,6 @@ export const SLIDES: Slide[] = [
       "Two jobs, and the slide shows both. One: build the system. Storybook, shadcn conventions, Tailwind tokens, Base UI primitives. Two: use it in context, across the marketplace and the agent platform, on Vercel and Next.js, designed in Figma, with Mapbox for search.",
       "Why the split matters: a change to a button is a change in two products. The system is what makes a decision hold.",
       "Offer the live site and the Storybook now; they can click while I talk.",
-    ],
-  },
-  {
-    slug: "two-people",
-    section: "design-system",
-    title: "who it is for",
-    notes: [
-      "The resident at 200% zoom and the adult child on a phone in a parking lot. Neither has patience.",
-      "The point for a design systems role: you cannot honour that on every screen by remembering to. It has to be a property of the components.",
     ],
   },
   {
