@@ -7,7 +7,7 @@ import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
-  CardGrid,
+  HairlineGrid,
   Kicker,
   Lede,
   LinkOut,
@@ -24,7 +24,7 @@ function Threads() {
     <Slide>
       <Kicker>Observations / across both</Kicker>
       <Title>Three things both projects have in common.</Title>
-      <CardGrid className="md:grid-cols-3">
+      <HairlineGrid columns={3}>
         <Card label="01" title="Test the brief before building it.">
           AuthorProof’s architecture was mapped against the platform before
           engineering spent a day. Modern Care Homes started with a teardown of
@@ -40,7 +40,7 @@ function Threads() {
           preview to production on Modern Care Homes. Fewer handoffs, fewer
           places for a decision to drift.
         </Card>
-      </CardGrid>
+      </HairlineGrid>
     </Slide>
   )
 }
@@ -65,7 +65,7 @@ function Role() {
         />
         <Stat value="8M" label="Test takers the platform serves" />
       </StatRow>
-      <CardGrid>
+      <HairlineGrid>
         <Card label="Tokens and architecture">
           Semantic token layers built before any component, so a new theme is a
           change to token values with no component touched.
@@ -82,7 +82,7 @@ function Role() {
           React, Tailwind, shadcn, Base UI, Storybook. I can build the component
           I documented.
         </Card>
-      </CardGrid>
+      </HairlineGrid>
       <LinkRow>
         <LinkOut href={REVIEW_LINKS.designSystemOverhaul}>
           Design System Overhaul
@@ -104,7 +104,7 @@ function Thanks() {
         Everything from today, in one place. Open whichever one is useful.
       </Lede>
       <Reveal>
-        <ul className="grid gap-x-8 divide-y divide-line border-y border-line sm:grid-cols-2">
+        <ul className="screen-line-top screen-line-bottom grid gap-x-8 divide-y divide-line sm:grid-cols-2">
           {[
             ["Portfolio", REVIEW_LINKS.portfolio],
             ["AuthorProof case study", REVIEW_LINKS.authorProof.caseStudy],

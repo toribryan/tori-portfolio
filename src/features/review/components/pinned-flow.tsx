@@ -35,7 +35,8 @@ const ROUTE = [
 /**
  * A process as it was handed over: index cards pinned to a ruled sheet,
  * joined by a dashed route that keeps marching. Six steps fill the sheet;
- * fewer leave the later slots empty. Below `md` the cards stack.
+ * fewer leave the later slots empty. Below `md` the cards stack; above it
+ * the sheet grows to whatever height its parent gives it.
  */
 export function PinnedFlow({
   steps,
@@ -47,7 +48,7 @@ export function PinnedFlow({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border border-line bg-surface-warm/60",
+        "relative overflow-hidden rounded-xl border border-line bg-surface-warm/60 md:flex md:flex-col",
         className
       )}
     >
@@ -61,7 +62,7 @@ export function PinnedFlow({
         aria-hidden
       />
 
-      <div className="relative md:aspect-[1000/440]">
+      <div className="relative md:min-h-88 md:flex-1">
         <svg
           className="pointer-events-none absolute inset-0 hidden size-full md:block"
           viewBox="0 0 1000 440"

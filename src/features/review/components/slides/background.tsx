@@ -4,21 +4,10 @@ import type { ComponentType } from "react"
 import Image from "next/image"
 import { AnimatePresence, motion } from "motion/react"
 
-import { SpecialText } from "@/components/ui/special-text"
-import { REVIEW_LINKS } from "@/features/review/data/links"
+import { Testimonial } from "@/components/ui/testimonial"
 import type { Slide as SlideType } from "@/features/review/types"
 
-import {
-  Card,
-  CardGrid,
-  EASE,
-  Kicker,
-  Lede,
-  LinkOut,
-  LinkRow,
-  Slide,
-  Title,
-} from "../slide-primitives"
+import { EASE, HairlineGrid, MediaCard, Slide } from "../slide-primitives"
 
 const BIO_PHOTOS = [
   {
@@ -58,12 +47,12 @@ const PILLARS = [
 ]
 
 const QUOTES = [
-  ["My dad would tell you I am a", "“question artist”"],
-  [
-    "My colleagues would say",
-    "“she goes far beyond simply completing the task”",
-  ],
-  ["I call myself a", "curious design engineer"],
+  { quote: "A question artist.", author: "My dad" },
+  {
+    quote: "She goes far beyond simply completing the task.",
+    author: "My colleagues",
+  },
+  { quote: "A curious design engineer.", author: "Me" },
 ]
 
 const swap = {
@@ -98,16 +87,13 @@ function Bio() {
           />
         ))}
       </div>
-      <div className="flex flex-col gap-6">
-        {QUOTES.map(([attribution, quote]) => (
-          <div key={quote} className="flex flex-col gap-1.5">
-            <p className="font-mono text-xs tracking-wide text-muted-foreground">
-              {attribution}
-            </p>
-            <p className="font-heading text-xl/tight font-medium text-balance md:text-2xl/tight">
-              {quote}
-            </p>
-          </div>
+      <div className="flex flex-col gap-8">
+        {QUOTES.map((item) => (
+          <Testimonial
+            key={item.quote}
+            quote={item.quote}
+            authorName={item.author}
+          />
         ))}
       </div>
     </div>
@@ -116,35 +102,36 @@ function Bio() {
 
 function Pillars() {
   return (
-    <div className="grid gap-px border-y border-line bg-line md:grid-cols-3">
+    <HairlineGrid columns={3}>
       {PILLARS.map((pillar) => (
-        <div key={pillar.src} className="flex flex-col gap-3 bg-background p-4">
-          {pillar.src.endsWith(".mp4") ? (
-            <video
-              className="aspect-[4/5] w-full rounded-xl bg-black object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-              src={pillar.src}
-              autoPlay
-              loop
-              muted
-              playsInline
-              aria-label={pillar.alt}
-            />
-          ) : (
-            <Image
-              className="aspect-[4/5] w-full rounded-xl object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-              src={pillar.src}
-              alt={pillar.alt}
-              width={1200}
-              height={1445}
-              unoptimized
-            />
-          )}
-          <p className="font-heading text-xl/tight font-medium">
-            {pillar.title}
-          </p>
-        </div>
+        <MediaCard
+          key={pillar.src}
+          title={pillar.title}
+          media={
+            pillar.src.endsWith(".mp4") ? (
+              <video
+                className="aspect-[4/5] w-full rounded-xl bg-black object-cover"
+                src={pillar.src}
+                autoPlay
+                loop
+                muted
+                playsInline
+                aria-label={pillar.alt}
+              />
+            ) : (
+              <Image
+                className="aspect-[4/5] w-full rounded-xl object-cover"
+                src={pillar.src}
+                alt={pillar.alt}
+                width={1200}
+                height={1445}
+                unoptimized
+              />
+            )
+          }
+        />
       ))}
-    </div>
+    </HairlineGrid>
   )
 }
 
@@ -154,7 +141,7 @@ const STEP_KICKER: Record<string, string> = {
 }
 
 /**
- * The first three slides share this view. The name scrambles in once and
+ * The first three slides share this view. The name fades in once and
  * stays; the bio and then the pillars take turns underneath it.
  */
 function Intro({ slide }: { slide: SlideType }) {
@@ -162,7 +149,7 @@ function Intro({ slide }: { slide: SlideType }) {
   const open = step !== "cover"
 
   return (
-    <Slide className="min-h-full justify-center">
+    <Slide className="flex-1 justify-center">
       <motion.div layout className="flex flex-col gap-3">
         <AnimatePresence initial={false}>
           {open && (
@@ -182,11 +169,11 @@ function Intro({ slide }: { slide: SlideType }) {
               ? "font-heading text-3xl/tight font-medium tracking-normal md:text-4xl/tight"
               : "font-heading text-5xl/none font-medium tracking-normal md:text-7xl/none"
           }
-          transition={{ duration: 0.5, ease: EASE }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, ease: EASE, opacity: { duration: 1.2 } }}
         >
-          <SpecialText delay={0.2} speed={24}>
-            Tori Bryan
-          </SpecialText>
+          Tori Bryan
         </motion.h2>
       </motion.div>
 
@@ -206,40 +193,6 @@ function Intro({ slide }: { slide: SlideType }) {
   )
 }
 
-function Agenda() {
-  return (
-    <Slide>
-      <Kicker>Background / today</Kicker>
-      <Title>Two projects, one argument.</Title>
-      <Lede>
-        A product project shows how I make a design decision. A design system
-        project shows how I make that decision hold across every screen that
-        comes after it.
-      </Lede>
-      <CardGrid>
-        <Card label="01 · Product" title="AuthorProof">
-          A new integrity product for Proctorio, taken from an assigned brief to
-          a shippable MVP. The brief arrived with its architecture already
-          chosen. I tested it before engineering spent time on it.
-        </Card>
-        <Card label="02 · Design system" title="Modern Care Homes">
-          A senior living marketplace and the agent platform behind it, both
-          running on one component library that I design, build in Storybook,
-          and ship.
-        </Card>
-      </CardGrid>
-      <LinkRow>
-        <LinkOut href={REVIEW_LINKS.authorProof.caseStudy}>
-          AuthorProof case study
-        </LinkOut>
-        <LinkOut href={REVIEW_LINKS.modernCareHomes.caseStudy}>
-          Modern Care Homes case study
-        </LinkOut>
-      </LinkRow>
-    </Slide>
-  )
-}
-
 export const BACKGROUND_CONTENT: Record<
   string,
   ComponentType<{ slide: SlideType }>
@@ -247,5 +200,4 @@ export const BACKGROUND_CONTENT: Record<
   cover: Intro,
   bio: Intro,
   pillars: Intro,
-  today: Agenda,
 }

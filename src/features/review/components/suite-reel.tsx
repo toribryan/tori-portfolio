@@ -4,6 +4,8 @@ import { useRef, useState } from "react"
 
 import { cn } from "@/lib/utils"
 
+import { Frame, HairlineGrid } from "./slide-primitives"
+
 export type SuiteItem = {
   name: string
   line: string
@@ -14,9 +16,9 @@ export type SuiteItem = {
 }
 
 /**
- * The product suites side by side, each as a looping clip. Hovering one
- * pauses the other two and drops them back, so the one under the pointer
- * is the only thing moving.
+ * The product suites side by side, each a looping clip set like a project
+ * card. Hovering one pauses the other two and drops them back, so the one
+ * under the pointer is the only thing moving.
  */
 export function SuiteReel({
   items,
@@ -41,56 +43,51 @@ export function SuiteReel({
   }
 
   return (
-    <ul
-      className={cn(
-        "grid gap-px border-y border-line bg-line md:grid-cols-3",
-        className
-      )}
-      onMouseLeave={() => focus(null)}
-    >
-      {items.map((item, i) => {
-        const dimmed = active !== null && active !== i
-        return (
-          <li
-            key={item.name}
-            className={cn(
-              "flex flex-col gap-3 bg-background p-4 transition-opacity duration-300",
-              dimmed && "opacity-50"
-            )}
-            onMouseEnter={() => focus(i)}
-            onFocus={() => focus(i)}
-            onBlur={() => focus(null)}
-            tabIndex={0}
-            aria-label={`${item.name}: ${item.line}`}
-          >
-            <video
-              ref={(el) => {
-                videos.current[i] = el
-              }}
-              className="aspect-square w-full rounded-xl bg-surface-warm object-cover inset-ring-1 inset-ring-border/64"
-              src={item.src}
-              autoPlay
-              loop
-              muted
-              playsInline
-              aria-hidden
-            />
-            <div className="flex items-center gap-2">
-              <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-                {item.name}
-              </p>
-              {item.featured && (
-                <span className="rounded-md bg-success/15 px-1.5 py-px font-mono text-[0.65rem] tracking-wide text-foreground uppercase">
-                  Today
-                </span>
+    <HairlineGrid columns={3} className={className}>
+      <ul className="contents" onMouseLeave={() => focus(null)}>
+        {items.map((item, i) => {
+          const dimmed = active !== null && active !== i
+          return (
+            <li
+              key={item.name}
+              className={cn(
+                "flex flex-col gap-2 rounded-xl p-2 transition-[opacity,background-color] duration-300 ease-out hover:bg-accent-muted",
+                dimmed && "opacity-50"
               )}
-            </div>
-            <p className="font-heading text-lg/tight font-medium md:text-xl/tight">
-              {item.line}
-            </p>
-          </li>
-        )
-      })}
-    </ul>
+              onMouseEnter={() => focus(i)}
+              onFocus={() => focus(i)}
+              onBlur={() => focus(null)}
+              tabIndex={0}
+              aria-label={`${item.name}: ${item.line}`}
+            >
+              <Frame>
+                <video
+                  ref={(el) => {
+                    videos.current[i] = el
+                  }}
+                  className="aspect-square w-full rounded-xl bg-surface object-cover"
+                  src={item.src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-hidden
+                />
+              </Frame>
+
+              <div className="flex flex-col gap-1 px-4 py-2">
+                <p className="text-lg leading-snug font-medium">{item.name}</p>
+                <p className="text-sm leading-snug text-pretty text-muted-foreground">
+                  {item.line}
+                </p>
+                <p className="font-mono text-xs tracking-wide text-muted-foreground">
+                  {item.featured ? "Today’s walkthrough" : "Proctorio suite"}
+                </p>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+    </HairlineGrid>
   )
 }

@@ -227,22 +227,18 @@ export function Deck({
 
         <div className="relative isolate mx-auto flex h-full max-w-4xl flex-col border-x border-line">
           <header className="screen-line-bottom z-20 flex h-(--header-height) shrink-0 items-center justify-between gap-4 px-4">
-            {started ? (
-              <Breadcrumb section={section.title} title={slide.title} />
-            ) : (
-              <Button
-                className="h-7 gap-2 border-none px-0 tracking-wider text-muted-foreground hover:text-foreground hover:no-underline"
-                variant="link"
-                size="sm"
-                nativeButton={false}
-                render={
-                  <Link href="/">
-                    <ArrowLeftIcon />
-                    toribryan.com
-                  </Link>
-                }
-              />
-            )}
+            <Button
+              className="h-7 gap-2 border-none px-0 tracking-wider text-muted-foreground hover:text-foreground hover:no-underline"
+              variant="link"
+              size="sm"
+              nativeButton={false}
+              render={
+                <Link href="/">
+                  <ArrowLeftIcon />
+                  toribryan.com
+                </Link>
+              }
+            />
 
             <div className="flex items-center gap-1.5">
               {started && (
@@ -302,7 +298,10 @@ export function Deck({
                 >
                   <motion.section
                     key={stageKey(slide)}
-                    className="absolute inset-0 overflow-y-auto px-4 md:px-8"
+                    // As wide as the viewport, not the column, so a slide's
+                    // hairlines can run across the screen the way the
+                    // site's do. The column is re-centred inside.
+                    className="absolute inset-y-0 left-1/2 w-screen -translate-x-1/2 overflow-x-hidden overflow-y-auto"
                     data-slide-scroll
                     custom={direction}
                     variants={slideVariants}
@@ -311,7 +310,9 @@ export function Deck({
                     exit="exit"
                     aria-label={`${section.title}: ${slide.title}`}
                   >
-                    {renderSlide(slide)}
+                    <div className="mx-auto flex min-h-full w-full max-w-4xl flex-col px-4 md:px-8">
+                      {renderSlide(slide)}
+                    </div>
                   </motion.section>
                 </AnimatePresence>
               ) : (
@@ -392,33 +393,6 @@ export function Deck({
         </div>
       </div>
     </MotionConfig>
-  )
-}
-
-/**
- * `section / title`, the way the doc pages name where you are. The section
- * stays put while the title flips, so a run of slides reads as one chapter.
- */
-function Breadcrumb({ section, title }: { section: string; title: string }) {
-  return (
-    <p className="flex min-w-0 items-center gap-2 text-sm">
-      <span className="shrink-0 text-muted-foreground">{section}</span>
-      <span className="text-border">/</span>
-      <span className="relative min-w-0 flex-1 overflow-hidden font-medium">
-        <AnimatePresence mode="popLayout" initial={false}>
-          <motion.span
-            key={title}
-            className="block truncate"
-            initial={{ opacity: 0, y: "-40%", filter: "blur(1px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: "40%", filter: "blur(1px)" }}
-            transition={{ duration: 0.3, ease: EASE }}
-          >
-            {title}
-          </motion.span>
-        </AnimatePresence>
-      </span>
-    </p>
   )
 }
 
