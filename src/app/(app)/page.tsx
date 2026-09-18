@@ -7,6 +7,7 @@ import { absoluteUrl, cn } from "@/lib/utils"
 import { Awards } from "@/features/portfolio/components/awards"
 import { Blog } from "@/features/portfolio/components/blog"
 import { Certifications } from "@/features/portfolio/components/certifications"
+import { Components } from "@/features/portfolio/components/components"
 import { Education } from "@/features/portfolio/components/education"
 import { Experiences } from "@/features/portfolio/components/experiences"
 import { Hello } from "@/features/portfolio/components/hello"
@@ -39,6 +40,9 @@ export default function HomePage() {
           <Separator />
 
           <Projects />
+          <Separator />
+
+          <Components />
           <Separator />
 
           <Blog />

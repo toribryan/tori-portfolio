@@ -6,6 +6,8 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/base/ui/collapsible"
+import { DocCardList } from "@/features/doc/components/doc-card-list"
+import { getWorkDocs } from "@/features/doc/data/documents"
 import {
   Panel,
   PanelHeader,
@@ -13,8 +15,6 @@ import {
   PanelTitleSup,
 } from "@/features/portfolio/components/panel"
 import { PanelTitleCopy } from "@/features/portfolio/components/panel-title-copy"
-import { DocCardList } from "@/features/doc/components/doc-card-list"
-import { getWorkDocs } from "@/features/doc/data/documents"
 
 const ID = "projects"
 

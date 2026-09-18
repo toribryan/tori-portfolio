@@ -11,11 +11,6 @@ export const EDUCATION: Education[] = [
       end: "2023",
     },
     description: `- BA in Digital Communication and Media/Multimedia.`,
-    skills: [
-      "Digital Communication",
-      "Multimedia",
-      "Visual Design",
-      "Writing",
-    ],
+    skills: ["Digital Communication", "Multimedia", "Visual Design", "Writing"],
   },
 ]
