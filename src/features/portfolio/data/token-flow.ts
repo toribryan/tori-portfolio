@@ -1,6 +1,6 @@
 import type { TokenRow } from "@/components/ui/token-flow"
 
-/** The site's own colour tokens, one row per tier walk, as the token flow draws them. */
+/** The site's own color tokens, one row per tier walk, as the token flow draws them. */
 export const TOKEN_ROWS: TokenRow[] = [
   {
     base: "oklch(0.141 0.005 285.823)",

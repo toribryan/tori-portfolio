@@ -1,6 +1,6 @@
 ---
 title: Token Flow
-description: A colour token walking from raw value to primitive to semantic utility, with a pulse along each wire. Theme aware.
+description: A color token walking from raw value to primitive to semantic utility, with a pulse along each wire. Theme aware.
 createdAt: 2026-09-18
 updatedAt: 2026-09-18
 new: true
@@ -10,7 +10,7 @@ new: true
 
 ## Features
 
-- One row per colour, three chips wired left to right: the raw value, the primitive that names it, and the semantic utility that uses it.
+- One row per color, three chips wired left to right: the raw value, the primitive that names it, and the semantic utility that uses it.
 - A pulse travels along every wire, staggered per row, so the plate reads as a flow rather than a table.
 - Rows that carry a dark value swap to it when the theme changes, and the chips that change scramble for a second on the way.
 - Follows the document's `dark` class by default. Hosts that own the theme can pin it with `theme`.
@@ -41,7 +41,7 @@ const rows: TokenRow[] = [
 <TokenFlow rows={rows} showUse />
 ```
 
-Each row's `base` also colours the swatch on its three chips, so a row that swaps in the dark theme changes colour along with its labels.
+Each row's `base` also colors the swatch on its three chips, so a row that swaps in the dark theme changes color along with its labels.
 
 ## API reference
 
@@ -49,7 +49,7 @@ Each row's `base` also colours the swatch on its three chips, so a row that swap
 
 | Prop        | Type                | Default | Description                                                     |
 | ----------- | ------------------- | ------- | --------------------------------------------------------------- |
-| `rows`      | `TokenRow[]`        |         | One entry per colour.                                           |
+| `rows`      | `TokenRow[]`        |         | One entry per color.                                            |
 | `showUse`   | `boolean`           | `false` | Print each row's `use` under its semantic chip.                 |
 | `theme`     | `"light" \| "dark"` |         | Pin the theme instead of following the document's `dark` class. |
 | `className` | `string`            |         | Classes for the outer plate.                                    |

@@ -173,8 +173,8 @@ function Swatch({ color }: { color: string }) {
 }
 
 /**
- * How a colour travels through the token tiers: a raw value, the primitive
- * that names it, and the semantic role that uses it. One row per colour,
+ * How a color travels through the token tiers: a raw value, the primitive
+ * that names it, and the semantic role that uses it. One row per color,
  * wired left to right across a dotted plate, with a pulse travelling along
  * each wire. Rows that carry a `dark` value swap to it when the theme
  * changes, scrambling for a moment on the way. The theme follows the
