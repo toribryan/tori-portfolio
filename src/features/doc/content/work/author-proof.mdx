@@ -7,7 +7,7 @@ imageCredit: "Cover image © Proctorio, from the AuthorProof product page and vi
 imageCreditUrl: "https://proctorio.com/solutions/origin"
 order: 2
 createdAt: "2026-04-01"
-updatedAt: "2026-09-06"
+updatedAt: "2026-09-18"
 company: "Proctorio"
 role: "Staff Product Designer, end to end"
 period: "Q2 2026"
@@ -66,10 +66,21 @@ results:
   caption="Product imagery, including this page's cover, from the AuthorProof page and video at proctorio.com, © Proctorio. Used with credit."
 />
 
+## Where it sits
+
+At Proctorio I led cross-product design across three suites, for institutions
+and for proctoring agencies, and led the implementation of the refactored
+design system underneath all three. Integrity proctors the exam, Vault protects
+the exam content, and Origin proves authorship. AuthorProof is Origin's product.
+
+<ProctorioSuites caption="The three suites. Hover one to see it move." />
+
 ## Did you write this?
 
 Existing integrity tools answer one question: is this original? None of them
 answer the one instructors care about: did you write this?
+
+<IntegrityRadar caption="What the integrity suite has to cover. Authorship, in green, was the vector no existing tool touched." />
 
 Author Proof asks that question directly. When a student submits written work,
 it generates a short comprehension quiz from the student's own writing, in the
@@ -78,13 +89,22 @@ about it. Someone who didn't, can't. The result surfaces as a score badge beside
 the submission, where instructors already grade, with a link out to the full
 session for anyone who wants the question-level detail.
 
+<Video
+  src="/images/review/authorproof-cover.webm"
+  fit="square"
+  caption="AuthorProof in motion: the quiz, generated from the submission."
+/>
+
 ## Four constraints, each a design problem in disguise
 
-The product arrived with its architecture already chosen: submit through the
-LMS as normal, generate questions, create a quiz in the LMS's own quiz tooling,
-assign it to that one student, and notify them. Before engineering committed
-time to it, I mapped that flow step by step and tested each step against what
-the platform could do.
+The product arrived with its architecture already chosen: three journeys built
+on the LMS's own quiz tooling, one quiz per submission, with the student
+notified to go find it.
+
+<BriefedJourneys caption="The first concept as it was handed over: the instructor configures, the student submits and answers, the instructor grades." />
+
+Before engineering committed time to it, I mapped that flow step by step and
+tested each step against what the platform could do.
 
 - Timing. Fetch, generate, create, assign, notify added up to roughly ten
   minutes between submission and quiz. That gap is exactly the window a student
@@ -100,14 +120,20 @@ the platform could do.
 - Two disconnected things to grade. A separate quiz item meant the
   submission and the quiz would live in different places, with no unified view.
 
+<ConstraintStats />
+
 ## A smaller flow that kept the promise
 
 Rather than report the blockers, I pitched an alternative and split it into an
 MVP and a longer vision. The MVP embeds Author Proof in the assignment itself:
 the student starts the assignment, uploads their essay, and the quiz appears
-seconds later. That one move collapsed the timing gap, removed the notification
-dependency, and stepped out of the quiz tooling entirely. The result is written
-back beside the submission, so the instructor has one thing to read.
+seconds later.
+
+<PivotFlows caption="The student's path as it was briefed, and as it was pitched instead." />
+
+That one move collapsed the timing gap, removed the notification dependency,
+and stepped out of the quiz tooling entirely. The result is written back beside
+the submission, so the instructor has one thing to read.
 
 I was also clear about what the pitch cost. It excluded short pieces written
 directly in the LMS editor, and it left an open question about how proctoring
@@ -136,6 +162,12 @@ production, and handed engineering working prototypes in HTML, CSS, and vanilla
 JS rather than a document about them. Surfaces included the quiz-settings panel
 inside the assignment editor, the student quiz flow, and the results pathway from
 badge to session detail.
+
+<Video
+  src="/images/review/authorproof-shipped.webm"
+  fit="square"
+  caption="AuthorProof as shipped."
+/>
 
 ## What I'd do next
 

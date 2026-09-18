@@ -26,6 +26,18 @@ import { InboxRegions } from "./mdx-inbox-regions"
 import { LinkButton } from "./mdx-link-button"
 import { Pipeline, Stage } from "./mdx-pipeline"
 import { PipelineHero } from "./mdx-pipeline-hero"
+import {
+  AtomicDesign,
+  BriefedJourneys,
+  ConstraintStats,
+  FoundationLayers,
+  IntegrityRadar,
+  PivotFlows,
+  ProctorioSuites,
+  TokenCallouts,
+  TokenTiers,
+  TwoJobs,
+} from "./mdx-review-artifacts"
 import { SkillCommandsVisual } from "./mdx-skill-commands"
 import { StoryEmbed } from "./mdx-story-embed"
 import { Tech } from "./mdx-tech"
@@ -72,6 +84,17 @@ const components: MDXRemoteProps["components"] = {
   Tech,
   ToolLabel,
   Video,
+
+  AtomicDesign,
+  BriefedJourneys,
+  ConstraintStats,
+  FoundationLayers,
+  IntegrityRadar,
+  PivotFlows,
+  ProctorioSuites,
+  TokenCallouts,
+  TokenTiers,
+  TwoJobs,
 
   Steps: ({ className, ...props }: React.ComponentProps<"div">) => (
     <div

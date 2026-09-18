@@ -4,7 +4,7 @@ description: "A senior living marketplace for families looking for care, and the
 claim: "I design the interfaces and ship the front end for both sides of it, the site families search and the platform agents run."
 image: "/cover-moderncare.webp"
 createdAt: "2026-01-01"
-updatedAt: "2026-09-08"
+updatedAt: "2026-09-18"
 order: 1
 new: true
 company: "Modern Care Homes"
@@ -179,6 +179,8 @@ the agent platform. A change to a button is a change in two products. That's
 the job the design system does — it's what keeps the two reframes from quietly
 breaking the second they leave the screen I designed them on.
 
+<TwoJobs caption="Two jobs: building the system, and using it in context. Hover a hub for a glimpse of each." />
+
 - **Tokens, foundations, components.** Foundations are locked. Components are
   still in progress and I'm publishing them as they get done.
 - **The accessibility floor lives in the components, not in a checklist.** 18px
@@ -193,6 +195,39 @@ breaking the second they leave the screen I designed them on.
 - **The two-product test.** Storybook is also how I know a component is ready
   for both the marketplace and the agent platform, because I can look at it
   outside of either one.
+
+### Tokens, named one to one
+
+A color flows from its base value to a primitive named for what it is, to a
+semantic role named for the job. Components only ever ask for the role, and
+every role has a Figma variable with the same name.
+
+<TokenTiers />
+
+### The rest of the foundations
+
+Theme, radius, and shadow, read off the live stylesheet. The theme panel is
+the point of the semantic layer: flip it, and the sample re-themes without any
+component being touched.
+
+<FoundationLayers />
+
+<Video
+  src="/case-studies/foundations-mch.mp4"
+  caption="The foundations: tokens, type, spacing, and radius, as they live in the system."
+/>
+
+The home card, with the token each part of it reads.
+
+<TokenCallouts />
+
+### Atoms to pages, straight from the Storybook
+
+The library is organized the atomic way, so a rule set at the bottom still
+holds at the top. Every frame below is a live story: click into one to change
+its state, or open it in the Storybook.
+
+<AtomicDesign />
 
 ## Shipping the front end
 
@@ -239,8 +274,14 @@ has to stay up. I own everything a family or agent sees and interacts with.
 
 ## What's next
 
-- Publishing the component library once the foundations settle.
+- The complex components, starting with the map: one variant for home
+  profiles and one for map search.
 - Better comparison. Cost and care level side by side is the decision families
   are making, and it isn't solved yet.
 - More editorial. The resources and posts answer the questions people have
   before they're ready to tour.
+
+<Video
+  src="/images/review/coming-map.mp4"
+  caption="The map search variant, in progress."
+/>
