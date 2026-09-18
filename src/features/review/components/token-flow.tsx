@@ -177,19 +177,24 @@ function Swatch({ color }: { color: string }) {
  * that names it, and the semantic role that uses it. One row per colour,
  * wired left to right across a dotted plate, with a pulse travelling along
  * each wire. Rows that carry a `dark` value swap to it when the theme
- * changes, scrambling for a moment on the way.
+ * changes, scrambling for a moment on the way. The theme follows the
+ * document's `dark` class unless `theme` pins it.
  */
 export function TokenFlow({
   rows,
   showUse = false,
+  theme,
   className,
 }: {
   rows: TokenRow[]
   /** Print each row's `use` under its semantic chip. */
   showUse?: boolean
+  /** Force a theme instead of following the document's `dark` class. */
+  theme?: "light" | "dark"
   className?: string
 }) {
-  const isDark = useIsDark()
+  const documentDark = useIsDark()
+  const isDark = theme ? theme === "dark" : documentDark
 
   return (
     <div
