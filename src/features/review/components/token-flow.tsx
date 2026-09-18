@@ -116,12 +116,9 @@ export function TokenFlow({
         ))}
 
         {rows.map((row, i) => (
-          <motion.div
+          <div
             key={row.semantic}
             className="col-span-5 grid grid-cols-subgrid items-center"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 + i * 0.12, duration: 0.4 }}
           >
             <Chip
               startContent={<Swatch color={row.base} />}
@@ -148,7 +145,7 @@ export function TokenFlow({
                 {row.use}
               </span>
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>
