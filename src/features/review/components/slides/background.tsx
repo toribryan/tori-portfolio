@@ -90,13 +90,18 @@ function Bio() {
   return (
     <HairlineGrid columns="3fr 2fr" className="flex-1">
       {/* Photos start on the title's line and grow to the stage's floor,
-          cropping as they go; the quotes span the photos' height so the
-          first sits on their top edge and the last on their bottom. */}
+          cropping as they go. They are positioned out of flow so their own
+          height never pushes the grid past the stage; the quotes span the
+          photos' height so the first sits on their top edge and the last on
+          their bottom. */}
       <div className="grid grid-cols-2 grid-rows-2 gap-2 py-2 pr-2 md:pl-6">
         {BIO_PHOTOS.map((photo) => (
-          <Frame key={photo.src} className="min-h-0">
+          <Frame
+            key={photo.src}
+            className="min-h-0 max-md:aspect-square md:min-h-40"
+          >
             <Image
-              className="size-full min-h-48 rounded-xl object-cover"
+              className="absolute inset-0 size-full rounded-xl object-cover"
               src={photo.src}
               alt={photo.alt}
               width={900}
@@ -128,26 +133,28 @@ function Pillars() {
           key={pillar.src}
           title={pillar.title}
           media={
-            pillar.src.endsWith(".mp4") ? (
-              <video
-                className="size-full min-h-64 rounded-xl bg-black object-cover"
-                src={pillar.src}
-                autoPlay
-                loop
-                muted
-                playsInline
-                aria-label={pillar.alt}
-              />
-            ) : (
-              <Image
-                className="size-full min-h-64 rounded-xl object-cover"
-                src={pillar.src}
-                alt={pillar.alt}
-                width={1200}
-                height={1445}
-                unoptimized
-              />
-            )
+            <div className="relative min-h-0 flex-1 max-md:aspect-[4/5] md:min-h-40">
+              {pillar.src.endsWith(".mp4") ? (
+                <video
+                  className="absolute inset-0 size-full rounded-xl bg-black object-cover"
+                  src={pillar.src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-label={pillar.alt}
+                />
+              ) : (
+                <Image
+                  className="absolute inset-0 size-full rounded-xl object-cover"
+                  src={pillar.src}
+                  alt={pillar.alt}
+                  width={1200}
+                  height={1445}
+                  unoptimized
+                />
+              )}
+            </div>
           }
         />
       ))}
