@@ -5,26 +5,14 @@ import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
 
 const STAGES = [
-  { label: "Research", name: "Pattern teardown", meta: "Mobbin" },
-  { label: "Design", name: "Figma", meta: "tokens named to match CSS" },
-  {
-    label: "Build",
-    name: "Storybook",
-    meta: "every state, 200% zoom",
-    focus: true,
-  },
-  { label: "Review", name: "Pull request", meta: "typed, tested, reviewed" },
-  { label: "Preview", name: "Vercel", meta: "on a real phone" },
+  { label: "Research", name: "Pattern teardown" },
+  { label: "Design", name: "Figma" },
+  { label: "Build", name: "Storybook", focus: true },
+  { label: "Review", name: "Pull request" },
+  { label: "Preview", name: "Vercel" },
 ]
 
 const OUTPUTS = ["Marketplace", "Agent platform"]
-
-const STATS = [
-  ["Products", "2"],
-  ["Base type", "18px"],
-  ["Targets", "48×48"],
-  ["Floor", "AA"],
-]
 
 /** A dot traveling down the rail, one of a few spaced along it. */
 function RailDot({ delay }: { delay: number }) {
@@ -79,21 +67,16 @@ export function ShippingPipeline({ className }: { className?: string }) {
             />
             <div
               className={cn(
-                "flex min-w-0 items-baseline justify-between gap-4 rounded-lg px-3 py-2",
+                "flex min-w-0 items-baseline gap-3 rounded-lg px-3 py-2",
                 stage.focus
                   ? "bg-surface inset-ring-1 inset-ring-foreground/80"
                   : "inset-ring-1 inset-ring-border/64"
               )}
             >
-              <div className="flex min-w-0 items-baseline gap-3">
-                <span className="w-14 shrink-0 text-[0.65rem] tracking-wide text-muted-foreground uppercase">
-                  {stage.label}
-                </span>
-                <span className="text-sm font-medium">{stage.name}</span>
-              </div>
-              <span className="truncate text-xs text-muted-foreground">
-                {stage.meta}
+              <span className="w-14 shrink-0 text-[0.65rem] tracking-wide text-muted-foreground uppercase">
+                {stage.label}
               </span>
+              <span className="text-sm font-medium">{stage.name}</span>
             </div>
           </li>
         ))}
@@ -124,17 +107,6 @@ export function ShippingPipeline({ className }: { className?: string }) {
           </div>
         </li>
       </ol>
-
-      <dl className="grid grid-cols-4 gap-4 border-t border-line px-3 py-2">
-        {STATS.map(([label, value]) => (
-          <div key={label}>
-            <dt className="text-[0.6rem] tracking-wide whitespace-nowrap text-muted-foreground uppercase">
-              {label}
-            </dt>
-            <dd className="text-base tabular-nums">{value}</dd>
-          </div>
-        ))}
-      </dl>
     </div>
   )
 }
