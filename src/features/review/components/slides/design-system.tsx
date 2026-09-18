@@ -78,8 +78,8 @@ function Cover() {
       <CardGrid>
         <Job number="01" title="Building the design system" items={BUILD_STACK}>
           Tokens, foundations and components, each built and argued with in
-          isolation before it lands on a page. The accessibility floor lives in
-          the component, not in a checklist.
+          isolation before it lands on a page. The accessibility floor is built
+          into each component.
         </Job>
         <Job number="02" title="Using it in context" items={USE_STACK}>
           The marketplace families search and the platform agents run it from,
@@ -148,9 +148,7 @@ function Foundations() {
   return (
     <Slide>
       <Kicker>Design system / foundations</Kicker>
-      <Title>
-        The accessibility floor lives in the components, not in a checklist.
-      </Title>
+      <Title>The accessibility floor is built into the components.</Title>
       <StatRow>
         <Stat value="18px" label="Base type size, everywhere" />
         <Stat value="48×48" label="Minimum target, every control" />
@@ -169,8 +167,8 @@ function Foundations() {
         </Card>
         <Card label="Why it holds">
           Because the floor is baked into the component, I cannot accidentally
-          undo it on page eleven. Designing from a floor instead of toward one
-          is the difference between a checklist and a system.
+          undo it on page eleven. A checklist gets checked once, at the end. The
+          component holds the floor on every screen.
         </Card>
       </Split>
     </Slide>

@@ -1,13 +1,22 @@
 "use client"
 
 import type { ComponentType } from "react"
+import { useState } from "react"
+import { motion } from "motion/react"
 
+import { Typewriter } from "@/components/ui/typewriter-text"
+import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
+import { PinnedFlow } from "@/features/review/components/pinned-flow"
+import { ProctorioLogo } from "@/features/review/components/proctorio-logo"
+import type { SuiteItem } from "@/features/review/components/suite-reel"
+import { SuiteReel } from "@/features/review/components/suite-reel"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
   CardGrid,
+  EASE,
   Flow,
   Kicker,
   Lede,
@@ -25,13 +34,53 @@ import {
   Title,
 } from "../slide-primitives"
 
+const SUITES: SuiteItem[] = [
+  {
+    name: "Integrity",
+    line: "Proctor an exam securely",
+    src: "/images/review/suite-integrity.webm",
+  },
+  {
+    name: "Vault",
+    line: "Protect your exam",
+    src: "/images/review/suite-vault.webm",
+  },
+  {
+    name: "Origin",
+    line: "Prove the work is theirs",
+    src: "/images/review/suite-origin.webm",
+    featured: true,
+  },
+]
+
+function Suite() {
+  return (
+    <Slide>
+      <Kicker>01 · Product / where it sits</Kicker>
+      <Title>Three product suites, one design system.</Title>
+      <Lede>
+        At Proctorio I led cross-product design across three suites for
+        institutions and proctoring agencies, and led the implementation of a
+        refactored design system underneath all of them. The product I chose to
+        walk through today comes from the Origin suite: AuthorProof.
+      </Lede>
+      <Reveal>
+        <SuiteReel items={SUITES} />
+      </Reveal>
+    </Slide>
+  )
+}
+
 function Cover() {
   return (
     <Slide>
-      <Split ratio="copy">
+      <Kicker>01 · Product</Kicker>
+      <Reveal>
+        <ProctorioLogo className="h-7 w-auto text-foreground" />
+      </Reveal>
+      <Title size="xl">AuthorProof</Title>
+      <Split className="items-start">
         <Stack>
-          <Kicker>01 · Product</Kicker>
-          <Title size="xl">AuthorProof</Title>
           <Lede>
             Plagiarism checkers read the document. This one asks the student
             about the paper they turned in.
@@ -44,107 +93,114 @@ function Cover() {
               "Canvas LMS",
             ]}
           />
+          <LinkRow>
+            <LinkOut href={REVIEW_LINKS.authorProof.product}>
+              Product page
+            </LinkOut>
+            <LinkOut href={REVIEW_LINKS.authorProof.caseStudy}>
+              Full case study
+            </LinkOut>
+          </LinkRow>
         </Stack>
-        <Shot
-          src="/cover-authorproof.webp"
-          alt="AuthorProof cover"
-          width={2400}
-          height={1260}
-          priority
-        />
+        <Reveal>
+          <video
+            className="aspect-square w-full rounded-xl bg-surface-warm object-cover inset-ring-1 inset-ring-border/64"
+            src="/images/review/authorproof-cover.webm"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label="AuthorProof in motion"
+          />
+        </Reveal>
       </Split>
     </Slide>
   )
 }
-
-const INTEGRITY_VECTORS = [
-  "Prevent content theft",
-  "Block AI assistance",
-  "Track leaked content",
-  "Prevent impersonation",
-  "Detect AI use",
-  "Monitor behaviour",
-]
 
 function Task() {
   return (
     <Slide>
       <Kicker>AuthorProof / task</Kicker>
-      <Title>Three products protecting the integrity of online learning.</Title>
-      <Split ratio="copy">
-        <CardGrid className="sm:grid-cols-1">
-          <Card
-            label="Origin · my task"
-            title="Prove the work is theirs"
-            emphasis
-          >
-            A new product. Verify authorship of written work, inside the
-            instructor’s existing Canvas workflow.
-          </Card>
-          <Card label="Integrity" title="Proctor an exam securely" />
-          <Card label="Vault" title="Protect your exam" />
-        </CardGrid>
-        <Stack>
-          <Reveal>
-            <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-              What the suite has to cover
-            </p>
-          </Reveal>
-          <ul className="grid grid-cols-2 gap-x-6 divide-y divide-line border-y border-line">
-            {INTEGRITY_VECTORS.map((vector) => (
-              <Reveal key={vector}>
-                <li className="py-3 text-sm md:text-base">{vector}</li>
-              </Reveal>
-            ))}
-          </ul>
-          <Lede className="text-base md:text-lg">
-            Every existing tool answers “is this original?”. None of them answer
-            the question instructors actually have.
-          </Lede>
-        </Stack>
+      <Title>Prove the work is theirs.</Title>
+      <Lede>
+        A new product in the Origin suite: verify authorship of written work,
+        inside the instructor’s existing Canvas workflow.
+      </Lede>
+      <Split ratio="art" className="items-center">
+        <Reveal className="flex flex-col gap-3">
+          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+            The gap
+          </p>
+          <p className="font-heading text-2xl/tight font-medium text-balance md:text-3xl/tight">
+            Every existing tool answers “is this original?”
+          </p>
+          <p className="text-base/relaxed text-pretty text-muted-foreground md:text-lg/relaxed">
+            None of them answer the question instructors actually have: did you
+            write this?
+          </p>
+        </Reveal>
+        <Reveal>
+          <AuthorProofRadar className="aspect-[4/3] w-full" />
+        </Reveal>
       </Split>
     </Slide>
   )
 }
 
+const THESIS =
+  "If a student submits an essay, they should be able to answer questions about what they wrote."
+
 function Thesis() {
+  const [typed, setTyped] = useState(false)
+
   return (
     <Slide className="gap-6">
       <Kicker>AuthorProof / statement</Kicker>
       <Reveal>
         <p className="font-mono text-sm text-muted-foreground">thesis:</p>
       </Reveal>
-      <Title size="xl">
-        If a student submits an essay, they should be able to answer questions
-        about what they wrote.
-      </Title>
       <Reveal>
-        <p className="font-serif text-3xl text-muted-foreground italic md:text-4xl">
-          right?
-        </p>
+        <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
+          <Typewriter
+            text={THESIS}
+            speed={38}
+            delay={0.6}
+            onComplete={() => setTyped(true)}
+          />
+        </h2>
       </Reveal>
+      <motion.p
+        className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
+        initial={{ opacity: 0, y: 8 }}
+        animate={typed ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+        transition={{ duration: 0.5, delay: 0.5, ease: EASE }}
+      >
+        right?
+      </motion.p>
     </Slide>
   )
 }
+
+const BRIEFED_FLOW = [
+  { title: "Student submits the completed written assignment" },
+  { title: "Assignment content is extracted to generate questions" },
+  { title: "AuthorProof uses the Canvas Quiz API to create and assign a quiz" },
+  { title: "Student is notified via Canvas inbox and AuthorProof email" },
+  { title: "Student navigates to the quiz and completes it" },
+  {
+    title: "AuthorProof generates a report card of results and answer analysis",
+  },
+]
 
 function Brief() {
   return (
     <Slide>
       <Kicker>AuthorProof / the brief as it arrived</Kicker>
       <Title>The architecture was already chosen.</Title>
-      <Lede>
-        Submit through the LMS as normal, generate questions, create a quiz in
-        the LMS’s own quiz tooling, assign it to that one student, notify them.
-        Before engineering committed time, I mapped every step against what the
-        platform could do.
-      </Lede>
-      <Shot
-        src="/case-studies/author-proof-flow.webp"
-        alt="The six-step flow as briefed: submit, extract, create and assign a Canvas quiz, notify, student completes, report card"
-        width={1468}
-        height={186}
-        imageClassName="bg-[#f7f6f2] p-2 dark:bg-[#f7f6f2]"
-      />
+      <Reveal>
+        <PinnedFlow steps={BRIEFED_FLOW} />
+      </Reveal>
       <StatRow>
         <Stat value="6" label="Steps between submission and quiz" />
         <Stat value="~10 min" label="Latency the steps add up to" />
@@ -346,6 +402,7 @@ export const AUTHOR_PROOF_CONTENT: Record<
   string,
   ComponentType<{ slide: SlideType }>
 > = {
+  suite: Suite,
   cover: Cover,
   task: Task,
   thesis: Thesis,

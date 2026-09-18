@@ -31,9 +31,9 @@ function Threads() {
           the marketplaces that had already solved search.
         </Card>
         <Card label="02" title="Put the rule in the component.">
-          Confidence, not verdict, is carried as text because colour cannot be
-          trusted. The accessibility floor is 18px and 48 by 48 because the
-          component says so, not a checklist.
+          Confidence is carried as text because colour cannot be trusted. The
+          accessibility floor is 18px and 48 by 48 because the component
+          enforces it.
         </Card>
         <Card label="03" title="Ship what you design.">
           Prototypes as the spec on AuthorProof. Storybook to pull request to
@@ -50,10 +50,6 @@ function Role() {
     <Slide>
       <Kicker>Observations / for a design systems role</Kicker>
       <Title>What I’d bring on day one.</Title>
-      <Lede>
-        The system work I have done at scale, for context on the two projects
-        above.
-      </Lede>
       <StatRow>
         <Stat
           value="94%"
@@ -71,8 +67,8 @@ function Role() {
       </StatRow>
       <CardGrid>
         <Card label="Tokens and architecture">
-          Semantic token layers built before any component. A theme is a data
-          change, not a code change.
+          Semantic token layers built before any component, so a new theme is a
+          change to token values with no component touched.
         </Card>
         <Card label="Governance as mentorship">
           Owning the answer to “does this belong in the system”, given in public
