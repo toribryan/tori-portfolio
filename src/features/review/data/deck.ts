@@ -175,8 +175,8 @@ export const SLIDES: Slide[] = [
     title: "atomic design",
     notes: [
       "Walk it top to bottom. Atoms carry the floor: 18px type, 48px targets, the one green that means available. Molecules are atoms that only make sense together, like the search bar.",
-      "The organism is the home card from two slides on: badge, save, carousel, then name, address, price. Decided once, holds on every listing.",
-      "Templates are content-agnostic: filters, grid, map. The page is the live marketplace, and the same pieces run the agent platform.",
+      "Organisms: hero search with suggestions on the marketplace, the rooms availability table on the agent platform. Same atoms, both products. (The home card story needs a Clerk provider decorator before it renders on the published Storybook; the card is on the next slide.)",
+      "Templates: the filter form empty and with eight active filters, content-agnostic. The page is the home hero, made of everything above. Every frame is live: click into one if they want to see a state change.",
       "If asked why atomic: it gives a contribution a home. A new piece has to say which level it lives at, which is most of the governance conversation.",
     ],
   },

@@ -168,10 +168,10 @@ function Components() {
   return (
     <Slide>
       <Kicker>Design system / components</Kicker>
-      <Title>Atoms to pages, in the marketplace’s own pieces.</Title>
+      <Title>Atoms to pages, straight from the Storybook.</Title>
       <Lede>
         The library is organised the atomic way, so a rule set at the bottom is
-        still holding at the top. Every piece below is Modern Care Homes’.
+        still holding at the top. Every frame below is a live story.
       </Lede>
       <AtomicDesign />
     </Slide>
