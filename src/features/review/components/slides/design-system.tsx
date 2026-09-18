@@ -334,12 +334,6 @@ function HomeCard() {
               "An “Available Now” tag marks homes ready for new residents.",
               "A save button keeps a home for later.",
               "A carousel previews a home’s photos before clicking in.",
-              <span
-                key="metric"
-                className="font-handwritten text-lg/none text-destructive"
-              >
-                TODO: success metric (engagement or browsing time).
-              </span>,
             ]}
           />
         </Stack>
