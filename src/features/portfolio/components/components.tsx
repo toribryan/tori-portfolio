@@ -4,6 +4,7 @@ import { TweetQuote } from "@/components/ui/tweet-card"
 import { ComponentList } from "@/features/components/components/component-list"
 import { getComponentDocs } from "@/features/components/data/docs"
 import { COMPONENTS } from "@/features/components/data/registry"
+import { USER } from "@/features/portfolio/data/user"
 
 import { Panel, PanelHeader, PanelTitle, PanelTitleSup } from "./panel"
 import { PanelTitleCopy } from "./panel-title-copy"
@@ -39,7 +40,7 @@ export async function Components() {
 
       {post && (
         <div className="screen-line-bottom p-4">
-          <TweetQuote tweet={post} />
+          <TweetQuote tweet={post} avatar={USER.headerAvatar} />
         </div>
       )}
 

@@ -75,9 +75,9 @@ function compareDocs(a: Doc, b: Doc) {
 }
 
 export const getAllDocs = cache(() => {
-  return getMDXData(
-    path.join(process.cwd(), "src/features/doc/content")
-  ).sort(compareDocs)
+  return getMDXData(path.join(process.cwd(), "src/features/doc/content")).sort(
+    compareDocs
+  )
 })
 
 export function getDocBySlug(slug: string) {

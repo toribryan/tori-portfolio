@@ -12,6 +12,7 @@ import { MDX } from "@/components/mdx"
 import { TOCInline } from "@/components/toc-inline"
 import type { ComponentDoc } from "@/features/components/data/docs"
 import type { ComponentEntry } from "@/features/components/data/registry"
+import { USER } from "@/features/portfolio/data/user"
 
 /**
  * The reading layout for a component doc: the header row with the way back
@@ -71,7 +72,7 @@ export async function ComponentDocPage({
 
         {post && (
           <div className="not-prose mb-6">
-            <TweetQuote tweet={post} />
+            <TweetQuote tweet={post} avatar={USER.headerAvatar} />
           </div>
         )}
 

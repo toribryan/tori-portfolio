@@ -19,8 +19,8 @@ decision below is downstream of one rule: **if it fails at 200% zoom, it isn't
 done.**
 
 <Callout title="Component library in progress">
-Foundations are locked. Components land here as they're published: the list at
-the bottom tracks what's shipped and what's still in Figma.
+  Foundations are locked. Components land here as they're published: the list at
+  the bottom tracks what's shipped and what's still in Figma.
 </Callout>
 
 ## Foundations
@@ -30,15 +30,15 @@ the bottom tracks what's shipped and what's still in Figma.
 The navy carries the brand. Everything else exists to keep contrast above the
 floor: AA is the minimum, AAA for body copy.
 
-| Token | Value | Contrast on surface | Use |
-| --- | --- | --- | --- |
-| `--mch-ink` | `#0d1b2a` | 16.8:1 | Body copy, headings |
-| `--mch-ink-muted` | `#3d4c5c` | 8.4:1 | Secondary copy, labels |
-| `--mch-brand` | `#113264` | 11.2:1 | Primary actions, links |
-| `--mch-brand-hover` | `#0b2450` | 14.1:1 | Hover, pressed |
-| `--mch-surface` | `#ffffff` | – | Page, card |
-| `--mch-surface-sunken` | `#f4f6f9` | – | Wells, table stripes |
-| `--mch-focus` | `#f0a202` | 2.1:1 vs brand | Focus ring only |
+| Token                  | Value     | Contrast on surface | Use                    |
+| ---------------------- | --------- | ------------------- | ---------------------- |
+| `--mch-ink`            | `#0d1b2a` | 16.8:1              | Body copy, headings    |
+| `--mch-ink-muted`      | `#3d4c5c` | 8.4:1               | Secondary copy, labels |
+| `--mch-brand`          | `#113264` | 11.2:1              | Primary actions, links |
+| `--mch-brand-hover`    | `#0b2450` | 14.1:1              | Hover, pressed         |
+| `--mch-surface`        | `#ffffff` | –                   | Page, card             |
+| `--mch-surface-sunken` | `#f4f6f9` | –                   | Wells, table stripes   |
+| `--mch-focus`          | `#f0a202` | 2.1:1 vs brand      | Focus ring only        |
 
 The focus ring is deliberately off-palette. A brand-colored ring on a
 brand-colored button is invisible to the person who most needs it.
@@ -60,14 +60,14 @@ brand-colored button is invisible to the person who most needs it.
 Base is 18px, not 16px. Every step below was tested at 200% browser zoom on a
 1280px viewport: the condition, not the edge case.
 
-| Step | Size | Line height | Use |
-| --- | --- | --- | --- |
-| `display` | 44px | 1.15 | Page titles |
-| `heading-1` | 32px | 1.2 | Section headings |
-| `heading-2` | 24px | 1.3 | Card titles |
-| `body-lg` | 20px | 1.6 | Lead paragraphs |
-| `body` | 18px | 1.6 | Default |
-| `caption` | 16px | 1.5 | Metadata, helper text |
+| Step        | Size | Line height | Use                   |
+| ----------- | ---- | ----------- | --------------------- |
+| `display`   | 44px | 1.15        | Page titles           |
+| `heading-1` | 32px | 1.2         | Section headings      |
+| `heading-2` | 24px | 1.3         | Card titles           |
+| `body-lg`   | 20px | 1.6         | Lead paragraphs       |
+| `body`      | 18px | 1.6         | Default               |
+| `caption`   | 16px | 1.5         | Metadata, helper text |
 
 There is no step below 16px. Legal copy included.
 
@@ -75,11 +75,20 @@ There is no step below 16px. Legal copy included.
 
 <Steps>
 
-<Step>Base unit is 4px, but no interactive element uses less than 12px of internal padding.</Step>
+<Step>
+  Base unit is 4px, but no interactive element uses less than 12px of internal
+  padding.
+</Step>
 
-<Step>Minimum touch target is 48×48px, above the WCAG 2.2 floor of 44px, because the audience skews older.</Step>
+<Step>
+  Minimum touch target is 48×48px, above the WCAG 2.2 floor of 44px, because the
+  audience skews older.
+</Step>
 
-<Step>Adjacent targets carry at least 8px of dead space between them, so a near-miss does nothing rather than the wrong thing.</Step>
+<Step>
+  Adjacent targets carry at least 8px of dead space between them, so a near-miss
+  does nothing rather than the wrong thing.
+</Step>
 
 </Steps>
 
@@ -87,13 +96,13 @@ There is no step below 16px. Legal copy included.
 
 Nothing is published to this library yet. The queue, in build order:
 
-| Component | Status | Notes |
-| --- | --- | --- |
-| Button | In Figma | Three sizes, all ≥48px tall |
-| Text field | In Figma | Label always visible, no placeholder-only inputs |
-| Tour request form | Design | The system's highest-traffic flow |
-| Care-level card | Design | Comparison view for adult children |
-| Site header | Not started | Phone number pinned at all breakpoints |
+| Component         | Status      | Notes                                            |
+| ----------------- | ----------- | ------------------------------------------------ |
+| Button            | In Figma    | Three sizes, all ≥48px tall                      |
+| Text field        | In Figma    | Label always visible, no placeholder-only inputs |
+| Tour request form | Design      | The system's highest-traffic flow                |
+| Care-level card   | Design      | Comparison view for adult children               |
+| Site header       | Not started | Phone number pinned at all breakpoints           |
 
 ## Changelog
 

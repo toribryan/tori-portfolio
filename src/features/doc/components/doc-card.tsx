@@ -93,7 +93,7 @@ export function DocCard({
             the title names the project, this says what it changed. Clamped to
             two lines so a long one can't push the cards out of alignment. */}
         {claim && (
-          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground text-pretty">
+          <p className="line-clamp-2 text-sm leading-snug text-pretty text-muted-foreground">
             {claim}
           </p>
         )}

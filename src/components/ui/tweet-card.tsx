@@ -76,7 +76,13 @@ export function TweetNotFound({
   )
 }
 
-function TweetHeader({ tweet }: { tweet: EnrichedTweet }) {
+function TweetHeader({
+  tweet,
+  avatar,
+}: {
+  tweet: EnrichedTweet
+  avatar?: string
+}) {
   const verified = tweet.user.verified || tweet.user.is_blue_verified
   return (
     <div className="flex items-start justify-between">
@@ -91,7 +97,7 @@ function TweetHeader({ tweet }: { tweet: EnrichedTweet }) {
             alt={tweet.user.screen_name}
             height={40}
             width={40}
-            src={tweet.user.profile_image_url_https}
+            src={avatar ?? tweet.user.profile_image_url_https}
             className="size-10 rounded-full border border-line"
           />
         </a>
@@ -203,9 +209,12 @@ function TweetMedia({ tweet }: { tweet: EnrichedTweet }) {
  */
 export function TweetQuote({
   tweet,
+  avatar,
   className,
 }: {
   tweet: Tweet
+  /** Stands in for the profile picture X serves, e.g. the site's own avatar for its owner. */
+  avatar?: string
   className?: string
 }) {
   const enriched = enrich(tweet)
@@ -252,7 +261,7 @@ export function TweetQuote({
             alt=""
             height={44}
             width={44}
-            src={enriched.user.profile_image_url_https}
+            src={avatar ?? enriched.user.profile_image_url_https}
             className="size-11 rounded-full border border-line"
           />
           <div className="flex flex-col">
@@ -290,9 +299,12 @@ export function TweetQuote({
  */
 export function TweetCard({
   tweet,
+  avatar,
   className,
 }: {
   tweet: Tweet
+  /** Stands in for the profile picture X serves. */
+  avatar?: string
   className?: string
 }) {
   const enriched = enrich(tweet)
@@ -303,7 +315,7 @@ export function TweetCard({
         className
       )}
     >
-      <TweetHeader tweet={enriched} />
+      <TweetHeader tweet={enriched} avatar={avatar} />
       <TweetBody tweet={enriched} />
       <TweetMedia tweet={enriched} />
     </div>

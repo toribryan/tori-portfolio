@@ -32,7 +32,7 @@ export function ProfileHeader() {
           <div className="mx-0.5 my-0.75 flex">
             <Image
               className="size-30 rounded-full select-none min-[24rem]:size-32 sm:size-40"
-              src="/images/header/avatar.webp"
+              src={USER.headerAvatar}
               alt={`${USER.displayName}'s avatar`}
               width={495}
               height={495}
