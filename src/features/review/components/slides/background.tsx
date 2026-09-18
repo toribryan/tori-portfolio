@@ -17,12 +17,12 @@ import {
 
 const BIO_PHOTOS = [
   {
-    src: "/images/review/mum.webp",
-    alt: "Tori and her mum inside a gilt picture frame",
+    src: "/images/review/mum-frame.webp",
+    alt: "Tori and her mum laughing inside a gilt picture frame against a teal door",
   },
   {
-    src: "/images/review/run.webp",
-    alt: "Tori biting a race medal beside a friend after a run",
+    src: "/images/review/vancouver.webp",
+    alt: "Tori and a friend in a selfie on a city street, buildings behind",
   },
   {
     src: "/images/review/dad.webp",
@@ -88,15 +88,20 @@ const swap = {
 
 function Bio() {
   return (
-    <HairlineGrid columns="4fr 5fr" className="flex-1">
+    <HairlineGrid columns="3fr 2fr" className="flex-1">
       {/* Photos start on the title's line and grow to the stage's floor,
-          cropping as they go; the quotes span the photos' height so the
-          first sits on their top edge and the last on their bottom. */}
+          cropping as they go. They are positioned out of flow so their own
+          height never pushes the grid past the stage; the quotes span the
+          photos' height so the first sits on their top edge and the last on
+          their bottom. */}
       <div className="grid grid-cols-2 grid-rows-2 gap-2 py-2 pr-2 md:pl-6">
         {BIO_PHOTOS.map((photo) => (
-          <Frame key={photo.src} className="min-h-0">
+          <Frame
+            key={photo.src}
+            className="min-h-0 max-md:aspect-square md:min-h-40"
+          >
             <Image
-              className="size-full min-h-48 rounded-xl object-cover"
+              className="absolute inset-0 size-full rounded-xl object-cover"
               src={photo.src}
               alt={photo.alt}
               width={900}
@@ -128,26 +133,28 @@ function Pillars() {
           key={pillar.src}
           title={pillar.title}
           media={
-            pillar.src.endsWith(".mp4") ? (
-              <video
-                className="size-full min-h-64 rounded-xl bg-black object-cover"
-                src={pillar.src}
-                autoPlay
-                loop
-                muted
-                playsInline
-                aria-label={pillar.alt}
-              />
-            ) : (
-              <Image
-                className="size-full min-h-64 rounded-xl object-cover"
-                src={pillar.src}
-                alt={pillar.alt}
-                width={1200}
-                height={1445}
-                unoptimized
-              />
-            )
+            <div className="relative min-h-0 flex-1 max-md:aspect-[4/5] md:min-h-40">
+              {pillar.src.endsWith(".mp4") ? (
+                <video
+                  className="absolute inset-0 size-full rounded-xl bg-black object-cover"
+                  src={pillar.src}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-label={pillar.alt}
+                />
+              ) : (
+                <Image
+                  className="absolute inset-0 size-full rounded-xl object-cover"
+                  src={pillar.src}
+                  alt={pillar.alt}
+                  width={1200}
+                  height={1445}
+                  unoptimized
+                />
+              )}
+            </div>
           }
         />
       ))}
@@ -161,41 +168,28 @@ const STEP_KICKER: Record<string, string> = {
 }
 
 /**
- * The first three slides share this view. The name fades in once and
- * stays; the bio and then the pillars take turns underneath it.
+ * The bio and the pillars share this view: the name stays put while the
+ * step underneath it swaps, and the kicker flips to name the step.
  */
 function Intro({ slide }: { slide: SlideType }) {
   const step = slide.slug
-  const open = step !== "cover"
 
   return (
     <Slide className="flex-1">
-      <motion.div layout className="flex flex-col gap-3">
-        <AnimatePresence initial={false}>
-          {open && (
-            <motion.p
-              key="kicker"
-              className="font-mono text-xs tracking-wide text-muted-foreground uppercase"
-              {...swap}
-            >
-              {STEP_KICKER[step]}
-            </motion.p>
-          )}
+      <div className="flex flex-col gap-3">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.p
+            key={step}
+            className="text-xs tracking-wide text-muted-foreground uppercase"
+            {...swap}
+          >
+            {STEP_KICKER[step]}
+          </motion.p>
         </AnimatePresence>
-        <motion.h2
-          layout="position"
-          className={
-            open
-              ? "font-heading text-3xl/tight font-medium tracking-normal md:text-4xl/tight"
-              : "font-heading text-5xl/none font-medium tracking-normal md:text-7xl/none"
-          }
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease: EASE, opacity: { duration: 1.2 } }}
-        >
+        <h2 className="font-heading text-3xl/tight font-medium tracking-normal md:text-4xl/tight">
           Tori Bryan
-        </motion.h2>
-      </motion.div>
+        </h2>
+      </div>
 
       <AnimatePresence mode="wait" initial={false}>
         {step === "bio" && (
@@ -225,7 +219,6 @@ export const BACKGROUND_CONTENT: Record<
   string,
   ComponentType<{ slide: SlideType }>
 > = {
-  cover: Intro,
   bio: Intro,
   pillars: Intro,
 }

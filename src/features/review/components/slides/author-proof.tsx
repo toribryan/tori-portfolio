@@ -122,7 +122,7 @@ function Task() {
       </Lede>
       <HairlineGrid columns="1fr 1.4fr">
         <Reveal className="flex flex-col justify-center gap-3 px-6 py-4">
-          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+          <p className="text-xs tracking-wide text-muted-foreground uppercase">
             The gap
           </p>
           <p className="font-heading text-2xl/tight font-medium text-balance md:text-3xl/tight">
@@ -157,7 +157,7 @@ function Thesis() {
       <HairlineGrid columns="3fr 2fr">
         <div className="flex flex-col justify-center gap-6 px-6 py-4">
           <Reveal>
-            <p className="font-mono text-sm text-muted-foreground">thesis:</p>
+            <p className="text-sm text-muted-foreground">thesis:</p>
           </Reveal>
           <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
             <TextReveal
@@ -268,7 +268,7 @@ function Pivot() {
       <Title>A smaller flow that kept the promise.</Title>
       <Stack className="gap-3">
         <Reveal>
-          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+          <p className="text-xs tracking-wide text-muted-foreground uppercase">
             As briefed
           </p>
         </Reveal>
@@ -284,7 +284,7 @@ function Pivot() {
           ]}
         />
         <Reveal>
-          <p className="mt-3 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+          <p className="mt-3 text-xs tracking-wide text-muted-foreground uppercase">
             As pitched
           </p>
         </Reveal>
@@ -298,6 +298,36 @@ function Pivot() {
         />
       </Stack>
       <HairlineGrid>
+        <Shot
+          src="/images/review/pivot-config-before.png"
+          alt="Quiz configuration as briefed: a Plagiarism Detection dropdown set to AuthorProof, with quiz type, number of questions, time limit and proctored environment stacked underneath in the assignment form"
+          width={1336}
+          height={798}
+          label="As briefed: settings inline in the assignment form"
+        />
+        <Shot
+          src="/images/review/pivot-config-after.png"
+          alt="Proposed quiz configuration: an AuthorProof dialog with basic controls, each explained, and advanced toggles for multiple attempts and written answers"
+          width={1336}
+          height={798}
+          label="Proposed: one AuthorProof dialog, each control explained"
+        />
+        <Shot
+          src="/images/review/pivot-notify-before.png"
+          alt="An email in the student's inbox: Your comprehension quiz is ready, with a deadline and an Open Quiz in Canvas button"
+          width={1334}
+          height={750}
+          label="As briefed: the student is told by email, later"
+        />
+        <Shot
+          src="/images/review/pivot-notify-after.png"
+          alt="The assignment page in Canvas with an Upload Documents panel embedded directly under the brief"
+          width={1252}
+          height={751}
+          label="Proposed: the quiz appears inside the assignment, immediately"
+        />
+      </HairlineGrid>
+      <HairlineGrid>
         <Card label="What the pivot bought">
           Collapsed the timing gap, removed the notification dependency, and
           stepped out of the quiz tooling entirely. One thing for the instructor
@@ -309,39 +339,6 @@ function Pivot() {
           hole rather than let engineering find it.
         </Card>
       </HairlineGrid>
-    </Slide>
-  )
-}
-
-function Model() {
-  return (
-    <Slide>
-      <Kicker>AuthorProof / model</Kicker>
-      <Title>Instructor sets it up. Questions come from the essay.</Title>
-      <HairlineGrid>
-        <Shot
-          src="/case-studies/author-proof-proctorio-quiz-settings.webp"
-          alt="AuthorProof quiz settings inside the assignment editor: proctoring level, completion window, and an Engage AuthorProof button"
-          width={1080}
-          height={1080}
-          fit="viewport"
-          label="Quiz settings, inside the assignment editor"
-        />
-        <Shot
-          src="/case-studies/author-proof-proctorio-generated-questions.webp"
-          alt="A student's essay beside four comprehension questions generated from it"
-          width={1080}
-          height={1080}
-          fit="viewport"
-          label="The student’s quiz, generated from their own writing"
-        />
-      </HairlineGrid>
-      <Reveal>
-        <p className="text-xs text-muted-foreground">
-          Product imagery © Proctorio, from the AuthorProof product page. Used
-          with credit.
-        </p>
-      </Reveal>
     </Slide>
   )
 }
@@ -424,7 +421,6 @@ export const AUTHOR_PROOF_CONTENT: Record<
   brief: Brief,
   constraints: Constraints,
   pivot: Pivot,
-  model: Model,
   principles: Principles,
   shipped: Shipped,
 }

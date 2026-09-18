@@ -37,7 +37,7 @@ export function PrThread({
                 aria-hidden
               />
             )}
-            <span className="relative z-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-surface font-mono text-[0.65rem] tracking-wide uppercase inset-ring-1 inset-ring-border/64">
+            <span className="relative z-1 flex size-8 shrink-0 items-center justify-center rounded-full bg-surface text-[0.65rem] tracking-wide uppercase inset-ring-1 inset-ring-border/64">
               {comment.handle.slice(0, 2)}
             </span>
             <div className="flex min-w-0 flex-1 flex-col gap-1.5 pb-4 last:pb-0">

@@ -255,7 +255,7 @@ export function Deck({
             <div className="flex items-center gap-1.5">
               {started && (
                 <>
-                  <p className="mr-2 font-mono text-xs text-muted-foreground tabular-nums max-sm:hidden">
+                  <p className="mr-2 text-xs text-muted-foreground tabular-nums max-sm:hidden">
                     {String(index + 1).padStart(2, "0")}
                     <span className="mx-1 text-border">/</span>
                     {String(count).padStart(2, "0")}
@@ -377,7 +377,7 @@ export function Deck({
               >
                 <div className="flex flex-col gap-3 rounded-xl border border-line bg-background p-4 shadow-lg">
                   <div className="flex items-center justify-between">
-                    <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+                    <p className="text-xs tracking-wide text-muted-foreground uppercase">
                       Notes · {slide.title}
                     </p>
                     <Button

@@ -67,7 +67,7 @@ export function Kicker({
     <Reveal>
       <p
         className={cn(
-          "font-mono text-xs tracking-wide text-muted-foreground uppercase",
+          "text-xs tracking-wide text-muted-foreground uppercase",
           className
         )}
       >
@@ -139,7 +139,7 @@ export function Stat({
       <p className="font-heading text-3xl/none font-medium tabular-nums">
         {value}
       </p>
-      <p className="font-mono text-xs/relaxed tracking-wide text-pretty text-muted-foreground">
+      <p className="text-xs/relaxed tracking-wide text-pretty text-muted-foreground">
         {label}
       </p>
     </Reveal>
@@ -220,7 +220,7 @@ export function Card({
   return (
     <Reveal className={cn("flex flex-col gap-2 px-6 py-4", className)}>
       {label && (
-        <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+        <p className="text-xs tracking-wide text-muted-foreground uppercase">
           {label}
         </p>
       )}
@@ -283,9 +283,7 @@ export function MediaCard({
           </p>
         )}
         {meta && (
-          <p className="font-mono text-xs tracking-wide text-muted-foreground">
-            {meta}
-          </p>
+          <p className="text-xs tracking-wide text-muted-foreground">{meta}</p>
         )}
       </div>
     </Reveal>
@@ -348,9 +346,7 @@ export function Flow({
               {stage.label}
             </p>
             {stage.detail && (
-              <p className="font-mono text-xs text-muted-foreground">
-                {stage.detail}
-              </p>
+              <p className="text-xs text-muted-foreground">{stage.detail}</p>
             )}
           </li>
           {i < stages.length - 1 && (
@@ -414,7 +410,7 @@ export function Shot({
         />
       </Frame>
       {label && (
-        <p className="px-4 py-2 font-mono text-xs tracking-wide text-muted-foreground">
+        <p className="px-4 py-2 text-xs tracking-wide text-muted-foreground">
           {label}
         </p>
       )}
@@ -445,9 +441,7 @@ export function Clip({
         />
       </Frame>
       {label && (
-        <p className="font-mono text-xs tracking-wide text-muted-foreground">
-          {label}
-        </p>
+        <p className="text-xs tracking-wide text-muted-foreground">{label}</p>
       )}
     </Reveal>
   )
@@ -462,7 +456,7 @@ export function Quote({
 }) {
   return (
     <Reveal className="flex flex-col gap-1.5">
-      <p className="font-mono text-xs tracking-wide text-muted-foreground">
+      <p className="text-xs tracking-wide text-muted-foreground">
         {attribution}
       </p>
       <p className="font-heading text-xl/tight font-medium text-balance md:text-2xl/tight">

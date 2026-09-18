@@ -60,7 +60,7 @@ export function Testimonial({
       >
         <div className="h-px grow translate-y-px bg-line" />
 
-        <p className="shrink-0 font-mono text-xs tracking-wide text-muted-foreground">
+        <p className="shrink-0 text-xs tracking-wide text-muted-foreground">
           {url ? (
             <a
               className="text-foreground hover:underline"

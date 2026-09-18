@@ -17,16 +17,6 @@ export const SECTIONS: Section[] = [
  */
 export const SLIDES: Slide[] = [
   {
-    slug: "cover",
-    section: "background",
-    stage: "background-intro",
-    title: "cover",
-    notes: [
-      "Thank them for the second round. Say what the next 30 minutes are: a short bit about me, one product project, one design systems project, then what I took from both.",
-      "Set expectations: this is a walkthrough, not a read-along. Every slide links out to the case study, the live product, or the Storybook, so they can go deeper afterwards.",
-    ],
-  },
-  {
     slug: "bio",
     section: "background",
     stage: "background-intro",
@@ -114,16 +104,6 @@ export const SLIDES: Slide[] = [
       "Rather than report blockers, I pitched an alternative and split it into an MVP and a longer vision.",
       "MVP: embed AuthorProof in the assignment itself. Student starts the assignment, uploads, the quiz appears seconds later, the result writes back beside the submission.",
       "Be explicit about cost: LMS-editor short pieces excluded, the proctoring question left open. I would rather name the hole than have engineering find it. Longer-vision pieces went on the roadmap.",
-    ],
-  },
-  {
-    slug: "model",
-    section: "product",
-    title: "model",
-    notes: [
-      "Left: the instructor's side. Proctoring level, completion window, one button. Nothing new to learn in Canvas.",
-      "Right: the student's side. Their essay beside questions generated from it, in the submission's own language.",
-      "If they want the full session view, the case study has the badge-to-detail pathway.",
     ],
   },
   {
@@ -218,15 +198,7 @@ export const SLIDES: Slide[] = [
       "The pipeline: research, Figma, Storybook, PR, Vercel preview on a real phone, shipped.",
       "The handoff exists for data-layer work. Everything else ships as code from me, and what I learn shipping goes back into the system.",
       "Credit Spencer: he owns data and infrastructure.",
-    ],
-  },
-  {
-    slug: "next",
-    section: "design-system",
-    title: "where it is",
-    notes: [
-      "Live, two products, AA holding. What's next: publishing the library, better comparison.",
-      "Transition: 'Two projects. Here is what they have in common, and what it means for a design systems role.'",
+      "Offer the live site, the Storybook and the case study, then transition: 'Two projects. Here is what they have in common, and what it means for a design systems role.'",
     ],
   },
   {

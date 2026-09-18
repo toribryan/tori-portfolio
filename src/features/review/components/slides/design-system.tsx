@@ -186,7 +186,7 @@ function Storybook() {
       <Reveal className="flex flex-col gap-2">
         <div className="overflow-hidden rounded-xl border border-line bg-background">
           <div className="flex h-9 items-center justify-between border-b border-line px-3">
-            <p className="font-mono text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               design.moderncarehomes.com
             </p>
             <a
@@ -285,6 +285,17 @@ function Shipping() {
     <Slide>
       <Kicker>Design system / shipping</Kicker>
       <Title>I build what I design.</Title>
+      <LinkRow>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.live} variant="default">
+          Visit Modern Care Homes
+        </LinkOut>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.storybook}>
+          Open Storybook
+        </LinkOut>
+        <LinkOut href={REVIEW_LINKS.modernCareHomes.caseStudy}>
+          Full case study
+        </LinkOut>
+      </LinkRow>
       <HairlineGrid columns="minmax(0, 1.15fr) minmax(0, 1fr)">
         <Reveal className="p-2">
           <ShippingPipeline />
@@ -329,38 +340,6 @@ function Shipping() {
   )
 }
 
-function Next() {
-  return (
-    <Slide>
-      <Kicker>Design system / where it is</Kicker>
-      <Title>Live, and still going.</Title>
-      <StatRow>
-        <Stat value="Live" label="Shipping in the Phoenix metro" />
-        <Stat value="2" label="Products running on one design system" />
-        <Stat value="AA" label="Floor on every surface, holding" />
-      </StatRow>
-      <HairlineGrid>
-        <Card label="Next" title="Publish the component library">
-          Foundations are locked; components are landing as they are done.
-        </Card>
-        <Card label="Next" title="Better comparison">
-          Cost and care level side by side is the decision families make, and it
-          is not solved yet.
-        </Card>
-      </HairlineGrid>
-      <LinkRow>
-        <LinkOut href={REVIEW_LINKS.modernCareHomes.live} variant="default">
-          Visit Modern Care Homes
-        </LinkOut>
-        <StorybookLink />
-        <LinkOut href={REVIEW_LINKS.modernCareHomes.caseStudy}>
-          Full case study
-        </LinkOut>
-      </LinkRow>
-    </Slide>
-  )
-}
-
 export const DESIGN_SYSTEM_CONTENT: Record<
   string,
   ComponentType<{ slide: SlideType }>
@@ -372,5 +351,4 @@ export const DESIGN_SYSTEM_CONTENT: Record<
   "home-card": HomeCard,
   dashboard: Dashboard,
   shipping: Shipping,
-  next: Next,
 }

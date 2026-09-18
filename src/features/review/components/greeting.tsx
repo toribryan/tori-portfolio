@@ -44,7 +44,7 @@ export function Greeting({
       }}
     >
       <motion.p
-        className="font-mono text-xs tracking-wide text-muted-foreground uppercase"
+        className="text-xs tracking-wide text-muted-foreground uppercase"
         variants={fade}
         transition={{ duration: 0.5, ease: EASE }}
       >
@@ -63,7 +63,7 @@ export function Greeting({
         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
         transition={{ duration: 0.5, ease: EASE, delay: 1.9 }}
       >
-        <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+        <p className="text-xs tracking-wide text-muted-foreground uppercase">
           Hotkeys
         </p>
         <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
