@@ -1,3 +1,5 @@
+import type { Tweet } from "react-tweet/api"
+
 export type SectionSlug =
   "background" | "product" | "design-system" | "observations"
 
@@ -13,8 +15,8 @@ export type Slide = {
   /** Breadcrumb tail and document title. */
   title: string
   /**
-   * Talking points for the presenter. Shown in the notes drawer (press N) and
-   * nowhere else, so they can be candid about what to say and when.
+   * Notes for whoever is reading the deck: what they are looking at, what to
+   * click, what to ask about. Shown in the notes drawer (press N).
    */
   notes: string[]
   /**
@@ -33,4 +35,10 @@ export function stageKey(slide: Slide) {
 /** A slide's URL path under `/review`, e.g. `product/thesis`. */
 export function slidePath(slide: Pick<Slide, "section" | "slug">) {
   return `${slide.section}/${slide.slug}`
+}
+
+/** Content fetched on the server that a slide body needs. */
+export type SlideData = {
+  /** The post quoted on the observations slide, or null if X did not answer. */
+  tweet: Tweet | null
 }

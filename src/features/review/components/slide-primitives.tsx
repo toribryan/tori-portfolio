@@ -230,7 +230,7 @@ export function Card({
         </p>
       )}
       {children && (
-        <div className="text-sm/relaxed text-pretty text-muted-foreground md:text-base/relaxed">
+        <div className="flex flex-1 flex-col text-sm/relaxed text-pretty text-muted-foreground md:text-base/relaxed">
           {children}
         </div>
       )}
@@ -286,6 +286,33 @@ export function MediaCard({
           <p className="text-xs tracking-wide text-muted-foreground">{meta}</p>
         )}
       </div>
+    </Reveal>
+  )
+}
+
+/** A short bulleted list under a picture: what was wrong, what is right. */
+export function Points({
+  items,
+  className,
+}: {
+  items: React.ReactNode[]
+  className?: string
+}) {
+  return (
+    <Reveal>
+      <ul
+        className={cn(
+          "flex flex-col gap-1.5 px-4 text-sm/relaxed text-pretty text-muted-foreground",
+          className
+        )}
+      >
+        {items.map((item, i) => (
+          <li key={i} className="flex gap-2">
+            <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-muted-foreground" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
     </Reveal>
   )
 }

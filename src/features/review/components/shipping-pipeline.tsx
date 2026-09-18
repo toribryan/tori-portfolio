@@ -26,7 +26,7 @@ const STATS = [
   ["Floor", "AA"],
 ]
 
-/** A dot travelling down the rail, one of a few spaced along it. */
+/** A dot traveling down the rail, one of a few spaced along it. */
 function RailDot({ delay }: { delay: number }) {
   return (
     <motion.span
@@ -47,7 +47,7 @@ function RailDot({ delay }: { delay: number }) {
 
 /**
  * How a screen gets from a teardown to two products: the stages down a
- * rail with work travelling along it. Storybook is the lit stage because
+ * rail with work traveling along it. Storybook is the lit stage because
  * it is where the two-product test runs.
  */
 export function ShippingPipeline({ className }: { className?: string }) {

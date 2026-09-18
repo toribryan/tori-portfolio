@@ -5,7 +5,7 @@ import Image from "next/image"
 import { AnimatePresence, motion } from "motion/react"
 
 import { Testimonial } from "@/components/ui/testimonial"
-import type { Slide as SlideType } from "@/features/review/types"
+import type { SlideData, Slide as SlideType } from "@/features/review/types"
 
 import {
   EASE,
@@ -29,8 +29,8 @@ const BIO_PHOTOS = [
     alt: "Tori and her dad at dinner, two desserts with candles",
   },
   {
-    src: "/images/review/config.webp",
-    alt: "Tori in front of the blue Figma Config sculpture",
+    src: "/images/review/christmas.webp",
+    alt: "Tori lying on the floor in a red Christmas jumper, her brother perched on her in a green one, in front of a fireplace and tree",
   },
 ]
 
@@ -217,7 +217,7 @@ function Intro({ slide }: { slide: SlideType }) {
 
 export const BACKGROUND_CONTENT: Record<
   string,
-  ComponentType<{ slide: SlideType }>
+  ComponentType<{ slide: SlideType; data: SlideData }>
 > = {
   bio: Intro,
   pillars: Intro,

@@ -1,6 +1,6 @@
 /**
- * The Proctorio wordmark. The mark keeps its brand colours; the type takes
- * the current text colour so it reads in both themes.
+ * The Proctorio wordmark. The mark keeps its brand colors; the type takes
+ * the current text color so it reads in both themes.
  */
 export function ProctorioLogo({ className }: { className?: string }) {
   return (

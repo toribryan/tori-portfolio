@@ -1,7 +1,7 @@
 "use client"
 
-import { useId } from "react"
-import { motion } from "motion/react"
+import { useId, useState } from "react"
+import { AnimatePresence, motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
@@ -11,7 +11,7 @@ const CX = W / 2
 const CY = H / 2
 
 /**
- * Four satellites around a centre tile, each joined to it by a path that
+ * Four satellites around a center tile, each joined to it by a path that
  * leaves the tile's edge and turns once. Fixed positions rather than
  * computed so the routes stay tidy.
  */
@@ -69,27 +69,29 @@ function Wire({ d, id, delay }: { d: string; id: string; delay: number }) {
 }
 
 /**
- * The integration diagram from the reference card: a dotted plate, a centre
+ * The integration diagram from the reference card: a dotted plate, a center
  * tile, and up to four tools wired into it. `center` is whatever names the
- * hub: a mark, a number, a word.
+ * hub: a mark, a number, a word. A `preview` springs up above the hub while
+ * the pointer rests on it; it is for looking at, so nothing in it can be
+ * clicked.
  */
 export function IntegrationVisual({
   center,
   items,
+  preview,
   className,
 }: {
   center: React.ReactNode
   items: IntegrationItem[]
+  preview?: React.ReactNode
   className?: string
 }) {
   const id = useId()
+  const [hovered, setHovered] = useState(false)
 
   return (
     <div
-      className={cn(
-        "relative aspect-[400/260] w-full overflow-hidden bg-muted/60",
-        className
-      )}
+      className={cn("relative aspect-[400/260] w-full bg-muted/60", className)}
     >
       <div
         className="absolute inset-0 opacity-20"
@@ -121,10 +123,37 @@ export function IntegrationVisual({
         ))}
       </svg>
 
-      <div className="absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-border bg-background p-1.5 shadow-md">
+      <div
+        className="absolute top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-xl border border-border bg-background p-1.5 shadow-md"
+        onPointerEnter={() => setHovered(true)}
+        onPointerLeave={() => setHovered(false)}
+      >
         <div className="flex size-11 items-center justify-center rounded-lg border border-line">
           {center}
         </div>
+        <AnimatePresence>
+          {preview && hovered && (
+            <motion.div
+              className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-3 w-56 origin-bottom -translate-x-1/2 rounded-xl border border-border bg-background p-1.5 shadow-lg"
+              initial={{ opacity: 0, y: 10, scale: 0.85 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{
+                opacity: 0,
+                y: 6,
+                scale: 0.9,
+                transition: { duration: 0.15 },
+              }}
+              transition={{ type: "spring", bounce: 0.45, duration: 0.55 }}
+              aria-hidden
+            >
+              {preview}
+              <span
+                className="absolute top-full left-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rotate-45 border-r border-b border-border bg-background"
+                aria-hidden
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
         <motion.div
           className="absolute inset-0 rounded-xl border-2 border-foreground/10"
           animate={{ scale: [1, 1.15, 1], opacity: [0.4, 0, 0.4] }}

@@ -1,6 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import { DM_Sans } from "next/font/google"
+import { MoonIcon, SunIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -11,7 +13,7 @@ const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "700"] })
 
 /**
  * Modern Care Homes' foundations, read off the live site's stylesheet:
- * its type scale, radius scale, shadow set and hairline.
+ * its radius scale, shadow set, hairline and both semantic value sets.
  */
 const MCH = {
   "--mch-ink": "#090b0c",
@@ -20,14 +22,38 @@ const MCH = {
   "--mch-brand": "#1447e6",
 } as React.CSSProperties
 
-const TYPE_SCALE = [
-  { token: "text-4xl", px: 40, leading: 56 },
-  { token: "text-2xl", px: 28, leading: 40 },
-  { token: "text-xl", px: 24, leading: 32 },
-  { token: "text-md", px: 18, leading: 26, base: true },
-  { token: "text-sm", px: 16, leading: 20 },
-  { token: "text-xs", px: 14, leading: 18 },
-]
+/**
+ * The semantic tokens a component reads, with the value each mode gives
+ * them. Same names in both columns: that is the point of the panel.
+ */
+const THEMES = {
+  light: {
+    "--background": "#ffffff",
+    "--foreground": "#090b0c",
+    "--card": "#ffffff",
+    "--card-foreground": "#090b0c",
+    "--primary": "#1447e6",
+    "--primary-foreground": "oklch(97% 0.014 254.604)",
+    "--muted": "oklch(96.3% 0.002 197.1)",
+    "--muted-foreground": "#4b585b",
+    "--border": "oklch(92.5% 0.005 214.3)",
+    "--input": "oklch(72.3% 0.014 214.4)",
+  },
+  dark: {
+    "--background": "oklch(14.8% 0.004 228.8)",
+    "--foreground": "oklch(98.7% 0.002 197.1)",
+    "--card": "oklch(21.8% 0.008 223.9)",
+    "--card-foreground": "oklch(98.7% 0.002 197.1)",
+    "--primary": "oklch(42.4% 0.199 265.638)",
+    "--primary-foreground": "oklch(97% 0.014 254.604)",
+    "--muted": "oklch(27.5% 0.011 216.9)",
+    "--muted-foreground": "oklch(72.3% 0.014 214.4)",
+    "--border": "oklch(100% 0 0 / 0.1)",
+    "--input": "oklch(100% 0 0 / 0.28)",
+  },
+} as const
+
+type Mode = keyof typeof THEMES
 
 /** `--radius` is 10px; the scale steps off it the way Tailwind 4 derives it. */
 const RADII = [
@@ -63,49 +89,84 @@ const SHADOWS = [
 function Panel({
   children,
   className,
+  style,
 }: {
   children: React.ReactNode
   className?: string
+  style?: React.CSSProperties
 }) {
   return (
     <div
       className={cn(
-        "rounded-xl bg-white p-4 text-(--mch-ink) inset-ring-1 inset-ring-(--mch-line)",
+        "flex flex-1 flex-col gap-3 rounded-xl bg-white p-4 text-(--mch-ink) inset-ring-1 inset-ring-(--mch-line)",
         className
       )}
+      style={style}
     >
       {children}
     </div>
   )
 }
 
-function Typography() {
+function Theme() {
+  const [mode, setMode] = useState<Mode>("light")
+
   return (
-    <Panel className={cn("flex flex-col gap-2", dmSans.className)}>
-      {TYPE_SCALE.map((step) => (
-        <div
-          key={step.token}
-          className="flex items-baseline justify-between gap-4"
-        >
-          <span
-            className={cn(step.base ? "font-medium" : "font-normal")}
-            style={{ fontSize: step.px, lineHeight: `${step.leading}px` }}
+    <Panel
+      className={cn("flex flex-col gap-3", dmSans.className)}
+      style={THEMES[mode] as React.CSSProperties}
+    >
+      <div
+        className="flex w-fit gap-0.5 rounded-lg bg-(--muted) p-0.5"
+        role="radiogroup"
+        aria-label="Theme"
+      >
+        {(["light", "dark"] as const).map((option) => (
+          <button
+            key={option}
+            type="button"
+            role="radio"
+            aria-checked={mode === option}
+            className={cn(
+              "flex h-7 items-center gap-1.5 rounded-md px-2 text-xs capitalize transition-colors",
+              mode === option
+                ? "bg-(--card) text-(--card-foreground) shadow-xs"
+                : "text-(--muted-foreground)"
+            )}
+            onClick={() => setMode(option)}
           >
-            Phoenix
-          </span>
-          <span className="shrink-0 text-xs text-(--mch-muted)">
-            {step.token} · {step.px}
-            {step.base ? " · base" : ""}
+            {option === "light" ? (
+              <SunIcon className="size-3.5" />
+            ) : (
+              <MoonIcon className="size-3.5" />
+            )}
+            {option}
+          </button>
+        ))}
+      </div>
+      <div className="flex flex-col gap-2 rounded-lg border border-(--border) bg-(--background) p-3 transition-colors">
+        <div className="flex flex-col gap-1 rounded-md border border-(--border) bg-(--card) p-2.5 text-(--card-foreground)">
+          <span className="text-sm font-medium">Desert Bloom Care Home</span>
+          <span className="text-xs text-(--muted-foreground)">
+            Scottsdale · from $4,200
           </span>
         </div>
-      ))}
+        <div className="flex gap-2">
+          <span className="flex h-8 flex-1 items-center rounded-md border border-(--input) bg-(--background) px-2 text-xs text-(--muted-foreground)">
+            Search homes
+          </span>
+          <span className="flex h-8 items-center rounded-md bg-(--primary) px-3 text-xs font-medium text-(--primary-foreground)">
+            Contact
+          </span>
+        </div>
+      </div>
     </Panel>
   )
 }
 
 function Radius() {
   return (
-    <Panel className="flex flex-col gap-3">
+    <Panel>
       <div className="grid grid-cols-3 gap-3">
         {RADII.map((r) => (
           <div key={r.token} className="flex flex-col items-center gap-1.5">
@@ -123,16 +184,13 @@ function Radius() {
           </div>
         ))}
       </div>
-      <p className="text-xs text-(--mch-muted)">
-        1px hairline, #e3e7e8, on every border. Radius steps off 10px.
-      </p>
     </Panel>
   )
 }
 
 function Shadow() {
   return (
-    <Panel className="flex flex-col gap-3 bg-[#f6f7f8]">
+    <Panel className="bg-[#f6f7f8]">
       <div className="grid grid-cols-5 gap-3">
         {SHADOWS.map((s) => (
           <div key={s.token} className="flex flex-col items-center gap-2">
@@ -144,23 +202,20 @@ function Shadow() {
           </div>
         ))}
       </div>
-      <p className="text-xs text-(--mch-muted)">
-        Five steps, xs to xl, and nothing in between.
-      </p>
     </Panel>
   )
 }
 
 /**
- * The foundation layers under the colour tokens: type, radius and border,
+ * The foundation layers under the color tokens: theme, radius and border,
  * shadow. Each panel is drawn from the marketplace's real values so it
  * reads as the system, not an illustration of one.
  */
 export function FoundationLayers() {
   return (
     <HairlineGrid columns={3} style={MCH}>
-      <Card label="Typography" title="DM Sans, 18px base">
-        <Typography />
+      <Card label="Theme" title="Semantic tokens, two value sets">
+        <Theme />
       </Card>
       <Card label="Radius and border" title="One hairline, six radii">
         <Radius />
