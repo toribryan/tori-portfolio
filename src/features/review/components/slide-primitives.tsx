@@ -178,7 +178,7 @@ export function HairlineGrid({
   return (
     <div
       className={cn(
-        "screen-line-top screen-line-bottom relative -mx-2 py-4 md:-mx-6",
+        "screen-line-top screen-line-bottom relative -mx-2 flex flex-col py-4 md:-mx-6",
         className
       )}
       style={{ "--cols": template } as React.CSSProperties}
@@ -198,7 +198,7 @@ export function HairlineGrid({
           />
         ))}
       </div>
-      <div className="grid gap-4 md:grid-cols-(--cols)" {...props}>
+      <div className="grid flex-1 gap-4 md:grid-cols-(--cols)" {...props}>
         {children}
       </div>
     </div>
@@ -274,7 +274,7 @@ export function MediaCard({
 }) {
   return (
     <Reveal className={cn("flex flex-col gap-2 p-2", className)}>
-      <Frame>{media}</Frame>
+      <Frame className="flex min-h-0 flex-1 flex-col">{media}</Frame>
       <div className="flex flex-col gap-1 px-4 py-2">
         <p className="text-lg leading-snug font-medium">{title}</p>
         {line && (

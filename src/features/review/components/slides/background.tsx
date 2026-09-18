@@ -88,14 +88,15 @@ const swap = {
 
 function Bio() {
   return (
-    <HairlineGrid columns="minmax(0, 24rem) 1fr">
-      {/* Photos start on the title's line; the quotes span the photos' height
-          so the first sits on their top edge and the last on their bottom. */}
-      <div className="grid grid-cols-2 gap-2 py-2 pr-2 md:pl-6">
+    <HairlineGrid columns="4fr 5fr" className="flex-1">
+      {/* Photos start on the title's line and grow to the stage's floor,
+          cropping as they go; the quotes span the photos' height so the
+          first sits on their top edge and the last on their bottom. */}
+      <div className="grid grid-cols-2 grid-rows-2 gap-2 py-2 pr-2 md:pl-6">
         {BIO_PHOTOS.map((photo) => (
-          <Frame key={photo.src}>
+          <Frame key={photo.src} className="min-h-0">
             <Image
-              className="aspect-square w-full rounded-xl object-cover"
+              className="size-full min-h-48 rounded-xl object-cover"
               src={photo.src}
               alt={photo.alt}
               width={900}
@@ -121,7 +122,7 @@ function Bio() {
 
 function Pillars() {
   return (
-    <HairlineGrid columns={3}>
+    <HairlineGrid columns={3} className="flex-1">
       {PILLARS.map((pillar) => (
         <MediaCard
           key={pillar.src}
@@ -129,7 +130,7 @@ function Pillars() {
           media={
             pillar.src.endsWith(".mp4") ? (
               <video
-                className="aspect-[4/5] w-full rounded-xl bg-black object-cover"
+                className="size-full min-h-64 rounded-xl bg-black object-cover"
                 src={pillar.src}
                 autoPlay
                 loop
@@ -139,7 +140,7 @@ function Pillars() {
               />
             ) : (
               <Image
-                className="aspect-[4/5] w-full rounded-xl object-cover"
+                className="size-full min-h-64 rounded-xl object-cover"
                 src={pillar.src}
                 alt={pillar.alt}
                 width={1200}
@@ -168,7 +169,7 @@ function Intro({ slide }: { slide: SlideType }) {
   const open = step !== "cover"
 
   return (
-    <Slide>
+    <Slide className="flex-1">
       <motion.div layout className="flex flex-col gap-3">
         <AnimatePresence initial={false}>
           {open && (
@@ -198,12 +199,20 @@ function Intro({ slide }: { slide: SlideType }) {
 
       <AnimatePresence mode="wait" initial={false}>
         {step === "bio" && (
-          <motion.div key="bio" {...swap}>
+          <motion.div
+            key="bio"
+            className="flex min-h-0 flex-1 flex-col"
+            {...swap}
+          >
             <Bio />
           </motion.div>
         )}
         {step === "pillars" && (
-          <motion.div key="pillars" {...swap}>
+          <motion.div
+            key="pillars"
+            className="flex min-h-0 flex-1 flex-col"
+            {...swap}
+          >
             <Pillars />
           </motion.div>
         )}
