@@ -17,96 +17,51 @@ const LOG = [
   "Idle. Listening for the next screen...",
 ]
 
-const NODE_H = 44
-const ROW_Y = 88
-
-/** The stages, left to right, in a 780 by 172 drawing. */
 const STAGES = [
-  { x: 12, w: 96, label: "Research", name: "Pattern teardown", meta: "Mobbin" },
-  { x: 140, w: 96, label: "Design", name: "Figma", meta: "tokens 1:1" },
+  { label: "Research", name: "Pattern teardown", meta: "Mobbin" },
+  { label: "Design", name: "Figma", meta: "tokens named to match CSS" },
   {
-    x: 268,
-    w: 118,
     label: "Build",
     name: "Storybook",
-    meta: "every state",
+    meta: "every state, every size, 200% zoom",
     focus: true,
   },
-  {
-    x: 418,
-    w: 96,
-    label: "Review",
-    name: "Pull request",
-    meta: "typed, tested",
-  },
-  { x: 546, w: 96, label: "Preview", name: "Vercel", meta: "on a real phone" },
+  { label: "Review", name: "Pull request", meta: "typed, tested, reviewed" },
+  { label: "Preview", name: "Vercel", meta: "on a real phone" },
 ]
 
-const OUTPUTS = [
-  { y: 50, name: "Marketplace" },
-  { y: 108, name: "Agent platform" },
+const OUTPUTS = ["Marketplace", "Agent platform"]
+
+const STATS = [
+  ["Products", "2"],
+  ["Base type", "18px"],
+  ["Targets", "48×48"],
+  ["Floor", "AA"],
 ]
 
-const OUT_X = 668
-const OUT_W = 100
-
-function link(from: (typeof STAGES)[number], to: (typeof STAGES)[number]) {
-  return `M${from.x + from.w},${ROW_Y} L${to.x},${ROW_Y}`
-}
-
-const PATHS = [
-  link(STAGES[0], STAGES[1]),
-  link(STAGES[1], STAGES[2]),
-  link(STAGES[2], STAGES[3]),
-  link(STAGES[3], STAGES[4]),
-  ...OUTPUTS.map(
-    (out) =>
-      `M${STAGES[4].x + STAGES[4].w},${ROW_Y} C${OUT_X - 18},${ROW_Y} ${OUT_X - 18},${out.y + 15} ${OUT_X},${out.y + 15}`
-  ),
-]
-
-function Dot({
-  path,
-  duration,
-  delay,
-  size,
-  opacity,
-}: {
-  path: string
-  duration: number
-  delay: number
-  size: number
-  opacity: number
-}) {
+/** A dot travelling down the rail, one of a few spaced along it. */
+function RailDot({ delay }: { delay: number }) {
   return (
-    <circle r={size} className="fill-info" opacity={opacity}>
-      <animateMotion
-        dur={`${duration}s`}
-        repeatCount="indefinite"
-        begin={`${delay}s`}
-        path={path}
-      />
-    </circle>
-  )
-}
-
-function Pulse({ cx, cy, delay }: { cx: number; cy: number; delay: number }) {
-  return (
-    <motion.circle
-      cx={cx}
-      cy={cy}
-      r={2.6}
-      className="fill-info"
-      animate={{ opacity: [0.15, 1, 0.15] }}
-      transition={{ duration: 1.2, delay, repeat: Infinity, ease: "easeInOut" }}
+    <motion.span
+      className="absolute left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-foreground"
+      initial={{ top: "0%", opacity: 0 }}
+      animate={{ top: ["0%", "100%"], opacity: [0, 1, 1, 0] }}
+      transition={{
+        duration: 4.5,
+        delay,
+        repeat: Infinity,
+        ease: "linear",
+        times: [0, 0.08, 0.92, 1],
+      }}
+      aria-hidden
     />
   )
 }
 
 /**
- * How a screen gets from a teardown to two products, as a live pipeline:
- * stages on a rail, work flowing along it, a log line ticking underneath.
- * Storybook is the lit node because it is where the two-product test runs.
+ * How a screen gets from a teardown to two products: the stages down a
+ * rail with work travelling along it, a log line ticking underneath.
+ * Storybook is the lit stage because it is where the two-product test runs.
  */
 export function ShippingPipeline({ className }: { className?: string }) {
   const [line, setLine] = useState(0)
@@ -141,152 +96,77 @@ export function ShippingPipeline({ className }: { className?: string }) {
         </span>
       </div>
 
-      <svg viewBox="0 0 780 172" className="block w-full" aria-hidden>
-        <defs>
-          <marker
-            id="pipeline-arrow"
-            viewBox="0 0 10 10"
-            refX="8"
-            refY="5"
-            markerWidth="5"
-            markerHeight="5"
-            orient="auto"
-          >
-            <path
-              d="M2 1.5L7.5 5L2 8.5"
-              fill="none"
-              className="stroke-info/50"
-              strokeWidth="1.6"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </marker>
-        </defs>
+      <ol className="relative flex flex-col gap-2 p-4 pl-11">
+        <div
+          className="absolute top-6 bottom-6 left-6 w-px bg-line"
+          aria-hidden
+        >
+          <RailDot delay={0} />
+          <RailDot delay={1.5} />
+          <RailDot delay={3} />
+        </div>
 
-        {PATHS.map((d, i) => (
-          <path
-            key={d}
-            d={d}
-            fill="none"
-            className={i < 4 ? "stroke-info/25" : "stroke-info/15"}
-            strokeWidth="1.5"
-            strokeDasharray="3 5"
-            markerEnd={i < 4 ? "url(#pipeline-arrow)" : undefined}
-          />
-        ))}
-
-        {PATHS.map((d, i) => (
-          <g key={d}>
-            <Dot
-              path={d}
-              duration={1 + i * 0.08}
-              delay={i * 0.18}
-              size={2.4}
-              opacity={1}
+        {STAGES.map((stage) => (
+          <li key={stage.name} className="relative">
+            <span
+              className={cn(
+                "absolute top-1/2 -left-[1.3125rem] size-2 -translate-y-1/2 rounded-full ring-4 ring-background",
+                stage.focus ? "bg-foreground" : "bg-border"
+              )}
+              aria-hidden
             />
-            <Dot
-              path={d}
-              duration={1 + i * 0.08}
-              delay={i * 0.18 + 0.4}
-              size={1.6}
-              opacity={0.55}
-            />
-          </g>
-        ))}
-
-        {STAGES.map((stage) => {
-          const cx = stage.x + stage.w / 2
-          const top = stage.focus ? ROW_Y - 35 : ROW_Y - NODE_H / 2
-          const h = stage.focus ? 70 : NODE_H
-          return (
-            <g key={stage.name}>
-              <rect
-                x={stage.x}
-                y={top}
-                width={stage.w}
-                height={h}
-                rx={stage.focus ? 10 : 8}
-                className={
-                  stage.focus
-                    ? "fill-info/8 stroke-info"
-                    : "fill-surface stroke-border"
-                }
-                strokeWidth={stage.focus ? 1 : 0.75}
-              />
-              <text
-                x={cx}
-                y={top + 17}
-                textAnchor="middle"
-                fontSize="8.5"
-                letterSpacing=".08em"
-                className={cn(
-                  "font-mono uppercase",
-                  stage.focus ? "fill-info" : "fill-muted-foreground"
-                )}
-              >
-                {stage.label}
-              </text>
-              <text
-                x={cx}
-                y={top + (stage.focus ? 40 : 34)}
-                textAnchor="middle"
-                fontSize={stage.focus ? 13 : 12}
-                fontWeight="500"
-                className="fill-foreground font-sans"
-              >
-                {stage.name}
-              </text>
-              {stage.focus ? (
-                <>
-                  <Pulse cx={cx - 12} cy={top + 56} delay={0} />
-                  <Pulse cx={cx} cy={top + 56} delay={0.4} />
-                  <Pulse cx={cx + 12} cy={top + 56} delay={0.8} />
-                </>
-              ) : null}
-              <text
-                x={cx}
-                y={top + h + 15}
-                textAnchor="middle"
-                fontSize="8.5"
-                className="fill-muted-foreground/70 font-mono"
-              >
-                {stage.meta}
-              </text>
-            </g>
-          )
-        })}
-
-        {OUTPUTS.map((out) => (
-          <g key={out.name}>
-            <rect
-              x={OUT_X}
-              y={out.y}
-              width={OUT_W}
-              height={30}
-              rx={7}
-              className="fill-surface stroke-border"
-              strokeWidth="0.75"
-            />
-            <text
-              x={OUT_X + 10}
-              y={out.y + 19}
-              fontSize="10"
-              className="fill-foreground font-sans"
+            <div
+              className={cn(
+                "flex items-baseline justify-between gap-4 rounded-lg px-3 py-2.5",
+                stage.focus
+                  ? "bg-surface inset-ring-1 inset-ring-foreground/80"
+                  : "inset-ring-1 inset-ring-border/64"
+              )}
             >
-              {out.name}
-            </text>
-            <circle
-              cx={OUT_X + OUT_W - 10}
-              cy={out.y + 15}
-              r={2.5}
-              className="fill-success"
-            />
-          </g>
+              <div className="flex items-baseline gap-3">
+                <span className="w-16 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
+                  {stage.label}
+                </span>
+                <span className="text-sm font-medium">{stage.name}</span>
+              </div>
+              <span className="truncate font-mono text-xs text-muted-foreground">
+                {stage.meta}
+              </span>
+            </div>
+          </li>
         ))}
-      </svg>
+
+        <li className="relative">
+          <span
+            className="absolute top-1/2 -left-[1.3125rem] size-2 -translate-y-1/2 rounded-full bg-success ring-4 ring-background"
+            aria-hidden
+          />
+          <div className="flex items-baseline gap-3 px-3 py-2.5">
+            <span className="w-16 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
+              Shipped
+            </span>
+            <ul className="flex flex-wrap gap-2">
+              {OUTPUTS.map((name) => (
+                <li
+                  key={name}
+                  className="flex items-center gap-2 rounded-md bg-surface px-2 py-1 text-sm inset-ring-1 inset-ring-border/64"
+                >
+                  {name}
+                  <span
+                    className="size-1.5 rounded-full bg-success"
+                    aria-hidden
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      </ol>
 
       <div className="flex h-11 items-start gap-2 border-t border-line px-4 py-2.5">
-        <span className="shrink-0 font-mono text-sm/snug text-info/70">›</span>
+        <span className="shrink-0 font-mono text-sm/snug text-muted-foreground">
+          ›
+        </span>
         <div className="relative h-full flex-1 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
@@ -303,28 +183,15 @@ export function ShippingPipeline({ className }: { className?: string }) {
         </div>
       </div>
 
-      <dl className="flex items-center gap-6 border-t border-line px-4 py-2.5">
-        {[
-          ["Products", "2"],
-          ["Base type", "18px"],
-          ["Targets", "48×48"],
-          ["Floor", "AA"],
-        ].map(([label, value]) => (
+      <dl className="grid grid-cols-4 gap-4 border-t border-line px-4 py-2.5">
+        {STATS.map(([label, value]) => (
           <div key={label}>
-            <dt className="font-mono text-[0.6rem] tracking-wide text-muted-foreground uppercase">
+            <dt className="font-mono text-[0.6rem] tracking-wide whitespace-nowrap text-muted-foreground uppercase">
               {label}
             </dt>
             <dd className="font-mono text-base tabular-nums">{value}</dd>
           </div>
         ))}
-        <div className="ml-auto text-right">
-          <dt className="font-mono text-[0.6rem] tracking-wide text-muted-foreground uppercase">
-            Stack
-          </dt>
-          <dd className="font-mono text-xs text-info">
-            Next.js · Tailwind · Base UI
-          </dd>
-        </div>
       </dl>
     </div>
   )

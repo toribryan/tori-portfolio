@@ -279,29 +279,11 @@ function Shipping() {
     <Slide>
       <Kicker>Design system / shipping</Kicker>
       <Title>I build what I design.</Title>
-      <Reveal>
-        <ShippingPipeline />
-      </Reveal>
-      <HairlineGrid columns="1fr 1.2fr">
+      <HairlineGrid columns="1.15fr 1fr">
         <Reveal className="p-2">
-          <PrThread
-            title="One of the first pull requests"
-            comments={[
-              {
-                handle: "sgrzincich",
-                when: "2 weeks ago",
-                body: "don't commit images. We will add a brand-based config later. for now it can just be empty.",
-              },
-              {
-                handle: "toribryan",
-                when: "2 weeks ago",
-                body: "ok captain",
-                author: true,
-              },
-            ]}
-          />
+          <ShippingPipeline />
         </Reveal>
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col">
           <Card label="What the handoff is for">
             The handoff between design and engineering exists for complex
             contributions that touch the data layer. Components, layout,
@@ -312,6 +294,24 @@ function Shipping() {
             change, I change it. Whatever I learn shipping goes back into the
             system, so the next screen starts further along.
           </Card>
+          <Reveal className="p-2">
+            <PrThread
+              title="One of the first pull requests"
+              comments={[
+                {
+                  handle: "sgrzincich",
+                  when: "2 weeks ago",
+                  body: "don't commit images. We will add a brand-based config later. for now it can just be empty.",
+                },
+                {
+                  handle: "toribryan",
+                  when: "2 weeks ago",
+                  body: "ok captain",
+                  author: true,
+                },
+              ]}
+            />
+          </Reveal>
         </div>
       </HairlineGrid>
       <Reveal>
