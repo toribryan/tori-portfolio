@@ -73,13 +73,13 @@ function Suite() {
 function Cover() {
   return (
     <Slide>
-      <Kicker>01 · Product</Kicker>
-      <Reveal>
-        <ProctorioLogo className="h-7 w-auto text-foreground" />
-      </Reveal>
-      <Title size="xl">AuthorProof</Title>
-      <HairlineGrid columns="3fr 2fr">
-        <Stack className="justify-center px-6 py-4">
+      <div className="grid items-center gap-8 md:grid-cols-[3fr_2fr]">
+        <Stack>
+          <Kicker>01 · Product</Kicker>
+          <Reveal>
+            <ProctorioLogo className="h-7 w-auto text-foreground" />
+          </Reveal>
+          <Title size="xl">AuthorProof</Title>
           <Lede>
             Plagiarism checkers read the document. This one asks the student
             about the paper they turned in.
@@ -93,7 +93,7 @@ function Cover() {
             </LinkOut>
           </LinkRow>
         </Stack>
-        <Reveal className="p-2">
+        <Reveal>
           <Frame>
             <video
               className="aspect-square w-full rounded-xl bg-surface object-cover"
@@ -106,7 +106,7 @@ function Cover() {
             />
           </Frame>
         </Reveal>
-      </HairlineGrid>
+      </div>
     </Slide>
   )
 }
