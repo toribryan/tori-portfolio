@@ -152,6 +152,7 @@ const TOKEN_ROWS: TokenRow[] = [
     primitive: "zinc-950",
     semantic: "bg-primary",
     use: "Primary actions, headings",
+    dark: { base: "oklch(0.985 0 0)", primitive: "zinc-50" },
   },
   {
     base: "oklch(0.723 0.219 149.579)",
@@ -164,6 +165,7 @@ const TOKEN_ROWS: TokenRow[] = [
     primitive: "zinc-200",
     semantic: "border-border",
     use: "Hairlines and inputs",
+    dark: { base: "oklch(0.274 0.006 286.033)", primitive: "zinc-800" },
   },
 ]
 

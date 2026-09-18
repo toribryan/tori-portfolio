@@ -1,6 +1,7 @@
 "use client"
 
-import { motion } from "motion/react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
+import { motion, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 import { Chip as BaseChip } from "@/components/ui/chip"
@@ -25,6 +26,93 @@ export type TokenRow = {
   semantic: string
   /** What the role is for, shown under the semantic chip when `showUse` is set. */
   use?: string
+  /** The value and primitive the role resolves to under the dark theme, when they differ. */
+  dark?: {
+    base: string
+    primitive: string
+  }
+}
+
+const SCRAMBLE_CHARS = "_!X$0-+*#"
+
+function randomChar() {
+  return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)]
+}
+
+function subscribeToTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange)
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  })
+  return () => observer.disconnect()
+}
+
+/** Whether the `dark` class is on the document, the way next-themes and 21st set it. */
+function useIsDark() {
+  return useSyncExternalStore(
+    subscribeToTheme,
+    () => document.documentElement.classList.contains("dark"),
+    () => false
+  )
+}
+
+/**
+ * Text that holds still until it changes, then spends a moment as noise
+ * before settling on the new value, resolving left to right.
+ */
+function ScrambleText({
+  text,
+  duration = 1000,
+}: {
+  text: string
+  /** Milliseconds the noise runs for after a change. */
+  duration?: number
+}) {
+  const reduceMotion = useReducedMotion()
+  const settled = useRef(text)
+  const [display, setDisplay] = useState(text)
+
+  useEffect(() => {
+    if (settled.current === text || reduceMotion) return
+    settled.current = text
+
+    const startedAt = performance.now()
+    let frame = 0
+    let lastStep = -1
+    const loop = (now: number) => {
+      const progress = Math.min((now - startedAt) / duration, 1)
+      const step = Math.floor(progress * (duration / 40))
+      if (step !== lastStep) {
+        lastStep = step
+        const revealed = Math.floor(progress * text.length)
+        let next = text.slice(0, revealed)
+        for (let i = revealed; i < text.length; i++) {
+          next += text[i] === " " ? " " : randomChar()
+        }
+        setDisplay(next)
+      }
+      if (progress < 1) {
+        frame = window.requestAnimationFrame(loop)
+      } else {
+        setDisplay(text)
+      }
+    }
+    frame = window.requestAnimationFrame(loop)
+    return () => window.cancelAnimationFrame(frame)
+  }, [text, duration, reduceMotion])
+
+  return (
+    <span className="relative inline-block whitespace-pre">
+      <span className="invisible" aria-hidden>
+        {text}
+      </span>
+      <span className="absolute inset-0" aria-hidden>
+        {reduceMotion ? text : display}
+      </span>
+      <span className="sr-only">{text}</span>
+    </span>
+  )
 }
 
 /**
@@ -77,7 +165,7 @@ function Wire({
 function Swatch({ color }: { color: string }) {
   return (
     <span
-      className="ml-1 size-2.5 shrink-0 rounded-full ring-1 ring-border/60"
+      className="ml-1 size-2.5 shrink-0 rounded-full ring-1 ring-border/60 transition-colors duration-1000"
       style={{ background: color }}
       aria-hidden
     />
@@ -88,7 +176,8 @@ function Swatch({ color }: { color: string }) {
  * How a colour travels through the token tiers: a raw value, the primitive
  * that names it, and the semantic role that uses it. One row per colour,
  * wired left to right across a dotted plate, with a pulse travelling along
- * each wire.
+ * each wire. Rows that carry a `dark` value swap to it when the theme
+ * changes, scrambling for a moment on the way.
  */
 export function TokenFlow({
   rows,
@@ -100,6 +189,8 @@ export function TokenFlow({
   showUse?: boolean
   className?: string
 }) {
+  const isDark = useIsDark()
+
   return (
     <div
       className={cn(
@@ -127,42 +218,45 @@ export function TokenFlow({
           </p>
         ))}
 
-        {rows.map((row, i) => (
-          <div
-            key={row.semantic}
-            className="flex flex-col items-center gap-1.5 sm:col-span-5 sm:grid sm:grid-cols-subgrid sm:gap-0"
-          >
-            <Chip
-              startContent={<Swatch color={row.base} />}
-              className="justify-self-center font-mono"
+        {rows.map((row, i) => {
+          const value = isDark && row.dark ? row.dark : row
+          return (
+            <div
+              key={`${row.semantic}-${i}`}
+              className="flex flex-col items-center gap-1.5 sm:col-span-5 sm:grid sm:grid-cols-subgrid sm:gap-0"
             >
-              {row.base}
-            </Chip>
-            <Wire delay={i * 0.5} className="max-sm:hidden" />
-            <Wire delay={i * 0.5} vertical className="sm:hidden" />
-            <Chip
-              startContent={<Swatch color={row.base} />}
-              className="justify-self-center font-mono"
-            >
-              {row.primitive}
-            </Chip>
-            <Wire delay={i * 0.5 + 0.8} className="max-sm:hidden" />
-            <Wire delay={i * 0.5 + 0.8} vertical className="sm:hidden" />
-            <div className="flex flex-col items-center gap-1 justify-self-center">
               <Chip
-                startContent={<Swatch color={row.base} />}
-                className="font-mono"
+                startContent={<Swatch color={value.base} />}
+                className="justify-self-center font-mono"
               >
-                {row.semantic}
+                <ScrambleText text={value.base} />
               </Chip>
-              {showUse && row.use && (
-                <span className="font-mono text-[9px] whitespace-nowrap text-muted-foreground">
-                  {row.use}
-                </span>
-              )}
+              <Wire delay={i * 0.5} className="max-sm:hidden" />
+              <Wire delay={i * 0.5} vertical className="sm:hidden" />
+              <Chip
+                startContent={<Swatch color={value.base} />}
+                className="justify-self-center font-mono"
+              >
+                <ScrambleText text={value.primitive} />
+              </Chip>
+              <Wire delay={i * 0.5 + 0.8} className="max-sm:hidden" />
+              <Wire delay={i * 0.5 + 0.8} vertical className="sm:hidden" />
+              <div className="flex flex-col items-center gap-1 justify-self-center">
+                <Chip
+                  startContent={<Swatch color={value.base} />}
+                  className="font-mono"
+                >
+                  {row.semantic}
+                </Chip>
+                {showUse && row.use && (
+                  <span className="font-mono text-[9px] whitespace-nowrap text-muted-foreground">
+                    {row.use}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
