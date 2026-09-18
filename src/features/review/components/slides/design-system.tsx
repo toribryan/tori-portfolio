@@ -170,7 +170,14 @@ const TOKEN_ROWS: TokenRow[] = [
 function Foundations() {
   return (
     <Slide>
-      <Kicker>Design system / foundations</Kicker>
+      <div className="flex items-center justify-between gap-4">
+        <Kicker>Design system / foundations</Kicker>
+        <LinkRow>
+          <LinkOut href={REVIEW_LINKS.tokenFlow} className="h-7 text-xs">
+            Token diagram on 21st.dev
+          </LinkOut>
+        </LinkRow>
+      </div>
       <Title>The accessibility floor is built into the components.</Title>
       <StatRow>
         <Stat value="18px" label="Base type size, everywhere" />
