@@ -36,7 +36,7 @@ export function Testimonial({
         className
       )}
     >
-      <blockquote className="relative block w-full font-heading text-xl/tight font-normal text-foreground md:text-2xl/tight">
+      <blockquote className="relative block w-full font-sans text-xl/snug font-normal text-foreground md:text-2xl/snug">
         <span
           className="absolute -left-3 text-muted-foreground select-none"
           aria-hidden="true"
