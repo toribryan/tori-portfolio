@@ -68,7 +68,9 @@ const nextConfig: NextConfig = {
       try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         return require("node:child_process")
-          .execSync("git rev-parse HEAD", { stdio: ["ignore", "pipe", "ignore"] })
+          .execSync("git rev-parse HEAD", {
+            stdio: ["ignore", "pipe", "ignore"],
+          })
           .toString()
           .trim()
       } catch {
@@ -178,6 +180,10 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return [
+      {
+        source: "/components/:slug.md",
+        destination: "/components/:slug/markdown",
+      },
       {
         source: "/:section(blog|components)/:slug.mdx",
         destination: "/doc.mdx/:slug",

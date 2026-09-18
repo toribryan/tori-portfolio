@@ -1,24 +1,29 @@
-import type { Route } from "next"
-import Link from "next/link"
 import { getTableOfContents } from "fumadocs-core/content/toc"
-import { ArrowLeftIcon, ArrowUpRightIcon } from "lucide-react"
+import { ArrowUpRightIcon } from "lucide-react"
 import { getTweet } from "react-tweet/api"
 
 import { cleanTableOfContents } from "@/lib/toc"
+import { absoluteUrl } from "@/lib/utils"
 import { TweetQuote } from "@/components/ui/tweet-card"
 import { Button } from "@/components/base/ui/button"
 import { Prose } from "@/components/base/ui/typography"
 import { MDX } from "@/components/mdx"
 import { TOCInline } from "@/components/toc-inline"
 import type { ComponentEntry } from "@/features/components/data/registry"
+import { COMPONENTS } from "@/features/components/data/registry"
 import type { RegistryDoc } from "@/features/components/data/registry-docs"
+import {
+  getRegistryDocs,
+  toMarkdown,
+} from "@/features/components/data/registry-docs"
 import { USER } from "@/features/portfolio/data/user"
 
+import { ComponentPageActions } from "./component-page-actions"
 import { ComponentPreview } from "./component-preview"
 import { InstallCommand } from "./install-command"
 
 /**
- * The reading layout for a component doc: the way back, the title, links to
+ * The reading layout for a component doc: the header actions, the title, links to
  * the registry and the post, the post itself, the table of contents and the
  * MDX body. The description stays in metadata for search and social cards.
  */
@@ -30,6 +35,8 @@ export async function ComponentDocPage({
   entry: ComponentEntry
 }) {
   const toc = cleanTableOfContents(await getTableOfContents(doc.content))
+  const siblings = getRegistryDocs().filter((d) => d.slug in COMPONENTS)
+  const index = siblings.findIndex((d) => d.slug === doc.slug)
   const post = entry.links.post
     ? await getTweet(entry.links.post.id).catch((error) => {
         console.error("Could not fetch the announcement post", error)
@@ -39,20 +46,15 @@ export async function ComponentDocPage({
 
   return (
     <>
-      <div className="screen-line-bottom flex items-center justify-between p-2 pl-4">
-        <Button
-          className="h-7 gap-2 border-none px-0 tracking-wider text-muted-foreground hover:text-foreground hover:no-underline"
-          variant="link"
-          size="sm"
-          nativeButton={false}
-          render={
-            <Link href={"/#components" as Route}>
-              <ArrowLeftIcon />
-              Components
-            </Link>
-          }
-        />
-      </div>
+      <ComponentPageActions
+        slug={doc.slug}
+        title={doc.metadata.title}
+        markdown={toMarkdown(doc)}
+        markdownUrl={absoluteUrl(`/components/${doc.slug}.md`)}
+        pageUrl={absoluteUrl(`/components/${doc.slug}`)}
+        previous={neighbour(siblings, index - 1)}
+        next={neighbour(siblings, index + 1)}
+      />
 
       <h1 className="screen-line-bottom overflow-x-clip px-4 py-6 font-heading text-4xl font-medium tracking-normal text-balance">
         {doc.metadata.title}
@@ -112,4 +114,9 @@ export async function ComponentDocPage({
       </Prose>
     </>
   )
+}
+
+function neighbour(docs: RegistryDoc[], index: number) {
+  const doc = docs[index]
+  return doc ? { slug: doc.slug, title: doc.metadata.title } : undefined
 }
