@@ -175,7 +175,7 @@ function Intro({ slide }: { slide: SlideType }) {
           {open && (
             <motion.p
               key="kicker"
-              className="font-mono text-xs tracking-wide text-muted-foreground uppercase"
+              className="text-xs tracking-wide text-muted-foreground uppercase"
               {...swap}
             >
               {STEP_KICKER[step]}

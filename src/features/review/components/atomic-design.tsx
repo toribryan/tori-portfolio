@@ -92,7 +92,7 @@ function StoryFrame({ story, height }: { story: Story; height: number }) {
           loading="lazy"
         />
       </Frame>
-      <figcaption className="flex items-center justify-between gap-2 px-1 font-mono text-xs text-muted-foreground">
+      <figcaption className="flex items-center justify-between gap-2 px-1 text-xs text-muted-foreground">
         <span>{story.label}</span>
         <a
           className="link-underline"
@@ -124,7 +124,7 @@ export function AtomicDesign({ className }: { className?: string }) {
         <Reveal key={level.name}>
           <li className="grid gap-4 py-5 md:grid-cols-[10rem_1fr] md:gap-8">
             <div className="flex flex-col gap-1.5">
-              <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+              <p className="text-xs tracking-wide text-muted-foreground uppercase">
                 {String(i + 1).padStart(2, "0")} · {level.name}
               </p>
               <p className="text-sm/snug text-pretty text-muted-foreground">

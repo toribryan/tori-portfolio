@@ -80,7 +80,7 @@ export function SuiteReel({
                 <p className="text-sm leading-snug text-pretty text-muted-foreground">
                   {item.line}
                 </p>
-                <p className="font-mono text-xs tracking-wide text-muted-foreground">
+                <p className="text-xs tracking-wide text-muted-foreground">
                   {item.featured ? "Today’s walkthrough" : "Proctorio suite"}
                 </p>
               </div>

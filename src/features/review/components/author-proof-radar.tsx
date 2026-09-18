@@ -68,7 +68,7 @@ function AxisTick({
       x={x}
       y={y}
       textAnchor={textAnchor}
-      className="fill-muted-foreground font-mono text-[10px] tracking-wide uppercase"
+      className="fill-muted-foreground text-[10px] tracking-wide uppercase"
     >
       {lines.map((line, i) => (
         <tspan key={line} x={x} dy={i === 0 ? first : LINE_HEIGHT}>

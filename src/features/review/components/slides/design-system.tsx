@@ -186,7 +186,7 @@ function Storybook() {
       <Reveal className="flex flex-col gap-2">
         <div className="overflow-hidden rounded-xl border border-line bg-background">
           <div className="flex h-9 items-center justify-between border-b border-line px-3">
-            <p className="font-mono text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               design.moderncarehomes.com
             </p>
             <a

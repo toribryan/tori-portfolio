@@ -86,12 +86,12 @@ export function ShippingPipeline({ className }: { className?: string }) {
               )}
             >
               <div className="flex min-w-0 items-baseline gap-3">
-                <span className="w-14 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
+                <span className="w-14 shrink-0 text-[0.65rem] tracking-wide text-muted-foreground uppercase">
                   {stage.label}
                 </span>
                 <span className="text-sm font-medium">{stage.name}</span>
               </div>
-              <span className="truncate font-mono text-xs text-muted-foreground">
+              <span className="truncate text-xs text-muted-foreground">
                 {stage.meta}
               </span>
             </div>
@@ -104,7 +104,7 @@ export function ShippingPipeline({ className }: { className?: string }) {
             aria-hidden
           />
           <div className="flex items-baseline gap-3 px-3 py-2">
-            <span className="w-14 shrink-0 font-mono text-[0.65rem] tracking-wide text-muted-foreground uppercase">
+            <span className="w-14 shrink-0 text-[0.65rem] tracking-wide text-muted-foreground uppercase">
               Shipped
             </span>
             <ul className="flex flex-wrap gap-2">
@@ -128,10 +128,10 @@ export function ShippingPipeline({ className }: { className?: string }) {
       <dl className="grid grid-cols-4 gap-4 border-t border-line px-3 py-2">
         {STATS.map(([label, value]) => (
           <div key={label}>
-            <dt className="font-mono text-[0.6rem] tracking-wide whitespace-nowrap text-muted-foreground uppercase">
+            <dt className="text-[0.6rem] tracking-wide whitespace-nowrap text-muted-foreground uppercase">
               {label}
             </dt>
-            <dd className="font-mono text-base tabular-nums">{value}</dd>
+            <dd className="text-base tabular-nums">{value}</dd>
           </div>
         ))}
       </dl>

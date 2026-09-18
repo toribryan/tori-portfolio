@@ -122,7 +122,7 @@ function Task() {
       </Lede>
       <HairlineGrid columns="1fr 1.4fr">
         <Reveal className="flex flex-col justify-center gap-3 px-6 py-4">
-          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+          <p className="text-xs tracking-wide text-muted-foreground uppercase">
             The gap
           </p>
           <p className="font-heading text-2xl/tight font-medium text-balance md:text-3xl/tight">
@@ -157,7 +157,7 @@ function Thesis() {
       <HairlineGrid columns="3fr 2fr">
         <div className="flex flex-col justify-center gap-6 px-6 py-4">
           <Reveal>
-            <p className="font-mono text-sm text-muted-foreground">thesis:</p>
+            <p className="text-sm text-muted-foreground">thesis:</p>
           </Reveal>
           <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
             <TextReveal
@@ -268,7 +268,7 @@ function Pivot() {
       <Title>A smaller flow that kept the promise.</Title>
       <Stack className="gap-3">
         <Reveal>
-          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
+          <p className="text-xs tracking-wide text-muted-foreground uppercase">
             As briefed
           </p>
         </Reveal>
@@ -284,7 +284,7 @@ function Pivot() {
           ]}
         />
         <Reveal>
-          <p className="mt-3 font-mono text-xs tracking-wide text-muted-foreground uppercase">
+          <p className="mt-3 text-xs tracking-wide text-muted-foreground uppercase">
             As pitched
           </p>
         </Reveal>
