@@ -159,16 +159,6 @@ export const SLIDES: Slide[] = [
     ],
   },
   {
-    slug: "storybook",
-    section: "design-system",
-    title: "Storybook",
-    notes: [
-      "This is the live library. Click into a component and walk its states: hover, focus, disabled, empty, loading, error.",
-      "The two-product test: a component is ready when it reads correctly outside both the marketplace and the agent platform. Storybook is how I look at it outside either one.",
-      "If it loads slowly, open it full screen in a new tab and keep talking. The Integrity Console Storybook is the second, complete example: 40 components, 149 stories.",
-    ],
-  },
-  {
     slug: "foundations",
     section: "design-system",
     title: "foundations",
@@ -184,6 +174,16 @@ export const SLIDES: Slide[] = [
     section: "design-system",
     title: "Atomic Design Inspired Components",
     notes: ["Placeholder. Content to come."],
+  },
+  {
+    slug: "storybook",
+    section: "design-system",
+    title: "Storybook",
+    notes: [
+      "This is the live library. Click into a component and walk its states: hover, focus, disabled, empty, loading, error.",
+      "The two-product test: a component is ready when it reads correctly outside both the marketplace and the agent platform. Storybook is how I look at it outside either one.",
+      "If it loads slowly, open it full screen in a new tab and keep talking. The Integrity Console Storybook is the second, complete example: 40 components, 149 stories.",
+    ],
   },
   {
     slug: "home-card",

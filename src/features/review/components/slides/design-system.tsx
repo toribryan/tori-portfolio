@@ -17,13 +17,13 @@ import {
 import { TOKEN_ROWS } from "@/features/portfolio/data/token-flow"
 import type { IntegrationItem } from "@/features/review/components/integration-visual"
 import { IntegrationVisual } from "@/features/review/components/integration-visual"
+import { ShippingPipeline } from "@/features/review/components/shipping-pipeline"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
 
 import {
   Card,
   Clip,
-  Flow,
   HairlineGrid,
   Kicker,
   Lede,
@@ -155,7 +155,6 @@ function Foundations() {
         <TokenFlow rows={TOKEN_ROWS} showUse />
       </Reveal>
       <Clip
-        className="[&_video]:max-h-[15vh] [&_video]:object-cover"
         src="/case-studies/foundations-mch.mp4"
         label="The foundations: tokens, type, spacing and radius, as they live in the system"
       />
@@ -279,16 +278,9 @@ function Shipping() {
     <Slide>
       <Kicker>Design system / shipping</Kicker>
       <Title>I build what I design.</Title>
-      <Flow
-        stages={[
-          { label: "Pattern research", detail: "marketplaces, in Mobbin" },
-          { label: "Figma", detail: "foundations, tokens, components" },
-          { label: "Storybook", detail: "every state, in isolation" },
-          { label: "Pull request", detail: "reviewed, typed, tested" },
-          { label: "Vercel preview", detail: "on a real phone" },
-          { label: "Shipped", detail: "both products" },
-        ]}
-      />
+      <Reveal>
+        <ShippingPipeline />
+      </Reveal>
       <HairlineGrid>
         <Card label="What the handoff is for">
           The handoff between design and engineering exists for complex
