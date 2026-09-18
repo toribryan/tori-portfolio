@@ -161,41 +161,28 @@ const STEP_KICKER: Record<string, string> = {
 }
 
 /**
- * The first three slides share this view. The name fades in once and
- * stays; the bio and then the pillars take turns underneath it.
+ * The bio and the pillars share this view: the name stays put while the
+ * step underneath it swaps, and the kicker flips to name the step.
  */
 function Intro({ slide }: { slide: SlideType }) {
   const step = slide.slug
-  const open = step !== "cover"
 
   return (
     <Slide className="flex-1">
-      <motion.div layout className="flex flex-col gap-3">
-        <AnimatePresence initial={false}>
-          {open && (
-            <motion.p
-              key="kicker"
-              className="text-xs tracking-wide text-muted-foreground uppercase"
-              {...swap}
-            >
-              {STEP_KICKER[step]}
-            </motion.p>
-          )}
+      <div className="flex flex-col gap-3">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.p
+            key={step}
+            className="text-xs tracking-wide text-muted-foreground uppercase"
+            {...swap}
+          >
+            {STEP_KICKER[step]}
+          </motion.p>
         </AnimatePresence>
-        <motion.h2
-          layout="position"
-          className={
-            open
-              ? "font-heading text-3xl/tight font-medium tracking-normal md:text-4xl/tight"
-              : "font-heading text-5xl/none font-medium tracking-normal md:text-7xl/none"
-          }
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease: EASE, opacity: { duration: 1.2 } }}
-        >
+        <h2 className="font-heading text-3xl/tight font-medium tracking-normal md:text-4xl/tight">
           Tori Bryan
-        </motion.h2>
-      </motion.div>
+        </h2>
+      </div>
 
       <AnimatePresence mode="wait" initial={false}>
         {step === "bio" && (
@@ -225,7 +212,6 @@ export const BACKGROUND_CONTENT: Record<
   string,
   ComponentType<{ slide: SlideType }>
 > = {
-  cover: Intro,
   bio: Intro,
   pillars: Intro,
 }

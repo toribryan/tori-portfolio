@@ -17,16 +17,6 @@ export const SECTIONS: Section[] = [
  */
 export const SLIDES: Slide[] = [
   {
-    slug: "cover",
-    section: "background",
-    stage: "background-intro",
-    title: "cover",
-    notes: [
-      "Thank them for the second round. Say what the next 30 minutes are: a short bit about me, one product project, one design systems project, then what I took from both.",
-      "Set expectations: this is a walkthrough, not a read-along. Every slide links out to the case study, the live product, or the Storybook, so they can go deeper afterwards.",
-    ],
-  },
-  {
     slug: "bio",
     section: "background",
     stage: "background-intro",
