@@ -61,20 +61,29 @@ const QUOTES = [
   { quote: "curious design engineer", author: "I call myself a" },
 ]
 
+/**
+ * How the step underneath the name comes and goes. Named variants rather
+ * than plain targets so the `Reveal` cards inside hear "show" and stagger in.
+ */
 const swap = {
-  initial: { opacity: 0, y: 16, filter: "blur(4px)" },
-  animate: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.5, ease: EASE },
+  variants: {
+    hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.5, ease: EASE, staggerChildren: 0.05 },
+    },
+    exit: {
+      opacity: 0,
+      y: -12,
+      filter: "blur(4px)",
+      transition: { duration: 0.22, ease: "easeIn" as const },
+    },
   },
-  exit: {
-    opacity: 0,
-    y: -12,
-    filter: "blur(4px)",
-    transition: { duration: 0.22, ease: "easeIn" as const },
-  },
+  initial: "hidden",
+  animate: "show",
+  exit: "exit",
 }
 
 function Bio() {
@@ -157,7 +166,7 @@ function Intro({ slide }: { slide: SlideType }) {
   const open = step !== "cover"
 
   return (
-    <Slide className="flex-1 justify-center">
+    <Slide>
       <motion.div layout className="flex flex-col gap-3">
         <AnimatePresence initial={false}>
           {open && (

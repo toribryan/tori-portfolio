@@ -147,7 +147,7 @@ const THESIS_DURATION = 2.4
 
 function Thesis() {
   return (
-    <Slide className="gap-6">
+    <Slide className="flex-1 justify-center gap-6">
       <Kicker>AuthorProof / statement</Kicker>
       <Reveal>
         <p className="font-mono text-sm text-muted-foreground">thesis:</p>
