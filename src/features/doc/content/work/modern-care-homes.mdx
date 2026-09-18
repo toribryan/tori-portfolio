@@ -41,11 +41,26 @@ results:
     label: "Floor on every surface"
 ---
 
+<Pipeline>
+  <Stage
+    label="Pattern research"
+    detail="Marketplaces, in Mobbin"
+    mark="search"
+  />
+  <Stage label="Figma" detail="Foundations, tokens, components" mark="figma" />
+  <Stage
+    label="Storybook"
+    detail="Every state, in isolation"
+    mark="storybook"
+  />
+  <Stage label="Shipped" detail="Marketplace and agent platform" mark="react" />
+</Pipeline>
+
 ## Two people, one search
 
 Modern Care Homes is a senior living platform for the Phoenix metro. Families
 search independent living and assisted living homes across Phoenix, Scottsdale,
-Peoria, Paradise Valley, Queen Creek and Surprise, compare what they find, and
+Peoria, Paradise Valley, Queen Creek, and Surprise, compare what they find, and
 contact a home directly.
 
 <Video
@@ -65,49 +80,35 @@ interface that gets in the way. Nearly every decision I've made on this project
 comes back to that.
 
 And they're both stuck in the same place. The core flow is search, then
-compare, then contact — and compare is where people actually get held up.
+compare, then contact, and compare is where people actually get held up.
 Ruling homes out fast is the whole job, so that's where the work goes.
 
 ## Studying the marketplaces that already solved it
 
-<Pipeline>
-  <Stage
-    label="Pattern research"
-    detail="Marketplaces, in Mobbin"
-    mark="search"
-  />
-  <Stage label="Figma" detail="Foundations, tokens, components" mark="figma" />
-  <Stage
-    label="Storybook"
-    detail="Every state, in isolation"
-    mark="storybook"
-  />
-  <Stage label="Shipped" detail="Marketplace and agent platform" mark="react" />
-</Pipeline>
-
 Senior living is a marketplace problem before it's a healthcare one. That
 framing decides a lot, because it means the products worth studying aren't other
 care sites. They're the marketplaces that already spent years and a lot of money
-on search, comparison and listing quality.
+on search, comparison, and listing quality.
 
 I spend a lot of time in <Tech name="mobbin" /> pulling apart how real estate
-marketplaces handle search and discovery — filters, result density, map and
+marketplaces handle search and discovery: filters, result density, map and
 list views, saved comparisons, what a card shows at a glance. Most of what those
 products landed on carries over. Some of it doesn't, because our filters are
 care levels rather than bedrooms and bathrooms, and the person deciding often
 isn't the person moving in.
 
 The agent side has its own teardown. Getting a home listed is a long form with
-photos, pricing and details, and the closest good version of that problem is
-Airbnb's listing creation flow. I pulled it apart screen by screen and mapped
-what someone is doing, seeing and thinking at each stage, then marked what
-works and where the openings are. It's a teardown I keep coming back to,
-because listing creation is the same problem in every marketplace I work on —
-and it's where the biggest change on the agent platform came from, below.
+photos, pricing, and details, and the closest good version of that problem is
+Airbnb's listing creation flow, with Zillow's close behind. I pulled it apart
+screen by screen and mapped what someone is doing, seeing, and thinking at each
+stage, then marked what works and where the openings are. It's a teardown I
+keep coming back to, because listing creation is the same problem in every
+marketplace I work on, and it's where the biggest change on the agent platform
+came from, below.
 
 <Video
   src="/case-studies/airbnb-research-mch.mp4"
-  caption="Tearing down Airbnb's listing creation flow next to the board where I map it: stage, what the person is doing, seeing and thinking, then what works and where the opening is."
+  caption="Tearing down Airbnb's listing creation flow next to the board where I map it: stage, what the person is doing, seeing, and thinking, then what works and where the opening is."
 />
 
 ## Two reframes the research paid for
@@ -120,25 +121,28 @@ research turned into one concrete change on each side.
 ### The home card should spend its space on what differs
 
 A family is mostly trying to rule homes out. So a listing should lead with what
-actually separates one home from the next — care level, setting, cost, what's
-included — not copy that reads the same on every page.
+actually separates one home from the next, care level, setting, cost, what's
+included, not copy that reads the same on every page.
 
 <Compare
   before="/case-studies/old-homecard-mch.png"
   after="/case-studies/new-homecard-mch.png"
-  beforeAlt="The old home card: photo, price above the name in grey, address, and a paragraph of generic marketing copy"
-  afterAlt="The reworked home card: an Available Now badge, a save control, photo carousel dots, then name, address and price"
+  beforeAlt="The old home card: photo, price above the name in gray, address, and a paragraph of generic marketing copy"
+  afterAlt="The reworked home card: an Available Now badge, a save control, photo carousel dots, then name, address, and price"
   layout="columns"
   caption="The home card, before and after."
 />
 
 The old card gave its widest line to marketing copy that read identically on
-every listing, which is no help when you're comparing. The new one spends that
-space on what differs between homes: whether it's available, more than one
-photo, and a way to keep it for later.
+every listing, and its white fill made the grid uneven as content lengths
+varied. There was no way to tell whether a home was available, no way to see a
+second photo without clicking in, and no way to keep a home for later. The new
+one spends that space on what differs between homes: an Available Now tag, a
+save button, a photo carousel, and the price beneath the name where the
+hierarchy wants it.
 
 There's a content-design job underneath this too. Senior living has a lot of
-jargon and most families are learning it while they shop — independent living,
+jargon and most families are learning it while they shop: independent living,
 assisted living, levels of care. If the words on the page assume you already
 know the difference, the page failed.
 
@@ -148,53 +152,54 @@ know the difference, the page failed.
   before="/case-studies/old-dashboard-mch.png"
   after="/case-studies/new-dashboard-mch.png"
   beforeAlt="The old agent dashboard shell: a wide sidebar holding only Home Details and Settings, next to an empty content area"
-  afterAlt="The reworked shell: an icon rail, then a column listing Availability, Photos, About, Amenities, Care services and Contact, each with its current state underneath"
+  afterAlt="The reworked shell: an icon rail, then a column listing Availability, Photos, About, Amenities, Care services, and Contact, each with its current state underneath"
   layout="columns"
   caption="The agent dashboard shell, before and after."
 />
 
-The old shell was two nav items and a blank canvas, which tells an agent
-nothing about the listing they're supposed to be finishing. Now the sidebar is
-the listing: every section — Availability, Photos, About, Amenities, Care
-services, Contact — carries its own state, so what's thin is visible before you
-open anything. That idea came straight out of the Airbnb teardown: the same
-"show the state of every stage" move, applied to a care listing instead of a
-rental.
+The old shell was two nav items and one long scroll, which tells an agent
+nothing about the listing they're supposed to be finishing, and people filling
+in a home struggled to get to the end of it. Now the sidebar is the listing:
+every section, Availability, Photos, About, Amenities, Care services, Contact,
+carries its own state, previewing how many items were added or the value
+entered, so what's thin is visible before you open anything. The home switcher
+is visually tied to the home's information, and there's an easy way to preview
+the home once its details are in. That idea came straight out of the Airbnb
+teardown: the same "show the state of every stage" move, applied to a care
+listing instead of a rental.
 
-Around both of these sit the unglamorous states — filters, no results, listings
+Around both of these sit the unglamorous states: filters, no results, listings
 with half their fields blank. Those are most of the real sessions and none of
 the pretty screenshots, so they get designed like they matter, because they do.
 
-And a note on the web-design side that carries all of it: brand and visual
-direction, a type scale and photography language that make a directory feel
-like a place instead of a spreadsheet, page design across jobs with little in
-common — expressive marketing pages, search results that get out of the way,
-editorial in between — and responsive behavior that survives a phone in a
-parking lot and a desktop at 200% zoom.
+The web-design side carries all of it: brand and visual direction, a type scale
+and photography language that make a directory feel like a place instead of a
+spreadsheet, and page design across jobs with little in common, from
+expressive marketing pages to search results that get out of the way. All of it
+has to survive a phone in a parking lot and a desktop at 200% zoom.
 
-## Both reframes have to survive being used twice
+## One design system, used twice
 
 Every interface above runs in two places, once on the marketplace and once in
 the agent platform. A change to a button is a change in two products. That's
-the job the design system does — it's what keeps the two reframes from quietly
+the job the design system does: it's what keeps the two reframes from quietly
 breaking the second they leave the screen I designed them on.
 
 <TwoJobs caption="Two jobs: building the system, and using it in context. Hover a hub for a glimpse of each." />
 
-- **Tokens, foundations, components.** Foundations are locked. Components are
-  still in progress and I'm publishing them as they get done.
-- **The accessibility floor lives in the components, not in a checklist.** 18px
-  base type, 48 by 48 targets, AA contrast as the minimum. Because it's baked
-  into the component, I can't accidentally undo it on page eleven. That's what
-  "design from an accessibility floor instead of toward one" actually means in
-  practice.
-- **<Tech name="storybook" /> is where components get built and argued with**
-  before they go anywhere near a page. I can put a component in every state it
-  has, at every size, at 200% zoom, and watch it fail on its own instead of
-  finding out inside a layout.
-- **The two-product test.** Storybook is also how I know a component is ready
-  for both the marketplace and the agent platform, because I can look at it
-  outside of either one.
+### The accessibility floor lives in the components
+
+18px base type, 48 by 48 targets, AA contrast as the minimum. Because the floor
+is baked into the component, I can't accidentally undo it on page eleven.
+That's what "design from an accessibility floor instead of toward one" means in
+practice.
+
+<Tech name="storybook" /> is where components get built and argued with before
+they go anywhere near a page. I can put a component in every state it has, at
+every size, at 200% zoom, and watch it fail on its own instead of finding out
+inside a layout. It's also the two-product test: a component is ready for both
+the marketplace and the agent platform when it reads correctly outside of either
+one.
 
 ### Tokens, named one to one
 
@@ -224,8 +229,10 @@ The home card, with the token each part of it reads.
 ### Atoms to pages, straight from the Storybook
 
 The library is organized the atomic way, so a rule set at the bottom still
-holds at the top. Every frame below is a live story: click into one to change
-its state, or open it in the Storybook.
+holds at the top. It gives a contribution a home: a new piece has to say which
+level it lives at, which is most of the governance conversation. Every frame
+below is a live story: click into one to change its state, or open it in the
+Storybook.
 
 <AtomicDesign />
 
@@ -235,26 +242,27 @@ I build what I design, which is the part that removes the most steps. The
 handoff between design and engineering exists mainly for complex contributions
 that connect to the data layer; everything else, I ship.
 
-- Components, layout, responsive behavior and motion all ship as code from me
+- Components, layout, responsive behavior, and motion all ship as code from me
   instead of as a spec I hand to someone else.
-- Accessibility gets verified on the real build — contrast, focus order,
-  keyboard paths, zoom and target sizes — because a mockup can't tell you what
+- Accessibility gets verified on the real build, contrast, focus order,
+  keyboard paths, zoom, and target sizes, because a mockup can't tell you what
   happens at 200 percent.
 - Whatever I learn shipping goes back into the system, so the next screen starts
   further along than the last one did.
 
 The part I like most is that I never have to defend any of it in a handoff
-meeting. If something needs to change, I go change it. That's the third rule —
-keep shipping — and it's less a principle than the thing that makes the other
+meeting. If something needs to change, I go change it. That's the third rule,
+keep shipping, and it's less a principle than the thing that makes the other
 two hold.
 
 ## Collaboration
 
 I build this with
 [Spencer Grzincich](https://www.linkedin.com/in/grzincich/), the Software
-Engineer on the project. He owns the data layer and the infrastructure — how
-home data gets modeled, stored and served, the integrations, and everything that
-has to stay up. I own everything a family or agent sees and interacts with.
+Engineer on the project. He owns the data layer and the infrastructure: how
+home data gets modeled, stored, and served, the integrations, and everything
+that has to stay up. I own everything a family or agent sees and interacts
+with.
 
 ## The stack
 
