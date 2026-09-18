@@ -17,6 +17,7 @@ import {
 import { TOKEN_ROWS } from "@/features/portfolio/data/token-flow"
 import type { IntegrationItem } from "@/features/review/components/integration-visual"
 import { IntegrationVisual } from "@/features/review/components/integration-visual"
+import { PrThread } from "@/features/review/components/pr-thread"
 import { ShippingPipeline } from "@/features/review/components/shipping-pipeline"
 import { REVIEW_LINKS } from "@/features/review/data/links"
 import type { Slide as SlideType } from "@/features/review/types"
@@ -281,17 +282,37 @@ function Shipping() {
       <Reveal>
         <ShippingPipeline />
       </Reveal>
-      <HairlineGrid>
-        <Card label="What the handoff is for">
-          The handoff between design and engineering exists for complex
-          contributions that touch the data layer. Components, layout,
-          responsive behaviour and motion ship as code from me.
-        </Card>
-        <Card label="What that removes">
-          Nothing gets defended in a handoff meeting. If something needs to
-          change, I change it. Whatever I learn shipping goes back into the
-          system, so the next screen starts further along.
-        </Card>
+      <HairlineGrid columns="1fr 1.2fr">
+        <Reveal className="p-2">
+          <PrThread
+            title="One of the first pull requests"
+            comments={[
+              {
+                handle: "sgrzincich",
+                when: "2 weeks ago",
+                body: "don't commit images. We will add a brand-based config later. for now it can just be empty.",
+              },
+              {
+                handle: "toribryan",
+                when: "2 weeks ago",
+                body: "ok captain",
+                author: true,
+              },
+            ]}
+          />
+        </Reveal>
+        <div className="flex flex-col justify-center">
+          <Card label="What the handoff is for">
+            The handoff between design and engineering exists for complex
+            contributions that touch the data layer. Components, layout,
+            responsive behaviour and motion ship as code from me.
+          </Card>
+          <Card label="What that removes">
+            Nothing gets defended in a handoff meeting. If something needs to
+            change, I change it. Whatever I learn shipping goes back into the
+            system, so the next screen starts further along.
+          </Card>
+        </div>
       </HairlineGrid>
       <Reveal>
         <p className="text-sm text-muted-foreground">
