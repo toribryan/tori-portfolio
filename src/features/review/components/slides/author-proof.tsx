@@ -330,8 +330,8 @@ function Pivot() {
       <HairlineGrid>
         <Card label="What the pivot bought">
           Collapsed the timing gap, removed the notification dependency, and
-          stepped out of the quiz tooling entirely. One thing for the instructor
-          to read.
+          stepped out of the quiz tooling entirely, which left the instructor
+          one thing to read.
         </Card>
         <Card label="What it cost, said out loud">
           Short pieces written directly in the LMS editor were excluded, and how
@@ -349,8 +349,8 @@ function Principles() {
       <Kicker>AuthorProof / principles</Kicker>
       <Title>Confidence, not verdict.</Title>
       <Lede>
-        The result had to read as evidence for a human conversation, never as an
-        automated judgment. Three rules followed.
+        The result had to read as evidence for a conversation between an
+        instructor and a student. Three rules followed.
       </Lede>
       <Steps
         items={[
