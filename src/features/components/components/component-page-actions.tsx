@@ -109,21 +109,21 @@ export function ComponentPageActions({
       />
 
       <div className="flex items-center gap-2">
-        <div className="flex h-7 items-center overflow-hidden rounded-lg bg-foreground/6 text-foreground inset-ring-1 inset-ring-foreground/6">
+        <div className="flex h-7 items-center overflow-hidden rounded-lg border border-border bg-background shadow-xs dark:border-input dark:bg-input/30">
           <Button
-            className="h-full gap-2 rounded-none bg-transparent pr-3 pl-2.5 hover:bg-foreground/6"
-            variant="secondary"
+            className="h-full gap-2 rounded-none pr-3 pl-2.5"
+            variant="ghost"
             size="sm"
             onClick={copyPage}
           >
             {state === "done" ? <CheckIcon /> : <CopyIcon />}
             Copy page
           </Button>
-          <div className="h-4 w-px bg-foreground/20" aria-hidden />
+          <div className="h-4 w-px bg-border" aria-hidden />
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
-                "inline-flex h-full items-center px-2 transition-colors hover:bg-foreground/6 aria-expanded:bg-foreground/6",
+                "inline-flex h-full items-center px-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
                 "[&_svg]:size-4 [&_svg]:transition-transform aria-expanded:[&_svg]:rotate-180"
               )}
               aria-label="More ways to read this page"
@@ -184,8 +184,8 @@ export function ComponentPageActions({
           <TooltipTrigger
             render={
               <Button
-                className="size-7 bg-foreground/6 inset-ring-1 inset-ring-foreground/6 hover:bg-foreground/10"
-                variant="secondary"
+                className="size-7"
+                variant="outline"
                 size="icon-sm"
                 onClick={share}
                 aria-label="Share this page"
@@ -234,8 +234,8 @@ function NeighbourLink({
       <TooltipTrigger
         render={
           <Button
-            className="size-7 bg-foreground/6 inset-ring-1 inset-ring-foreground/6 hover:bg-foreground/10"
-            variant="secondary"
+            className="size-7"
+            variant="outline"
             size="icon-sm"
             nativeButton={false}
             render={
