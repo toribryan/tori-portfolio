@@ -109,9 +109,9 @@ export function ComponentPageActions({
       />
 
       <div className="flex items-center gap-2">
-        <div className="flex items-center rounded-lg bg-muted">
+        <div className="flex h-7 items-center overflow-hidden rounded-lg bg-secondary text-secondary-foreground">
           <Button
-            className="h-7 gap-2 rounded-r-none pr-3 pl-2.5"
+            className="h-full gap-2 rounded-none bg-transparent pr-3 pl-2.5 hover:bg-foreground/5"
             variant="secondary"
             size="sm"
             onClick={copyPage}
@@ -119,11 +119,11 @@ export function ComponentPageActions({
             {state === "done" ? <CheckIcon /> : <CopyIcon />}
             Copy page
           </Button>
-          <div className="h-4 w-px bg-border" aria-hidden />
+          <div className="h-4 w-px bg-foreground/15" aria-hidden />
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(
-                "inline-flex h-7 items-center rounded-r-lg px-2 text-muted-foreground transition-colors hover:text-foreground",
+                "inline-flex h-full items-center px-2 transition-colors hover:bg-foreground/5 aria-expanded:bg-foreground/5",
                 "[&_svg]:size-4 [&_svg]:transition-transform aria-expanded:[&_svg]:rotate-180"
               )}
               aria-label="More ways to read this page"
