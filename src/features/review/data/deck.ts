@@ -172,8 +172,13 @@ export const SLIDES: Slide[] = [
   {
     slug: "components",
     section: "design-system",
-    title: "Atomic Design Inspired Components",
-    notes: ["Placeholder. Content to come."],
+    title: "atomic design",
+    notes: [
+      "Walk it top to bottom. Atoms carry the floor: 18px type, 48px targets, the one green that means available. Molecules are atoms that only make sense together, like the search bar.",
+      "The organism is the home card from two slides on: badge, save, carousel, then name, address, price. Decided once, holds on every listing.",
+      "Templates are content-agnostic: filters, grid, map. The page is the live marketplace, and the same pieces run the agent platform.",
+      "If asked why atomic: it gives a contribution a home. A new piece has to say which level it lives at, which is most of the governance conversation.",
+    ],
   },
   {
     slug: "storybook",

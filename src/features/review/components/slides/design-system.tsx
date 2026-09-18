@@ -15,6 +15,7 @@ import {
   VercelIcon,
 } from "@/components/icons"
 import { TOKEN_ROWS } from "@/features/portfolio/data/token-flow"
+import { AtomicDesign } from "@/features/review/components/atomic-design"
 import type { IntegrationItem } from "@/features/review/components/integration-visual"
 import { IntegrationVisual } from "@/features/review/components/integration-visual"
 import { PrThread } from "@/features/review/components/pr-thread"
@@ -167,7 +168,12 @@ function Components() {
   return (
     <Slide>
       <Kicker>Design system / components</Kicker>
-      <Title>Atomic Design Inspired Components</Title>
+      <Title>Atoms to pages, in the marketplace’s own pieces.</Title>
+      <Lede>
+        The library is organised the atomic way, so a rule set at the bottom is
+        still holding at the top. Every piece below is Modern Care Homes’.
+      </Lede>
+      <AtomicDesign />
     </Slide>
   )
 }
