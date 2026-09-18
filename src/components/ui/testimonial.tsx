@@ -8,12 +8,17 @@ export type TestimonialProps = {
   /** Where the words came from; the name links out when set. */
   url?: string
   quote: string
+  /**
+   * The attribution is a lead-in ("My dad would tell you I am a"), so it
+   * sits above the quote and reads into it.
+   */
+  lead?: boolean
   className?: string
 }
 
 /**
- * A quote in serif with hanging quotation marks, credited on a hairline
- * that runs in from the left so the attribution reads as a signature.
+ * A quote with hanging quotation marks, credited on a hairline: below and
+ * to the right like a signature, or above and to the left as a lead-in.
  */
 export function Testimonial({
   className,
@@ -21,10 +26,17 @@ export function Testimonial({
   authorTagline,
   url,
   quote,
+  lead = false,
 }: TestimonialProps) {
   return (
-    <figure className={cn("relative flex flex-col gap-4 pl-3", className)}>
-      <blockquote className="relative block w-full font-serif text-xl/snug text-foreground md:text-2xl/snug">
+    <figure
+      className={cn(
+        "relative flex gap-4 pl-3",
+        lead ? "flex-col-reverse" : "flex-col",
+        className
+      )}
+    >
+      <blockquote className="relative block w-full font-sans text-xl/snug font-normal text-foreground md:text-2xl/snug">
         <span
           className="absolute -left-3 text-muted-foreground select-none"
           aria-hidden="true"
@@ -40,7 +52,12 @@ export function Testimonial({
         </span>
       </blockquote>
 
-      <figcaption className="ml-auto flex w-full items-center gap-3 md:w-2/3">
+      <figcaption
+        className={cn(
+          "flex w-full items-center gap-3 md:w-2/3",
+          lead ? "flex-row-reverse" : "ml-auto"
+        )}
+      >
         <div className="h-px grow translate-y-px bg-line" />
 
         <p className="shrink-0 font-mono text-xs tracking-wide text-muted-foreground">

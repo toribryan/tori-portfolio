@@ -7,7 +7,13 @@ import { AnimatePresence, motion } from "motion/react"
 import { Testimonial } from "@/components/ui/testimonial"
 import type { Slide as SlideType } from "@/features/review/types"
 
-import { EASE, HairlineGrid, MediaCard, Slide } from "../slide-primitives"
+import {
+  EASE,
+  Frame,
+  HairlineGrid,
+  MediaCard,
+  Slide,
+} from "../slide-primitives"
 
 const BIO_PHOTOS = [
   {
@@ -47,62 +53,76 @@ const PILLARS = [
 ]
 
 const QUOTES = [
-  { quote: "A question artist.", author: "My dad" },
+  { quote: "question artist", author: "My dad would tell you I am a" },
   {
-    quote: "She goes far beyond simply completing the task.",
-    author: "My colleagues",
+    quote: "she goes far beyond simply completing the task",
+    author: "My colleagues would say",
   },
-  { quote: "A curious design engineer.", author: "Me" },
+  { quote: "curious design engineer", author: "I call myself a" },
 ]
 
+/**
+ * How the step underneath the name comes and goes. Named variants rather
+ * than plain targets so the `Reveal` cards inside hear "show" and stagger in.
+ */
 const swap = {
-  initial: { opacity: 0, y: 16, filter: "blur(4px)" },
-  animate: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: { duration: 0.5, ease: EASE },
+  variants: {
+    hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.5, ease: EASE, staggerChildren: 0.05 },
+    },
+    exit: {
+      opacity: 0,
+      y: -12,
+      filter: "blur(4px)",
+      transition: { duration: 0.22, ease: "easeIn" as const },
+    },
   },
-  exit: {
-    opacity: 0,
-    y: -12,
-    filter: "blur(4px)",
-    transition: { duration: 0.22, ease: "easeIn" as const },
-  },
+  initial: "hidden",
+  animate: "show",
+  exit: "exit",
 }
 
 function Bio() {
   return (
-    <div className="grid items-center gap-8 md:grid-cols-[minmax(0,24rem)_1fr]">
-      <div className="grid grid-cols-2 gap-2">
+    <HairlineGrid columns="4fr 5fr" className="flex-1">
+      {/* Photos start on the title's line and grow to the stage's floor,
+          cropping as they go; the quotes span the photos' height so the
+          first sits on their top edge and the last on their bottom. */}
+      <div className="grid grid-cols-2 grid-rows-2 gap-2 py-2 pr-2 md:pl-6">
         {BIO_PHOTOS.map((photo) => (
-          <Image
-            key={photo.src}
-            className="aspect-square w-full rounded-lg object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-            src={photo.src}
-            alt={photo.alt}
-            width={900}
-            height={900}
-            unoptimized
-          />
+          <Frame key={photo.src} className="min-h-0">
+            <Image
+              className="size-full min-h-48 rounded-xl object-cover"
+              src={photo.src}
+              alt={photo.alt}
+              width={900}
+              height={900}
+              unoptimized
+            />
+          </Frame>
         ))}
       </div>
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col justify-between gap-8 px-6 py-2">
         {QUOTES.map((item) => (
           <Testimonial
             key={item.quote}
             quote={item.quote}
             authorName={item.author}
+            lead
           />
         ))}
       </div>
-    </div>
+    </HairlineGrid>
   )
 }
 
 function Pillars() {
   return (
-    <HairlineGrid columns={3}>
+    <HairlineGrid columns={3} className="flex-1">
       {PILLARS.map((pillar) => (
         <MediaCard
           key={pillar.src}
@@ -110,7 +130,7 @@ function Pillars() {
           media={
             pillar.src.endsWith(".mp4") ? (
               <video
-                className="aspect-[4/5] w-full rounded-xl bg-black object-cover"
+                className="size-full min-h-64 rounded-xl bg-black object-cover"
                 src={pillar.src}
                 autoPlay
                 loop
@@ -120,7 +140,7 @@ function Pillars() {
               />
             ) : (
               <Image
-                className="aspect-[4/5] w-full rounded-xl object-cover"
+                className="size-full min-h-64 rounded-xl object-cover"
                 src={pillar.src}
                 alt={pillar.alt}
                 width={1200}
@@ -149,7 +169,7 @@ function Intro({ slide }: { slide: SlideType }) {
   const open = step !== "cover"
 
   return (
-    <Slide className="flex-1 justify-center">
+    <Slide className="flex-1">
       <motion.div layout className="flex flex-col gap-3">
         <AnimatePresence initial={false}>
           {open && (
@@ -179,12 +199,20 @@ function Intro({ slide }: { slide: SlideType }) {
 
       <AnimatePresence mode="wait" initial={false}>
         {step === "bio" && (
-          <motion.div key="bio" {...swap}>
+          <motion.div
+            key="bio"
+            className="flex min-h-0 flex-1 flex-col"
+            {...swap}
+          >
             <Bio />
           </motion.div>
         )}
         {step === "pillars" && (
-          <motion.div key="pillars" {...swap}>
+          <motion.div
+            key="pillars"
+            className="flex min-h-0 flex-1 flex-col"
+            {...swap}
+          >
             <Pillars />
           </motion.div>
         )}

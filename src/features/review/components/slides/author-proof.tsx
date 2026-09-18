@@ -1,6 +1,7 @@
 "use client"
 
 import type { ComponentType } from "react"
+import Image from "next/image"
 import { motion } from "motion/react"
 
 import { TextReveal } from "@/components/ui/text-reveal"
@@ -16,6 +17,7 @@ import {
   Card,
   EASE,
   Flow,
+  Frame,
   HairlineGrid,
   Kicker,
   Lede,
@@ -24,7 +26,6 @@ import {
   Reveal,
   Shot,
   Slide,
-  Split,
   Stack,
   Stat,
   StatRow,
@@ -77,8 +78,8 @@ function Cover() {
         <ProctorioLogo className="h-7 w-auto text-foreground" />
       </Reveal>
       <Title size="xl">AuthorProof</Title>
-      <Split className="items-start">
-        <Stack>
+      <HairlineGrid columns="3fr 2fr">
+        <Stack className="justify-center px-6 py-4">
           <Lede>
             Plagiarism checkers read the document. This one asks the student
             about the paper they turned in.
@@ -92,18 +93,20 @@ function Cover() {
             </LinkOut>
           </LinkRow>
         </Stack>
-        <Reveal>
-          <video
-            className="aspect-square w-full rounded-xl bg-surface-warm object-cover inset-ring-1 inset-ring-border/64"
-            src="/images/review/authorproof-cover.webm"
-            autoPlay
-            loop
-            muted
-            playsInline
-            aria-label="AuthorProof in motion"
-          />
+        <Reveal className="p-2">
+          <Frame>
+            <video
+              className="aspect-square w-full rounded-xl bg-surface object-cover"
+              src="/images/review/authorproof-cover.webm"
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-label="AuthorProof in motion"
+            />
+          </Frame>
         </Reveal>
-      </Split>
+      </HairlineGrid>
     </Slide>
   )
 }
@@ -117,8 +120,8 @@ function Task() {
         A new product in the Origin suite: verify authorship of written work,
         inside the instructor’s existing Canvas workflow.
       </Lede>
-      <Split ratio="art" className="items-center">
-        <Reveal className="flex flex-col gap-3">
+      <HairlineGrid columns="1fr 1.4fr">
+        <Reveal className="flex flex-col justify-center gap-3 px-6 py-4">
           <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
             The gap
           </p>
@@ -130,10 +133,10 @@ function Task() {
             write this?
           </p>
         </Reveal>
-        <Reveal>
+        <Reveal className="p-2">
           <AuthorProofRadar className="aspect-[4/3] w-full" />
         </Reveal>
-      </Split>
+      </HairlineGrid>
     </Slide>
   )
 }
@@ -146,33 +149,50 @@ const THESIS_DELAY = 0.6
 const THESIS_DURATION = 2.4
 
 function Thesis() {
+  const settled = THESIS_DELAY + THESIS_DURATION + 0.4
+
   return (
-    <Slide className="gap-6">
+    <Slide className="flex-1 justify-center gap-6">
       <Kicker>AuthorProof / statement</Kicker>
-      <Reveal>
-        <p className="font-mono text-sm text-muted-foreground">thesis:</p>
-      </Reveal>
-      <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
-        <TextReveal
-          text={THESIS}
-          startOnView={false}
-          delay={THESIS_DELAY}
-          stagger={0.09}
-          maxDuration={THESIS_DURATION}
-        />
-      </h2>
-      <motion.p
-        className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.5,
-          delay: THESIS_DELAY + THESIS_DURATION + 0.4,
-          ease: EASE,
-        }}
-      >
-        right?
-      </motion.p>
+      <HairlineGrid columns="3fr 2fr">
+        <div className="flex flex-col justify-center gap-6 px-6 py-4">
+          <Reveal>
+            <p className="font-mono text-sm text-muted-foreground">thesis:</p>
+          </Reveal>
+          <h2 className="font-heading text-4xl/tight font-medium tracking-normal text-balance md:text-5xl/tight">
+            <TextReveal
+              text={THESIS}
+              startOnView={false}
+              delay={THESIS_DELAY}
+              stagger={0.09}
+              maxDuration={THESIS_DURATION}
+            />
+          </h2>
+          <motion.p
+            className="font-serif text-3xl text-muted-foreground italic md:text-4xl"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: settled, ease: EASE }}
+          >
+            right?
+          </motion.p>
+        </div>
+        <motion.div
+          className="flex items-center justify-center p-6"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: settled + 0.2, ease: EASE }}
+        >
+          <Image
+            className="w-full max-w-72"
+            src="/images/review/thesis-visual.svg"
+            alt="A pixel-art pug with a lit bulb over its head, beside a small crab"
+            width={400}
+            height={329}
+            unoptimized
+          />
+        </motion.div>
+      </HairlineGrid>
     </Slide>
   )
 }
@@ -200,15 +220,11 @@ function Brief() {
   )
 }
 
-function Latency() {
+function Constraints() {
   return (
     <Slide>
-      <Kicker>AuthorProof / what it added up to</Kicker>
-      <Title>Six steps. About ten minutes. One quiz per student.</Title>
-      <Lede>
-        Timed against what the platform could actually do, the briefed flow
-        handed the student exactly the gap they would need to reopen the essay.
-      </Lede>
+      <Kicker>AuthorProof / four constraints</Kicker>
+      <Title>Four constraints, each a design problem in disguise.</Title>
       <StatRow>
         <Stat value="6" label="Steps between submission and quiz" />
         <Stat value="~10 min" label="Latency the steps add up to" />
@@ -217,15 +233,6 @@ function Latency() {
           label="A fresh quiz each, in tooling built for one per class"
         />
       </StatRow>
-    </Slide>
-  )
-}
-
-function Constraints() {
-  return (
-    <Slide>
-      <Kicker>AuthorProof / four constraints</Kicker>
-      <Title>Four constraints, each a design problem in disguise.</Title>
       <HairlineGrid>
         <Card
           label="01 · Timing"
@@ -415,7 +422,6 @@ export const AUTHOR_PROOF_CONTENT: Record<
   task: Task,
   thesis: Thesis,
   brief: Brief,
-  latency: Latency,
   constraints: Constraints,
   pivot: Pivot,
   model: Model,

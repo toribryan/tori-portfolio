@@ -166,13 +166,19 @@ export function HairlineGrid({
   children,
   ...props
 }: React.ComponentProps<"div"> & {
-  columns?: 2 | 3 | 4
+  /** A count of equal columns, or a `grid-template-columns` value. */
+  columns?: 2 | 3 | 4 | string
 }) {
-  const template = `repeat(${columns}, minmax(0, 1fr))`
+  const template =
+    typeof columns === "number" ? `repeat(${columns}, minmax(0, 1fr))` : columns
+  const count =
+    typeof columns === "number"
+      ? columns
+      : columns.split(/\s+(?![^(]*\))/).length
   return (
     <div
       className={cn(
-        "screen-line-top screen-line-bottom relative -mx-2 py-4 md:-mx-6",
+        "screen-line-top screen-line-bottom relative -mx-2 flex flex-col py-4 md:-mx-6",
         className
       )}
       style={{ "--cols": template } as React.CSSProperties}
@@ -181,18 +187,18 @@ export function HairlineGrid({
         className="pointer-events-none absolute inset-0 -z-1 grid gap-4 max-md:hidden md:grid-cols-(--cols)"
         aria-hidden
       >
-        {Array.from({ length: columns }, (_, i) => (
+        {Array.from({ length: count }, (_, i) => (
           <div
             key={i}
             className={cn(
               "border-line",
               i > 0 && "border-l",
-              i < columns - 1 && "border-r"
+              i < count - 1 && "border-r"
             )}
           />
         ))}
       </div>
-      <div className="grid gap-4 md:grid-cols-(--cols)" {...props}>
+      <div className="grid flex-1 gap-4 md:grid-cols-(--cols)" {...props}>
         {children}
       </div>
     </div>
@@ -268,7 +274,7 @@ export function MediaCard({
 }) {
   return (
     <Reveal className={cn("flex flex-col gap-2 p-2", className)}>
-      <Frame>{media}</Frame>
+      <Frame className="flex min-h-0 flex-1 flex-col">{media}</Frame>
       <div className="flex flex-col gap-1 px-4 py-2">
         <p className="text-lg leading-snug font-medium">{title}</p>
         {line && (
@@ -463,31 +469,6 @@ export function Quote({
         {children}
       </p>
     </Reveal>
-  )
-}
-
-/** Two columns from `md` up: copy on the left, artefact on the right. */
-export function Split({
-  className,
-  children,
-  ratio = "even",
-}: {
-  className?: string
-  children: React.ReactNode
-  ratio?: "even" | "copy" | "art"
-}) {
-  return (
-    <div
-      className={cn(
-        "grid items-start gap-6 md:gap-8",
-        ratio === "even" && "md:grid-cols-2",
-        ratio === "copy" && "md:grid-cols-[1.2fr_1fr]",
-        ratio === "art" && "md:grid-cols-[1fr_1.4fr]",
-        className
-      )}
-    >
-      {children}
-    </div>
   )
 }
 
