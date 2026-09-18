@@ -88,7 +88,7 @@ const swap = {
 
 function Bio() {
   return (
-    <HairlineGrid columns="4fr 5fr" className="flex-1">
+    <HairlineGrid columns="5fr 4fr" className="flex-1">
       {/* Photos start on the title's line and grow to the stage's floor,
           cropping as they go; the quotes span the photos' height so the
           first sits on their top edge and the last on their bottom. */}
