@@ -3,14 +3,16 @@
 import { useSyncExternalStore } from "react"
 
 import { InlineScript } from "@/components/inline-script"
-import { PanelTitle } from "@/features/portfolio/components/panel"
 
 const ID = "hello"
 const SSR_TEXT = "Hello"
 
-export function HelloTitle() {
-  // Server renders "Hello" for SEO; the client snapshot resolves the viewer's
-  // local greeting, which also covers client-side navigation (no inline script).
+/**
+ * The viewer's local greeting with its kaomoji. The server renders "Hello" for
+ * SEO, and a blocking script swaps in the local greeting before hydration so
+ * it never flashes.
+ */
+export function Greeting({ className }: { className?: string }) {
   const greeting = useSyncExternalStore(
     () => () => {},
     getGreeting,
@@ -18,26 +20,17 @@ export function HelloTitle() {
   )
 
   return (
-    <>
-      <PanelTitle>
-        {/* The id sits on this inner span, not on the title: the pre-hydration
-            script below replaces its target's textContent, which would wipe any
-            sibling markup inside. Keeping the glyph outside the swapped node
-            lets it share the title's line. */}
-        <span id={`${ID}-greeting`} suppressHydrationWarning>
-          {greeting}
-        </span>
-
-        <span
-          className="ml-2 align-middle font-mono text-base font-normal select-none"
-          aria-hidden
-        >
-          ( ˶ˆ ᗜ ˆ˵ )
-        </span>
-      </PanelTitle>
-
+    <span className={className}>
+      {/* The id sits on this inner span: the pre-hydration script replaces its
+          textContent, which would wipe the kaomoji beside it. */}
+      <span id={`${ID}-greeting`} suppressHydrationWarning>
+        {greeting}
+      </span>
+      <span className="ml-2 select-none" aria-hidden>
+        ( ˶ˆ ᗜ ˆ˵ )
+      </span>
       <InlineScript html={getInlineScript(`${ID}-greeting`)} />
-    </>
+    </span>
   )
 }
 
