@@ -34,20 +34,30 @@ The category is derived from the folder name, never declared in frontmatter.
 | `latest/`     | `/latest/[slug]` | Posts and creative retros       |
 | `work/`       | `/work/[slug]`   | Case studies                    |
 
-Published UI components are a separate feature: `src/features/components/`.
-`content/<slug>.mdx` is the doc body (preview, install, usage, API tables),
-`data/registry.tsx` wires the live preview, published source and 21st.dev
-link, and `data/marks.ts` holds the icon for the home page grid. Pages are at
-`/components/[slug]` and the home page section lists them. Adding one means
-an MDX file plus a registry entry and a mark; a doc without a registry entry
-is skipped rather than rendered. `.21st/token-flow.tsx` is generated from
-`src/components/ui/token-flow.tsx` by `npm run sync:token-flow`; edit the
-source, not the copy.
+fibo's special components are a separate feature. The parts themselves are
+installed as source from fibo's registry into `src/components/fibo/` (`npx
+shadcn@latest add https://fibo.toribryan.com/r/<name>.json --path
+src/components/fibo`); re-run that to update one, and check its imports still
+point at `@/components/fibo/`. `src/features/portfolio/data/fibo-niche.ts`
+lists them, which drives the home page section, `/components/all` and the
+docs. Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
+`src/features/components/content/<slug>.mdx` is the body,
+`examples/<slug>.tsx` holds its live examples (named after the fibo stories
+they port), and `data/registry.tsx` wires the lead preview and links. The
+MDX renders with JS expressions allowed, since fibo's doc blocks take
+arrays and elements as props; `components/doc-blocks.tsx` and
+`doc-parts.tsx` are everything it can use. Adding one means installing the
+part, a `fibo-niche.ts` entry, an MDX file, an examples module and a home
+page cover in `features/portfolio/components/components/covers.tsx`.
+
+`src/components/ui/token-flow.tsx`, the site's own copy, still backs the
+review deck; `.21st/token-flow.tsx` is generated from it by `npm run
+sync:token-flow` for 21st.dev.
 
 The brand design system docs under `components/` are archived: their list
 and detail routes and the nav link were removed, but the MDX and
 `getComponentDocs` remain so they can be restored by reverting that commit.
-They are unrelated to the published UI components, which now own the
+They are unrelated to fibo's special components, which now own the
 `/components/[slug]` route.
 
 `src/features/doc/data/documents.ts` reads them; `src/features/doc/types/document.ts`

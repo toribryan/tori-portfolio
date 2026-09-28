@@ -128,16 +128,22 @@ const options: MDXRemoteProps["options"] = {
 export function MDX({
   code,
   components: extra,
+  allowJS = false,
 }: {
   code: string
   /** Components only this doc's MDX may use, on top of the shared set. */
   components?: MDXRemoteProps["components"]
+  /**
+   * Keeps JS expressions, such as arrays and elements passed as props. Off by
+   * default; only for content written in this repo, never anything fetched.
+   */
+  allowJS?: boolean
 }) {
   return (
     <MDXRemote
       source={code}
       components={extra ? { ...components, ...extra } : components}
-      options={options}
+      options={allowJS ? { ...options, blockJS: false } : options}
     />
   )
 }
