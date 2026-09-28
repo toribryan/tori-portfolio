@@ -7,7 +7,7 @@
  * round again. A visitor who lingers without clicking gets a hello.
  */
 export const FIBO_LINES = {
-  poke: "do you just go around poking people? ...",
+  poke: "do you always go around poking people? ...",
   miss: "i'm not slow, i'm lazy loaded.",
   button: "this isn't a button. well, i guess it is now.",
   bruise: "careful, i bruise in 8-bit.",
