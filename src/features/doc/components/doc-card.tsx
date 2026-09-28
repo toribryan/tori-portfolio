@@ -28,13 +28,16 @@ export function DocCard({
   const Heading = headingAs ?? "h2"
   const {
     image,
+    imageHover,
     title,
     period,
     createdAt,
     claim,
     new: isNew,
     updated,
+    href,
   } = doc.metadata
+  const external = href?.startsWith("http")
 
   return (
     <div className="group/doc-card relative flex h-full flex-col gap-2 p-2 transition-[background-color] ease-out hover:bg-accent-muted">
@@ -67,6 +70,18 @@ export function DocCard({
             </span>
           </div>
         )}
+        {image && imageHover && (
+          <Image
+            className="absolute inset-0 aspect-1200/630 w-full rounded-(--image-radius) object-cover opacity-0 transition-opacity duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:opacity-100"
+            src={imageHover}
+            alt=""
+            width={1200}
+            height={630}
+            quality={100}
+            loading={imageLoading}
+            unoptimized
+          />
+        )}
         <div
           className={cn(
             "pointer-events-none absolute inset-0 rounded-(--image-radius)",
@@ -77,7 +92,10 @@ export function DocCard({
 
       <div className="flex flex-col gap-1 p-2">
         <Heading className="text-lg leading-snug font-medium text-balance">
-          <Link href={`${basePath}/${doc.slug}` as Route}>
+          <Link
+            href={(href ?? `${basePath}/${doc.slug}`) as Route}
+            {...(external && { target: "_blank", rel: "noopener" })}
+          >
             <span className="absolute inset-0" aria-hidden />
             {title}
           </Link>

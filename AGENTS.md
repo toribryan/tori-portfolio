@@ -106,8 +106,9 @@ constant-time `safeEqual` rather than `===`.
 - A component doc can set `href` in frontmatter to say "my story is told
   elsewhere", and `comingSoon: true` marks one as not yet written. `bab.mdx`
   uses the former (its reference lives in `content/work/bab-design-system.mdx`);
-  `iron.mdx` and `modern.mdx` use the latter. Both only matter once the
-  archived Components page is restored.
+  `iron.mdx` and `modern.mdx` use the latter. On Projects cards, `href`
+  already works: `work/fibo.mdx` sends its card to fibo.toribryan.com.
+  `comingSoon` only matters once the archived Components page is restored.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
