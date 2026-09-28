@@ -7,6 +7,12 @@ export type DocMetadata = {
    */
   image?: string
   /**
+   * Cover shown while the card is hovered, cross-fading over `image`. For
+   * covers with no colour, where the usual grayscale-to-colour hover would
+   * change nothing.
+   */
+  imageHover?: string
+  /**
    * Attribution shown directly under the cover image, for imagery that is
    * not the author's own (e.g. an employer's public product marketing).
    */
