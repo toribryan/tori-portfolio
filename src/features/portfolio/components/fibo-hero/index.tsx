@@ -44,7 +44,7 @@ const FIBO = {
  * spiral from the pole out past the frame. `wide` is the landscape frame;
  * `tall` turns it upright for narrow containers. fibo adds the motion: the
  * spiral draws outward from the pole, and fibo, a pixel snail, builds up on
- * the cut beside it and dances there.
+ * a line clear of it and dances there.
  */
 type Geometry = {
   viewBox: string
@@ -59,7 +59,7 @@ type Geometry = {
   }[]
   /** Pole to the frame's edge. */
   spiral: string
-  /** Where fibo stands: a point on one of the cuts, under his foot. */
+  /** Where fibo stands: a point on a cut or the frame's edge, under his foot. */
   fibo: { x: number; y: number }
   /** The last quarter turn, which leaves the frame. */
   tail: string
@@ -157,7 +157,7 @@ const TALL: Geometry = {
   ],
   spiral:
     "M149.643 239.897C155.106 239.897 159.619 244.414 159.619 249.882C159.619 255.35 155.106 259.868 149.643 259.868C138.717 259.868 129.69 250.833 129.69 239.897C129.69 223.493 143.23 209.941 159.619 209.941C186.935 209.941 209.5 232.527 209.5 259.868C209.5 303.613 173.396 339.75 129.69 339.75C58.6695 339.75 0 281.027 0 209.941C0 95.1103 94.7738 0.24998 209.5 0.249985",
-  fibo: { x: 185, y: 260 },
+  fibo: { x: 30, y: 340 },
   tail: "C395.69 0.250001 549.5 154.06 549.5 340.25",
   stroke: 0.9,
   dot: 3,
@@ -393,6 +393,7 @@ function Fibo({
   const pixel = geometry.stroke * FIBO_SCALE
   const { x, y } = geometry.fibo
   const [, , width = 1, height = 1] = geometry.viewBox.split(" ").map(Number)
+  const opensRight = x < width / 2
   const reply = useRef(speak)
   useEffect(() => {
     reply.current = speak
@@ -508,20 +509,28 @@ function Fibo({
         />
       </svg>
       {speaking ? (
-        // Anchored by its right edge over his head, so it opens back across
-        // the frame instead of off the side of it. The untyped rest of the
-        // line holds its place, so the bubble keeps its size as it fills.
+        // Anchored by the edge over his head nearest the frame's side, so it
+        // opens back across the frame instead of off the side of it. The
+        // untyped rest of the line holds its place, so the bubble keeps its
+        // size as it fills.
         <div
           aria-hidden="true"
           className="pointer-events-none absolute z-10 w-max max-w-[15rem] rounded-lg border border-border bg-popover px-2.5 py-1.5 font-mono text-xs leading-snug text-popover-foreground shadow-sm"
           style={{
-            right: `${(1 - (x + 12 * pixel) / width) * 100}%`,
+            ...(opensRight
+              ? { left: `${((x - 12 * pixel) / width) * 100}%` }
+              : { right: `${(1 - (x + 12 * pixel) / width) * 100}%` }),
             bottom: `${(1 - (y - 18 * pixel) / height) * 100}%`,
           }}
         >
           {text.slice(0, typed)}
           <span className="text-transparent">{text.slice(typed)}</span>
-          <span className="absolute right-6 -bottom-[5px] size-2 rotate-45 border-r border-b border-border bg-popover" />
+          <span
+            className={cn(
+              "absolute -bottom-[5px] size-2 rotate-45 border-r border-b border-border bg-popover",
+              opensRight ? "left-6" : "right-6"
+            )}
+          />
         </div>
       ) : null}
     </>
