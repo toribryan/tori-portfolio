@@ -857,3 +857,47 @@
   /* The exact dark-geist accent, preserved. */
   --brand: #7f285c;
 }
+
+/* The fibo hero: its golden tiling draws in, then its parts fade up. */
+.fibo-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: fibo-draw 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+.fibo-draw--spiral {
+  animation-duration: 1.2s;
+  animation-delay: 0.4s;
+}
+
+.fibo-tile {
+  opacity: 0;
+  animation: fibo-fade 0.6s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+/* Held on their first frame until the hero scrolls into view. */
+[data-intro="wait"] :is(.fibo-draw, .fibo-tile) {
+  animation-play-state: paused;
+}
+
+@keyframes fibo-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fibo-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fibo-draw,
+  .fibo-tile {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
