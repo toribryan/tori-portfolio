@@ -8,6 +8,7 @@
  */
 export const FIBO_LINES = {
   poke: "do you always go around poking people? ...",
+  size: "hey buddy poke on someone your own size",
   miss: "i'm not slow, i'm lazy loaded.",
   button: "this isn't a button. well, i guess it is now.",
   bruise: "careful, i bruise in 8-bit.",
@@ -18,7 +19,7 @@ export const FIBO_LINES = {
 export type FiboLine = keyof typeof FIBO_LINES
 
 const ORDER: Record<"on" | "off", FiboLine[]> = {
-  on: ["poke", "bruise", "rage"],
+  on: ["poke", "size", "bruise", "rage"],
   off: ["button", "miss", "rage"],
 }
 // A pause this long between clicks lets him cool off and start over.

@@ -14,7 +14,7 @@ export const USER: User = {
   bio: "Product Designer specializing in design systems. Five years building products, component libraries, and the tooling that connects design to production code.",
   flipSentences: [
     "questioning everything, all the time.",
-    "designing systems + shipping them",
+    "designing systems + pushing pixels",
   ],
   address: "Arizona, United States",
   emailB64: "dG9yaWJyeWFuLmRlc2lnbkBnbWFpbC5jb20=", // toribryan.design@gmail.com

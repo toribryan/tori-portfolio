@@ -53,6 +53,18 @@ function tone({ from, to = from, ms, volume, wave = "square", at = 0 }: Tone) {
 // Each line opens with its own tone of voice.
 const VOICES: Record<FiboLine, () => void> = {
   poke: () => tone({ from: 880, to: 220, ms: 90, volume: 0.04 }),
+  // Puffing himself up, then sinking back to snail size.
+  size: () => {
+    tone({ from: 180, to: 360, ms: 120, volume: 0.04 })
+    tone({
+      from: 360,
+      to: 140,
+      ms: 180,
+      volume: 0.03,
+      wave: "square",
+      at: 0.13,
+    })
+  },
   button: () => {
     tone({ from: 660, ms: 60, volume: 0.03 })
     tone({ from: 440, ms: 80, volume: 0.03, at: 0.08 })
