@@ -11,9 +11,9 @@ import { RECOMMENDATIONS } from "@/features/portfolio/data/recommendations"
  * to a pin to open its comment. The world is larger than the header, so some
  * comments start out of view.
  *
- * Panning moves the world with `left`/`top` rather than a transform, so the
- * canvas never becomes a stacking context: an open comment can rise above
- * the avatar and name cells that sit on top of the canvas.
+ * The canvas is its own stacking context, so the avatar and name cells that
+ * sit on top of it always cover an open comment, and comments open within
+ * the strip above those cells, the part marked `data-hero-canvas-open`.
  */
 
 const WORLD = { width: 1100, height: 400 }
@@ -29,14 +29,16 @@ const COLORS = [
 ]
 
 // World coordinates for each pin, in RECOMMENDATIONS order, clustered around
-// the centre so most are in view before any panning.
+// the centre so most are in view before any panning. Pins sit in two bands
+// of the open strip: near the top they open down, near the bottom they open
+// up, so every comment has room to open inside it.
 const PINS = [
   { x: 420, y: 24 },
-  { x: 600, y: 84 },
+  { x: 600, y: 148 },
   { x: 820, y: 36 },
-  { x: 250, y: 72 },
-  { x: 740, y: 124 },
-  { x: 470, y: 132 },
+  { x: 250, y: 140 },
+  { x: 740, y: 16 },
+  { x: 470, y: 160 },
 ]
 
 type Offset = { x: number; y: number }
@@ -127,22 +129,16 @@ export function HeroCanvas({ className }: { className?: string }) {
     setDragging(false)
   }
 
-  // Keyboard users can't drag, so focusing a pin brings it into view.
+  // Keyboard users can't drag, so focusing a pin pans it into view. Only
+  // sideways, so the pin keeps its band in the open strip.
   const reveal = (pin: Offset) => {
     const el = ref.current
     if (!el) return
     const at = current()
     const vx = pin.x + at.x
-    const vy = pin.y + at.y
     const margin = 48
-    if (
-      vx >= margin &&
-      vx <= el.clientWidth - margin &&
-      vy >= 0 &&
-      vy <= el.clientHeight / 2
-    )
-      return
-    setOffset(clamp({ x: el.clientWidth / 2 - pin.x, y: 24 - pin.y }))
+    if (vx >= margin && vx <= el.clientWidth - margin) return
+    setOffset(clamp({ x: el.clientWidth / 2 - pin.x, y: at.y }))
   }
 
   const position = offset
@@ -153,7 +149,7 @@ export function HeroCanvas({ className }: { className?: string }) {
     <div
       ref={ref}
       className={cn(
-        "touch-pan-y overflow-hidden bg-[color-mix(in_oklab,var(--color-foreground)_2.5%,var(--color-background))] [background-image:radial-gradient(color-mix(in_oklab,var(--color-foreground)_14%,transparent)_1px,transparent_1px)] [background-size:16px_16px] select-none",
+        "isolate touch-pan-y overflow-hidden bg-[color-mix(in_oklab,var(--color-foreground)_2.5%,var(--color-background))] [background-image:radial-gradient(color-mix(in_oklab,var(--color-foreground)_14%,transparent)_1px,transparent_1px)] [background-size:16px_16px] select-none",
         dragging ? "cursor-grabbing" : "cursor-grab",
         className
       )}
@@ -212,18 +208,38 @@ function Pin({
   onFocus: () => void
 } & (typeof RECOMMENDATIONS)[number]) {
   const comment = useRef<HTMLDivElement>(null)
-  const [place, setPlace] = useState({ x: "right", y: "up" })
+  const [place, setPlace] = useState({ x: "right", y: "up", shift: 0 })
 
   // Open up and to the right like Figma, flipping on either axis when the
-  // comment would run out of the canvas that way.
+  // comment would run out of the open strip that way. On a canvas too narrow
+  // for it on either side of the pin, it slides sideways to stay inside.
   const aim = (event: React.SyntheticEvent<HTMLElement>) => {
-    const box = canvas.current?.getBoundingClientRect()
+    const el = canvas.current
     const card = comment.current
-    if (!box || !card) return
+    if (!el || !card) return
+    const box = el.getBoundingClientRect()
+    const open =
+      el.parentElement
+        ?.querySelector("[data-hero-canvas-open]")
+        ?.getBoundingClientRect() ?? box
     const at = event.currentTarget.getBoundingClientRect()
+    const above = at.bottom - open.top
+    const below = open.bottom - at.top
+    const inset = 8
+    const toRight = box.right - inset - (at.left - 8)
+    const toLeft = at.right + 8 - (box.left + inset)
+    const width = card.offsetWidth
+    const x =
+      toRight >= width || (toLeft < width && toRight >= toLeft)
+        ? "right"
+        : "left"
     setPlace({
-      x: at.left - box.left + card.offsetWidth > box.width ? "left" : "right",
-      y: at.bottom - box.top - card.offsetHeight < 0 ? "down" : "up",
+      x,
+      y: above < card.offsetHeight && below > above ? "down" : "up",
+      shift:
+        x === "right"
+          ? Math.min(0, toRight - width)
+          : Math.max(0, width - toLeft),
     })
   }
 
@@ -273,23 +289,27 @@ function Pin({
         id={id}
         role="tooltip"
         className={cn(
-          "pointer-events-none absolute flex w-72 scale-[0.6] items-start gap-2.5 rounded-[1.25rem] bg-popover p-2.5 pr-4 opacity-0 shadow-lg ring-1 ring-line blur-[2px] transition-[opacity,scale,filter] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-focus-within:scale-100 group-focus-within:opacity-100 group-focus-within:blur-none group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none motion-reduce:scale-100 motion-reduce:blur-none motion-reduce:transition-none",
+          "pointer-events-none absolute flex w-80 max-w-[calc(100vw-2rem)] scale-[0.6] items-start gap-2.5 rounded-[1.25rem] bg-popover p-2.5 pr-4 opacity-0 shadow-lg ring-1 ring-line blur-[2px] transition-[opacity,scale,filter] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-focus-within:scale-100 group-focus-within:opacity-100 group-focus-within:blur-none group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none motion-reduce:scale-100 motion-reduce:blur-none motion-reduce:transition-none",
           place.x === "right"
             ? "-left-2"
             : "-right-2 flex-row-reverse pr-2.5 pl-4",
           place.y === "up" ? "-bottom-1" : "-top-2",
-          // The pointed corner and the growth origin sit on the pin.
+          // The growth origin sits on the pin, and so does the pointed
+          // corner unless the comment has slid away from it.
           {
-            "origin-bottom-left rounded-bl-none":
-              place.y === "up" && place.x === "right",
-            "origin-bottom-right rounded-br-none":
-              place.y === "up" && place.x === "left",
-            "origin-top-left rounded-tl-none":
-              place.y === "down" && place.x === "right",
-            "origin-top-right rounded-tr-none":
-              place.y === "down" && place.x === "left",
+            "origin-bottom-left": place.y === "up" && place.x === "right",
+            "origin-bottom-right": place.y === "up" && place.x === "left",
+            "origin-top-left": place.y === "down" && place.x === "right",
+            "origin-top-right": place.y === "down" && place.x === "left",
+          },
+          place.shift === 0 && {
+            "rounded-bl-none": place.y === "up" && place.x === "right",
+            "rounded-br-none": place.y === "up" && place.x === "left",
+            "rounded-tl-none": place.y === "down" && place.x === "right",
+            "rounded-tr-none": place.y === "down" && place.x === "left",
           }
         )}
+        style={{ translate: `${place.shift}px 0` }}
       >
         {avatar}
         <div className="min-w-0 flex-1 pt-0.5">
