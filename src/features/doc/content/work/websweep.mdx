@@ -1,133 +1,49 @@
 ---
 title: "WebSweep"
-description: "The first product surface shipped on the overhauled design system. I owned the system side: the product design language in practice, and the two components the product needed that the system did not have."
-claim: "The first product to ship on the new design system, and the two components it gave back."
+description: "A product in Vault by Proctorio that finds leaked exam content on the open web. It shipped on a branded style of the overhauled design system."
+claim: "The first product to ship on the new design system, in a branded style of it."
 image: "/cover-websweep.webp"
-order: 7
+order: 6
 createdAt: "2026-02-01"
-updatedAt: "2026-09-06"
+updatedAt: "2026-09-28"
 company: "Proctorio"
-role: "Staff Designer, design system and product design language"
+role: "Staff Designer, design system"
 team: "Product design by Tory Barden"
 type: "New Product Suite"
 period: "Q1 to Q2 2026"
+liveUrl: "https://proctorio.com/solutions/vault"
+liveLabel: "See Vault on Proctorio"
 skills:
   - "Design Systems"
   - "Design Tokens"
-  - "Component Design"
-  - "Responsive Design"
-  - "Data Visualization"
   - "Figma"
-problem: "WebSweep had been designed on the legacy design system. When the overhaul shipped in January 2026, a brand-new product was about to launch on a system we had just retired, and the new system had never carried a real product."
-task: "As the system owner, bring WebSweep onto the overhauled design system without losing its launch window, establish the product design language on a real surface, and build what the product needed that the system did not yet have."
-process: "Worked alongside the product designer, Tory Barden, who owned the flows and product decisions. I owned the system side: mapping the redesign onto the new tokens and components, then designing a graph component and a responsive table that collapses to cards on mobile, both built as system components rather than product one-offs."
-outcome: "The redesign ran February through an April beta, and the first tier launched to customers in May 2026 as one half of Vault by Proctorio. The graph and responsive table are now shared system components, and WebSweep became the reference for how the design language looks on a product."
-results:
-  - value: "First"
-    label: "Product surface shipped on the overhauled design system"
-  - value: "2"
-    label: "System components it gave back: a graph, and a table that becomes cards"
-  - value: "May 2026"
-    label: "First tier live to customers, after an April beta"
 ---
 
-<Pipeline>
-  <Stage
-    label="Legacy to new"
-    detail="Redesigned on the overhauled system"
-    mark="layers"
-  />
-  <Stage
-    label="Design language"
-    detail="Established on a real product"
-    mark="figma"
-  />
-  <Stage
-    label="Graph"
-    detail="First data visualization in the system"
-    mark="split"
-  />
-  <Stage
-    label="Table to cards"
-    detail="One component, two presentations"
-    mark="rocket"
-  />
-</Pipeline>
+Exam content leaks to homework-help sites, forums and file-shares, and the
+institution is usually the last to know. WebSweep scans the open web for
+leaked assessment content, shows what has already escaped, and turns a find
+into an action: a takedown notice, or swapping the affected questions so the
+exam stays usable. It ships as one half of Vault by Proctorio, alongside
+ScreenBlock.
 
-## What WebSweep is, briefly
+The product design, the flows and the product decisions were Tory Barden's.
 
-Exam content leaks to homework-help sites, forums, and file-shares, and the
-institution is usually the last to know. WebSweep scans the open web for leaked
-assessment content, surfaces what has already escaped, and turns a find into an
-action: a takedown notice, or swapping the affected questions so the exam stays
-usable. It ships as one half of Vault by Proctorio, alongside ScreenBlock.
+## A branded style of the new system
 
-The product design, the flows, and the product decisions were Tory Barden's.
-This case study is about my part: the design system underneath it.
+WebSweep was the first product to ship on the
+[overhauled design system](/work/design-system-overhaul). It was first
+designed on the legacy system, and when the overhaul shipped in January 2026
+it moved onto the new one before launch. It uses a branded style of the
+system: the same components and semantic tokens as everything else, styled
+for the product.
 
-## Why the system owner was hands-on
-
-WebSweep was first designed on the legacy design system, the one with 587 card
-variants and no semantic token layer. I was leading the
-[overhaul of that system](/work/design-system-overhaul) at the same time, and
-the overhaul shipped in January 2026, before WebSweep did.
-
-That left a choice: launch a new product on a system we had just retired, or
-redesign it on the new one and hold the launch window. We redesigned it. The
-work ran from February, went to beta with real customers in April, and the first
-tier launched in May 2026.
-
-It was the first new product surface released on the overhauled system, which
-made it the first real test of the design language. A system proves itself on a
-product, not in a library, and I wanted to be in the room for the first one.
-
-## Establishing the design language on a real surface
-
-The overhaul had set principles on paper: no product logic in components, no
-variants for hypothetical use, start from the foundation and let the foundation
-grow. WebSweep is where those principles first met a product with its own needs.
-
-My job was to make sure the new language held under real pressure: that the
-dashboard composed from the system's tokens and components without forking
-them, that the spacing, type, and color decisions were the system's decisions
-and not the product's, and that when the product needed something the system
-did not have, the answer was a system component rather than a one-off.
-
-Most of the dashboard composed cleanly. Two things did not exist yet.
+The first tier launched to customers in May 2026, after an April beta.
 
 <Figure
   src="/cover-websweep.webp"
   alt="The WebSweep dashboard: a resolution-rate ring, an activity-over-time chart, a compromised content table, and a question details panel listing compromised links with their sources selected for takedown"
-  caption="The shipped dashboard. The ring and line chart are the graph component; the compromised content list is the responsive table."
+  caption="The shipped dashboard."
 />
-
-## The graph component
-
-The resolution-rate ring and the activity-over-time chart were the first data
-visualizations the system had to carry. I designed them as a system component
-on the semantic token layer, so chart color, typography, and spacing come from
-the same tokens as everything else. The graph themes with the rest of the
-product instead of carrying its own palette, and the next product that needs a
-chart starts from a component rather than from scratch.
-
-## The table that becomes cards
-
-The compromised content table is dense by nature: course, quiz, content, link
-counts, status. It reads well on a wide screen and falls apart on a phone.
-
-Rather than a separate mobile component, I designed it as one component with
-two presentations: rows on desktop, and on mobile each row collapses into a card
-that keeps the same data and the same actions. One data model and one set of
-behaviours, with no fork. It is the "let the foundation grow" principle doing
-its job: a real pattern showed up in a real product, and the system absorbed
-it.
-
-## What it proved
-
-Both components went back into the library, so WebSweep left the system larger
-than it found it. More importantly, it left a reference: the first shipped
-answer to "what does the design language look like on a product," which every
-surface after it could build from.
 
 <LinkButton href="https://proctorio.com/solutions/vault">
   See Vault on Proctorio

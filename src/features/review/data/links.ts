@@ -17,7 +17,6 @@ export const REVIEW_LINKS = {
     storybook: "https://design.moderncarehomes.com",
   },
   integrityConsole: {
-    caseStudy: "/work/bab-design-system",
     storybook: "/storybook/bab/index.html",
   },
   /** The token visualizer from the foundations slide, published as a component. */

@@ -1,0 +1,69 @@
+---
+title: "storybook-kit"
+description: "A Storybook for your design system that looks like it was made by a designer: a pre-styled template, a getting-started guide, and agent skills that take a Figma file to a documented component library."
+claim: "fibo's Storybook, lifted out and made configurable, so a designer with an agent can document their own system."
+image: "/cover-storybookkit.webp"
+imageHover: "/cover-storybookkit-light.webp"
+order: 3
+new: true
+createdAt: "2026-09-28"
+updatedAt: "2026-09-28"
+role: "Designer and engineer"
+type: "Open source tool"
+period: "Q3 2026"
+status: "Early: the shell and the guide are done, the skills are next"
+skills:
+  - "Design Systems"
+  - "Storybook"
+  - "React"
+  - "Tailwind CSS"
+  - "Figma"
+  - "AI Agents"
+---
+
+Storybook's default interface is built for engineers. Designers who now build
+components with an AI agent end up with a library that works but looks like a
+developer tool, and paid documentation tools document pictures of components
+rather than the components themselves.
+
+[fibo](https://fibo.toribryan.com)'s Storybook already solved the look.
+storybook-kit lifts that shell out, makes it configurable, and wraps it in
+skills so the agent does the setup.
+
+## What is in it
+
+- **The shell.** A Storybook with a calm, designer-facing interface: a clean
+  sidebar, light and dark themes, and docs pages for anatomy, usage and do's
+  and don'ts. The name, logo, fonts and colours all live in one file,
+  `brand.config.ts`.
+- **The guide.** Every step from an empty laptop to a running Storybook,
+  written for people who have not opened a terminal before.
+- **The skills.** Instructions an agent follows to set the kit up, pull tokens
+  from Figma variables, turn a Figma frame into a documented component, and
+  publish the result as a link.
+
+## Who it is for
+
+A designer with a Figma file, Claude Code or Cursor, and little development
+experience. The agent is their interface: they ask it to set up a Storybook
+from their Figma file rather than running commands themselves.
+
+## Decisions so far
+
+- **One stack.** React, Vite, Tailwind CSS 4 and Storybook 10. Supporting
+  every framework would work against "minimal development knowledge".
+- **Storybook pinned exactly.** The sidebar styling targets Storybook's
+  internal class names, so version bumps go through an `upgrade` skill that
+  repairs whatever broke.
+- **Its own repo, not a fibo package.** fibo stays a design system; this is a
+  tool for making one.
+
+## Where it is
+
+The shell is extracted from fibo into the template, and the getting-started
+guide is written. Next are the first three skills: `setup`, `sync-tokens` and
+`add-component`. Version one is done when a designer who has never used
+Storybook goes from nothing to one Figma component documented in the kit,
+without help, in about ten minutes.
+
+storybook-kit is an independent project and is not affiliated with Storybook.
