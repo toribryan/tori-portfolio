@@ -10,8 +10,7 @@ import {
 import { cn } from "@/lib/utils"
 import { IconTile } from "@/components/ui/icon-tile"
 
-import { Panel, PanelHeader, PanelTitle, PanelTitleSup } from "./panel"
-import { PanelTitleCopy } from "./panel-title-copy"
+import { Panel } from "./panel"
 
 const ID = "niche"
 
@@ -65,16 +64,8 @@ function docsUrl(name: string) {
  */
 export function FiboNiche() {
   return (
-    <Panel id={ID}>
-      <PanelHeader>
-        <PanelTitle>
-          <a href={`#${ID}`}>Niche components</a>
-          <PanelTitleSup>({PARTS.length})</PanelTitleSup>
-          <PanelTitleCopy id={ID} />
-        </PanelTitle>
-      </PanelHeader>
-
-      <ul className="grid gap-px bg-line sm:grid-cols-2 sm:[&>li:last-child:nth-child(odd)]:col-span-2">
+    <Panel id={ID} aria-label="Niche components">
+      <ul className="grid gap-px border-t border-line bg-line sm:grid-cols-2 sm:[&>li:last-child:nth-child(odd)]:col-span-2">
         {PARTS.map(({ name, title, description, icon: Icon }) => (
           <li key={name} className="bg-background">
             <a
