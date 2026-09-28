@@ -20,8 +20,9 @@ export const USER: User = {
   emailB64: "dG9yaWJyeWFuLmRlc2lnbkBnbWFpbC5jb20=", // toribryan.design@gmail.com
   website: "https://toribryan.com",
   jobTitle: "Design Engineer",
-  /** Shown in the Overview; broader than the job title under the name. */
+  /** Shown under the name in the hero; broader than the job title. */
   discipline: "Product + Design Engineering",
+  availability: "Open to full-time roles",
   jobs: [
     {
       title: "Staff Product Designer",
@@ -36,6 +37,7 @@ export const USER: User = {
 `,
   avatar: "/images/about/photo-1.jpg",
   headerAvatar: "/images/header/avatar.webp",
+  portrait: "/images/header/avatar-square.webp",
   avatarVariants: {
     lightOff: "/images/about/photo-1.jpg",
     lightOn: "/images/about/photo-1.jpg",
