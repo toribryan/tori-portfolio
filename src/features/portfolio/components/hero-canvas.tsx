@@ -31,7 +31,8 @@ const COLORS = [
 ]
 
 // World coordinates for each pin, in RECOMMENDATIONS order, clustered around
-// the centre so most are in view before any panning. Pins sit in two bands
+// the centre so most are in view before any panning. On narrow canvases
+// `--squeeze` pulls them in toward the centre so more of them fit. Pins sit in two bands
 // of the open strip: near the top they open down, near the bottom they open
 // up, so every comment has room to open inside it.
 const PINS = [
@@ -148,15 +149,16 @@ export function HeroCanvas({ className }: { className?: string }) {
   }
 
   // Keyboard users can't drag, so focusing a pin pans it into view. Only
-  // sideways, so the pin keeps its band in the open strip.
-  const reveal = (pin: Offset) => {
+  // sideways, so the pin keeps its band in the open strip. `x` is where the
+  // pin sits in the world after any squeeze.
+  const reveal = (x: number) => {
     const el = ref.current
     if (!el) return
     const at = current()
-    const vx = pin.x + at.x
+    const vx = x + at.x
     const margin = 48
     if (vx >= margin && vx <= el.clientWidth - margin) return
-    setOffset(clamp({ x: el.clientWidth / 2 - pin.x, y: at.y }))
+    setOffset(clamp({ x: el.clientWidth / 2 - x, y: at.y }))
   }
 
   const position = offset
@@ -167,7 +169,7 @@ export function HeroCanvas({ className }: { className?: string }) {
     <div
       ref={ref}
       className={cn(
-        "isolate touch-pan-y overflow-hidden bg-[color-mix(in_oklab,var(--color-foreground)_2.5%,var(--color-background))] [background-image:radial-gradient(color-mix(in_oklab,var(--color-foreground)_14%,transparent)_1px,transparent_1px)] [background-size:16px_16px] select-none",
+        "isolate touch-pan-y overflow-hidden bg-[color-mix(in_oklab,var(--color-foreground)_2.5%,var(--color-background))] [background-image:radial-gradient(color-mix(in_oklab,var(--color-foreground)_14%,transparent)_1px,transparent_1px)] [background-size:16px_16px] select-none [--squeeze:0.45] min-[22.5rem]:[--squeeze:0.5] min-[30rem]:[--squeeze:0.75] sm:[--squeeze:1]",
         dragging ? "cursor-grabbing" : "cursor-grab",
         className
       )}
@@ -200,7 +202,7 @@ export function HeroCanvas({ className }: { className?: string }) {
               onToggle={() =>
                 setOpen((prev) => (prev === index ? null : index))
               }
-              onFocus={() => reveal(pin)}
+              onFocus={reveal}
               {...rec}
             />
           )
@@ -231,8 +233,9 @@ function Pin({
   canvas: React.RefObject<HTMLDivElement | null>
   open: boolean
   onToggle: () => void
-  onFocus: () => void
+  onFocus: (x: number) => void
 } & (typeof RECOMMENDATIONS)[number]) {
+  const self = useRef<HTMLDivElement>(null)
   const comment = useRef<HTMLDivElement>(null)
   const [place, setPlace] = useState({ x: "right", y: "up", shift: 0 })
 
@@ -286,10 +289,14 @@ function Pin({
 
   return (
     <div
+      ref={self}
       data-pin
       data-open={open || undefined}
       className="group absolute z-0 focus-within:z-20 hover:z-20 data-open:z-20"
-      style={{ left: pin.x, top: pin.y }}
+      style={{
+        left: `calc(${WORLD.width / 2}px + ${pin.x - WORLD.width / 2}px * var(--squeeze))`,
+        top: pin.y,
+      }}
       onPointerEnter={aim}
     >
       <span
@@ -309,7 +316,7 @@ function Pin({
           }}
           onFocus={(event) => {
             aim(event)
-            onFocus()
+            if (self.current) onFocus(self.current.offsetLeft)
           }}
           className="block cursor-pointer rounded-full rounded-bl-none bg-background p-0.5 shadow-md transition-[scale,box-shadow] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] outline-none group-hover:scale-110 group-hover:shadow-lg group-data-open:scale-110 group-data-open:shadow-lg focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
         >
