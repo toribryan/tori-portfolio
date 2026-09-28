@@ -129,6 +129,7 @@ export function MDX({
   code,
   components: extra,
   allowJS = false,
+  format = "mdx",
 }: {
   code: string
   /** Components only this doc's MDX may use, on top of the shared set. */
@@ -138,12 +139,18 @@ export function MDX({
    * default; only for content written in this repo, never anything fetched.
    */
   allowJS?: boolean
+  /** `md` reads the source as plain Markdown, so a stray `<` or `{` is text. */
+  format?: "mdx" | "md"
 }) {
   return (
     <MDXRemote
       source={code}
       components={extra ? { ...components, ...extra } : components}
-      options={allowJS ? { ...options, blockJS: false } : options}
+      options={{
+        ...options,
+        ...(allowJS && { blockJS: false }),
+        mdxOptions: { ...options?.mdxOptions, format },
+      }}
     />
   )
 }
