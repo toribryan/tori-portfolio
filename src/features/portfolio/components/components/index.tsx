@@ -10,10 +10,13 @@ import { ComponentCardList } from "./component-card-list"
 
 const ID = "components"
 
-/** fibo's special components, branching off the fibo hero above. */
+/**
+ * fibo's special components, branching off the fibo hero above. It sits
+ * flush under the hero and shares the hero's bottom line.
+ */
 export function Components() {
   return (
-    <Panel id={ID}>
+    <Panel id={ID} className="screen-line-top-none">
       <PanelHeader>
         <PanelTitle>
           <a href={`#${ID}`}>Components</a>
