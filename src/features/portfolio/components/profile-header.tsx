@@ -13,10 +13,10 @@ import { SOCIAL_ICONS } from "@/features/portfolio/components/social-link-icons"
 import { SOCIAL_LINKS } from "@/features/portfolio/data/social-links"
 import { USER } from "@/features/portfolio/data/user"
 
-import { Banner } from "./banner"
 import { FlipSentences } from "./flip-sentences"
 import { Greeting } from "./greeting"
 import { HeroActions } from "./hero-actions"
+import { NameReel } from "./name-reel"
 import { VerifiedIcon } from "./verified-icon"
 
 /**
@@ -27,22 +27,17 @@ import { VerifiedIcon } from "./verified-icon"
 export function ProfileHeader() {
   return (
     <div className="screen-line-bottom border-x border-line">
-      {/* A dithering shader, palette #1A1423 to #FFF5EB, that ripples under
-          the pointer. Kept as a slim strip so it frames the hero without
-          setting its height. */}
-      <figure className="relative h-20 overflow-hidden bg-[#1A1423] sm:h-24">
-        <Banner className="absolute inset-0" />
-        <figcaption className="pointer-events-none absolute right-3 bottom-2 font-mono text-xs leading-none tracking-wide text-white tabular-nums select-none sm:right-4">
-          Fig. 1.
-        </figcaption>
-      </figure>
+      <h1 className="flex h-20 items-center bg-[#1A1423] px-4 sm:h-28 sm:px-6">
+        <span className="sr-only">{USER.displayName}</span>
+        <NameReel name={USER.displayName} className="h-12 sm:h-16" />
+      </h1>
 
       {/* Side by side from sm up; on a phone the portrait becomes a band
           above the text so the name and actions get the full width. */}
       <div className="screen-line-top grid sm:grid-cols-[auto_1fr]">
-        <div className="flex items-center justify-center border-line bg-[#EDDFD6] max-sm:border-b sm:border-r">
+        <div className="group flex items-center justify-center border-line bg-[#EDDFD6] max-sm:border-b sm:border-r">
           <Image
-            className="size-36 select-none sm:size-48"
+            className="size-36 select-none group-hover:animate-pixel-hop motion-reduce:animate-none sm:size-48"
             src={USER.portrait}
             alt={`${USER.displayName}'s pixel portrait`}
             width={495}
@@ -55,13 +50,13 @@ export function ProfileHeader() {
         <div className="flex min-w-0 flex-col justify-center gap-3 p-4 sm:gap-4 sm:px-6">
           <div className="flex flex-col gap-1">
             <Greeting className="font-mono text-sm text-muted-foreground" />
-            <div className="flex items-center gap-2">
-              <h1 className="font-heading text-3xl font-medium tracking-tight sm:text-4xl">
-                {USER.displayName}
-              </h1>
-              <VerifiedIcon className="size-5 select-none" aria-hidden />
-            </div>
-            <p className="text-lg text-foreground">{USER.discipline}</p>
+            <p className="font-heading text-2xl font-medium tracking-tight text-balance sm:text-3xl">
+              {USER.discipline}
+              <VerifiedIcon
+                className="ml-2 inline-block size-5 -translate-y-0.5 align-middle select-none"
+                aria-hidden
+              />
+            </p>
             <FlipSentences className="h-12 sm:h-6">
               {USER.flipSentences}
             </FlipSentences>

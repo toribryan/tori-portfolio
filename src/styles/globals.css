@@ -116,6 +116,29 @@
       rotate: -360deg;
     }
   }
+
+  /* A two-bounce hop in whole steps, so the pixel portrait moves like a
+     sprite rather than sliding. */
+  --animate-pixel-hop: pixel-hop 0.6s steps(1, end) 1;
+
+  @keyframes pixel-hop {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    20% {
+      translate: 0 -8px;
+    }
+    40% {
+      translate: 0 0;
+    }
+    60% {
+      translate: 0 -4px;
+    }
+    80% {
+      translate: 0 0;
+    }
+  }
 }
 
 @utility link {
