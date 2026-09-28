@@ -23,7 +23,7 @@ export type User = {
   jobTitle: string
   /** The role shown under the name in the hero, e.g. "Product + Design Engineering". */
   discipline: string
-  /** Shown as a status chip in the hero, e.g. "Open to full-time roles". Omit to hide it. */
+  /** Shown in the overview, e.g. "Open to work". Omit to hide it. */
   availability?: string
   /** Work history entries */
   jobs: {
