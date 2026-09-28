@@ -10,6 +10,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react"
+import Link from "next/link"
 import { ArrowRightIcon, Volume2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -29,14 +30,8 @@ import {
   TailwindIcon,
 } from "./brand-icons"
 import { createHeckle, FIBO_LINES, type FiboLine } from "./lines"
+import { FIBO } from "./links"
 import { listenForUnlock, sfx } from "./sounds"
-
-const FIBO = {
-  site: "https://fibo.toribryan.com",
-  catalog: "https://fibo.toribryan.com/?path=/docs/catalog--docs",
-  github: "https://github.com/toribryan/fibo",
-  figma: "https://www.figma.com/design/LJZ5Tt4Ba7NPPi8Xnq8i0e/Fibo-DS",
-}
 
 /*
  * Geometry is ncdai's hero-01 (@ncdai/hero-01): a golden rectangle whose
@@ -775,21 +770,21 @@ function Pitch({ width, className }: { width: number; className?: string }) {
           size="lg"
           variant="outline"
           nativeButton={false}
-          className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent"
-          render={<a href={FIBO.figma} target="_blank" rel="noreferrer" />}
+          className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
+          render={<Link href="/fibo/figma" />}
         >
           <FigmaIcon data-icon="inline-start" />
-          Figma
+          <span className="max-sm:sr-only">Figma</span>
         </Button>
         <Button
           size="lg"
           variant="outline"
           nativeButton={false}
-          className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent"
+          className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
           render={<a href={FIBO.github} target="_blank" rel="noreferrer" />}
         >
           <GithubIcon data-icon="inline-start" />
-          GitHub
+          <span className="max-sm:sr-only">GitHub</span>
         </Button>
       </div>
       <ul
