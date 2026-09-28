@@ -8,7 +8,9 @@ import { RECOMMENDATIONS } from "@/features/portfolio/data/recommendations"
 /*
  * A pannable dot-grid canvas with Figma-style comment pins, one per LinkedIn
  * recommendation. Drag (or scroll sideways) to look around; hover, tap or tab
- * to a pin to open its comment. The world is larger than the header, so some
+ * to a pin to open its comment. Touch has no hover, and a tap doesn't focus
+ * a button everywhere, so a tap opens the comment through `open` instead,
+ * and it stays open until the next tap, a drag or Escape. The world is larger than the header, so some
  * comments start out of view.
  *
  * The canvas is its own stacking context, so the avatar and name cells that
@@ -48,6 +50,22 @@ export function HeroCanvas({ className }: { className?: string }) {
   const [offset, setOffset] = useState<Offset | null>(null)
   const [dragging, setDragging] = useState(false)
   const drag = useRef<{ pointer: Offset; start: Offset } | null>(null)
+  const [open, setOpen] = useState<number | null>(null)
+
+  useEffect(() => {
+    if (open === null) return
+    const close = (event: Event) => {
+      if (event instanceof KeyboardEvent && event.key !== "Escape") return
+      if ((event.target as Element | null)?.closest?.("[data-pin]")) return
+      setOpen(null)
+    }
+    document.addEventListener("pointerdown", close)
+    document.addEventListener("keydown", close)
+    return () => {
+      document.removeEventListener("pointerdown", close)
+      document.removeEventListener("keydown", close)
+    }
+  }, [open])
 
   const clamp = useCallback((next: Offset): Offset => {
     const el = ref.current
@@ -178,6 +196,10 @@ export function HeroCanvas({ className }: { className?: string }) {
               pin={pin}
               color={COLORS[index % COLORS.length]!}
               canvas={ref}
+              open={open === index}
+              onToggle={() =>
+                setOpen((prev) => (prev === index ? null : index))
+              }
               onFocus={() => reveal(pin)}
               {...rec}
             />
@@ -194,6 +216,8 @@ function Pin({
   pin,
   color,
   canvas,
+  open,
+  onToggle,
   onFocus,
   name,
   role,
@@ -205,6 +229,8 @@ function Pin({
   pin: Offset
   color: string
   canvas: React.RefObject<HTMLDivElement | null>
+  open: boolean
+  onToggle: () => void
   onFocus: () => void
 } & (typeof RECOMMENDATIONS)[number]) {
   const comment = useRef<HTMLDivElement>(null)
@@ -256,27 +282,36 @@ function Pin({
   // Each line of the comment rises in just after the card opens, one after
   // another; closing drops them at once.
   const line =
-    "translate-y-1 opacity-0 transition-[opacity,translate] duration-300 ease-out group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:translate-y-0 motion-reduce:transition-none"
+    "translate-y-1 opacity-0 transition-[opacity,translate] duration-300 ease-out group-focus-within:translate-y-0 group-focus-within:opacity-100 group-data-open:translate-y-0 group-data-open:opacity-100 group-hover:translate-y-0 group-hover:opacity-100 motion-reduce:translate-y-0 motion-reduce:transition-none"
 
   return (
     <div
-      className="group absolute z-0 focus-within:z-20 hover:z-20"
+      data-pin
+      data-open={open || undefined}
+      className="group absolute z-0 focus-within:z-20 hover:z-20 data-open:z-20"
       style={{ left: pin.x, top: pin.y }}
       onPointerEnter={aim}
     >
       <span
-        className="block animate-pin group-focus-within:[animation-play-state:paused] group-hover:[animation-play-state:paused] motion-reduce:animate-none"
+        className="block animate-pin group-focus-within:[animation-play-state:paused] group-hover:[animation-play-state:paused] group-data-open:[animation-play-state:paused] motion-reduce:animate-none"
         style={{ "--pin-delay": `${index * 70}ms` } as React.CSSProperties}
       >
         <button
           type="button"
           aria-describedby={id}
           aria-label={`Recommendation from ${name}`}
+          aria-expanded={open}
+          onPointerUp={(event) => {
+            if (event.pointerType === "mouse") return
+            aim(event)
+            if (open) event.currentTarget.blur()
+            onToggle()
+          }}
           onFocus={(event) => {
             aim(event)
             onFocus()
           }}
-          className="block cursor-pointer rounded-full rounded-bl-none bg-background p-0.5 shadow-md transition-[scale,box-shadow] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] outline-none group-hover:scale-110 group-hover:shadow-lg focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+          className="block cursor-pointer rounded-full rounded-bl-none bg-background p-0.5 shadow-md transition-[scale,box-shadow] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] outline-none group-hover:scale-110 group-hover:shadow-lg group-data-open:scale-110 group-data-open:shadow-lg focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
         >
           {avatar}
         </button>
@@ -289,7 +324,7 @@ function Pin({
         id={id}
         role="tooltip"
         className={cn(
-          "pointer-events-none absolute flex w-80 max-w-[calc(100vw-2rem)] scale-[0.6] items-start gap-2.5 rounded-[1.25rem] bg-popover p-2.5 pr-4 opacity-0 shadow-lg ring-1 ring-line blur-[2px] transition-[opacity,scale,filter] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-focus-within:scale-100 group-focus-within:opacity-100 group-focus-within:blur-none group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none motion-reduce:scale-100 motion-reduce:blur-none motion-reduce:transition-none",
+          "pointer-events-none absolute flex w-80 max-w-[calc(100vw-2rem)] scale-[0.6] items-start gap-2.5 rounded-[1.25rem] bg-popover p-2.5 pr-4 opacity-0 shadow-lg ring-1 ring-line blur-[2px] transition-[opacity,scale,filter] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-focus-within:scale-100 group-focus-within:opacity-100 group-focus-within:blur-none group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-data-open:scale-100 group-data-open:opacity-100 group-data-open:blur-none motion-reduce:scale-100 motion-reduce:blur-none motion-reduce:transition-none",
           place.x === "right"
             ? "-left-2"
             : "-right-2 flex-row-reverse pr-2.5 pl-4",
@@ -315,7 +350,7 @@ function Pin({
         <div className="min-w-0 flex-1 pt-0.5">
           <p
             className={cn(
-              "flex flex-wrap items-baseline gap-x-1.5 text-sm group-focus-within:delay-75 group-hover:delay-75",
+              "flex flex-wrap items-baseline gap-x-1.5 text-sm group-focus-within:delay-75 group-hover:delay-75 group-data-open:delay-75",
               line
             )}
           >
@@ -326,7 +361,7 @@ function Pin({
           </p>
           <p
             className={cn(
-              "mt-0.5 text-sm text-pretty text-foreground group-focus-within:delay-125 group-hover:delay-125",
+              "mt-0.5 text-sm text-pretty text-foreground group-focus-within:delay-125 group-hover:delay-125 group-data-open:delay-125",
               line
             )}
           >
@@ -334,7 +369,7 @@ function Pin({
           </p>
           <p
             className={cn(
-              "mt-1.5 text-xs text-muted-foreground group-focus-within:delay-175 group-hover:delay-175",
+              "mt-1.5 text-xs text-muted-foreground group-focus-within:delay-175 group-hover:delay-175 group-data-open:delay-175",
               line
             )}
           >
