@@ -1,9 +1,14 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import type { Route } from "next"
+import Link from "next/link"
 
 import { cn } from "@/lib/utils"
-import { RECOMMENDATIONS } from "@/features/portfolio/data/recommendations"
+import {
+  recommendationId,
+  RECOMMENDATIONS,
+} from "@/features/portfolio/data/recommendations"
 
 /*
  * A pannable dot-grid canvas with Figma-style comment pins, one per LinkedIn
@@ -318,20 +323,22 @@ function Pin({
             aim(event)
             if (self.current) onFocus(self.current.offsetLeft)
           }}
-          className="block cursor-pointer rounded-full rounded-bl-none bg-background p-0.5 shadow-md transition-[scale,box-shadow] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] outline-none group-hover:scale-110 group-hover:shadow-lg group-data-open:scale-110 group-data-open:shadow-lg focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+          className="block cursor-pointer rounded-full rounded-bl-none bg-background p-0.5 shadow-sm transition-[scale,box-shadow] duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] outline-none group-hover:scale-110 group-hover:shadow-md group-data-open:scale-110 group-data-open:shadow-md focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
         >
           {avatar}
         </button>
       </span>
 
       {/* The comment grows out of the pin the way Figma's does, springing
-          open from the corner that sits on the pin. */}
+          open from the corner that sits on the pin. Once open it takes the
+          pointer, and its `before` margin reaches past its edges, so moving
+          from the pin onto it, or drifting just off it, keeps it open long
+          enough to read and follow its link. */}
       <div
         ref={comment}
         id={id}
-        role="tooltip"
         className={cn(
-          "pointer-events-none absolute flex w-80 max-w-[calc(100vw-2rem)] scale-[0.6] items-start gap-2.5 rounded-[1.25rem] bg-popover p-2.5 pr-4 opacity-0 shadow-lg ring-1 ring-line blur-[2px] transition-[opacity,scale,filter] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-focus-within:scale-100 group-focus-within:opacity-100 group-focus-within:blur-none group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-data-open:scale-100 group-data-open:opacity-100 group-data-open:blur-none motion-reduce:scale-100 motion-reduce:blur-none motion-reduce:transition-none",
+          "pointer-events-none absolute flex w-80 max-w-[calc(100vw-2rem)] scale-[0.6] cursor-auto items-start gap-2.5 rounded-[1.25rem] bg-popover p-2.5 pr-4 opacity-0 shadow-md ring-1 ring-line blur-[2px] transition-[opacity,scale,filter] duration-300 ease-[cubic-bezier(0.34,1.3,0.64,1)] group-focus-within:pointer-events-auto group-focus-within:scale-100 group-focus-within:opacity-100 group-focus-within:blur-none group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100 group-hover:blur-none group-data-open:pointer-events-auto group-data-open:scale-100 group-data-open:opacity-100 group-data-open:blur-none before:absolute before:-inset-5 before:-z-1 before:content-[''] motion-reduce:scale-100 motion-reduce:blur-none motion-reduce:transition-none",
           place.x === "right"
             ? "-left-2"
             : "-right-2 flex-row-reverse pr-2.5 pl-4",
@@ -380,7 +387,12 @@ function Pin({
               line
             )}
           >
-            {role}, via LinkedIn
+            <Link
+              href={`/recommendations#${recommendationId(name)}` as Route}
+              className="underline-offset-2 hover:text-foreground hover:underline focus-visible:text-foreground focus-visible:underline focus-visible:outline-none"
+            >
+              {role}, via LinkedIn
+            </Link>
           </p>
         </div>
       </div>

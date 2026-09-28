@@ -48,3 +48,8 @@ export const RECOMMENDATIONS: Recommendation[] = [
       "Her ideas are creative, and her execution is beautiful and thinking outside the box is her speciality.",
   },
 ]
+
+/** The anchor for a recommendation on the recommendations page. */
+export function recommendationId(name: string) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+}

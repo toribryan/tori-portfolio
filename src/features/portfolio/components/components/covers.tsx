@@ -201,10 +201,7 @@ function ReactionsCover({ active }: CoverProps) {
   }, [active])
 
   return (
-    <div
-      ref={root}
-      className="flex size-full items-center justify-center"
-    >
+    <div ref={root} className="flex size-full items-center justify-center">
       <Reactions defaultReactions={SEEDED} />
     </div>
   )
