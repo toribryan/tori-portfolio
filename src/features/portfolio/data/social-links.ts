@@ -22,6 +22,12 @@ export const SOCIAL = {
     href: "https://x.com/iamtoribryan",
     sameAs: true,
   },
+  github: {
+    title: "GitHub",
+    handle: "toribryan",
+    href: "https://github.com/toribryan",
+    sameAs: true,
+  },
   twentyFirstDev: {
     title: "21st.dev",
     handle: "iamtoribryan",

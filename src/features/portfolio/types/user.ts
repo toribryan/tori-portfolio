@@ -21,8 +21,10 @@ export type User = {
   website: string
   /** Primary/current role shown on profile */
   jobTitle: string
-  /** Broader discipline shown in the Overview, e.g. "Product + Design Engineering". */
+  /** The role shown under the name in the hero, e.g. "Product + Design Engineering". */
   discipline: string
+  /** Shown in the overview, e.g. "Open to work". Omit to hide it. */
+  availability?: string
   /** Work history entries */
   jobs: {
     title: string
@@ -36,6 +38,8 @@ export type User = {
   avatar: string
   /** The pixel avatar in the home page header, reused wherever the site speaks as its owner. */
   headerAvatar: string
+  /** The same portrait on a flat square, for the hero's grid cell. */
+  portrait: string
   /** Different avatar variants based on theme and lighting */
   avatarVariants: AvatarLightsVariants
   /** Open Graph image URL for social sharing */
