@@ -8,7 +8,6 @@ import { useInView, useReducedMotion } from "motion/react"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import {
   NICHE_PARTS,
-  NICHE_ROWS,
   type NichePart,
 } from "@/features/portfolio/data/fibo-niche"
 
@@ -19,27 +18,18 @@ import { COVERS } from "./covers"
 const PLAYS_ON_HOVER = new Set(["reactions"])
 
 /**
- * fibo's special components as cover cards in two labelled rows, three
- * across, with the live part standing in for the cover image.
+ * fibo's special components as cover cards, three across, with the live
+ * part standing in for the cover image.
  */
 export function ComponentCardList() {
   return (
-    <div className="flex flex-col">
-      {NICHE_ROWS.map(({ row, label }) => (
-        <section key={row} aria-label={label}>
-          <h3 className="screen-line-bottom px-4 py-2 font-mono text-xs tracking-wide text-muted-foreground uppercase">
-            {label}
-          </h3>
-          <ul className="grid gap-px bg-line sm:grid-cols-2 md:grid-cols-3">
-            {NICHE_PARTS.filter((part) => part.row === row).map((part) => (
-              <li key={part.name} className="bg-background">
-                <ComponentCard part={part} />
-              </li>
-            ))}
-          </ul>
-        </section>
+    <ul className="grid gap-px bg-line sm:grid-cols-2 md:grid-cols-3">
+      {NICHE_PARTS.map((part) => (
+        <li key={part.name} className="bg-background">
+          <ComponentCard part={part} />
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }
 
@@ -76,7 +66,7 @@ function ComponentCard({ part }: { part: NichePart }) {
       </div>
 
       <div className="flex flex-col gap-1 p-2">
-        <h4 className="text-lg leading-snug font-medium text-balance">
+        <h3 className="text-lg leading-snug font-medium text-balance">
           <Link
             href={`/components/${part.name}` as Route}
             onFocus={() => setFocused(true)}
@@ -85,7 +75,7 @@ function ComponentCard({ part }: { part: NichePart }) {
             <span className="absolute inset-0" aria-hidden />
             {part.title}
           </Link>
-        </h4>
+        </h3>
 
         <p className="line-clamp-2 text-sm leading-snug text-pretty text-muted-foreground">
           {part.description}
