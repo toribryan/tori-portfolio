@@ -64,8 +64,12 @@ function docsUrl(name: string) {
  */
 export function FiboNiche() {
   return (
-    <Panel id={ID} aria-label="Niche components">
-      <ul className="grid gap-px border-t border-line bg-line sm:grid-cols-2 sm:[&>li:last-child:nth-child(odd)]:col-span-2">
+    <Panel
+      id={ID}
+      aria-label="Niche components"
+      className="screen-line-top-none"
+    >
+      <ul className="grid gap-px border-b border-line bg-line sm:grid-cols-2 sm:[&>li:last-child:nth-child(odd)]:col-span-2">
         {PARTS.map(({ name, title, description, icon: Icon }) => (
           <li key={name} className="bg-background">
             <a
