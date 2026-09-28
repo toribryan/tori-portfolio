@@ -22,7 +22,8 @@ const ID = "projects"
 const MAX = 6
 
 export function Projects() {
-  const projects = getWorkDocs()
+  // fibo has its own hero and niche shelf above.
+  const projects = getWorkDocs().filter((doc) => doc.slug !== "fibo")
 
   return (
     <Panel id={ID}>
