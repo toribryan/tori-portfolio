@@ -29,6 +29,7 @@ import {
   TailwindIcon,
 } from "./brand-icons"
 import { createHeckle, FIBO_LINES, type FiboLine } from "./lines"
+import { listenForUnlock, sfx } from "./sounds"
 
 const FIBO = {
   site: "https://fibo.toribryan.com",
@@ -303,36 +304,10 @@ const FIBO_TYPE_MS = 35
 const FIBO_LINGER_MS = 2800
 
 /*
- * Chiptune-ish sounds, synthesised so there is nothing to load: a square
- * wave sliding between two pitches and fading out.
- */
-function chirp(
-  audio: AudioContext,
-  from: number,
-  to: number,
-  ms: number,
-  volume: number
-) {
-  const start = audio.currentTime
-  const end = start + ms / 1000
-  const tone = audio.createOscillator()
-  const gain = audio.createGain()
-  tone.type = "square"
-  tone.frequency.setValueAtTime(from, start)
-  tone.frequency.exponentialRampToValueAtTime(to, end)
-  gain.gain.setValueAtTime(volume, start)
-  gain.gain.exponentialRampToValueAtTime(0.0001, end)
-  tone.connect(gain).connect(audio.destination)
-  tone.start(start)
-  tone.stop(end)
-}
-
-/*
  * A poke sets fibo talking: a speech bubble types his line out with a blip
  * every other letter, then clears. Poking again starts him over.
  */
 function useSpeech(reduced: boolean) {
-  const audio = useRef<AudioContext | null>(null)
   const [poke, setPoke] = useState(0)
   const [line, setLine] = useState<FiboLine>("poke")
   const [typed, setTyped] = useState(0)
@@ -350,8 +325,7 @@ function useSpeech(reduced: boolean) {
       }
       count += 1
       setTyped(count)
-      if (audio.current && count % 2 === 0 && text[count - 1] !== " ")
-        chirp(audio.current, 440 + Math.random() * 160, 400, 40, 0.02)
+      if (count % 2 === 0 && text[count - 1] !== " ") sfx.blip()
     }, FIBO_TYPE_MS)
     return () => {
       window.clearInterval(typing)
@@ -360,11 +334,7 @@ function useSpeech(reduced: boolean) {
   }, [poke, text, reduced])
 
   const speak = (next: FiboLine) => {
-    // A hello can come before any click, when the browser still holds the
-    // audio suspended; the next click is the chance to wake it.
-    audio.current ??= new AudioContext()
-    void audio.current.resume()
-    chirp(audio.current, 880, 220, 90, 0.04)
+    sfx.voice(next)
     setLine(next)
     setTyped(reduced ? FIBO_LINES[next].length : 0)
     setPoke((p) => p + 1)
@@ -477,21 +447,25 @@ function Fibo({
   useEffect(() => {
     const node = area.current
     if (!node) return
+    let facing: -1 | 1 = 1
     const follow = (event: globalThis.PointerEvent) => {
       const at = pointerOffset(svg.current, event, geometry.fibo, pixel)
       if (!at) return
       const { dx, dy } = at
-      setLook((current) => {
-        const turned = current?.facing ?? 1
-        const facing = dx < -FIBO_TURN ? -1 : dx > FIBO_TURN ? 1 : turned
-        return {
-          facing,
-          x: glance((dx - facing * FIBO_EYES.x) * facing),
-          y: glance(dy - FIBO_EYES.y),
-        }
+      const next = dx < -FIBO_TURN ? -1 : dx > FIBO_TURN ? 1 : facing
+      if (next !== facing) sfx.turn()
+      facing = next
+      setLook({
+        facing,
+        x: glance((dx - facing * FIBO_EYES.x) * facing),
+        y: glance(dy - FIBO_EYES.y),
       })
     }
-    const forget = () => setLook(null)
+    // Left alone he faces right again, so the next visit starts from there.
+    const forget = () => {
+      facing = 1
+      setLook(null)
+    }
     node.addEventListener("pointermove", follow)
     node.addEventListener("pointerleave", forget)
     return () => {
@@ -516,6 +490,11 @@ function Fibo({
             mode="dance"
             look={look}
             assembleDelay={FIBO_ASSEMBLE_MS}
+            onAssemble={(step) => {
+              if (!isShown(svg.current)) return
+              if (step === "whole") sfx.settle()
+              else sfx.pixels(step)
+            }}
           />
         ) : null}
         <rect
@@ -951,6 +930,7 @@ function useSeen(ref: RefObject<HTMLElement | null>) {
 export function FiboHero() {
   const area = useRef<HTMLElement>(null)
   const seen = useSeen(area)
+  useEffect(listenForUnlock, [])
   return (
     <section
       ref={area}
