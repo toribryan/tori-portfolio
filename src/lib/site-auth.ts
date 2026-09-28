@@ -6,8 +6,8 @@
  * cookie therefore expires on its own and can't be taken offline and cracked
  * back into the password.
  *
- * Web Crypto only, no Node built-ins: this runs in middleware on the Edge
- * runtime as well as in the route handler.
+ * Web Crypto only, no Node built-ins, so the same code runs in the proxy and
+ * in the route handler.
  */
 
 export const SITE_AUTH_COOKIE = "site_auth"

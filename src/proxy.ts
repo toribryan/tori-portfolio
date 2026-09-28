@@ -3,7 +3,7 @@ import { NextResponse } from "next/server"
 
 import { SITE_AUTH_COOKIE, verifySessionToken } from "@/lib/site-auth"
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const password = process.env.SITE_PASSWORD
 
   // No password configured — leave the site open rather than lock everyone

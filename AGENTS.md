@@ -91,7 +91,7 @@ Import alias is `@/*` → `./src/*`.
 
 ## Password gate
 
-`src/middleware.ts` gates every route behind `SITE_PASSWORD`. When the variable
+`src/proxy.ts` gates every route behind `SITE_PASSWORD`. When the variable
 is unset the site is open — that's deliberate, so dev and preview builds work
 without a secret. `src/lib/site-auth.ts` holds the token logic; the session
 cookie is an expiring HMAC (`<expiry>.<signature>`), not a hash of the password.
