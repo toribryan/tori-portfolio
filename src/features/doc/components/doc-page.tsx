@@ -185,7 +185,9 @@ export async function DocPage({
       )}
 
       <Prose className="px-4 pt-8 pb-4">
-        <p className="lead text-muted-foreground">{m.description}</p>
+        {!m.hideLead && (
+          <p className="lead text-muted-foreground">{m.description}</p>
+        )}
 
         {results.length > 0 ? (
           <dl

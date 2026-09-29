@@ -40,6 +40,11 @@ export type DocMetadata = {
    * library whose story is told by a case study.
    */
   href?: string
+  /**
+   * Leaves `description` out of the top of the doc's page, for a doc whose
+   * body opens on its own. It still describes the doc everywhere else.
+   */
+  hideLead?: boolean
   /** Pins the doc to the top of its list, above the date-sorted rest. */
   pinned?: boolean
   /**
