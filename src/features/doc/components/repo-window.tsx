@@ -58,30 +58,27 @@ function toRows(files: string[], expanded: Set<string>): TreeRow[] {
 }
 
 /**
- * A code-editor-style window onto a repo: the file tree beside the open
- * document. Files with a rendered copy open in the pane, and links between
- * them switch files rather than leave the page.
+ * A code-editor-style window onto a repo's documents: a file tree of them
+ * beside the open one. Links between them switch files rather than leave
+ * the page.
  */
 export function RepoWindow({
   name,
-  files,
   open,
   guide,
   documents,
 }: {
   name: string
-  files: string[]
   open: string
   guide?: string
   documents: Record<string, ReactNode>
 }) {
   const [current, setCurrent] = useState(open)
-  // Folders holding a document start open; the rest start closed.
   const [expanded, setExpanded] = useState(
     () => new Set(Object.keys(documents).flatMap(foldersOf))
   )
   const pane = useRef<HTMLDivElement>(null)
-  const rows = toRows(files, expanded)
+  const rows = toRows(Object.keys(documents), expanded)
 
   const toggle = (folder: string) =>
     setExpanded((prev) => {
@@ -137,7 +134,6 @@ export function RepoWindow({
         >
           <ul>
             {rows.map((row) => {
-              const readable = !row.folder && row.path in documents
               const isOpen = row.folder && expanded.has(row.path)
               const Icon = row.folder
                 ? isOpen
@@ -163,7 +159,7 @@ export function RepoWindow({
                     >
                       {label}
                     </button>
-                  ) : readable ? (
+                  ) : (
                     <button
                       type="button"
                       onClick={() => show(row.path)}
@@ -178,13 +174,6 @@ export function RepoWindow({
                     >
                       {label}
                     </button>
-                  ) : (
-                    <span
-                      className="flex items-center gap-1.5 py-1 pr-3 font-mono text-xs text-muted-foreground"
-                      style={indent}
-                    >
-                      {label}
-                    </span>
                   )}
                 </li>
               )

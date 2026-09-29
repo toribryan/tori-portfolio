@@ -9,8 +9,8 @@ import { RepoWindow } from "./repo-window"
 const REPOS = { "storybook-kit": STORYBOOK_KIT }
 
 /**
- * A repo as a window: its file tree, and the documents it can open rendered
- * as Markdown, read from the copies kept in `features/doc/repos/` at build.
+ * A repo's documents as a window: a file tree of them beside the open one,
+ * rendered as Markdown from the copies kept in `features/doc/repos/`.
  */
 export function RepoViewer({
   repo,
@@ -20,7 +20,7 @@ export function RepoViewer({
   /** A document to offer as "Getting started" in the window's title bar. */
   guide?: string
 }) {
-  const { name, dir, open, readable, files } = REPOS[repo]
+  const { name, dir, open, readable } = REPOS[repo]
   const documents = Object.fromEntries(
     readable.map((file) => [
       file,
@@ -33,12 +33,6 @@ export function RepoViewer({
   )
 
   return (
-    <RepoWindow
-      name={name}
-      files={files}
-      open={open}
-      guide={guide}
-      documents={documents}
-    />
+    <RepoWindow name={name} open={open} guide={guide} documents={documents} />
   )
 }
