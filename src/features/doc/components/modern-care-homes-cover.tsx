@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import { DM_Sans } from "next/font/google"
 import Image from "next/image"
 import {
   ChevronsUpDownIcon,
@@ -25,7 +26,15 @@ import { useCoverSteps } from "./use-cover-steps"
  * platform's own blue and white surfaces in both of the site's themes.
  */
 const BRAND = "#2347d9"
-const PLATE = "#0b2a9a"
+
+/** Modern Care Homes' own typeface, on both the desktop and phone screens. */
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+})
+/** The pale blue of the marketplace's hero card, and its grid lines. */
+const PLATE = "#d3eafb"
+const GRID = "#b2d6f3"
 const INK = "#1b1d21"
 const MUTED = "#5d626b"
 const LINE = "#e3e5e8"
@@ -97,22 +106,21 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
   return (
     <div
       ref={frame}
-      className="absolute inset-0"
+      className={cn("absolute inset-0", dmSans.className)}
       style={{ background: PLATE, color: INK }}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-15"
+        className="pointer-events-none absolute inset-0 opacity-50"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundImage: `linear-gradient(${GRID} 1px, transparent 1px), linear-gradient(90deg, ${GRID} 1px, transparent 1px)`,
+          backgroundSize: "12px 12px",
         }}
         aria-hidden
       />
       <ScaledStage width={440}>
         <div className="relative h-full">
           {/* Desktop: the icon rail and the listing, section by section. */}
-          <div className="absolute top-1/2 left-9 flex w-[184px] -translate-y-1/2 overflow-hidden rounded-xl bg-[#f7f8f8] shadow-[0_8px_24px_rgb(0_0_0/0.25)]">
+          <div className="absolute top-1/2 left-9 flex w-[184px] -translate-y-1/2 overflow-hidden rounded-xl bg-[#f7f8f8] shadow-[0_8px_24px_rgb(11_42_110/0.14)]">
             <div className="flex w-7 shrink-0 flex-col items-center gap-1.5 border-r border-[#e6e8ea] py-2">
               <span className="flex size-5 items-center justify-center rounded-md bg-white shadow-[0_1px_2px_rgb(0_0_0/0.12)]">
                 <HouseHeart />
@@ -169,7 +177,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
           {/* Mobile: the same dashboard, tab by tab. It runs off the bottom
               of the cover, as a phone held up to the camera would. */}
           <div
-            className="absolute top-5 right-10 h-[260px] rounded-[22px] bg-[#101114] p-[3px] shadow-[0_12px_32px_rgb(0_0_0/0.35)]"
+            className="absolute top-5 right-10 h-[260px] rounded-[22px] bg-[#101114] p-[3px] shadow-[0_12px_32px_rgb(11_42_110/0.22)]"
             style={{ width: PHONE_WIDTH }}
           >
             <div className="relative size-full overflow-hidden rounded-[19px] bg-white">
