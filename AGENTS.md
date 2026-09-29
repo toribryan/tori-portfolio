@@ -40,7 +40,9 @@ shadcn@latest add https://fibo.toribryan.com/r/<name>.json --path
 src/components/fibo`); re-run that to update one, and check its imports still
 point at `@/components/fibo/`. `filter-menu.tsx` carries one local change, a
 `container` prop for where its popup renders, which the home page cover
-needs; put it back after reinstalling. `src/features/portfolio/data/fibo-niche.ts`
+needs; `token-flow.tsx` carries an `orientation` prop so the Design
+System Overhaul card cover can stack its tiers at any width. Put both back
+after reinstalling. `src/features/portfolio/data/fibo-niche.ts`
 lists them, which drives the home page section, `/components/all` and the
 docs. Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
 `src/features/components/content/<slug>.mdx` is the body,

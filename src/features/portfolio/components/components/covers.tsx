@@ -372,7 +372,7 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
  * a part draws its full layout rather than its narrow one. Hidden until the
  * cover has been measured.
  */
-function ScaledStage({
+export function ScaledStage({
   width,
   children,
 }: {
