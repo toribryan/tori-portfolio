@@ -1,12 +1,12 @@
 ---
 title: Pixel snail
-description: A one-colour pixel snail that crawls on a loop while something loads.
+description: A one-color pixel snail that crawls on a loop while something loads.
 createdAt: 2026-09-28
 updatedAt: 2026-09-28
 new: true
 ---
 
-This is fibo, the snail the design system is named after. He's a one-colour
+This is fibo, the snail the design system is named after. He's a one-color
 pixel-art snail who crawls on a loop while something loads. As a sprite
 inside your own SVG, he can also build himself up, dance and turn to watch
 the pointer.
@@ -21,7 +21,7 @@ snail took the name too. You'll find him on the [Welcome page](https://fibo.tori
 where he builds up once the spiral has drawn, dances on its edge and talks
 back when you click.
 
-He has one colour, a googly eye on each stalk and a slow sense of humour.
+He has one color, a googly eye on each stalk and a slow sense of humor.
 Everything on this page is about how he moves and how he responds, because
 that's where his character comes from.
 
@@ -95,8 +95,8 @@ Everything fibo does follows three rules.
 2. **He's timed by hand.** Each loop is a script of frames and holds rather
    than an easing curve. The holds are deliberately uneven, because an even
    beat reads as a machine and a snail shouldn't feel like one.
-3. **He has one colour.** He draws in `currentColor`, so a text class
-   recolours him. The whites of his eyes take the page background, which
+3. **He has one color.** He draws in `currentColor`, so a text class
+   recolors him. The whites of his eyes take the page background, which
    keeps his pupils readable in either theme.
 
 ### The crawl
@@ -201,7 +201,7 @@ const look = {
 
 ### On the Welcome page
 
-The Welcome page's hero builds a few more behaviours on top of `look` and
+The Welcome page's hero builds a few more behaviors on top of `look` and
 `onAssemble`. They belong to the site rather than the component, but they
 show how far the sprite can go:
 
@@ -220,7 +220,7 @@ show how far the sprite can go:
   every other one, then lingers for 2.8 seconds. The untyped rest of the
   line is laid out but invisible, so the bubble is full size from the first
   letter. It opens toward the middle of the frame, never off its edge.
-- **He sounds like a game.** Every sound is synthesised with the Web Audio
+- **He sounds like a game.** Every sound is synthesized with the Web Audio
   API, so there's nothing to download. Each line opens with its own tone of
   voice. Audio waits for the visitor's first click or key press, as browsers
   require.
@@ -240,7 +240,7 @@ His lines:
   root={{
     name: "PixelSnail",
     slot: "pixel-snail",
-    note: "The root, a status region. Carries data-travel while travelling.",
+    note: "The root, a status region. Carries data-travel while traveling.",
     children: [
       {
         name: "ground",

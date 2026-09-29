@@ -37,7 +37,7 @@ export const EXPERIENCES: Experience[] = [
         },
         employmentType: "Self-employed",
         icon: <CodeIcon />,
-        description: `- Intentional career pivot towards hardening front-end technical skills through independent design engineering work.
+        description: `- Intentional career pivot toward hardening front-end technical skills through independent design engineering work.
 - Full time since August 2026: design systems, product design, and the production front end that ships them, mainly through SLV Technologies for their clients.
 - Contribute production code to the SLV Technologies codebase through GitHub PR review, deployed to production: Next.js, React, Tailwind, shadcn, Base UI, Astro, and Storybook.
 - Built and ship [this site](/latest/portfolio-website) as a live Next.js codebase in React, Tailwind, shadcn, and Base UI.`,
@@ -194,7 +194,7 @@ export const EXPERIENCES: Experience[] = [
         icon: <LayoutGridIcon />,
         description: `- Via SLV Technologies: defined the design system for the agent platform and redesigned the [senior living search and discovery marketplace](/work/modern-care-homes), partnering with engineering.
 - Designed the family-facing search end to end, for a tool that did not previously exist: multi-criteria filtering, facility listings, and profiles.
-- Own the visual language: type scale, colour, components, and page templates.`,
+- Own the visual language: type scale, color, components, and page templates.`,
         skills: [
           "Design Systems",
           "Product Design",
@@ -221,7 +221,7 @@ export const EXPERIENCES: Experience[] = [
         icon: <LayoutGridIcon />,
         description: `- Via SLV Technologies: partnered with engineering on a redesign of the editorial website and vendor platform across seven sister brands, starting with [Arizona Bride](/work/arizona-bride) and Minnesota Bride.
 - Built one themed design system the seven publications share, and shipped its front-end styling and markup.
-- Designed a two-sided dashboard connecting vendors and couples, and standardised ad placements to industry sizing.`,
+- Designed a two-sided dashboard connecting vendors and couples, and standardized ad placements to industry sizing.`,
         skills: [
           "Design Systems",
           "Web Design",

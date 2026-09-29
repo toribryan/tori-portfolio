@@ -33,7 +33,7 @@ export const NICHE_PARTS: NichePart[] = [
     name: "pixel-snail",
     title: "Pixel snail",
     description:
-      "A one-colour pixel snail that crawls on a loop while something loads.",
+      "A one-color pixel snail that crawls on a loop while something loads.",
   },
   {
     name: "integration-visual",
@@ -45,7 +45,7 @@ export const NICHE_PARTS: NichePart[] = [
     name: "token-flow",
     title: "Token flow",
     description:
-      "Walks a colour token from raw value to primitive to semantic role.",
+      "Walks a color token from raw value to primitive to semantic role.",
   },
 ]
 
