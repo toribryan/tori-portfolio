@@ -14,7 +14,8 @@ type HeadingTypes = "h2" | "h3" | "h4"
 
 /**
  * Cover-image card used by both the Latest feed and the Projects section. The
- * whole card is one link target; the image desaturates until hover.
+ * whole card is one link target; the image desaturates until hover. Touch
+ * screens have no hover to bring the color back, so they keep it in color.
  */
 export function DocCard({
   doc,
@@ -52,7 +53,7 @@ export function DocCard({
       <div className="relative select-none [--image-radius:var(--radius-xl)]">
         {Cover ? (
           <div
-            className="relative aspect-1200/630 overflow-hidden rounded-(--image-radius) bg-muted/60 grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0"
+            className="relative aspect-1200/630 overflow-hidden rounded-(--image-radius) bg-muted/60 transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 [@media(hover:hover)]:grayscale"
             aria-hidden
             inert
           >
@@ -60,7 +61,7 @@ export function DocCard({
           </div>
         ) : image ? (
           <Image
-            className="aspect-1200/630 w-full rounded-(--image-radius) object-cover grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0"
+            className="aspect-1200/630 w-full rounded-(--image-radius) object-cover transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 [@media(hover:hover)]:grayscale"
             src={image}
             alt={title}
             width={1200}
