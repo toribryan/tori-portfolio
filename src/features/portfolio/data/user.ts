@@ -36,7 +36,7 @@ export const USER: User = {
 - Always exploring new tools and ways to create. Currently learning the drums, and studying the history of the golden ratio and its relevance to design today.
 `,
   avatar: "/images/about/photo-1.jpg",
-  headerAvatar: "/images/header/avatar.webp",
+  headerAvatar: "/images/header/avatar.svg",
   portrait: "/images/header/avatar-square.webp",
   avatarVariants: {
     lightOff: "/images/about/photo-1.jpg",
