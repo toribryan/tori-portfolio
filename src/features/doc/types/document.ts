@@ -13,6 +13,12 @@ export type DocMetadata = {
    */
   imageHover?: string
   /**
+   * A square looping clip played over the middle of the cover at full
+   * height, for a cover made by widening that clip's frame. The cover still
+   * shows around it, and on its own under reduced motion.
+   */
+  video?: string
+  /**
    * Attribution shown directly under the cover image, for imagery that is
    * not the author's own (e.g. an employer's public product marketing).
    */
