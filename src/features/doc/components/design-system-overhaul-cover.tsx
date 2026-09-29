@@ -92,6 +92,59 @@ function useCount(target: number) {
   return value
 }
 
+/** How long a survivor takes to hop one cell. */
+const HOP = 55
+
+/**
+ * A surviving tile that hops to its place in the block a cell at a time,
+ * across then down together, so it sits square on the grid in every frame
+ * rather than gliding between cells. Each axis steps once per cell it
+ * crosses.
+ */
+function Survivor({
+  x,
+  y,
+  to,
+  rank,
+  gathered,
+}: {
+  x: number
+  y: number
+  to: { x: number; y: number }
+  rank: number
+  gathered: boolean
+}) {
+  const across = Math.abs(to.x) / PITCH
+  const down = Math.abs(to.y) / PITCH
+  const delay = `${rank * 12}ms`
+  const hops = (cells: number) =>
+    cells
+      ? `transform ${cells * HOP}ms steps(${cells}, jump-start) ${delay}`
+      : "none"
+
+  return (
+    <g
+      style={{
+        transform: `translate(${gathered ? to.x : 0}px, 0px)`,
+        transition: hops(across),
+      }}
+    >
+      <rect
+        x={x}
+        y={y}
+        width={TILE}
+        height={TILE}
+        rx={1.25}
+        className="fill-foreground"
+        style={{
+          transform: `translate(0px, ${gathered ? to.y : 0}px)`,
+          transition: hops(down),
+        }}
+      />
+    </g>
+  )
+}
+
 /**
  * The overhaul's headline, played out: the old library's 587 card variants
  * as a wall of tiles beside the count. A diagonal sweep clears the 555 that
@@ -175,9 +228,17 @@ export function DesignSystemOverhaulCover({
                 className="fill-border"
               />
             ))}
-            {TILES.map((tile, index) => {
-              const kept = tile.rank >= 0
-              return (
+            {TILES.map((tile, index) =>
+              tile.to ? (
+                <Survivor
+                  key={index}
+                  x={tile.x}
+                  y={tile.y}
+                  to={tile.to}
+                  rank={tile.rank}
+                  gathered={gathered}
+                />
+              ) : (
                 <rect
                   key={index}
                   x={tile.x}
@@ -186,29 +247,18 @@ export function DesignSystemOverhaulCover({
                   height={TILE}
                   rx={1.25}
                   className={cn(
-                    "fill-foreground",
-                    kept
-                      ? "transition-transform duration-700 ease-[cubic-bezier(0.65,0,0.35,1)]"
-                      : cn(
-                          "transition-opacity ease-out",
-                          swept
-                            ? "opacity-0 duration-500"
-                            : "opacity-100 duration-400"
-                        )
+                    "fill-foreground transition-opacity ease-out",
+                    swept
+                      ? "opacity-0 duration-500"
+                      : "opacity-100 duration-400"
                   )}
+                  // Out along the wave, and back in along it too.
                   style={{
-                    transitionDelay: kept
-                      ? `${tile.rank * 12}ms`
-                      : // Out along the wave, and back in along it too.
-                        `${swept ? tile.delay : tile.delay * 0.6}ms`,
-                    transform:
-                      gathered && tile.to
-                        ? `translate(${tile.to.x}px, ${tile.to.y}px)`
-                        : "translate(0px, 0px)",
+                    transitionDelay: `${swept ? tile.delay : tile.delay * 0.6}ms`,
                   }}
                 />
               )
-            })}
+            )}
           </svg>
         </div>
       </ScaledStage>
