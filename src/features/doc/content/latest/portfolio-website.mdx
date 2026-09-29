@@ -1,6 +1,6 @@
 ---
 title: "Design Engineering a Portfolio"
-description: "I redesigned my portfolio, learned a new stack, and tried a handful of new tools throughout the journey. Here's what stuck, what didn't, and why."
+description: "I redesigned my portfolio, learned a new stack, and tried a handful of new tools along the way. Here's what stuck, what didn't, and why."
 createdAt: "2026-08-23"
 updatedAt: "2026-08-30"
 order: 3
@@ -14,9 +14,9 @@ skills:
 
 ## Framer <BrandLink brand="framer" />
 
-I started my first portfolio redesign as a Framer site, coming from a background of working in Webflow. Despite how I feel in general about "no code" web platforms, I honestly felt Framer is good for what it's built for. It was an easy transition from Webflow and it provides you a great canvas editing view, something I feel a lot of designers really crave. The CMS is also really nice, and I see the value in it as a product...
+I started my first portfolio redesign as a Framer site, coming from a background of working in Webflow. Despite my doubts about "no code" web platforms in general, Framer is good for what it's built for. It was an easy transition from Webflow and it provides a great canvas editing view, something a lot of designers crave. The CMS is also really nice, and I see the value in it as a product...
 
-But I struggled with having a mix of some components built from the Framer canvas and some code components built by Framers agent. Editing the code components inside Framer didn't work as easily as I wanted to, and that got frustrating fast. Sometimes it would render what I designed on the canvas when I wanted the code component, and then when I finally got it using the code component, I'd be fighting to get it back to the canvas version. I needed more control than the platform wanted to give me.
+But I struggled with having a mix of some components built from the Framer canvas and some code components built by Framer's agent. Editing the code components inside Framer didn't work as easily as I wanted, and that got frustrating fast. Sometimes it would render what I designed on the canvas when I wanted the code component, and then when I finally got it using the code component, I'd be fighting to get it back to the canvas version. I needed more control than the platform wanted to give me.
 
 <Video
   src="/case-studies/framer-portfolio-concept.mov"
@@ -28,18 +28,18 @@ A second concept, for the about-me modal, went the opposite direction: designed 
 <Figure
   src="/case-studies/framer-portfolio-concept-2-flow.webp"
   alt="Interaction spec for the about-me modal, mapping every click target in the top nav and modal to what it triggers"
-  caption="The interaction spec annotated in Figma before existing in Framer."
+  caption="The interaction spec, annotated in Figma before I built it in Framer."
 />
 
 <Figure
   src="/case-studies/framer-portfolio-concept-2-modal.webp"
-  alt="Desktop and mobile layouts of the about-me modal in Figma, showing the avatar, skills, interests, and photo grid"
-  caption="Desktop and mobile, built out by hand in Framer from Figma specs."
+  alt="Desktop and mobile layouts of the about-me modal in Framer, showing the avatar, skills, interests, and photo grid"
+  caption="Desktop and mobile, built by hand in Framer from the Figma specs."
 />
 
 ## Astro and Cloudflare
 
-Astro gave me the flexibility I needed from Framer right away and was great for creating static pages for my site. It felt easy to work with, and it let me lean into more React and actually strengthen my animation and bezier skills instead of working around a tool.
+Astro gave me the flexibility Framer didn't, right away, and was great for creating static pages for my site. It felt easy to work with, and it let me lean into more React and actually strengthen my animation and bezier skills instead of working around a tool.
 
 <Figure
   src="/case-studies/portfolio-astro-concept-case-study.webp"
@@ -55,35 +55,35 @@ Astro gave me the flexibility I needed from Framer right away and was great for 
 
 ## Next.js <BrandLink brand="nextjs" />
 
-When I was exploring other Design Engineer portfolios, I noticed a lot of those portfolios were Next.js apps, and naturally I wondered why. My vague understanding after some research: more server side rendering, faster, better for SEO. So my curiousity naturall led me to adopting it for my new portfolio.
+When I was exploring other Design Engineer portfolios, I noticed many of them were Next.js apps, and I wondered why. My vague understanding after some research: more server-side rendering, faster, better for SEO. So I adopted it for my new portfolio.
 
 No regrets. Next.js has been pretty intuitive for me. Learning it alongside a deeper dive into React has been smooth. I wouldn't say easy, but I haven't hit any real friction understanding how it all fits together. Big fan.
 
 ## Storybook <BrandLink brand="storybook" />
 
-For my portfolio, I built out a prototype demo of a support agent dashboard. I wanted a polished seamless way to embed my design and build within the case study, so I put the entire design system inside Storybook. It was super easy.
+For my portfolio, I built a prototype of a support agent dashboard. I wanted a polished, seamless way to embed the design and build in the case study, so I put the entire design system inside Storybook, built out every region of the dashboard there, and embedded them. It was super easy.
 
-The payoff is huge. Having everything built in Storybook means I can display live, engineered versions of my design work right inside my portfolio case studies. Interactive, with a segmented picker to flip through states and variants. For the dashboard project I built out every region in Storybook and embedded them in the case study. It's a really clean way to show design work compared to static Figma screenshots.
+Now the case studies show live, engineered versions of my design work, with a segmented picker to flip through states and variants. It's a really clean way to show design work compared to static Figma screenshots.
 
 <Video
   src="/case-studies/the-system.mp4"
-  caption="The design system in Storybook, which is what the case study embeds are pulling from."
+  caption="The design system in Storybook, the source for the case study embeds."
 />
 
-## The rapid fire reviews
+## The rapid-fire reviews
 
-Previously places I worked at self hosted everything for security reasons, so I never got to experiment with the big name platforms. This week I finally did. Here's every one, pros and cons.
+The places I worked before self-hosted everything for security reasons, so I never got to experiment with the big-name platforms. Recently I finally did. Here's every one, pros and cons.
 
 <ToolLabel name="21st.dev" brand="21st-dev" />
 
 Top of the list, my favorite thing right now. I became a member and I'll be posting my own component designs there.
 
 - Pros: The best marketplace for design engineering components I've found. Beautifully crafted work, and a place to publish your own as a member.
-- Cons: Some components are better looking than they are engineered, with way too many effects. That's fine, but it's there.
+- Cons: Some components are better looking than they are engineered, with way too many effects. Fine, but worth knowing.
 
 <ToolLabel name="shadcn/ui" brand="shadcn" />
 
-- Pros: Loved it. It's a really good starting kit that lets you turn your own design system into real code without reinventing every UI primitive. It provides the difficult parts of of UI while leaving a lot of flexibility in the visual design. As someone who has almost entirely designed products from systems I built myself, I liked how these didn't make me feel like it was locking in to someone elses design system.
+- Pros: Loved it. It's a really good starting kit that lets you turn your own design system into real code without reinventing every UI primitive. It handles the hard parts of UI while leaving a lot of flexibility in the visual design. I've almost always designed products from systems I built myself, and I liked that it didn't lock me into someone else's design system.
 - Cons: None yet.
 
 <ToolLabel name="Subframe" brand="subframe" />
@@ -95,7 +95,7 @@ I've been playing with this one for four or five months, but I used it more rece
 
 <ToolLabel name="Obsidian" brand="obsidian" />
 
-My best friend right now. Daily notes, task outlines, skill building plans all live here. Considering building a MOC or "Second Brain" in here
+My best friend right now. Daily notes, task outlines, skill-building plans all live here. I'm considering building a map of content (MOC), or "Second Brain," in here.
 
 - Pros: Fits how I actually work day to day with little to no friction.
 - Cons: Annoying how the title also serves as the file name.
@@ -103,7 +103,7 @@ My best friend right now. Daily notes, task outlines, skill building plans all l
 <ToolLabel name="Notion" brand="notion" />
 
 - Pros: Genuinely good databases and knowledge bases. It's where my career index and project KBs live.
-- Cons: I just don't work in it day to day at this point in time, so I only keep info in there that wont go stale.
+- Cons: I don't work in it day to day right now, so I only keep info in there that won't go stale.
 
 **snd.dev**
 
@@ -117,7 +117,7 @@ A little platform with three UI sound libraries made by UX developers. I downloa
 Marketed as a hub where you can vibe code an app, generate design assets, make interface sounds, generate images. I didn't really like it.
 
 - Pros: Genuinely good for mood boarding. I fed it inspiration photos in a few styles for a floral painting background, and it blended them into generated ideas based on my board. The interface is also nicely designed.
-- Cons: The rest of the pitch didn't land for me. And take even the praise with a grain of salt, because I only used it for about two days.
+- Cons: The rest of the pitch didn't land for me. And I only used it for about two days, so weigh even the praise lightly.
 
 <ToolLabel name="ElevenLabs" brand="elevenlabs" />
 
