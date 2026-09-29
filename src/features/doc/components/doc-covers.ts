@@ -2,6 +2,7 @@ import type { ComponentType } from "react"
 
 import { DesignSystemOverhaulCover } from "./design-system-overhaul-cover"
 import { ModernCareHomesCover } from "./modern-care-homes-cover"
+import { StorybookKitCover } from "./storybook-kit-cover"
 
 /**
  * Live covers that stand in for a doc's cover image on its card, keyed by
@@ -10,4 +11,5 @@ import { ModernCareHomesCover } from "./modern-care-homes-cover"
 export const DOC_COVERS: Record<string, ComponentType<{ loop?: boolean }>> = {
   "design-system-overhaul": DesignSystemOverhaulCover,
   "modern-care-homes": ModernCareHomesCover,
+  "storybook-kit": StorybookKitCover,
 }
