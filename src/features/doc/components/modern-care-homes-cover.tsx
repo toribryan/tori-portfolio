@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import { DM_Sans } from "next/font/google"
 import Image from "next/image"
 import {
   ChevronsUpDownIcon,
@@ -25,6 +26,12 @@ import { useCoverSteps } from "./use-cover-steps"
  * platform's own blue and white surfaces in both of the site's themes.
  */
 const BRAND = "#2347d9"
+
+/** Modern Care Homes' own typeface, on both the desktop and phone screens. */
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+})
 const PLATE = "#0b2a9a"
 const INK = "#1b1d21"
 const MUTED = "#5d626b"
@@ -97,7 +104,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
   return (
     <div
       ref={frame}
-      className="absolute inset-0"
+      className={cn("absolute inset-0", dmSans.className)}
       style={{ background: PLATE, color: INK }}
     >
       <div
