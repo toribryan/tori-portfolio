@@ -945,6 +945,15 @@
   }
 }
 
+/* A pixel snail pixel flying out when he bursts apart. */
+@keyframes pixel-burst {
+  to {
+    translate: var(--dx) var(--dy);
+    rotate: var(--spin);
+    opacity: 0;
+  }
+}
+
 @keyframes fibo-fade {
   to {
     opacity: 1;

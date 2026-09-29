@@ -396,6 +396,42 @@ function scatter(x: number, y: number) {
   return ((x * 73856093) ^ (y * 19349663)) % 97
 }
 
+// Where a burst flies out from: the middle of the shell.
+const BURST_CENTRE = { x: 8, y: 4 }
+
+/*
+ * The art bursting apart: every pixel flies out from the middle of the
+ * shell, spinning a little and fading. Distances and spins come from the
+ * pixel's position, so the burst is the same each time and does not jitter
+ * as the component re-renders.
+ */
+function Burst({ pixels }: { pixels: Pixel[] }) {
+  return pixels.map(([x, y]) => {
+    const seed = Math.abs(scatter(x, y)) / 97
+    const dx = x - BURST_CENTRE.x + (seed - 0.5) * 2
+    const dy = y - BURST_CENTRE.y - 2 - seed * 3
+    const length = Math.hypot(dx, dy) || 1
+    const reach = 6 + seed * 10
+    return (
+      <rect
+        key={`${x}:${y}`}
+        x={x}
+        y={y}
+        width={1}
+        height={1}
+        className="[transform-origin:center] animate-[pixel-burst_600ms_cubic-bezier(0.2,0.7,0.3,1)_forwards] [transform-box:fill-box]"
+        style={
+          {
+            "--dx": `${(dx / length) * reach}px`,
+            "--dy": `${(dy / length) * reach}px`,
+            "--spin": `${(seed - 0.5) * 360}deg`,
+          } as React.CSSProperties
+        }
+      />
+    )
+  })
+}
+
 type Look = {
   /** Behind, level or ahead, from where the snail faces. */
   x: -1 | 0 | 1
@@ -432,6 +468,12 @@ type PixelSnailSpriteProps = Omit<React.ComponentProps<"g">, "children"> & {
    * `"whole"` once the art is complete. For syncing sound to the pixels.
    */
   onAssemble?: (step: { block: number; shown: number } | "whole") => void
+  /**
+   * Bursts the snail apart: the pose he is in when it turns on flies out
+   * pixel by pixel and fades. Remount the sprite with `assembleDelay` to
+   * build him back up.
+   */
+  burst?: boolean
 }
 
 /**
@@ -446,6 +488,7 @@ function PixelSnailSprite({
   look = null,
   assembleDelay,
   onAssemble,
+  burst = false,
   transform,
   ...props
 }: PixelSnailSpriteProps) {
@@ -469,6 +512,10 @@ function PixelSnailSprite({
       ? REST
       : { crawl: FRAMES[step % FRAMES.length]!, rest: idle, dance }[mode]
   const { ink, whites } = snailPixels(frame)
+  // The pose at the moment the burst starts, held while it flies apart.
+  const [burstFrom, setBurstFrom] = React.useState<Pixel[] | null>(null)
+  if (burst && !burstFrom) setBurstFrom(ink)
+  if (!burst && burstFrom) setBurstFrom(null)
   const flip = look?.facing === -1 ? -1 : 1
   const origin = `scale(${pixel * flip} ${pixel}) translate(${-FOOT_MIDDLE} -11)`
   return (
@@ -479,7 +526,9 @@ function PixelSnailSprite({
       transform={transform ? `${transform} ${origin}` : origin}
       {...props}
     >
-      {assembly === "hidden" ? null : assembly === "whole" ? (
+      {burstFrom ? (
+        <Burst pixels={burstFrom} />
+      ) : assembly === "hidden" ? null : assembly === "whole" ? (
         <Drawn ink={ink} whites={whites} />
       ) : (
         <Mosaic pixels={ink} {...assembly} />

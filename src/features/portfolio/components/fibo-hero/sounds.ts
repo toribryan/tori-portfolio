@@ -9,29 +9,10 @@ import type { FiboLine } from "./lines"
  */
 let audio: AudioContext | null = null
 let listening = false
-const unlockListeners = new Set<() => void>()
 
 function unlock() {
   audio ??= new AudioContext()
   void audio.resume()
-  for (const listener of unlockListeners) listener()
-  unlockListeners.clear()
-}
-
-/** Whether the visitor has clicked or pressed a key, so sounds can play. */
-export function isUnlocked() {
-  return audio !== null
-}
-
-/**
- * Runs once, on the click or key press that wakes the audio. Returns a
- * function that cancels it.
- */
-export function onUnlock(listener: () => void) {
-  unlockListeners.add(listener)
-  return () => {
-    unlockListeners.delete(listener)
-  }
 }
 
 /** Wakes the audio on the visitor's first click or key press on the page. */
@@ -106,6 +87,18 @@ const VOICES: Record<FiboLine, () => void> = {
     tone({ from: 523, ms: 90, volume: 0.04, wave: "triangle" })
     tone({ from: 784, ms: 140, volume: 0.04, wave: "triangle", at: 0.1 })
   },
+  // A dizzy swoop down and back up, just back in one piece.
+  woah: () => {
+    tone({ from: 700, to: 260, ms: 220, volume: 0.04, wave: "triangle" })
+    tone({
+      from: 260,
+      to: 620,
+      ms: 260,
+      volume: 0.04,
+      wave: "triangle",
+      at: 0.2,
+    })
+  },
 }
 
 export const sfx = {
@@ -131,6 +124,11 @@ export const sfx = {
           volume: 0.03,
           wave: "triangle",
         }),
+  /** Bursting apart: a crunchy drop, noisy at the top. */
+  burst: () => {
+    tone({ from: 1400, to: 90, ms: 380, volume: 0.05, wave: "sawtooth" })
+    tone({ from: 300, to: 60, ms: 300, volume: 0.04, at: 0.03 })
+  },
   /** The last pixels settling: a chord. */
   settle: () => {
     for (const note of [523, 659, 784])

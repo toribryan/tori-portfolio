@@ -14,6 +14,7 @@ export const FIBO_LINES = {
   bruise: "careful, i bruise in 8-bit.",
   rage: "i can see those rage clicks. go poke around fibo instead?",
   hello: "oh, hi.",
+  woah: "WOAH",
 }
 
 export type FiboLine = keyof typeof FIBO_LINES
