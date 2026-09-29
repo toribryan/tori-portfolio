@@ -420,7 +420,7 @@ function StickyNote() {
         top: STICKY.y,
       }}
     >
-      <p className="text-xs leading-snug font-medium sm:text-sm">
+      <p className="text-[0.6875rem] leading-snug font-normal sm:text-xs">
         questioning everything, all the time.
       </p>
       <p className="text-[0.625rem] text-[#1e1e1e]/60">{USER.displayName}</p>
