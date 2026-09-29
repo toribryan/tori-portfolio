@@ -264,15 +264,27 @@ function FilterMenu({
   )
 
   // Views mount and unmount the search box, so focus follows each change.
+  // This also places the first focus on open, in place of the popup's own,
+  // which would scroll the page.
   React.useEffect(() => {
     if (open) home.current?.focus({ preventScroll: true })
   }, [open, view, home])
 
+  // Scrolls only the list, where scrollIntoView would also scroll the page
+  // to reach a menu that is partly off screen.
   React.useEffect(() => {
-    if (!active) return
-    listRef.current
-      ?.querySelector(`[id="${CSS.escape(rowId(active))}"]`)
-      ?.scrollIntoView({ block: "nearest" })
+    const list = listRef.current
+    if (!active || !list) return
+    const row = list.querySelector(`[id="${CSS.escape(rowId(active))}"]`)
+    if (!row) return
+    const bounds = list.getBoundingClientRect()
+    const target = row.getBoundingClientRect()
+    const scale = bounds.height / list.offsetHeight || 1
+    if (target.top < bounds.top) {
+      list.scrollTop -= (bounds.top - target.top) / scale
+    } else if (target.bottom > bounds.bottom) {
+      list.scrollTop += (target.bottom - bounds.bottom) / scale
+    }
   })
 
   const reset = () => {
@@ -325,7 +337,7 @@ function FilterMenu({
   const activate = (row: Row) => {
     if (row.kind === "field") openField(row.field)
     else toggle(row.field, row.option)
-    home.current?.focus()
+    home.current?.focus({ preventScroll: true })
   }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
@@ -416,7 +428,7 @@ function FilterMenu({
       aria-label={name}
       onClick={() => {
         onBack()
-        home.current?.focus()
+        home.current?.focus({ preventScroll: true })
       }}
       className="flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring-subtle"
     >
@@ -474,7 +486,7 @@ function FilterMenu({
             setHighlight(0)
           } else if (buttonSearch) exitSearch()
           else back()
-          home.current?.focus()
+          home.current?.focus({ preventScroll: true })
           return
         }
         setOpen(next)
@@ -502,7 +514,7 @@ function FilterMenu({
             data-view={view}
             aria-label={label}
             data-search={search}
-            initialFocus={home}
+            initialFocus={false}
             className="w-64 origin-(--transform-origin) overflow-hidden rounded-xl border border-border bg-popover text-popover-foreground shadow-lg outline-none motion-reduce:animate-none data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
           >
             <motion.div style={{ height }}>
