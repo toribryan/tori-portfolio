@@ -9,10 +9,29 @@ import type { FiboLine } from "./lines"
  */
 let audio: AudioContext | null = null
 let listening = false
+const unlockListeners = new Set<() => void>()
 
 function unlock() {
   audio ??= new AudioContext()
   void audio.resume()
+  for (const listener of unlockListeners) listener()
+  unlockListeners.clear()
+}
+
+/** Whether the visitor has clicked or pressed a key, so sounds can play. */
+export function isUnlocked() {
+  return audio !== null
+}
+
+/**
+ * Runs once, on the click or key press that wakes the audio. Returns a
+ * function that cancels it.
+ */
+export function onUnlock(listener: () => void) {
+  unlockListeners.add(listener)
+  return () => {
+    unlockListeners.delete(listener)
+  }
 }
 
 /** Wakes the audio on the visitor's first click or key press on the page. */

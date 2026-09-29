@@ -31,7 +31,7 @@ import {
 } from "./brand-icons"
 import { createHeckle, FIBO_LINES, type FiboLine } from "./lines"
 import { FIBO } from "./links"
-import { listenForUnlock, sfx } from "./sounds"
+import { isUnlocked, listenForUnlock, onUnlock, sfx } from "./sounds"
 
 /*
  * Geometry is ncdai's hero-01 (@ncdai/hero-01): a golden rectangle whose
@@ -394,6 +394,20 @@ function Fibo({
     reply.current = speak
   })
 
+  // Browsers keep audio off until the first click or key press, so a
+  // visitor who scrolls to him builds him up in silence. That first click,
+  // while he is on screen, builds him up again with the sound.
+  const [build, setBuild] = useState(0)
+  useEffect(() => {
+    if (!seen || isUnlocked()) return
+    return onUnlock(() => {
+      const box = svg.current?.getBoundingClientRect()
+      if (!isShown(svg.current) || !box) return
+      if (box.bottom < 0 || box.top > window.innerHeight) return
+      setBuild((b) => b + 1)
+    })
+  }, [seen])
+
   // A click anywhere in the hero gets a line, bar the buttons and links,
   // which keep their own jobs.
   useEffect(() => {
@@ -480,6 +494,7 @@ function Fibo({
       >
         {seen ? (
           <PixelSnailSprite
+            key={build}
             className="text-foreground"
             transform={`translate(${x} ${y})`}
             pixel={pixel}
