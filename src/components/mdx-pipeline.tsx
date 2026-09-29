@@ -27,7 +27,7 @@ import { ClaudeIcon, ReactIcon, TerminalIcon } from "@/components/icons"
  * These are deliberately not the `@/lib/tech` catalog icons: those are sized
  * for a badge, and re-sizing them here would fight their own class.
  */
-const STAGE_MARKS = {
+export const STAGE_MARKS = {
   claude: <ClaudeIcon className="size-5" />,
   component: <ComponentIcon className="size-5" />,
   figma: <img src="/Figma.svg" alt="" aria-hidden className="size-5" />,

@@ -1,13 +1,7 @@
 import { Children, isValidElement, type ReactNode } from "react"
-import {
-  ComponentIcon,
-  LayersIcon,
-  LayoutTemplateIcon,
-  RocketIcon,
-  ShieldIcon,
-} from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { STAGE_MARKS, type StageMark } from "@/components/mdx-pipeline"
 
 /*
  * Case-study blocks drawn in fibo's language: hairlines instead of shadows,
@@ -33,41 +27,72 @@ function Index({ index }: { index: number }) {
   )
 }
 
+/** fibo's two plate backgrounds, as in its IntegrationVisual. */
+const PLATE_BACKGROUNDS = {
+  dots: {
+    className:
+      "opacity-20 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_85%,transparent)]",
+    style: {
+      backgroundImage:
+        "radial-gradient(circle, var(--foreground) 1px, transparent 1px)",
+      backgroundSize: "24px 24px",
+    },
+  },
+  grid: {
+    // Faint, and faded out toward the edges, so the lines sit behind the
+    // diagram instead of ruling through it.
+    className:
+      "opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]",
+    style: {
+      backgroundImage:
+        "linear-gradient(to right, var(--line) 1px, transparent 1px), linear-gradient(to bottom, var(--line) 1px, transparent 1px)",
+      backgroundSize: "24px 24px",
+      backgroundPosition: "-1px -1px",
+    },
+  },
+}
+
 /**
- * A figure on fibo's dotted plate: a hairline frame with a mono label row,
- * the diagram, and a caption underneath.
+ * A figure on one of fibo's plates: a hairline frame around the diagram, over
+ * dots or a grid, with a caption underneath. `meta` adds a header row for
+ * things the diagram needs, such as a legend or a control.
  */
 export function Plate({
-  label,
   meta,
   caption,
+  background = "dots",
   className,
   children,
 }: {
-  label: string
   meta?: ReactNode
   caption?: ReactNode
+  background?: keyof typeof PLATE_BACKGROUNDS | "none"
   className?: string
   children: ReactNode
 }) {
+  const plate = background === "none" ? null : PLATE_BACKGROUNDS[background]
   return (
     <figure className="not-prose my-8">
       <div className="overflow-hidden rounded-xl border border-line bg-card">
-        <div className="flex items-baseline justify-between gap-4 border-b border-line px-4 py-2.5 font-mono text-xs text-muted-foreground">
-          <span className="tracking-wide uppercase">{label}</span>
-          {meta && <span className="tabular-nums">{meta}</span>}
-        </div>
+        {meta && (
+          <div className="flex items-center justify-end gap-4 border-b border-line px-4 py-2.5 font-mono text-xs text-muted-foreground tabular-nums">
+            {meta}
+          </div>
+        )}
         <div className="relative">
-          <div
-            className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,black_12%,black_85%,transparent)] opacity-20"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle, var(--foreground) 1px, transparent 1px)",
-              backgroundSize: "24px 24px",
-            }}
-            aria-hidden
-          />
-          <div className={cn("relative p-4 sm:p-6", className)}>{children}</div>
+          {plate && (
+            <div
+              className={cn(
+                "pointer-events-none absolute inset-0",
+                plate.className
+              )}
+              style={plate.style}
+              aria-hidden
+            />
+          )}
+          <div className={cn("relative p-4 sm:p-6 [&_figure]:my-0", className)}>
+            {children}
+          </div>
         </div>
       </div>
       {caption && (
@@ -183,14 +208,6 @@ export function Side({
   )
 }
 
-const PHASE_ICONS = {
-  component: ComponentIcon,
-  layers: LayersIcon,
-  layout: LayoutTemplateIcon,
-  rocket: RocketIcon,
-  shield: ShieldIcon,
-}
-
 /** The build order as numbered cells on one hairline row. */
 export function Phases({ children }: { children: ReactNode }) {
   const phases = items(children)
@@ -223,14 +240,13 @@ export function Phase({
 }: {
   title: string
   detail?: string
-  icon?: keyof typeof PHASE_ICONS
+  icon?: StageMark
 }) {
-  const Icon = icon ? PHASE_ICONS[icon] : null
   return (
     <>
-      {Icon && (
+      {icon && (
         <span className="flex size-10 items-center justify-center rounded-xl border border-line bg-background transition-transform duration-200 ease-out motion-safe:group-hover/phase:-rotate-6">
-          <Icon className="size-4.5 text-foreground" aria-hidden />
+          {STAGE_MARKS[icon]}
         </span>
       )}
       <span className="flex flex-col gap-1">

@@ -7,7 +7,10 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/base/ui/tabs"
-import { AtomicDesign as AtomicDesignRows } from "@/features/review/components/atomic-design"
+import {
+  AtomicDesign as AtomicDesignRows,
+  StoryFrame,
+} from "@/features/review/components/atomic-design"
 import { AuthorProofRadar } from "@/features/review/components/author-proof-radar"
 import { FoundationLayers as FoundationLayerPanels } from "@/features/review/components/foundation-layers"
 import { PinnedFlow } from "@/features/review/components/pinned-flow"
@@ -69,19 +72,24 @@ export function IntegrityRadar({ caption }: { caption?: string }) {
   )
 }
 
-/** The three journeys the first concept was built on, as they were handed over. */
+/** The three journeys the first concept was built on, one tab each. */
 export function BriefedJourneys({ caption }: { caption?: string }) {
   return (
     <Artifact caption={caption}>
-      <div className="flex flex-col gap-3">
+      <Tabs defaultValue={BRIEFED_JOURNEYS[0].label}>
+        <TabsList>
+          {BRIEFED_JOURNEYS.map((journey) => (
+            <TabsTrigger key={journey.label} value={journey.label}>
+              {journey.label.replace(/^\d+ · /, "")}
+            </TabsTrigger>
+          ))}
+        </TabsList>
         {BRIEFED_JOURNEYS.map((journey) => (
-          <PinnedFlow
-            key={journey.label}
-            label={journey.label}
-            steps={journey.steps}
-          />
+          <TabsContent key={journey.label} value={journey.label}>
+            <PinnedFlow steps={journey.steps} />
+          </TabsContent>
         ))}
-      </div>
+      </Tabs>
     </Artifact>
   )
 }
@@ -151,10 +159,42 @@ export function TokenCallouts({ caption }: { caption?: string }) {
   )
 }
 
-export function AtomicDesign({ caption }: { caption?: string }) {
+export function AtomicDesign({
+  caption,
+  through,
+  omit,
+}: {
+  caption?: string
+  /** The last level to show, by name. */
+  through?: string
+  /** Story labels to leave out, comma-separated. */
+  omit?: string
+}) {
   return (
     <Artifact caption={caption}>
-      <AtomicDesignRows />
+      <AtomicDesignRows
+        through={through}
+        omit={omit?.split(",").map((label) => label.trim())}
+      />
+    </Artifact>
+  )
+}
+
+/** One story from the Modern Care Homes Storybook, framed and live. */
+export function MchStory({
+  id,
+  label,
+  height = "480",
+  caption,
+}: {
+  id: string
+  label: string
+  height?: string
+  caption?: string
+}) {
+  return (
+    <Artifact caption={caption}>
+      <StoryFrame story={{ id, label }} height={Number(height) || 480} />
     </Artifact>
   )
 }

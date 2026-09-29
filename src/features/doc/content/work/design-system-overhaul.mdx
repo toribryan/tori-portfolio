@@ -33,8 +33,16 @@ results:
 <Phases>
   <Phase title="Tokens" detail="Named for their job" icon="layers" />
   <Phase title="Foundations" detail="WCAG AAA from the start" icon="shield" />
-  <Phase title="Base components" detail="Built only from tokens" icon="component" />
-  <Phase title="Slotted components" detail="Built from the base" icon="layout" />
+  <Phase
+    title="Base components"
+    detail="Built only from tokens"
+    icon="component"
+  />
+  <Phase
+    title="Slotted components"
+    detail="Built from the base"
+    icon="layout"
+  />
   <Phase title="Rollout" detail="One product at a time" icon="rocket" />
 </Phases>
 
@@ -47,12 +55,12 @@ checked how many of them appeared anywhere in the product. Very few did.
 <Numbered>
   <Item title="No semantic tokens.">
     Tokens were named after their values, such as blue-500, and never after
-    their jobs. No product could change its look without editing components,
-    and every color choice meant looking one up.
+    their jobs. No product could change its look without editing components, and
+    every color choice meant looking one up.
   </Item>
   <Item title="Product logic inside components.">
-    Some components knew which product they were in. A component like that
-    can't be reused, only copied.
+    Some components knew which product they were in. A component like that can't
+    be reused, only copied.
   </Item>
   <Item title="Variants for needs nobody had.">
     Hundreds of combinations had never been placed on a screen, and each one
@@ -103,16 +111,20 @@ and made the case together with our front-end lead, each of us speaking for our
 own discipline.
 
 <Sides>
-  <Side label="Design" title="What I argued">
-    - Every product surface gets the same polished design language
-    - Designers stop spending time and energy rebuilding the same things
-    - Standards get set, and someone's job is keeping them
-  </Side>
-  <Side label="Engineering" title="What our front-end lead argued">
-    - Better version control
-    - Components that are easier to implement
-    - Less time from idea to release
-  </Side>
+<Side label="Design" title="What I argued">
+
+- Every product surface gets the same polished design language
+- Designers stop spending time and energy rebuilding the same things
+- Standards get set, and someone's job is keeping them
+
+</Side>
+<Side label="Engineering" title="What our front-end lead argued">
+
+- Better version control
+- Components that are easier to implement
+- Less time from idea to release
+
+</Side>
 </Sides>
 
 ## Building from the tokens up
@@ -132,9 +144,10 @@ whichever green the theme has set.
 
 <TokenRoles />
 
-To change a theme, you change a handful of values. No component code changes.
+The card below is colored both ways. Under the old tokens, one name colored
+unrelated parts, so no part could change on its own.
 
-<ThemeSwap />
+<TokenVisualizer />
 
 Our engineers build everything in-house, so I also wrote the CSS framework the
 tokens live in. It uses the same names as the Figma library, so designers and

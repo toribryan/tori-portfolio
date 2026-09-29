@@ -74,7 +74,7 @@ export function VariantWall() {
 
   return (
     <Plate
-      label="Every variant, one cell each"
+      background="none"
       meta={
         <span className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
@@ -130,7 +130,7 @@ export function SwitchSprawl() {
 
   return (
     <Plate
-      label="One card, ten switches"
+      background="grid"
       caption="Ten on/off options on one component. Nobody designed a thousand cards; the options did."
     >
       <div
@@ -169,7 +169,7 @@ export function SwitchSprawl() {
                     variant="destructive"
                     className="ml-auto py-0 font-sans leading-5"
                   >
-                    names a product
+                    product logic
                   </Badge>
                 )}
               </li>
@@ -224,7 +224,6 @@ export function TokenRoles() {
 
   return (
     <Plate
-      label="Value, primitive, role"
       meta={
         <Button
           size="xs"
@@ -244,76 +243,6 @@ export function TokenRoles() {
         theme={theme}
         className="rounded-none border-0 bg-transparent py-6 [&>div:first-child]:hidden"
       />
-    </Plate>
-  )
-}
-
-/** A second theme, set on a wrapper. Nothing inside it changes. */
-const THEME_B = {
-  "--background": "oklch(0.97 0.012 250)",
-  "--card": "oklch(0.995 0.003 250)",
-  "--foreground": "oklch(0.26 0.06 260)",
-  "--muted-foreground": "oklch(0.5 0.05 260)",
-  "--line": "oklch(0.9 0.02 255)",
-  "--primary": "oklch(0.47 0.17 262)",
-} as React.CSSProperties
-
-function StatCard() {
-  return (
-    <div className="flex flex-col gap-4 rounded-xl border border-line bg-card p-4 text-foreground">
-      <div className="flex flex-col gap-0.5">
-        <p className="text-sm font-medium">Escalated conversations</p>
-        <p className="text-xs text-muted-foreground">Last 7 days</p>
-      </div>
-      <div className="flex items-end gap-2">
-        <p className="font-mono text-3xl leading-none tabular-nums">14</p>
-        <Badge>+3</Badge>
-      </div>
-      <Button size="sm" className="self-start">
-        View report
-      </Button>
-    </div>
-  )
-}
-
-/** The same card under two themes, with the reassigned tokens listed. */
-export function ThemeSwap() {
-  return (
-    <Plate
-      label="One card, two themes"
-      caption="The same markup in both panels. Six token values changed on the wrapper."
-    >
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-            Theme A
-          </p>
-          <div className="rounded-xl border border-line bg-background p-4">
-            <StatCard />
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
-            Theme B
-          </p>
-          <div
-            className="rounded-xl border border-line bg-background p-4 [color-scheme:light]"
-            style={THEME_B}
-          >
-            <StatCard />
-          </div>
-        </div>
-      </div>
-      <ul className="mt-4 flex flex-wrap gap-1.5">
-        {Object.keys(THEME_B).map((token) => (
-          <li
-            key={token}
-            className="rounded-md border border-line bg-muted px-1.5 py-0.5 font-mono text-[0.75rem] text-muted-foreground"
-          >
-            {token}
-          </li>
-        ))}
-      </ul>
     </Plate>
   )
 }
@@ -356,10 +285,7 @@ function Heading({
 /** Three jobs, one Card: each fills the same slots with different content. */
 export function SlotComposition() {
   return (
-    <Plate
-      label="Three jobs, one card"
-      caption="Each card fills the same slots with different parts. No new variant, no new option, no product logic."
-    >
+    <Plate caption="Each card fills the same slots with different parts. No new variant, no new option, no product logic.">
       <div className="grid gap-4 sm:grid-cols-3">
         <SlotCard>
           <Slot name="Header">

@@ -8,7 +8,7 @@ imageCredit: "Cover image © Proctorio, from the AuthorProof product page and vi
 imageCreditUrl: "https://proctorio.com/solutions/origin"
 order: 1
 createdAt: "2026-04-01"
-updatedAt: "2026-09-18"
+updatedAt: "2026-09-28"
 company: "Proctorio"
 role: "Staff Product Designer, end to end"
 period: "Q2 2026"
@@ -20,183 +20,200 @@ skills:
   - "Accessibility"
   - "Figma"
   - "Claude Code"
-problem: "Plagiarism detectors analyze the document, not the student. A paraphrase, an AI rewrite, or a ghostwriter pass clears every existing check. Instructors had no scalable way to verify authorship inside their Canvas workflow."
-task: "Take a new product from an assigned brief to a shippable MVP inside Canvas, without adding a single step to the instructor's grading workflow."
-process: "Mapped the intended flow step by step and pressure-tested each step against what the platform could do. Four constraints came out, each one a design problem in disguise, and the answer was a smaller, faster flow rather than a workaround for each."
-outcome: "An MVP that puts the quiz seconds after submission and the result where instructors already grade, with the score shown as confidence rather than a verdict. Prototypes in HTML, CSS, and vanilla JS served as the spec, and the pilot came back with a 95% completion rate."
+outcome: "An MVP that puts the quiz seconds after submission and the result where instructors already grade, with the score shown as confidence rather than a verdict. Prototypes in HTML, CSS, and vanilla JS served as the spec, built toward a 95% quiz completion rate and fewer than 5% false positives."
 results:
   - value: "95%"
-    label: "Quiz completion rate among pilot test takers"
+    label: "Goal for quiz completion among test takers"
   - value: "<5%"
-    label: "False-positive rate in the pilot"
+    label: "Goal for the false-positive rate"
   - value: "Seconds"
     label: "From submission to quiz, instead of about ten minutes"
   - value: "0"
     label: "Steps added to the instructor's grading workflow"
 ---
 
-<Pipeline>
-  <Stage
-    label="The question"
+<Phases>
+  <Phase
+    title="The question"
     detail="Did you write this, not is this original"
-    mark="search"
+    icon="search"
   />
-  <Stage
-    label="The constraints"
+  <Phase
+    title="The constraints"
     detail="Four, found before engineering spent time"
-    mark="question"
+    icon="question"
   />
-  <Stage
-    label="The pivot"
+  <Phase
+    title="The pivot"
     detail="A smaller flow that kept the promise"
-    mark="split"
+    icon="split"
   />
-  <Stage
-    label="Shipped"
-    detail="Score, confidence, and detail where instructors grade"
-    mark="rocket"
+  <Phase
+    title="Shipped"
+    detail="Score and confidence where instructors grade"
+    icon="rocket"
   />
-</Pipeline>
+</Phases>
 
-<Video
-  src="/images/review/authorproof-cover.webm"
-  fit="square"
-  caption="AuthorProof in motion: a quiz generated from the student's own submission."
-/>
+<Plate
+  background="grid"
+  className="flex justify-center"
+  caption="A quiz generated from the student's own submission."
+>
+  <Video src="/images/review/authorproof-cover.webm" fit="square" />
+</Plate>
 
 ## Where it sits
 
-Proctorio's integrity suite is three products. Integrity proctors the exam,
-Vault protects the exam content, and Origin proves authorship. I led
-cross-product design across all three, for institutions and for proctoring
-agencies. AuthorProof is Origin's product, and the one I took from an assigned
-brief to a shippable MVP.
+Proctorio's integrity suite is three products: Integrity proctors the exam,
+Vault protects its content, and Origin proves authorship. I led design across
+all three. AuthorProof is Origin's product, and I took it from an assigned brief
+to a shippable MVP.
 
 <ProctorioSuites caption="The three suites. Hover one to see it move." />
 
 ## Did you write this?
 
-Existing integrity tools answer one question: is this original? A paraphrase,
-an AI rewrite, or a ghostwriter pass clears every one of them. None answer the
-question instructors actually have: did you write this?
+Existing integrity tools ask whether a paper is original. A paraphrase, an AI
+rewrite or a ghostwriter clears every one of them. None ask what instructors
+want to know: did you write this?
 
-<IntegrityRadar caption="What the suite has to cover. Authorship, in green, was the vector no existing tool touched." />
+<IntegrityRadar caption="What the suite has to cover. Authorship, in green, was the one no existing tool touched." />
 
-AuthorProof asks that question directly. When a student submits written work,
-it generates a short comprehension quiz from the student's own writing, in the
-submission's own language. Someone who wrote the paper can answer questions
-about it. Someone who didn't, can't. The result surfaces as a score badge beside
-the submission, where instructors already grade, with a link out to the full
-session for anyone who wants the question-level detail.
+AuthorProof asks it directly. When a student submits written work, it builds a
+short quiz from that writing, in the language it was written in. Someone who
+wrote the paper can answer questions about it; someone who didn't, can't. The
+score appears beside the submission, where instructors already grade.
 
 ## The brief as it arrived
 
-The product came with its architecture already chosen: three journeys built on
-the LMS's own quiz tooling, one quiz per submission, with the student notified
+The brief came with its architecture chosen: three journeys built on the LMS's
+own quiz tool, one quiz per submission, and a notification telling the student
 to go find it.
 
-<BriefedJourneys caption="The first concept as it was handed over: the instructor configures, the student submits and answers, the instructor grades." />
+<BriefedJourneys caption="The first concept as it was handed over, one journey per tab." />
 
-Before engineering committed time to it, I mapped that flow step by step and
-timed it against what the platform could actually do.
+Before engineering spent time on it, I mapped the flow step by step and timed it
+against what the platform could do.
 
 <ConstraintStats />
 
-## Four constraints, each a design problem in disguise
+## Four constraints that moved the product
 
-- **The quiz tooling is one-to-many.** It assumes a quiz is authored once and
-  assigned to a class. A fresh quiz per submission fights that assumption at
-  every step, and gets fragile when a whole class submits at once.
-- **Ten minutes is the whole attack window.** Fetch, generate, create, assign,
-  notify added up to roughly ten minutes between submission and quiz. That gap
-  is exactly the time a student needs to pull their essay back up, so the
-  architecture was working against the one thing the product had to prove.
-- **Students turn notifications off.** The inbox is rarely checked, and email
-  timing varies by institution. The fallback would have been "instructors
-  remind students," which puts the burden on the exact person we were trying
-  to help.
-- **Two disconnected things to grade.** A separate quiz item meant the
-  submission and the quiz would live in different places, with no unified view
-  for the instructor.
+<Numbered>
+  <Item title="The quiz tool is one-to-many.">
+    It expects one quiz written once for a whole class. A new quiz per
+    submission fights that at every step, and breaks when a class submits at
+    once.
+  </Item>
+  <Item title="Ten minutes is enough to cheat.">
+    Fetching, generating, creating, assigning and notifying took about ten
+    minutes. That is all the time a student needs to reread their essay.
+  </Item>
+  <Item title="Students turn notifications off.">
+    The fallback was instructors reminding students, which loads the work onto
+    the person we were trying to help.
+  </Item>
+  <Item title="Two things to grade.">
+    A separate quiz would sit apart from the submission, with no single view for
+    the instructor.
+  </Item>
+</Numbered>
 
-Each one changes where the product should live, not how a screen looks. That
-is why I call them design problems, and why the answer was a different flow
-rather than a workaround for each.
+Each one changed where the product should live, not how a screen looked, so the
+answer was a different flow rather than four workarounds.
 
 ## A smaller flow that kept the promise
 
-Rather than report the blockers, I pitched an alternative and split it into an
-MVP and a longer vision. The MVP embeds AuthorProof in the assignment itself:
-the student starts the assignment, uploads their essay, and the quiz appears
-seconds later.
+Instead of reporting the blockers, I pitched an alternative, split into an MVP
+and a longer vision. The MVP puts AuthorProof inside the assignment: the student
+uploads their essay and the quiz appears seconds later.
 
-<PivotFlows caption="The student's path as it was briefed, and as it was pitched instead." />
+<PivotFlows caption="The student's path as it was briefed, and as I pitched it instead." />
 
-That one move collapsed the timing gap, removed the notification dependency,
-and stepped out of the quiz tooling entirely. The result is written back beside
-the submission, so the instructor has one thing to read.
+<Sides>
+<Side label="What it fixed" title="One move, three constraints">
 
-I was also clear about what the pitch cost. It excluded short pieces written
-directly in the LMS editor, and it left an open question about how proctoring
-would coexist with the embedded flow. I would rather flag the hole myself than
-have engineering find it. The longer-vision pieces were parked on a roadmap
-rather than dropped, and that direction was later adopted as the product's
-official long-term vision, with the briefed idea shipping first as the proof
-of concept.
+- The ten-minute gap closed to seconds
+- No notification to miss
+- Out of the quiz tool, with the result written back beside the submission
+
+</Side>
+<Side label="What it cost" title="Named up front">
+
+- Short pieces written in the LMS editor were left out
+- How proctoring would work alongside it was still open
+- I flagged both before engineering could find them
+
+</Side>
+</Sides>
+
+The longer vision went on the roadmap instead of being dropped, and Proctorio
+later adopted it as the product's long-term direction, with the briefed idea
+shipping first as the proof of concept.
 
 ## Confidence, not verdict
 
-The result had to read as evidence for a conversation between an instructor
-and a student, never as an automated judgment. Three rules followed from that:
+The result had to support a conversation between an instructor and a student,
+never judge the student on its own.
 
-- **No binary pass or fail.** A score ships with a confidence level, and the
-  instructor decides what to do with it.
-- **Transparency into what was evaluated.** Every generated question sits
-  beside the student's own words that prompted it and beside the assessment of
-  the answer, so a score traces back to something a person can read.
-- **Never color alone.** The host platform controls the badge color and maps it
-  the opposite way from the score, so the score, label, and confidence are
-  always carried as text.
-
-<Figure
-  src="/images/review/authorproof-artifacts.webp"
-  alt="Two AuthorProof screens side by side: the instructor's report card, with an overview of the student's score, confidence level, and time used beside a question-by-question breakdown of answers and assessments, and the student's email saying their comprehension quiz is ready, with its deadline and course"
-  caption="The report card instructors read, with the score, its confidence, and every question beside the words that prompted it; and the email students receive."
-/>
+<Principles>
+  <Principle title="No pass or fail">
+    A score ships with a confidence level, and the instructor decides what to do
+    with it.
+  </Principle>
+  <Principle title="Show what was asked">
+    Every question sits beside the words that prompted it and the assessment of
+    the answer.
+  </Principle>
+  <Principle title="Never color alone">
+    The host platform colors the badge the opposite way from the score, so the
+    score, label and confidence always appear as text.
+  </Principle>
+</Principles>
 
 ## The prototype was the spec
 
-I led design end to end on a four-to-six-week timeline from concept to
-production-ready MVP. I designed the settings model for quiz configuration and
-built its interface, designed the report card, the quiz results, and the emails
-students receive, and built the front end for all of it in HTML, CSS, and
-vanilla JavaScript on our design system. Engineering got working prototypes
-rather than a document about them.
+I led design end to end, from concept to a production-ready MVP in four to six
+weeks. I designed the quiz settings, the report card, the results and the
+student emails, and built the front end for all of it in HTML, CSS and vanilla
+JavaScript on our design system. Engineering got working prototypes instead of
+a document about them.
 
-<Video
-  src="/images/review/authorproof-shipped.webm"
-  fit="square"
+<Plate
+  background="grid"
+  className="flex justify-center"
   caption="AuthorProof as shipped."
-/>
+>
+  <Video src="/images/review/authorproof-shipped.webm" fit="square" />
+</Plate>
 
-<Compare
-  layout="columns"
-  before="/case-studies/author-proof-proctorio-quiz-settings.webp"
-  after="/case-studies/author-proof-proctorio-generated-questions.webp"
-  beforeAlt="AuthorProof quiz settings: a proctoring level dropdown set to Lock Down, a completion window of 12 minutes, and an Engage AuthorProof button, with an Admin cursor"
-  afterAlt="A student's essay on sustainability beside four comprehension questions generated from that essay"
-  beforeLabel="Instructor sets it up"
-  afterLabel="Questions come from the essay"
-  caption="The product as Proctorio shows it. Imagery, including this page's cover, from the AuthorProof page and video at proctorio.com, © Proctorio. Used with credit."
-/>
+<Plate caption="The product as Proctorio shows it. Imagery, including this page's cover, from the AuthorProof page and video at proctorio.com, © Proctorio. Used with credit.">
+  <Compare
+    layout="columns"
+    before="/case-studies/author-proof-proctorio-quiz-settings.webp"
+    after="/case-studies/author-proof-proctorio-generated-questions.webp"
+    beforeAlt="AuthorProof quiz settings: a proctoring level dropdown set to Lock Down, a completion window of 12 minutes, and an Engage AuthorProof button, with an Admin cursor"
+    afterAlt="A student's essay on sustainability beside four comprehension questions generated from that essay"
+    beforeLabel="Instructor sets it up"
+    afterLabel="Questions come from the essay"
+  />
+</Plate>
 
-In the first-semester pilot, 95% of test takers completed their quiz, the
-false-positive rate stayed under 5%, and customer feedback on the concept was
-sweepingly positive.
+The goals for the first semester: 95% of test takers finish their quiz, and
+fewer than 5% of results are false positives.
 
 ## What I'd do next
 
-- Prototype the embedded flow alongside a proctored session earlier, so that
-  open question gets resolved before the direction decision instead of after.
-- Let instructors review generated questions before they reach a student.
-- A per-language quiz picker, beyond the submission-language default.
+<Numbered>
+  <Item title="Test it with proctoring sooner.">
+    Prototype the embedded flow beside a proctored session before the direction
+    decision, not after.
+  </Item>
+  <Item title="Let instructors review questions.">
+    Before a generated quiz reaches a student.
+  </Item>
+  <Item title="Pick the quiz language.">
+    Beyond the default of the submission's language.
+  </Item>
+</Numbered>

@@ -1,10 +1,10 @@
 ---
 title: "Modern Care Homes"
-description: "A senior living marketplace for families looking for care, and the agent platform that runs it. I do the product design, the web design, and the front end that ships them both."
+description: "A senior living marketplace for families, and the platform agents use to list their homes. I design both and ship their front end."
 claim: "I design the interfaces and ship the front end for both sides of it, the site families search and the platform agents run."
 image: "/cover-moderncare.webp"
 createdAt: "2026-01-01"
-updatedAt: "2026-09-18"
+updatedAt: "2026-09-28"
 order: 3
 new: true
 company: "Modern Care Homes"
@@ -28,268 +28,237 @@ skills:
   - "Storybook"
   - "Mobbin"
   - "PostHog"
-problem: "Families looking for a care home are usually doing it fast, under stress, and for the first time. Most senior living sites meet them with a lead form and a stock photo."
-task: "Design and ship the interface and product experience for both sides of a senior living marketplace: the site where families search and compare homes, and the platform where agents manage the listings."
-process: "I ship what I design. The handoff between design and engineering exists mainly for complex contributions that connect to the data layer. The design system is where I spend a large portion of my time, making sure the interfaces we build have consistently reliable design support."
-outcome: "Live and still going. The accessibility floor is set and holding. New surfaces land as we build them."
+outcome: "Live in the Phoenix metro, with both products on one design system and an AA contrast floor on every surface."
 results:
-  - value: "Live"
-    label: "Shipping in the Phoenix metro"
   - value: "2"
-    label: "Products running on one design system"
+    label: "Products on one design system"
+  - value: "6"
+    label: "Cities families can search"
+  - value: "18px"
+    label: "Base type size"
   - value: "AA"
-    label: "Floor on every surface"
+    label: "Contrast floor on every surface"
 ---
 
-<Pipeline>
-  <Stage
-    label="Pattern research"
+<Phases>
+  <Phase
+    title="Pattern research"
     detail="Marketplaces, in Mobbin"
-    mark="search"
+    icon="search"
   />
-  <Stage label="Figma" detail="Foundations, tokens, components" mark="figma" />
-  <Stage
-    label="Storybook"
+  <Phase title="Figma" detail="Foundations, tokens, components" icon="figma" />
+  <Phase
+    title="Storybook"
     detail="Every state, in isolation"
-    mark="storybook"
+    icon="storybook"
   />
-  <Stage label="Shipped" detail="Marketplace and agent platform" mark="react" />
-</Pipeline>
+  <Phase title="Shipped" detail="Marketplace and agent platform" icon="react" />
+</Phases>
 
 ## Two people, one search
 
-Modern Care Homes is a senior living platform for the Phoenix metro. Families
-search independent living and assisted living homes across Phoenix, Scottsdale,
-Peoria, Paradise Valley, Queen Creek, and Surprise, compare what they find, and
-contact a home directly.
+Modern Care Homes is a senior living marketplace for the Phoenix metro.
+Families search independent and assisted living homes across six cities,
+compare them, and contact a home directly. Agents list and manage those homes
+on a second product, the agent platform.
 
-<Video
-  src="/case-studies/home-grid-mch.mp4"
-  caption="Browsing homes: the comparison grid families land on after a search."
-/>
+<Plate background="none" caption="The grid families land on after a search.">
+  <Video src="/case-studies/home-grid-mch.mp4" />
+</Plate>
 
-What makes it a hard design problem is that two very different people use it
-for the same task. There's the resident, usually over 70, on a tablet or a
-desktop with the browser zoomed way in, trying to figure out whether a place
-looks like somewhere they could live. And there's their adult child, on a
-phone, often in the middle of something stressful, trying to compare six homes
-and find cost and care level fast.
+Two very different people use the marketplace for the same task, and neither
+has patience for an interface that gets in the way.
 
-They don't have much in common except that neither one has any patience for an
-interface that gets in the way. Nearly every decision I've made on this project
-comes back to that.
+<Sides>
+<Side label="Their adult child" title="On a phone, short on time">
 
-And they're both stuck in the same place. The core flow is search, then
-compare, then contact, and compare is where people actually get held up.
-Ruling homes out fast is the whole job, so that's where the work goes.
+- Often in the middle of something stressful
+- Comparing six homes to find cost and care level fast
+
+</Side>
+<Side label="The resident" title="Usually over 70">
+
+- On a tablet or a desktop, with the browser zoomed way in
+- Deciding whether a place looks like somewhere they could live
+
+</Side>
+</Sides>
+
+Both stall at the same step. The flow is search, compare, contact, and families
+are mostly ruling homes out, so compare is where I put the work.
 
 ## Studying the marketplaces that already solved it
 
-Senior living is a marketplace problem before it's a healthcare one. That
-framing decides a lot, because it means the products worth studying aren't other
-care sites. They're the marketplaces that already spent years and a lot of money
-on search, comparison, and listing quality.
+Senior living is a marketplace problem first and a healthcare problem second,
+so I study real estate marketplaces, not other care sites.
 
-I spend a lot of time in <Tech name="mobbin" /> pulling apart how real estate
-marketplaces handle search and discovery: filters, result density, map and
-list views, saved comparisons, what a card shows at a glance. Most of what those
-products landed on carries over. Some of it doesn't, because our filters are
-care levels rather than bedrooms and bathrooms, and the person deciding often
-isn't the person moving in.
+<Sides>
+<Side label="Marketplace" title="Real estate search, in Mobbin">
 
-The agent side has its own teardown. Getting a home listed is a long form with
-photos, pricing, and details, and the closest good version of that problem is
-Airbnb's listing creation flow, with Zillow's close behind. I pulled it apart
-screen by screen and mapped what someone is doing, seeing, and thinking at each
-stage, then marked what works and where the openings are. It's a teardown I
-keep coming back to, because listing creation is the same problem in every
-marketplace I work on, and it's where the biggest change on the agent platform
-came from, below.
+- Filters, result density, map and list views
+- Saved homes, and what a card shows at a glance
+- What doesn't carry over: we filter by care level, and the person deciding often isn't the person moving in
 
-<Video
-  src="/case-studies/airbnb-research-mch.mp4"
-  caption="Tearing down Airbnb's listing creation flow next to the board where I map it: stage, what the person is doing, seeing, and thinking, then what works and where the opening is."
-/>
+</Side>
+<Side label="Agent platform" title="Airbnb's listing flow">
 
-## Two reframes the research paid for
+- Mapped screen by screen, with Zillow's close behind
+- What the host is doing, seeing and thinking at each stage
+- What works, and where the openings are
 
-Two kinds of design sit next to each other here and they don't always want the
-same thing. Product design decides whether someone can finish what they came to
-do. Web design decides whether they trust the place enough to keep going. The
-research turned into one concrete change on each side.
+</Side>
+</Sides>
 
-### The home card should spend its space on what differs
+<Plate
+  background="none"
+  caption="Airbnb's listing flow beside the board where I map it."
+>
+  <Video src="/case-studies/airbnb-research-mch.mp4" />
+</Plate>
 
-A family is mostly trying to rule homes out. So a listing should lead with what
-actually separates one home from the next, care level, setting, cost, what's
-included, not copy that reads the same on every page.
+## What changed
 
-<Compare
-  before="/case-studies/old-homecard-mch.png"
-  after="/case-studies/new-homecard-mch.png"
-  beforeAlt="The old home card: photo, price above the name in gray, address, and a paragraph of generic marketing copy"
-  afterAlt="The reworked home card: an Available Now badge, a save control, photo carousel dots, then name, address, and price"
-  layout="columns"
-  caption="The home card, before and after."
-/>
+### The home card shows what differs
 
-The old card gave its widest line to marketing copy that read identically on
-every listing, and its white fill made the grid uneven as content lengths
-varied. There was no way to tell whether a home was available, no way to see a
-second photo without clicking in, and no way to keep a home for later. The new
-one spends that space on what differs between homes: an Available Now tag, a
-save button, a photo carousel, and the price beneath the name where the
-hierarchy wants it.
+The old card gave its widest line to marketing copy that read the same on every
+listing. It didn't say whether a home had space, showed one photo, and gave
+families no way to save a home. The new card leads with what separates one home
+from the next.
 
-There's a content-design job underneath this too. Senior living has a lot of
-jargon and most families are learning it while they shop: independent living,
-assisted living, levels of care. If the words on the page assume you already
-know the difference, the page failed.
+<Plate caption="Before and after: an Available Now tag, a save button, a photo carousel, and the price under the name.">
+  <Compare
+    before="/case-studies/old-homecard-mch.png"
+    after="/case-studies/new-homecard-mch.png"
+    beforeAlt="The old home card: photo, price above the name in gray, address, and a paragraph of generic marketing copy"
+    afterAlt="The reworked home card: an Available Now badge, a save control, photo carousel dots, then name, address, and price"
+    layout="columns"
+  />
+</Plate>
 
-### The agent dashboard should _be_ the listing
+### The agent dashboard is the listing
 
-<Compare
-  before="/case-studies/old-dashboard-mch.png"
-  after="/case-studies/new-dashboard-mch.png"
-  beforeAlt="The old agent dashboard shell: a wide sidebar holding only Home Details and Settings, next to an empty content area"
-  afterAlt="The reworked shell: an icon rail, then a column listing Availability, Photos, About, Amenities, Care services, and Contact, each with its current state underneath"
-  layout="columns"
-  caption="The agent dashboard shell, before and after."
-/>
+The old dashboard had two nav items and one long scroll, and many agents didn't
+reach the end. Now each section of the listing sits in the sidebar with its own
+state, so agents see what's thin before they open anything. That idea came from
+the Airbnb study.
 
-The old shell was two nav items and one long scroll, which tells an agent
-nothing about the listing they're supposed to be finishing, and people filling
-in a home struggled to get to the end of it. Now the sidebar is the listing:
-every section, Availability, Photos, About, Amenities, Care services, Contact,
-carries its own state, previewing how many items were added or the value
-entered, so what's thin is visible before you open anything. The home switcher
-is visually tied to the home's information, and there's an easy way to preview
-the home once its details are in. That idea came straight out of the Airbnb
-teardown: the same "show the state of every stage" move, applied to a care
-listing instead of a rental.
+<Plate caption="Before and after: every section shows how many items are in, or the value entered.">
+  <Compare
+    before="/case-studies/old-dashboard-mch.png"
+    after="/case-studies/new-dashboard-mch.png"
+    beforeAlt="The old agent dashboard shell: a wide sidebar holding only Home Details and Settings, next to an empty content area"
+    afterAlt="The reworked shell: an icon rail, then a column listing Availability, Photos, About, Amenities, Care services, and Contact, each with its current state underneath"
+    layout="columns"
+  />
+</Plate>
 
-Around both of these sit the unglamorous states: filters, no results, listings
-with half their fields blank. Those are most of the real sessions and none of
-the pretty screenshots, so they get designed like they matter, because they do.
+### Around the main screens
 
-The web-design side carries all of it: brand and visual direction, a type scale
-and photography language that make a directory feel like a place instead of a
-spreadsheet, and page design across jobs with little in common, from
-expressive marketing pages to search results that get out of the way. All of it
-has to survive a phone in a parking lot and a desktop at 200% zoom.
+<Principles>
+  <Principle title="The screens nobody screenshots">
+    Filters, empty results and half-filled listings make up most real sessions,
+    so I design them as carefully as the main screens.
+  </Principle>
+  <Principle title="Words families are still learning">
+    Independent living, assisted living, levels of care. A page that assumes
+    families know the difference has failed them.
+  </Principle>
+  <Principle title="A place, not a spreadsheet">
+    I own the brand, type scale and photography, from marketing pages to search
+    results, on a phone in a parking lot or a desktop at 200% zoom.
+  </Principle>
+</Principles>
 
-## One design system, used twice
+## One design system, two products
 
-Every interface above runs in two places, once on the marketplace and once in
-the agent platform. A change to a button is a change in two products. That's
-the job the design system does: it's what keeps the two reframes from quietly
-breaking the second they leave the screen I designed them on.
+Every component runs in both the marketplace and the agent platform, so a
+change to a button changes two products.
 
-<TwoJobs caption="Two jobs: building the system, and using it in context. Hover a hub for a glimpse of each." />
+<TwoJobs caption="Building the system, and using it in context. Hover a hub for a glimpse of each." />
 
-### The accessibility floor lives in the components
+### Tokens
 
-18px base type, 48 by 48 targets, AA contrast as the minimum. Because the floor
-is baked into the component, I can't accidentally undo it on page eleven.
-That's what "design from an accessibility floor instead of toward one" means in
-practice.
-
-<Tech name="storybook" /> is where components get built and argued with before
-they go anywhere near a page. I can put a component in every state it has, at
-every size, at 200% zoom, and watch it fail on its own instead of finding out
-inside a layout. It's also the two-product test: a component is ready for both
-the marketplace and the agent platform when it reads correctly outside of either
-one.
-
-### Tokens, named one to one
-
-A color flows from its base value to a primitive named for what it is, to a
-semantic role named for the job. Components only ever ask for the role, and
-every role has a Figma variable with the same name.
+Each color goes from a raw value, to a primitive named for what it is, to a
+role named for its job. Components only ask for roles, and every role has a
+Figma variable with the same name.
 
 <TokenTiers />
 
-### The rest of the foundations
+<Plate caption="The home card, labeled with the token each part uses.">
+  <TokenCallouts />
+</Plate>
 
-Theme, radius, and shadow, read off the live stylesheet. The theme panel is
-the point of the semantic layer: flip it, and the sample re-themes without any
-component being touched.
+### Components in Storybook
 
-<FoundationLayers />
+I build each component in <Tech name="storybook" /> first, in every state, at
+every size and at 200% zoom. A component is ready when it works outside both
+products. The library follows atomic design, so each new piece has to name its
+level.
 
-<Video
-  src="/case-studies/foundations-mch.mp4"
-  caption="The foundations: tokens, type, spacing, and radius, as they live in the system."
-/>
+<Plate caption="Every frame is a live story: click one to change its state, or open it in Storybook.">
+  <AtomicDesign through="Organisms" omit="Sidebar" />
+</Plate>
 
-The home card, with the token each part of it reads.
+### A template, live
 
-<TokenCallouts />
+Filters, results and the map come together before any listing is real.
 
-### Atoms to pages, straight from the Storybook
+<Plate caption="The filter form, live from the Storybook.">
+  <MchStory
+    id="components-search-filterform--in-dialog-chrome"
+    label="Filter form"
+  />
+</Plate>
 
-The library is organized the atomic way, so a rule set at the bottom still
-holds at the top. It gives a contribution a home: a new piece has to say which
-level it lives at, which is most of the governance conversation. Every frame
-below is a live story: click into one to change its state, or open it in the
-Storybook.
+## Shipping it
 
-<AtomicDesign />
+<Sides>
+<Side label="Me" title="Everything families and agents see">
 
-## Shipping the front end
+- Components, layout, responsive behavior and motion, shipped as code
+- Accessibility tested on the real build: contrast, focus, keyboard, zoom, targets
+- What I learn shipping goes back into the system
 
-I build what I design, which is the part that removes the most steps. The
-handoff between design and engineering exists mainly for complex contributions
-that connect to the data layer; everything else, I ship.
+</Side>
+<Side label="Spencer Grzincich" title="The data layer">
 
-- Components, layout, responsive behavior, and motion all ship as code from me
-  instead of as a spec I hand to someone else.
-- Accessibility gets verified on the real build, contrast, focus order,
-  keyboard paths, zoom, and target sizes, because a mockup can't tell you what
-  happens at 200 percent.
-- Whatever I learn shipping goes back into the system, so the next screen starts
-  further along than the last one did.
+- How home data is modeled, stored and served
+- The integrations, and keeping it all running
+- The only work I hand off is work that touches his side
 
-The part I like most is that I never have to defend any of it in a handoff
-meeting. If something needs to change, I go change it. That's the third rule,
-keep shipping, and it's less a principle than the thing that makes the other
-two hold.
-
-## Collaboration
-
-I build this with
-[Spencer Grzincich](https://www.linkedin.com/in/grzincich/), the Software
-Engineer on the project. He owns the data layer and the infrastructure: how
-home data gets modeled, stored, and served, the integrations, and everything
-that has to stay up. I own everything a family or agent sees and interacts
-with.
+</Side>
+</Sides>
 
 ## The stack
 
-| Tool                                             | Layer                   | Why                                                                                                                                               |
-| ------------------------------------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| <Tech name="nextjs" />                           | Framework               | Server rendering, because a lot of this traffic is a phone on cell service. Typed routes help as the directory grows.                             |
-| <Tech name="react" /> <Tech name="typescript" /> | UI                      | TypeScript catches the things I'd otherwise find in the browser.                                                                                  |
-| <Tech name="tailwindcss" />                      | Styling                 | Tokens live as CSS variables, so a system change is one edit instead of forty.                                                                    |
-| <Tech name="shadcn-ui" />                        | Components              | I own the source instead of importing it, so when I need to fix an accessibility issue I fix it inside the component.                             |
-| <Tech name="figma" />                            | Design                  | Where foundations and components live. Tokens map one to one with the CSS variables.                                                              |
-| <Tech name="storybook" />                        | Components              | Where components get built and tested in isolation, in every state, before they land in either product.                                           |
-| <Tech name="vercel" />                           | Deployment              | A preview build per branch, so I can look at a change on a real phone before it merges.                                                           |
-| <Tech name="github" />                           | Version control         | Where the design and the code meet.                                                                                                               |
-| <Tech name="mobbin" />                           | Research                | Search and discovery patterns from real estate marketplaces, which are further along on this problem than senior living is.                       |
-| <Tech name="posthog" />                          | Analytics               | Events and funnels for the search, compare, contact flow, so I can see where families stop. Session replay for the part the numbers only hint at. |
-| Spencer's side                                   | Data and infrastructure | Home data, integrations, and everything that has to stay up.                                                                                      |
+| Tool                                             | Layer           | Why                                                                          |
+| ------------------------------------------------ | --------------- | ---------------------------------------------------------------------------- |
+| <Tech name="nextjs" />                           | Framework       | Server rendering, since much of the traffic is a phone on cell service.      |
+| <Tech name="react" /> <Tech name="typescript" /> | UI              | TypeScript catches what I'd otherwise find in the browser.                   |
+| <Tech name="tailwindcss" />                      | Styling         | Tokens live as CSS variables, so a system change is one edit.                |
+| <Tech name="shadcn-ui" />                        | Components      | I own the source, so I fix accessibility issues inside the component.        |
+| <Tech name="figma" />                            | Design          | Foundations and components, mapped one to one with the CSS variables.        |
+| <Tech name="storybook" />                        | Components      | Every component, in every state, before it lands in either product.          |
+| <Tech name="vercel" />                           | Deployment      | A preview build per branch, to check a change on a real phone.               |
+| <Tech name="github" />                           | Version control | Design and code in one place.                                                |
+| <Tech name="mobbin" />                           | Research        | Search and discovery patterns from real estate marketplaces.                 |
+| <Tech name="posthog" />                          | Analytics       | Funnels for search, compare and contact, and replays of where families stop. |
 
 ## What's next
 
-- The complex components, starting with the map: one variant for home
-  profiles and one for map search.
-- Better comparison. Cost and care level side by side is the decision families
-  are making, and it isn't solved yet.
-- More editorial. The resources and posts answer the questions people have
-  before they're ready to tour.
+<Numbered>
+  <Item title="The map.">
+    One variant for home profiles, and one for map search.
+  </Item>
+  <Item title="Better comparison.">
+    Families decide on cost and care level side by side, and the product doesn't
+    show that well yet.
+  </Item>
+  <Item title="More editorial.">
+    Resources and posts that answer what families ask before they tour.
+  </Item>
+</Numbered>
 
-<Video
-  src="/images/review/coming-map.mp4"
-  caption="The map search variant, in progress."
-/>
+<Plate background="none" caption="The map search variant.">
+  <Video src="/images/review/coming-map.mp4" />
+</Plate>

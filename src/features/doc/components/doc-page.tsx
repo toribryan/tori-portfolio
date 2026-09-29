@@ -30,6 +30,7 @@ import {
   Numbered,
   Phase,
   Phases,
+  Plate,
   Principle,
   Principles,
   Side,
@@ -38,12 +39,12 @@ import {
 import {
   SlotComposition,
   SwitchSprawl,
-  ThemeSwap,
   TokenRoles,
   VariantWall,
 } from "./overhaul-diagrams"
 import { RepoViewer } from "./repo-viewer"
 import { ResultFigure } from "./result-figure"
+import { TokenVisualizer } from "./token-visualizer"
 
 /** Components a doc's MDX can use beyond the shared set. */
 const DOC_COMPONENTS = {
@@ -51,6 +52,7 @@ const DOC_COMPONENTS = {
   Numbered,
   Phase,
   Phases,
+  Plate,
   Principle,
   Principles,
   RepoViewer,
@@ -58,8 +60,8 @@ const DOC_COMPONENTS = {
   Sides,
   SlotComposition,
   SwitchSprawl,
-  ThemeSwap,
   TokenRoles,
+  TokenVisualizer,
   VariantWall,
 }
 
