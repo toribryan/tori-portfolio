@@ -9,6 +9,7 @@ import {
   recommendationId,
   RECOMMENDATIONS,
 } from "@/features/portfolio/data/recommendations"
+import { USER } from "@/features/portfolio/data/user"
 
 /*
  * A pannable dot-grid canvas with Figma-style comment pins, one per LinkedIn
@@ -48,6 +49,11 @@ const PINS = [
   { x: 740, y: 16 },
   { x: 470, y: 160 },
 ]
+
+// A FigJam-style sticky in the open space between the pins, in world
+// coordinates for its centre. It sits under the pins, so on a narrow canvas,
+// where the squeeze brings them close, an open comment covers it.
+const STICKY = { x: 600, y: 20 }
 
 type Offset = { x: number; y: number }
 
@@ -192,6 +198,7 @@ export function HeroCanvas({ className }: { className?: string }) {
         className="absolute"
         style={{ ...position, width: WORLD.width, height: WORLD.height }}
       >
+        <StickyNote />
         {RECOMMENDATIONS.map((rec, index) => {
           const pin = PINS[index]
           if (!pin) return null
@@ -396,6 +403,27 @@ function Pin({
           </p>
         </div>
       </div>
+    </div>
+  )
+}
+
+/**
+ * A square of flat yellow with the author's name in its corner, the way a
+ * FigJam sticky reads, and the soft shadow that lifts it off the board.
+ */
+function StickyNote() {
+  return (
+    <div
+      className="absolute flex size-24 -translate-x-1/2 flex-col justify-between bg-[#ffe8a3] p-2.5 text-[#1e1e1e] shadow-[0_1px_2px_rgb(0_0_0/0.08),0_4px_12px_rgb(0_0_0/0.1)] sm:size-28 sm:p-3"
+      style={{
+        left: `calc(${WORLD.width / 2}px + ${STICKY.x - WORLD.width / 2}px * var(--squeeze))`,
+        top: STICKY.y,
+      }}
+    >
+      <p className="text-[0.6875rem] leading-snug font-normal sm:text-xs">
+        questioning everything, all the time.
+      </p>
+      <p className="text-[0.625rem] text-[#1e1e1e]/60">{USER.displayName}</p>
     </div>
   )
 }
