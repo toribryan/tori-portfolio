@@ -117,7 +117,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
         }}
         aria-hidden
       />
-      <ScaledStage width={440}>
+      <ScaledStage width={440} zoom>
         <div className="relative h-full">
           {/* Desktop: the icon rail and the listing, section by section. */}
           <div className="absolute top-1/2 left-9 flex w-[184px] -translate-y-1/2 overflow-hidden rounded-xl bg-[#f7f8f8] shadow-[0_8px_24px_rgb(11_42_110/0.14)]">

@@ -223,8 +223,9 @@ function PixelSnailCover({ active }: CoverProps) {
   return (
     <div className="flex size-full items-center justify-center text-foreground">
       <svg
-        viewBox="-10 -15 23 17"
-        className="aspect-23/17 h-2/5 w-auto overflow-visible"
+        // fibo's stories frame the dancing sprite with this box.
+        viewBox="-13 -16 27 18"
+        className="aspect-27/18 h-2/5 w-auto overflow-visible"
         shapeRendering="crispEdges"
         fill="currentColor"
         aria-hidden
@@ -374,9 +375,18 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
  */
 export function ScaledStage({
   width,
+  zoom = false,
   children,
 }: {
   width: number
+  /**
+   * Scale with CSS zoom rather than a transform. A transformed stage is
+   * rasterized again at slightly different sub-pixel offsets whenever
+   * something inside it animates, so small icons shimmer; a zoomed one lays
+   * out at the final size and holds still. Popups that measure the page
+   * expect a transform, so the fibo part covers keep it.
+   */
+  zoom?: boolean
   children: ReactNode
 }) {
   const frame = useRef<HTMLDivElement>(null)
@@ -402,8 +412,14 @@ export function ScaledStage({
         )}
         style={{
           width,
-          height: scale ? `${100 / scale}%` : "100%",
-          transform: `scale(${scale ?? 1})`,
+          // Zoom scales the layout box itself, so the stage needs only the
+          // cover's height; a transform scales after layout and needs more.
+          ...(zoom
+            ? { height: "100%", zoom: scale ?? 1 }
+            : {
+                height: scale ? `${100 / scale}%` : "100%",
+                transform: `scale(${scale ?? 1})`,
+              }),
         }}
       >
         {children}
