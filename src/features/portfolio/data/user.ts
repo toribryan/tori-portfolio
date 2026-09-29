@@ -10,9 +10,9 @@ export const USER: User = {
   // and the JSON-LD Person node.
   // pronouns: "",
   // Feeds the site meta description (see config/site.ts), so it needs to read
-  // as a description of the work. The personal line lives in flipSentences.
+  // as a description of the work. The header's lines live in headerLines.
   bio: "Product Designer specializing in design systems. Five years building products, component libraries, and the tooling that connects design to production code.",
-  flipSentences: ["Designing: Products + Systems", "Medium: Code + Canvas"],
+  headerLines: ["Designing: Products + Systems", "Medium: Code + Canvas"],
   address: "Arizona, United States",
   emailB64: "dG9yaWJyeWFuLmRlc2lnbkBnbWFpbC5jb20=", // toribryan.design@gmail.com
   website: "https://toribryan.com",

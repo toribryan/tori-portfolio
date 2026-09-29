@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { createPortal } from "react-dom"
 import {
   motion,
   useMotionValue,
@@ -10,6 +9,7 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react"
+import { createPortal } from "react-dom"
 
 import { cn } from "@/lib/utils"
 
@@ -55,6 +55,7 @@ const SIZES: Record<
 }
 
 const CARD_WIDTH = 248
+const LABEL_MAX_WIDTH = 220
 const GAP = 16
 // The card flips to the rail's other side when it would come closer than
 // this to the viewport's edge.
@@ -261,6 +262,9 @@ function ChapterScrubber({
   const [engaged, setEngaged] = React.useState(false)
   const [flipped, setFlipped] = React.useState(false)
   const [previewSize, setPreviewSize] = React.useState(0)
+  // Room across the rail on the chosen side. On a narrow screen neither side
+  // may fit the card, so it takes whichever has more and narrows to fit.
+  const [room, setRoom] = React.useState(Infinity)
   // Where the rail sits on screen. The preview is portalled to the body so
   // no clipping ancestor can cut it off, and is placed from this.
   const [anchor, setAnchor] = React.useState<{
@@ -296,11 +300,13 @@ function ChapterScrubber({
 
   // The preview is clamped to the rail's length, which needs its size along
   // the rail.
+  const [previewWidth, setPreviewWidth] = React.useState(0)
   React.useLayoutEffect(() => {
     const node = previewRef.current
     if (!node) return
     setPreviewSize(vertical ? node.offsetHeight : node.offsetWidth)
-  }, [activeIndex, vertical, preview])
+    setPreviewWidth(node.offsetWidth)
+  }, [activeIndex, vertical, preview, room])
 
   // Measure the rail, and decide which side the preview opens on, before
   // paint, so it never shows a frame on the wrong side. While engaged, the
@@ -312,11 +318,31 @@ function ChapterScrubber({
     if (!root || !view) return
     const measure = () => {
       const rect = root.getBoundingClientRect()
+      // On touch a tap leaves the rail focused, so the preview would stay
+      // pinned over the page once the rail scrolls away. Let it go instead.
+      if (
+        rect.bottom < 0 ||
+        rect.top > view.innerHeight ||
+        rect.right < 0 ||
+        rect.left > view.innerWidth
+      ) {
+        const focused = root.ownerDocument.activeElement
+        if (focused instanceof HTMLElement && root.contains(focused)) {
+          focused.blur()
+        }
+        focusedRef.current = null
+        hoveringRef.current = false
+        rawStrength.set(0)
+        setEngaged(false)
+        return
+      }
       setAnchor({ rect, width: view.innerWidth, height: view.innerHeight })
       const node = previewRef.current
       const need =
         (vertical
-          ? (node?.offsetWidth ?? CARD_WIDTH)
+          ? preview === "card"
+            ? CARD_WIDTH
+            : (node?.scrollWidth ?? LABEL_MAX_WIDTH)
           : (node?.offsetHeight ?? CARD_FALLBACK_HEIGHT)) +
         GAP +
         VIEWPORT_MARGIN
@@ -328,7 +354,11 @@ function ChapterScrubber({
       let useAfter = wantsAfter
       if (useAfter && after < need && before >= need) useAfter = false
       if (!useAfter && before < need && after >= need) useAfter = true
+      if (before < need && after < need) useAfter = after >= before
       setFlipped(useAfter !== wantsAfter)
+      if (vertical) {
+        setRoom((useAfter ? after : before) - GAP - VIEWPORT_MARGIN)
+      }
     }
     measure()
     view.addEventListener("scroll", measure, true)
@@ -337,7 +367,7 @@ function ChapterScrubber({
       view.removeEventListener("scroll", measure, true)
       view.removeEventListener("resize", measure)
     }
-  }, [engaged, preferredSide, vertical, preview])
+  }, [engaged, preferredSide, vertical, preview, rawStrength])
 
   const opposite: Record<Side, Side> = {
     left: "right",
@@ -441,6 +471,18 @@ function ChapterScrubber({
         : "end"
 
   const chapter = chapters[activeIndex]
+  // A horizontal rail's preview runs along it from the rail's start, so near
+  // either screen edge it is nudged back inside.
+  const alongShift = useTransform(previewOffset, (offset) => {
+    if (vertical || !anchor) return offset
+    const start = anchor.rect.left + offset
+    const end = start + previewWidth
+    if (end > anchor.width - VIEWPORT_MARGIN) {
+      return offset - (end - (anchor.width - VIEWPORT_MARGIN))
+    }
+    if (start < VIEWPORT_MARGIN) return offset + (VIEWPORT_MARGIN - start)
+    return offset
+  })
   const placement = anchor
     ? {
         right: { top: anchor.rect.top, left: anchor.rect.right + GAP },
@@ -550,10 +592,12 @@ function ChapterScrubber({
                 // the rail and ease it in, as a transform on top.
                 ...(vertical
                   ? { y: previewOffset, x: previewShift }
-                  : { x: previewOffset, y: previewShift }),
+                  : { x: alongShift, y: previewShift }),
                 scale: previewScale,
                 opacity: strength,
-                ...(preview === "card" ? { width: CARD_WIDTH } : null),
+                ...(preview === "card"
+                  ? { width: Math.min(CARD_WIDTH, room) }
+                  : { maxWidth: Math.min(LABEL_MAX_WIDTH, room) }),
                 ...placement,
               }}
               className={cn(
@@ -566,7 +610,7 @@ function ChapterScrubber({
                 }[resolvedSide],
                 preview === "card"
                   ? "rounded-xl border border-border bg-popover p-3 text-popover-foreground shadow-md"
-                  : "w-max max-w-[220px] rounded-md border border-border bg-popover px-2 py-1 text-popover-foreground shadow-sm",
+                  : "w-max rounded-md border border-border bg-popover px-2 py-1 text-popover-foreground shadow-sm",
                 previewClassName
               )}
             >

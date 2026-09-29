@@ -1,56 +1,57 @@
 # Tori Bryan
 
-**Product Designer | Design Systems | Front-End**
+**Staff Product Designer, Design Systems and Design Engineering**
 
-Phoenix, AZ (open to relocation, NYC / SF) | (480) 323-6343 | toribryan.design@gmail.com
-[toribryan.com](https://toribryan.com) | [linkedin.com/in/victorialbryan](https://linkedin.com/in/victorialbryan)
+Phoenix, AZ (open to relocating to NYC or SF) | (480) 323-6343 | toribryan.design@gmail.com | [toribryan.com](https://toribryan.com)
+[linkedin.com/in/victorialbryan](https://linkedin.com/in/victorialbryan) | [github.com/toribryan](https://github.com/toribryan)
 
-Five years in B2B and B2C product design, most recently Staff at an enterprise EdTech company, where I led design on three products and owned the multi-brand design system. I design data-dense enterprise interfaces, build the tooling that lets a design team work with AI agents, and ship production front end alongside engineering.
+## Summary
+
+Five years in B2B and B2C product design. Started as Proctorio's first design intern, built its first design system, and came back as Staff to own the multi-brand system behind a platform used by 8 million test takers. Now a React and Next.js design engineer.
 
 ## Experience
 
-### Proctorio | Staff Product Designer
+### Tori Bryan Design Services | Phoenix, AZ (Remote)
 
-Scottsdale, AZ | Sep 2025 – Aug 2026
+**Design Engineer** | Aug 2026 – Present
 
-Led design across 3 products and 8 surfaces, and owned the multi-brand design system, its governance, and the standards the design team and engineering org build from. Promoted to Staff 90 days after rejoining.
+- Design and build production front ends for SLV Technologies clients in Next.js, React, Tailwind CSS, and Storybook, merged through GitHub review.
+- Built [fibo](https://fibo.toribryan.com), an open-source design system on shadcn/ui and Base UI that installs as a shadcn registry.
 
-- Led a legacy design system overhaul with two engineers: 37 components, MVP in 60 days. Button variants dropped 59%, from 1,160 to 480, and card variants dropped 94%, from 587 to 32. Rebuilt the tokens on a semantic hierarchy, and took contrast from roughly 40% of button variants failing WCAG to a 100% AAA pass. The v2 Card took 1.5 days to build against 2 weeks for v1.
-- Rebuilt design-to-engineering handoff around working prototypes and Claude Code. Spec production and review went from 3 days to 2 weeks, down to under 30 minutes, with 100% team adoption and roughly 80 hours per cycle returned to design work.
-- Took AuthorProof, an AI authorship-verification tool, from an assigned brief to a production-ready MVP in 4 to 6 weeks. Audited the intended architecture before build, found four constraints that broke the core promise, and pitched a smaller embedded flow that cut the wait before a quiz from about ten minutes to seconds.
-- Designed the operational screens where dense exam and staffing data has to be read fast: Proctor Coverage Analytics, a Support Agent Dashboard for live in-exam support, and the admin scanning tools.
-- Shipped features for a customer-facing review product used by instructors, administrators, and proctoring agents, each opening the same session recording for a different reason.
-- Made the case for putting usability testing back in the process, then ran it. The Exam Precheck study was in person, 6 participants across 3 demographics. Its findings made transparency a core design principle, and the 30+ customer beta reported majority high satisfaction on every targeted area.
-- Aligned the Figma design system library to the codebase 1:1 so an LLM could read it, and defined the design layer of an agentic pipeline that takes a PRD to production-ready code.
+**Product Designer (Contract)** | Feb 2023 – Jul 2026
 
-### Tori Bryan Design Services | Product Designer and Design Engineer
+- Designed 12+ documented Proctorio design system components, the Review Center video player, and its help center.
+- For SLV Technologies clients, defined the design system for [Modern Care Homes' senior living marketplace](https://toribryan.com/work/modern-care-homes) and built one themed system for [Iron Diamond Media's 7 publications](https://toribryan.com/work/arizona-bride).
 
-Self-employed | Feb 2023 – Present
+### Proctorio | Scottsdale, AZ
 
-Independent practice, full time since Aug 2026. I partner with engineering teams on design systems, product design, and the production front-end code that ships them.
+**Staff Product Designer** | Sep 2025 – Aug 2026
 
-- Defined the design system for Modern Care Homes, a senior living search and discovery marketplace, and designed the family-facing search (multi-criteria filtering, listings, profiles) and the agent platform.
-- Redesigned Iron Diamond Media's editorial website and vendor platform with their engineers, so 7 sister brands share one themed design system. Wrote the front-end styling and markup myself.
-- Contribute production code to the SLV Technologies codebase through GitHub PR review, deployed to production: Next.js, React, Tailwind, Shadcn, Base UI, Astro, and Storybook.
-- Contracted with Proctorio as a design system contributor and product designer: designed and documented 12+ components, and designed internal tools and dashboards.
+- Owned the multi-brand design system and its governance while leading design across 3 products and 8 surfaces.
+- Led the [legacy system overhaul](https://toribryan.com/work/design-system-overhaul) with 2 engineers: a 37-component MVP in 60 days on rebuilt semantic tokens that cut card variants from 587 to 32 and button variants from 1,160 to 480, and took buttons from roughly 40% failing WCAG to 100% AAA.
+- [Aligned the Figma library to the codebase 1:1 so an LLM could read it](https://toribryan.com/work/agentic-design-system), then wrote the team's [Claude Code skill framework](https://toribryan.com/latest/design-skills-infrastructure) and hooks that carry prototype changes into specs and release notes. Specs that took 3 days to 2 weeks now take under 30 minutes, returning about 80 hours per cycle, and the whole team adopted it.
+- Took [AuthorProof](https://toribryan.com/work/author-proof), an AI authorship-verification tool, from brief to production-ready MVP in 4 to 6 weeks. An architecture audit found 4 constraints that broke its core promise, and the smaller flow pitched in its place cut the wait before a quiz from about 10 minutes to seconds.
+- Designed dense operational screens for Proctor Coverage Analytics and the Support Agent Dashboard, brought usability testing back into the process, and mentored junior designers and interns.
 
-### Proctorio | Multimedia Designer
+**Product Designer** | Jun 2025 – Sep 2025
 
-Scottsdale, AZ | Jun 2021 – Aug 2023
+- Rejoined full time after 2 years of contract work, shipped 2 product surfaces, and wrote the 60-day proposal that became the design system overhaul. Promoted to Staff after 90 days.
 
-- Led a full rebrand across product and marketing, grounded in personas, market strategy, and user research, and built a first design system from scratch before moving into UI/UX on the product design system and internal dashboards.
+**Multimedia Designer** | 2022 – Aug 2023
+
+**Multimedia Design Intern** | Jun 2021 – 2022
+
+- Joined as the first full-time design intern, then led the full rebrand: logo, color, visual language, and asset library.
+- Built Proctorio's first design system, then moved from marketing into product UI.
 
 ## Skills
 
-- **Product design:** End-to-end product design (0-to-1 and scale), B2B and B2C, SaaS and enterprise, data-dense interface design, complex operational workflows, information architecture, prototyping
-- **Design systems:** Ownership and governance, semantic token architecture, design-to-code alignment, multi-brand theming, WCAG accessibility
-- **Front end:** React, Next.js, JS/JSX, HTML, CSS, Tailwind, Shadcn, Base UI, Astro, Storybook, Git and GitHub, WebStorm
-- **Research:** User interviews, in-person usability testing, research methodology (IRB certified), success-metric definition, PostHog
-- **AI and tooling:** Claude Code skill authorship, hooks and automation, MCP, Code Connect, LLM-legible design systems, spec authorship, Cursor
-- **Design tools:** Figma, FigJam, Framer, Notion, Adobe Creative Suite
+- **Design:** Design systems, token architecture, multi-brand theming, data-dense interfaces, prototyping, usability testing, WCAG
+- **Engineering:** React, Next.js, JavaScript, Tailwind CSS, shadcn/ui, Base UI, Astro, Storybook, HTML, CSS, GitHub
+- **Tools:** Figma, Claude Code, Cursor, MCP, Code Connect, Framer, Adobe Creative Suite, Notion
 
-## Selected Work & Education
+## Education
 
-Case studies at toribryan.com: [/work/author-proof](https://toribryan.com/work/author-proof) | [/work/design-system-overhaul](https://toribryan.com/work/design-system-overhaul) | [/work/modern-care-homes](https://toribryan.com/work/modern-care-homes)
+**Arizona State University** | B.A. Digital Communication and Media/Multimedia | Tempe, AZ | Dec 2023
 
-**Arizona State University** | B.A. Digital Communication & Media / Multimedia | Dec 2023 | IRB Social & Behavioral Research (CITI)
+Certifications: IRB Social and Behavioral Research (CITI Program), Search Engine Optimization (Stukent)

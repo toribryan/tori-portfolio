@@ -117,7 +117,7 @@ const args: ChapterScrubberProps = {
 
 function Frame({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-80 min-w-[34rem] items-center justify-center p-10">
+    <div className="flex min-h-80 items-center justify-start p-2 sm:min-w-[34rem] sm:justify-center sm:p-10">
       {children}
     </div>
   )
@@ -163,7 +163,7 @@ export function Centered() {
 export function Sizes() {
   return (
     <Frame>
-      <div className="flex items-end gap-24">
+      <div className="flex flex-wrap items-end gap-8 sm:gap-24">
         {(["sm", "default", "lg"] as const).map((size) => (
           <div key={size} className="flex flex-col items-start gap-4">
             <ChapterScrubber {...args} size={size} preview="none" />
@@ -182,20 +182,20 @@ export function Controlled() {
   const chapter = talk[current]!
   return (
     <Frame>
-      <div className="flex items-center gap-10">
+      <div className="flex items-center gap-4 sm:gap-10">
         <ChapterScrubber
           {...args}
           currentIndex={current}
           onCurrentIndexChange={setCurrent}
         />
-        <div className="flex w-64 flex-col gap-3">
+        <div className="flex min-w-0 flex-col gap-3 sm:w-64">
           <span className="font-mono text-xs text-muted-foreground tabular-nums">
             {chapter.meta} · {current + 1} of {talk.length}
           </span>
           <span className="text-lg font-semibold tracking-tight text-foreground">
             {chapter.title}
           </span>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
               variant="outline"
@@ -224,7 +224,7 @@ export function Controlled() {
 export function InAnArticle() {
   const [current, setCurrent] = useState(0)
   return (
-    <div className="flex gap-10 p-10">
+    <div className="flex gap-6 p-2 sm:gap-10 sm:p-10">
       <div className="sticky top-10 self-start">
         <ChapterScrubber
           {...args}
