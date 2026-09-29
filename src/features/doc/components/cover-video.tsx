@@ -1,12 +1,15 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { useInView } from "motion/react"
 
 import { cn } from "@/lib/utils"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 /**
  * A card's cover clip that stays hidden behind the still image until the
- * card is hovered or focused, then fades in and plays from the start.
+ * card is hovered or focused, then fades in and plays from the start. Touch
+ * screens have no hover, so there it plays on its own while in view.
  */
 export function CoverVideo({
   src,
@@ -17,12 +20,27 @@ export function CoverVideo({
 }) {
   const video = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
+  const touch = useMediaQuery("(hover: none)")
+  const inView = useInView(video, { amount: 0.5 })
+
+  useEffect(() => {
+    const element = video.current
+    if (!element || !touch) return
+    if (!inView) {
+      element.pause()
+      return
+    }
+    element.play().catch(() => {})
+    const start = () => setPlaying(true)
+    element.addEventListener("playing", start)
+    return () => element.removeEventListener("playing", start)
+  }, [touch, inView])
 
   // The video is aria-hidden and inert, so it listens on the card around it.
   useEffect(() => {
     const element = video.current
     const card = element?.closest("[data-cover-host]")
-    if (!element || !card) return
+    if (!element || !card || touch) return
     const on = () => {
       element.currentTime = 0
       element.play().catch(() => {})
@@ -42,7 +60,7 @@ export function CoverVideo({
       card.removeEventListener("focusin", on)
       card.removeEventListener("focusout", off)
     }
-  }, [])
+  }, [touch])
 
   return (
     <video

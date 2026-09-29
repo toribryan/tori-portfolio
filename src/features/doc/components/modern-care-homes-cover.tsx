@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef } from "react"
 import Image from "next/image"
 import {
   ChevronsUpDownIcon,
@@ -14,11 +14,11 @@ import {
   SettingsIcon,
   XIcon,
 } from "lucide-react"
-import { useInView, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
-import { useMediaQuery } from "@/hooks/use-media-query"
 import { ScaledStage } from "@/features/portfolio/components/components/covers"
+
+import { useCoverSteps } from "./use-cover-steps"
 
 /*
  * The cover draws the product, not the site, so it keeps the agent
@@ -31,10 +31,7 @@ const MUTED = "#5d626b"
 const LINE = "#e3e5e8"
 
 /** Rest, a room opened, the Photos tab, Preview gallery pressed, the gallery. */
-const LAST_STEP = 4
 const STEP_AT = [0, 500, 1400, 2300, 2550]
-/** How long the finished state holds before a looping cover starts over. */
-const LOOP_HOLD = 2600
 
 /** The phone is drawn at its real width in points, then scaled to fit. */
 const PHONE_POINTS = 390
@@ -91,54 +88,7 @@ function Photo({ src, className }: { src: string; className?: string }) {
  */
 export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
   const frame = useRef<HTMLDivElement>(null)
-  const [engaged, setEngaged] = useState(false)
-  const [step, setStep] = useState(0)
-  const inView = useInView(frame, { amount: 0.5 })
-  const reduceMotion = useReducedMotion()
-  // Touch screens have no hover to start it, so there it plays on its own.
-  const touch = useMediaQuery("(hover: none)")
-  const autoplay = loop || touch
-  const active = autoplay ? inView : engaged
-
-  useEffect(() => {
-    if (!active || reduceMotion) return
-    const timers: number[] = []
-    const play = () => {
-      STEP_AT.forEach((at, index) => {
-        timers.push(window.setTimeout(() => setStep(index), at))
-      })
-    }
-    play()
-    const id = autoplay
-      ? window.setInterval(play, STEP_AT[LAST_STEP] + LOOP_HOLD)
-      : undefined
-    return () => {
-      window.clearInterval(id)
-      timers.forEach((timer) => window.clearTimeout(timer))
-      setStep(0)
-    }
-  }, [active, autoplay, reduceMotion])
-
-  // The cover is inert, so it listens on the card or hero around it.
-  useEffect(() => {
-    const card = frame.current?.closest("[data-cover-host]")
-    if (!card || autoplay) return
-    const on = () => setEngaged(true)
-    const off = () => setEngaged(false)
-    card.addEventListener("pointerenter", on)
-    card.addEventListener("pointerleave", off)
-    card.addEventListener("focusin", on)
-    card.addEventListener("focusout", off)
-    return () => {
-      card.removeEventListener("pointerenter", on)
-      card.removeEventListener("pointerleave", off)
-      card.removeEventListener("focusin", on)
-      card.removeEventListener("focusout", off)
-    }
-  }, [autoplay])
-
-  // With reduced motion the cover shows where the story ends, still.
-  const shown = !active ? 0 : reduceMotion ? LAST_STEP : step
+  const shown = useCoverSteps(frame, STEP_AT, { loop })
   const open = shown >= 1
   const tab = shown >= 2 ? "Photos" : "Availability"
   const pressed = shown === 3
