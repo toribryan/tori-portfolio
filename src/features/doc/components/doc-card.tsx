@@ -87,13 +87,13 @@ export function DocCard({
             </span>
           </div>
         )}
-        {image && video && (
+        {!Cover && image && video && (
           <CoverVideo
             className="absolute inset-0 size-full rounded-(--image-radius) object-cover motion-reduce:hidden"
             src={video}
           />
         )}
-        {image && imageHover && (
+        {!Cover && image && imageHover && (
           <Image
             className="absolute inset-0 aspect-1200/630 w-full rounded-(--image-radius) object-cover opacity-0 transition-opacity duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:opacity-100"
             src={imageHover}
