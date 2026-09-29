@@ -30,7 +30,7 @@ export function ProfileHeader() {
         <div className="relative z-10 row-start-2 flex items-center border-t border-r border-line bg-background sm:row-span-2 sm:row-start-1 sm:items-start">
           <div className="mx-0.5 my-0.75 flex">
             <Image
-              className="size-25 rounded-full border border-line object-cover select-none min-[22.5rem]:size-30 min-[23.4375rem]:size-34 sm:size-40"
+              className="size-25 rounded-full object-cover select-none min-[22.5rem]:size-30 min-[23.4375rem]:size-34 sm:size-40"
               src={USER.headerAvatar}
               alt={`${USER.displayName}'s avatar`}
               width={165}
