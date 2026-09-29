@@ -1,11 +1,3 @@
-import { ChevronDownIcon } from "lucide-react"
-
-import { Button } from "@/components/base/ui/button"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/base/ui/collapsible"
 import { DocCardList } from "@/features/doc/components/doc-card-list"
 import { getWorkDocs } from "@/features/doc/data/documents"
 import {
@@ -16,10 +8,12 @@ import {
 } from "@/features/portfolio/components/panel"
 import { PanelTitleCopy } from "@/features/portfolio/components/panel-title-copy"
 
+import { LoadMore } from "./load-more"
+
 const ID = "projects"
 
-/** Cards shown before "Load more" — three rows of the two-column grid. */
-const MAX = 6
+/** Cards per page of "Load more": two rows of the two-column grid. */
+const PAGE = 4
 
 export function Projects() {
   // fibo has its own hero and niche shelf above.
@@ -36,40 +30,25 @@ export function Projects() {
       </PanelHeader>
 
       <div className="px-2 pb-4">
-        <DocCardList
-          docs={projects.slice(0, MAX)}
-          basePath="/work"
-          emptyMessage="No projects published yet."
-        />
-
-        {projects.length > MAX && (
-          <Collapsible className="group/collapsible">
-            <CollapsibleContent>
-              <DocCardList docs={projects.slice(MAX)} basePath="/work" />
-            </CollapsibleContent>
-
-            <div className="flex items-center justify-center pt-4">
-              <CollapsibleTrigger
-                render={
-                  <Button
-                    className="gap-2 pr-2.5 pl-3"
-                    variant="outline"
-                    size="sm"
-                  >
-                    <span className="hidden group-data-closed/collapsible:block">
-                      Load more
-                    </span>
-
-                    <span className="hidden group-data-open/collapsible:block">
-                      Show less
-                    </span>
-
-                    <ChevronDownIcon className="group-data-open/collapsible:rotate-180" />
-                  </Button>
-                }
-              />
-            </div>
-          </Collapsible>
+        {projects.length === 0 ? (
+          <DocCardList
+            docs={[]}
+            basePath="/work"
+            emptyMessage="No projects published yet."
+          />
+        ) : (
+          <LoadMore
+            pages={Array.from(
+              { length: Math.ceil(projects.length / PAGE) },
+              (_, i) => (
+                <DocCardList
+                  key={i}
+                  docs={projects.slice(i * PAGE, (i + 1) * PAGE)}
+                  basePath="/work"
+                />
+              )
+            )}
+          />
         )}
       </div>
     </Panel>
