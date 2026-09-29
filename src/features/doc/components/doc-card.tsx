@@ -7,6 +7,7 @@ import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { Doc } from "@/features/doc/types/document"
 
+import { CoverVideo } from "./cover-video"
 import { DOC_COVERS } from "./doc-covers"
 
 type HeadingTypes = "h2" | "h3" | "h4"
@@ -86,14 +87,9 @@ export function DocCard({
           </div>
         )}
         {image && video && (
-          <video
-            className="absolute inset-0 size-full rounded-(--image-radius) object-cover grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 motion-reduce:hidden"
+          <CoverVideo
+            className="absolute inset-0 size-full rounded-(--image-radius) object-cover motion-reduce:hidden"
             src={video}
-            autoPlay
-            loop
-            muted
-            playsInline
-            aria-hidden
           />
         )}
         {image && imageHover && (
