@@ -1,7 +1,7 @@
 /**
- * The storybook-kit documents the case study's viewer shows. The repo isn't
- * public yet, so these are copies; refresh them from ~/Developer/storybook-kit
- * when those files change.
+ * The storybook-kit documents the case study's viewer shows: copies of the
+ * files in github.com/toribryan/storybook-kit, kept with the site so the page
+ * builds without fetching them. Refresh them when those files change.
  */
 export const STORYBOOK_KIT = {
   name: "storybook-kit",
