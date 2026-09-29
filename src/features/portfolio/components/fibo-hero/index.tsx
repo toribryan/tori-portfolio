@@ -714,13 +714,14 @@ const STACK: { icon: ComponentType<{ className?: string }>; title: string }[] =
 /*
  * The pitch is laid out in lattice cells (--u) so the buttons land on the dot
  * grid: their row starts on a dot row and they are whole cells tall. The text
- * above hangs off that row.
+ * above hangs off that row. Its left edge is the page's usual inset instead,
+ * so it lines up with the section headings below.
  */
 function Pitch({ width, className }: { width: number; className?: string }) {
   return (
     <div
       className={cn(
-        "grid grid-rows-[max(calc(var(--u)*13),round(up,15rem,var(--u)))_auto_auto] content-start overflow-hidden px-[calc(var(--u)*2)]",
+        "grid grid-rows-[max(calc(var(--u)*13),round(up,15rem,var(--u)))_auto_auto] content-start overflow-hidden pr-[calc(var(--u)*2)] pl-4",
         className
       )}
       style={{ "--u": `calc(100cqw * ${LATTICE} / ${width})` } as CSSProperties}
