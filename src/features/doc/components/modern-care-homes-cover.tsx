@@ -110,7 +110,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
       style={{ background: PLATE, color: INK }}
     >
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 opacity-50"
         style={{
           backgroundImage: `linear-gradient(${GRID} 1px, transparent 1px), linear-gradient(90deg, ${GRID} 1px, transparent 1px)`,
           backgroundSize: "12px 12px",
