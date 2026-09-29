@@ -154,6 +154,8 @@ type FilterMenuProps = {
   search?: "inline" | "button"
   /** Classes for the trigger button. */
   className?: string
+  /** Where the popup renders. Defaults to the end of the body. */
+  container?: HTMLElement | null
 }
 
 /**
@@ -174,6 +176,7 @@ function FilterMenu({
   align = "start",
   search = "inline",
   className,
+  container,
 }: FilterMenuProps) {
   const [selected, setSelected] = useControllable(
     value,
@@ -488,7 +491,7 @@ function FilterMenu({
         <ListFilterIcon data-icon="inline-start" aria-hidden="true" />
         {triggerLabel}
       </PopoverPrimitive.Trigger>
-      <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Portal container={container}>
         <PopoverPrimitive.Positioner
           align={align}
           sideOffset={6}

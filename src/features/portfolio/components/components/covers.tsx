@@ -54,6 +54,17 @@ function useCycle(count: number, ms: number, active: boolean) {
   return step
 }
 
+/*
+ * Runs `act` with the cover's inert lifted, since inert swallows the clicks
+ * and key presses the demos send.
+ */
+function uninerted(node: Element | null, act: () => void) {
+  const cover = node?.closest<HTMLElement>("[inert]")
+  if (cover) cover.inert = false
+  act()
+  if (cover) cover.inert = true
+}
+
 const TOKEN_ROWS: TokenRow[] = [
   {
     base: "oklch(0.205 0 0)",
@@ -190,11 +201,7 @@ function ReactionsCover({ active }: CoverProps) {
       const pill = root.current?.querySelector<HTMLButtonElement>(
         "button[aria-pressed]"
       )
-      // The cover is inert, which swallows `click()`; lift it for the tap.
-      const cover = pill?.closest<HTMLElement>("[inert]")
-      if (cover) cover.inert = false
-      pill?.click()
-      if (cover) cover.inert = true
+      uninerted(pill ?? null, () => pill?.click())
     }
     tap()
     return tap
@@ -242,7 +249,11 @@ const FIELDS: FilterField[] = [
     id: "priority",
     label: "Priority",
     icon: <SignalHighIcon />,
-    options: [{ value: "urgent", label: "Urgent" }],
+    options: [
+      { value: "urgent", label: "Urgent" },
+      { value: "high", label: "High" },
+      { value: "low", label: "Low" },
+    ],
   },
   {
     id: "label",
@@ -252,31 +263,82 @@ const FIELDS: FilterField[] = [
   },
 ]
 
-// The filters applied at each step of the loop, building up then clearing.
-const FILTER_STEPS: FilterValue[] = [
-  {},
-  { status: ["todo"] },
-  { status: ["todo", "in-progress"] },
-  { status: ["todo", "in-progress"], priority: ["urgent"] },
-  { status: ["todo", "in-progress"], priority: ["urgent"], label: ["bug"] },
-]
+function typeInto(input: HTMLInputElement, text: string) {
+  Object.getOwnPropertyDescriptor(
+    HTMLInputElement.prototype,
+    "value"
+  )?.set?.call(input, text)
+  input.dispatchEvent(new Event("input", { bubbles: true }))
+}
 
 /**
- * Filters pile up as chips beside the trigger, then clear and start again,
- * as they do when someone narrows a list. The menu itself opens in a popup
- * that would escape the cover, so it stays shut.
+ * The menu with its Search filters button, run the way a person would: it
+ * opens, slides over to search, "urg" is typed, Enter picks Urgent and a chip
+ * appears beside the trigger. Then it closes, clears and starts again. The
+ * popup renders inside the cover rather than at the end of the page.
  */
 function FilterMenuCover({ active }: CoverProps) {
-  const value = FILTER_STEPS[useCycle(FILTER_STEPS.length, 1100, active)]!
+  const [stage, setStage] = useState<HTMLDivElement | null>(null)
+  const [value, setValue] = useState<FilterValue>({})
   const labelOf = (fieldId: string, optionValue: string) =>
     FIELDS.find((f) => f.id === fieldId)?.options.find(
       (o) => o.value === optionValue
     )?.label ?? optionValue
 
+  useEffect(() => {
+    if (!active || !stage) return
+    const trigger = () =>
+      stage.querySelector<HTMLElement>("[data-slot=filter-menu-trigger]")
+    const input = () => stage.querySelector<HTMLInputElement>("input")
+    const timers: number[] = []
+    const at = (ms: number, act: () => void) =>
+      timers.push(window.setTimeout(() => uninerted(stage, act), ms))
+
+    const run = () => {
+      at(700, () => trigger()?.click())
+      at(1600, () =>
+        stage
+          .querySelector<HTMLElement>("[data-slot=filter-menu-search-button]")
+          ?.click()
+      )
+      ;["u", "ur", "urg"].forEach((text, i) =>
+        at(2100 + i * 220, () => {
+          const box = input()
+          if (box) typeInto(box, text)
+        })
+      )
+      at(3200, () =>
+        input()?.dispatchEvent(
+          new KeyboardEvent("keydown", { key: "Enter", bubbles: true })
+        )
+      )
+      at(4200, () => trigger()?.click())
+      at(6000, () => setValue({}))
+      timers.push(window.setTimeout(run, 6600))
+    }
+    run()
+
+    return () => {
+      timers.forEach((id) => window.clearTimeout(id))
+      if (stage.querySelector("[data-slot=filter-menu]"))
+        uninerted(stage, () => trigger()?.click())
+      setValue({})
+    }
+  }, [active, stage])
+
   return (
-    <ScaledStage width={300}>
-      <div className="flex h-full flex-wrap content-center items-center gap-2 p-5">
-        <FilterMenu fields={FIELDS} value={value} />
+    <ScaledStage width={340}>
+      <div
+        ref={setStage}
+        className="relative flex h-full flex-wrap content-start items-center gap-2 p-5"
+      >
+        <FilterMenu
+          fields={FIELDS}
+          value={value}
+          onValueChange={setValue}
+          search="button"
+          container={stage}
+        />
         {Object.entries(value).map(([fieldId, values]) => (
           <span
             key={fieldId}
