@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
@@ -8,13 +8,9 @@ import { ScaledStage } from "@/features/portfolio/components/components/covers"
 
 import { useCoverSteps } from "./use-cover-steps"
 
-/**
- * Rest, the sweep, the survivors gathering, then back to rest, so the loop
- * runs in reverse before it starts again rather than snapping.
- */
-const STEP_AT = [0, 250, 1700, 4600]
-/** The rest held between the return and the next sweep. */
-const HOLD = 1600
+/** Rest, the sweep, then the refill, which the loop holds before sweeping again. */
+const STEP_AT = [0, 300, 3700]
+const HOLD = 1500
 
 const BEFORE = 587
 const AFTER = 32
@@ -25,13 +21,13 @@ const COLUMNS = 31
 const ROWS = Math.ceil(BEFORE / COLUMNS)
 const PITCH = 8
 const TILE = 6
+const RADIUS = 1.25
 const WALL_WIDTH = COLUMNS * PITCH - (PITCH - TILE)
 const WALL_HEIGHT = ROWS * PITCH - (PITCH - TILE)
 
-/** Where the survivors gather: an 8 by 4 block in the middle of the wall. */
-const BLOCK_COLUMNS = 8
-const BLOCK_LEFT = Math.round((COLUMNS - BLOCK_COLUMNS) / 2)
-const BLOCK_TOP = Math.round((ROWS - AFTER / BLOCK_COLUMNS) / 2)
+/** How long one tile takes to fade, and how much faster the refill runs. */
+const FADE = 280
+const REFILL = 0.55
 
 /**
  * The 32 variants that survived, scattered over the wall. A fixed seed keeps
@@ -44,114 +40,198 @@ const KEPT = (() => {
     seed = (seed * 1103515245 + 12345) % 2147483648
     picked.add(seed % BEFORE)
   }
-  return [...picked].sort((a, b) => a - b)
+  return picked
 })()
 
 const TILES = Array.from({ length: BEFORE }, (_, index) => {
   const column = index % COLUMNS
   const row = Math.floor(index / COLUMNS)
-  const rank = KEPT.indexOf(index)
   return {
-    x: column * PITCH,
-    y: row * PITCH,
-    rank,
-    // A diagonal wave from the top left, done in under a second.
+    column,
+    row,
+    kept: KEPT.has(index),
+    // One diagonal wave from the top left, in about a second.
     delay: column * 14 + row * 22,
-    // Survivors travel whole cells, so they land square on the grid.
-    to:
-      rank < 0
-        ? null
-        : {
-            x: (BLOCK_LEFT + (rank % BLOCK_COLUMNS) - column) * PITCH,
-            y: (BLOCK_TOP + Math.floor(rank / BLOCK_COLUMNS) - row) * PITCH,
-          },
   }
 })
 
-/** Eases the shown count toward `target`, in either direction. */
-function useCount(target: number) {
-  const [value, setValue] = useState(target)
-  const current = useRef(target)
-  const reduceMotion = useReducedMotion()
+/** When the last tile of the sweep is half gone. */
+const SWEEP_DONE = Math.max(...TILES.map((tile) => tile.delay)) + FADE / 2
 
-  useEffect(() => {
-    const from = current.current
-    if (from === target) return
-    const duration = reduceMotion ? 0 : target < from ? 1300 : 900
-    const start = performance.now()
-    let frame = requestAnimationFrame(function tick(now) {
-      const t = duration ? Math.min((now - start) / duration, 1) : 1
-      const eased = 1 - (1 - t) ** 2
-      current.current = Math.round(from + (target - from) * eased)
-      setValue(current.current)
-      if (t < 1) frame = requestAnimationFrame(tick)
-    })
-    return () => cancelAnimationFrame(frame)
-  }, [target, reduceMotion])
-
-  return value
+function ease(t: number) {
+  const c = Math.min(Math.max(t, 0), 1)
+  return c < 0.5 ? 2 * c * c : 1 - (-2 * c + 2) ** 2 / 2
 }
 
-/** How long a survivor takes to hop one cell. */
-const HOP = 55
-
 /**
- * A surviving tile that hops to its place in the block a cell at a time,
- * across then down together, so it sits square on the grid in every frame
- * rather than gliding between cells. Each axis steps once per cell it
- * crosses.
+ * The wall and the count, drawn together. The wall is a canvas rather than
+ * 587 elements: one loop fades every tile and draws them in a single pass,
+ * with each edge on a whole device pixel so every gap is the same width. The
+ * count is read off the tiles in the same frame, so it always matches what
+ * is on screen, even when a sweep is cut short and reversed.
  */
-function Survivor({
-  x,
-  y,
-  to,
-  rank,
-  gathered,
-}: {
-  x: number
-  y: number
-  to: { x: number; y: number }
-  rank: number
-  gathered: boolean
-}) {
-  const across = Math.abs(to.x) / PITCH
-  const down = Math.abs(to.y) / PITCH
-  const delay = `${rank * 12}ms`
-  const hops = (cells: number) =>
-    cells
-      ? `transform ${cells * HOP}ms steps(${cells}, jump-start) ${delay}`
-      : "none"
+function useWall(swept: boolean, reduceMotion: boolean) {
+  const canvas = useRef<HTMLCanvasElement>(null)
+  const swatch = useRef<HTMLSpanElement>(null)
+  const count = useRef<HTMLSpanElement>(null)
+  // How much of each tile is showing, from 0 (an empty square) to 1.
+  const shown = useRef<Float32Array>(new Float32Array(BEFORE).fill(1))
+  // Set by the measuring effect, which owns the canvas context.
+  const paint = useRef<() => void>(() => {})
 
-  return (
-    <g
-      style={{
-        transform: `translate(${gathered ? to.x : 0}px, 0px)`,
-        transition: hops(across),
-      }}
-    >
-      <rect
-        x={x}
-        y={y}
-        width={TILE}
-        height={TILE}
-        rx={1.25}
-        className="fill-foreground"
-        style={{
-          transform: `translate(0px, ${gathered ? to.y : 0}px)`,
-          transition: hops(down),
-        }}
-      />
-    </g>
-  )
+  useEffect(() => {
+    const element = canvas.current
+    const context = element?.getContext("2d")
+    if (!element || !context) return
+
+    let size = { width: 0, height: 0, scale: 1 }
+    const measure = () => {
+      const box = element.getBoundingClientRect()
+      const ratio = window.devicePixelRatio || 1
+      size = {
+        width: Math.round(box.width * ratio),
+        height: Math.round(box.height * ratio),
+        scale: (box.width * ratio) / WALL_WIDTH,
+      }
+      element.width = size.width
+      element.height = size.height
+    }
+
+    // Tile edges in device pixels, worked out once per size.
+    let rects: [number, number, number, number][] = []
+    let colors = { ink: "", slot: "" }
+    let written = -1
+
+    const readColors = () => {
+      // Read once, and again when the theme changes: reading styles every
+      // frame would make the browser recompute the whole page's.
+      const ink = getComputedStyle(element).color
+      const slot = swatch.current ? getComputedStyle(swatch.current).color : ink
+      colors = { ink, slot }
+    }
+
+    const layout = () => {
+      const { scale } = size
+      rects = TILES.map((tile) => {
+        const left = Math.round(tile.column * PITCH * scale)
+        const top = Math.round(tile.row * PITCH * scale)
+        return [
+          left,
+          top,
+          Math.round((tile.column * PITCH + TILE) * scale) - left,
+          Math.round((tile.row * PITCH + TILE) * scale) - top,
+        ]
+      })
+    }
+
+    // Tiles are filled in batches that share an opacity, so a frame is a
+    // couple of dozen fills rather than a thousand.
+    const LEVELS = 16
+    const draw = () => {
+      const radius = RADIUS * size.scale
+      const slots = new Path2D()
+      const inks = Array.from({ length: LEVELS + 1 }, () => new Path2D())
+      let remaining = 0
+      for (let index = 0; index < BEFORE; index++) {
+        const [left, top, width, height] = rects[index]
+        const alpha = shown.current[index]
+        if (alpha >= 0.5) remaining++
+        const level = Math.round(alpha * LEVELS)
+        if (level < LEVELS) slots.roundRect(left, top, width, height, radius)
+        if (level > 0) inks[level].roundRect(left, top, width, height, radius)
+      }
+      context.clearRect(0, 0, size.width, size.height)
+      context.globalAlpha = 1
+      context.fillStyle = colors.slot
+      context.fill(slots)
+      context.fillStyle = colors.ink
+      for (let level = 1; level <= LEVELS; level++) {
+        context.globalAlpha = level / LEVELS
+        context.fill(inks[level])
+      }
+      context.globalAlpha = 1
+      if (remaining !== written && count.current) {
+        written = remaining
+        count.current.textContent = String(remaining)
+      }
+    }
+
+    paint.current = draw
+    measure()
+    layout()
+    readColors()
+    draw()
+    const resize = new ResizeObserver(() => {
+      measure()
+      layout()
+      draw()
+    })
+    resize.observe(element)
+    // The site's theme is a class on the root; its colors change with it.
+    // Read again once any color transition on the page has settled.
+    let settle = 0
+    const theme = new MutationObserver(() => {
+      readColors()
+      draw()
+      window.clearTimeout(settle)
+      settle = window.setTimeout(() => {
+        readColors()
+        draw()
+      }, 400)
+    })
+    theme.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "style"],
+    })
+    return () => {
+      paint.current = () => {}
+      window.clearTimeout(settle)
+      resize.disconnect()
+      theme.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    const target = swept ? 0 : 1
+    const from = Float32Array.from(shown.current)
+    const redraw = () => paint.current()
+
+    if (reduceMotion) {
+      TILES.forEach((tile, index) => {
+        if (!tile.kept) shown.current[index] = target
+      })
+      redraw()
+      return
+    }
+
+    const start = performance.now()
+    let frame = requestAnimationFrame(function tick(now) {
+      const elapsed = now - start
+      let moving = false
+      TILES.forEach((tile, index) => {
+        if (tile.kept) return
+        // Out along the wave, and back in along it, faster.
+        const delay = swept ? tile.delay : tile.delay * REFILL
+        const progress = ease((elapsed - delay) / FADE)
+        shown.current[index] = from[index] + (target - from[index]) * progress
+        if (progress < 1) moving = true
+      })
+      redraw()
+      if (moving) frame = requestAnimationFrame(tick)
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [swept, reduceMotion])
+
+  return { canvas, swatch, count }
 }
 
 /**
  * The overhaul's headline, played out: the old library's 587 card variants
- * as a wall of tiles beside the count. A diagonal sweep clears the 555 that
- * were removed while the count runs down to 32, and the survivors gather
- * into one block on the grid. Then it runs back and starts again. It plays
+ * as a wall of tiles beside the count. A diagonal wave clears the 555 that
+ * were removed, the count falling with it, until the 32 that survived stand
+ * alone in the grid. Then the wall fills back in and it goes again. It plays
  * while the card is hovered or focused, or on its own with `loop` or on a
- * touch screen; with reduced motion it shows the gathered block, still.
+ * touch screen; with reduced motion it shows the 32, still.
  */
 export function DesignSystemOverhaulCover({
   loop = false,
@@ -159,18 +239,15 @@ export function DesignSystemOverhaulCover({
   loop?: boolean
 }) {
   const frame = useRef<HTMLDivElement>(null)
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = Boolean(useReducedMotion())
   const step = useCoverSteps(frame, STEP_AT, {
     loop,
     repeat: true,
     hold: HOLD,
   })
-  const last = STEP_AT.length - 1
-  // The last step is the return to rest, except where nothing moves.
-  const phase = step === last ? (reduceMotion ? 2 : 0) : step
-  const swept = phase >= 1
-  const gathered = phase >= 2
-  const count = useCount(swept ? AFTER : BEFORE)
+  // The last step is the refill, except where nothing moves.
+  const swept = step === 1 || (step === 2 && reduceMotion)
+  const { canvas, swatch, count } = useWall(swept, reduceMotion)
 
   return (
     <div
@@ -184,82 +261,34 @@ export function DesignSystemOverhaulCover({
               Card variants
             </p>
             <p className="mt-1.5 font-heading text-[68px] leading-[0.9] font-medium tracking-tight tabular-nums">
-              {count}
+              <span ref={count}>{BEFORE}</span>
             </p>
-            <div className="mt-3 flex h-4 items-center gap-1.5">
-              <span
-                className={cn(
-                  "rounded-full bg-foreground px-1.5 py-0.5 font-mono text-[8px] leading-none text-background tabular-nums transition-[opacity,scale] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
-                  gathered ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                )}
-              >
+            <div
+              className={cn(
+                "mt-3 flex h-4 items-center gap-1.5 transition-[opacity,translate] ease-[cubic-bezier(0.22,1,0.36,1)]",
+                swept
+                  ? "translate-y-0 opacity-100 duration-500"
+                  : "translate-y-1 opacity-0 duration-300"
+              )}
+              style={{ transitionDelay: swept ? `${SWEEP_DONE}ms` : "0ms" }}
+            >
+              <span className="rounded-full bg-foreground px-1.5 py-0.5 font-mono text-[8px] leading-none text-background tabular-nums">
                 −94%
               </span>
-              <span
-                className={cn(
-                  "font-mono text-[8px] text-muted-foreground transition-opacity duration-300",
-                  gathered ? "opacity-100" : "opacity-0"
-                )}
-              >
+              <span className="font-mono text-[8px] text-muted-foreground">
                 from {BEFORE}
               </span>
             </div>
           </div>
-
-          {/* One SVG rather than 587 boxes, so every gap renders the same
-              width at any scale. */}
-          <svg
-            viewBox={`0 0 ${WALL_WIDTH} ${WALL_HEIGHT}`}
-            width={WALL_WIDTH}
-            height={WALL_HEIGHT}
-            className="shrink-0 overflow-visible"
-          >
-            {/* The grid itself: an empty square under every tile, so a
-                removed variant leaves one behind and a survivor always
-                lands on one. */}
-            {TILES.map((tile, index) => (
-              <rect
-                key={`slot-${index}`}
-                x={tile.x}
-                y={tile.y}
-                width={TILE}
-                height={TILE}
-                rx={1.25}
-                className="fill-border"
-              />
-            ))}
-            {TILES.map((tile, index) =>
-              tile.to ? (
-                <Survivor
-                  key={index}
-                  x={tile.x}
-                  y={tile.y}
-                  to={tile.to}
-                  rank={tile.rank}
-                  gathered={gathered}
-                />
-              ) : (
-                <rect
-                  key={index}
-                  x={tile.x}
-                  y={tile.y}
-                  width={TILE}
-                  height={TILE}
-                  rx={1.25}
-                  className={cn(
-                    "fill-foreground transition-opacity ease-out",
-                    swept
-                      ? "opacity-0 duration-500"
-                      : "opacity-100 duration-400"
-                  )}
-                  // Out along the wave, and back in along it too.
-                  style={{
-                    transitionDelay: `${swept ? tile.delay : tile.delay * 0.6}ms`,
-                  }}
-                />
-              )
-            )}
-          </svg>
+          <div className="relative shrink-0">
+            <canvas
+              ref={canvas}
+              className="block text-foreground"
+              style={{ width: WALL_WIDTH, height: WALL_HEIGHT }}
+            />
+            {/* Carries the empty squares' color for the canvas to read. */}
+            <span ref={swatch} className="hidden text-border" />
+          </div>
         </div>
       </ScaledStage>
     </div>
