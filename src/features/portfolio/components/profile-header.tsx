@@ -2,7 +2,6 @@ import Image from "next/image"
 
 import { USER } from "@/features/portfolio/data/user"
 
-import { FlipSentences } from "./flip-sentences"
 import { HeroCanvas } from "./hero-canvas"
 import { SocialLinks } from "./social-links"
 import { VerifiedIcon } from "./verified-icon"
@@ -53,9 +52,11 @@ export function ProfileHeader() {
             <VerifiedIcon className="size-4.5 select-none" aria-hidden />
           </div>
 
-          <FlipSentences className="flex min-h-9 items-center border-t border-line py-1 pl-4">
-            {USER.flipSentences}
-          </FlipSentences>
+          <div className="border-t border-line py-1.5 pl-4 font-mono text-sm text-balance text-muted-foreground max-[22.5rem]:text-[0.8125rem]">
+            {USER.headerLines.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
+          </div>
 
           <SocialLinks className="border-t border-line py-2 pl-4" />
         </div>

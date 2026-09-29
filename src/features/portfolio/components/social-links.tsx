@@ -9,6 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/base/ui/tooltip"
+import { ResumeMenu } from "@/components/resume-menu"
 import { SOCIAL_ICONS } from "@/features/portfolio/components/social-link-icons"
 import { SOCIAL_LINKS } from "@/features/portfolio/data/social-links"
 
@@ -16,8 +17,9 @@ const BUTTON =
   "text-foreground/80 shadow-none [&_svg:not([class*='size-'])]:size-4.5"
 
 /**
- * The resume, then the social profiles, as icon buttons. LinkedIn sits in
- * the overview instead, as a line of its own.
+ * The resume, then the social profiles, as icon buttons. The resume opens the
+ * same menu of formats as the footer. LinkedIn sits in the overview instead,
+ * as a line of its own.
  */
 export function SocialLinks({ className }: { className?: string }) {
   return (
@@ -27,22 +29,19 @@ export function SocialLinks({ className }: { className?: string }) {
     >
       <li>
         <Tooltip>
-          <TooltipTrigger
+          <ResumeMenu
+            side="bottom"
+            align="start"
             render={
-              <Button
-                className={BUTTON}
-                variant="outline"
-                size="icon-sm"
-                nativeButton={false}
+              <TooltipTrigger
                 render={
-                  <a href="/resume.pdf" target="_blank" rel="noopener">
-                    <FileTextIcon />
-                    <span className="sr-only">Resume</span>
-                  </a>
+                  <Button className={BUTTON} variant="outline" size="icon-sm" />
                 }
               />
             }
-          />
+          >
+            <FileTextIcon />
+          </ResumeMenu>
           <TooltipContent>Resume</TooltipContent>
         </Tooltip>
       </li>

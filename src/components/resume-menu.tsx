@@ -2,7 +2,12 @@
 
 import { copyText } from "@/utils/copy"
 import { useTiks } from "@rexa-developer/tiks/react"
-import { ChevronDownIcon, CopyIcon, FileTextIcon } from "lucide-react"
+import {
+  ChevronDownIcon,
+  CopyIcon,
+  DownloadIcon,
+  ExternalLinkIcon,
+} from "lucide-react"
 import { toast } from "sonner"
 
 import { trackEvent } from "@/lib/events"
@@ -15,20 +20,31 @@ import {
   DropdownMenuLinkItem,
   DropdownMenuTrigger,
 } from "@/components/base/ui/dropdown-menu"
-import { MarkdownIcon } from "@/components/icons"
 
 const RESUME_PDF = "/resume.pdf"
 const RESUME_MARKDOWN = "/resume.md"
+const RESUME_FILENAME = "Tori-Bryan-Resume.pdf"
 
 /**
- * The footer's Resume link, as a menu of formats: the PDF, the Markdown
- * version served at `/resume.md`, or that Markdown straight to the clipboard.
+ * The resume as a menu of formats: the PDF in a new tab, the PDF as a
+ * download, or the Markdown version served at `/resume.md` straight to the
+ * clipboard. The footer uses the default text trigger; the profile header
+ * passes its icon button through `render`.
  *
- * The two link rows are real anchors so they open in a new tab like the plain
- * link they replace. The copy row fetches the same route the "view" row links
- * to, so there is one copy of the text to keep current.
+ * The two PDF rows are real anchors, so a new tab and a download behave the
+ * way a plain link would.
  */
-export function ResumeMenu({ className }: { className?: string }) {
+export function ResumeMenu({
+  className,
+  render,
+  children,
+  side = "top",
+  align = "end",
+}: Pick<
+  React.ComponentProps<typeof DropdownMenuTrigger>,
+  "className" | "render" | "children"
+> &
+  Pick<React.ComponentProps<typeof DropdownMenuContent>, "side" | "align">) {
   const { success, error } = useTiks()
   // `interrupt` so a repeat copy restarts the blip instead of layering one
   // over the other, the same as every other copy on the site.
@@ -66,19 +82,28 @@ export function ResumeMenu({ className }: { className?: string }) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={className} aria-label="Resume formats">
-        Resume
-        <ChevronDownIcon
-          className="size-3.5 text-muted-foreground transition-transform group-aria-expanded/resume:rotate-180"
-          aria-hidden
-        />
+      <DropdownMenuTrigger
+        className={className}
+        render={render}
+        aria-label="Resume formats"
+      >
+        {children ?? (
+          <>
+            Resume
+            <ChevronDownIcon
+              className="size-3.5 text-muted-foreground transition-transform group-aria-expanded/resume:rotate-180"
+              aria-hidden
+            />
+          </>
+        )}
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" side="top" className="w-fit">
+      <DropdownMenuContent align={align} side={side} className="w-fit">
         <DropdownMenuLinkItem
           href={RESUME_PDF}
           target="_blank"
           rel="noopener"
+          closeOnClick
           onClick={() =>
             trackEvent({
               name: "resume_menu_action",
@@ -86,23 +111,23 @@ export function ResumeMenu({ className }: { className?: string }) {
             })
           }
         >
-          <FileTextIcon />
-          Open PDF
+          <ExternalLinkIcon />
+          Open in browser
         </DropdownMenuLinkItem>
 
         <DropdownMenuLinkItem
-          href={RESUME_MARKDOWN}
-          target="_blank"
-          rel="noopener"
+          href={RESUME_PDF}
+          download={RESUME_FILENAME}
+          closeOnClick
           onClick={() =>
             trackEvent({
               name: "resume_menu_action",
-              properties: { format: "markdown" },
+              properties: { format: "download" },
             })
           }
         >
-          <MarkdownIcon />
-          View as Markdown
+          <DownloadIcon />
+          Download PDF
         </DropdownMenuLinkItem>
 
         <DropdownMenuItem onClick={copyMarkdown}>
