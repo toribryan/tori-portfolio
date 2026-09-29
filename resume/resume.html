@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tori Bryan, Product Designer</title>
+    <meta name="author" content="Tori Bryan" />
+    <meta
+      name="description"
+      content="Résumé of Tori Bryan, Product Designer specializing in design systems and design engineering."
+    />
+    <style>
+      /* The site's own faces: Nohemi for headings, Geist for text, Geist Mono
+         for metadata. Chrome embeds them with a Unicode map, so ATS parsers
+         still read the PDF as plain text. */
+      @font-face {
+        font-family: "Nohemi";
+        src: url("fonts/Nohemi-Medium.woff2") format("woff2");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "Geist";
+        src: url("fonts/Geist-Regular.woff2") format("woff2");
+        font-weight: 400;
+      }
+      @font-face {
+        font-family: "Geist";
+        src: url("fonts/Geist-Medium.woff2") format("woff2");
+        font-weight: 500;
+      }
+      @font-face {
+        font-family: "Geist";
+        src: url("fonts/Geist-SemiBold.woff2") format("woff2");
+        font-weight: 600;
+      }
+      @font-face {
+        font-family: "Geist Mono";
+        src: url("fonts/GeistMono-Regular.woff2") format("woff2");
+        font-weight: 400;
+      }
+
+      /* Light-theme values from src/styles/globals.css. The line is the
+         rgb(0 0 0 / 0.1) hairline flattened onto white so it prints solid. */
+      :root {
+        --ink: #131313;
+        --ink-secondary: #3d3d3a;
+        --muted: #737268;
+        --line: #e6e6e6;
+        --link: #fa7e25;
+      }
+
+      @page {
+        size: letter;
+        margin: 0.55in 0.6in;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        background: #fff;
+      }
+
+      body {
+        font-family: "Geist", Arial, sans-serif;
+        font-size: 9.25pt;
+        line-height: 1.45;
+        color: var(--ink-secondary);
+        /* Ligatures extract as single glyphs (U+FB01 for "fi"), which breaks
+           ATS keyword matching on words like "Certifications". */
+        font-variant-ligatures: none;
+        font-feature-settings: "liga" 0, "clig" 0;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      /* On screen, show it as a sheet so it can be proofed before printing. */
+      @media screen {
+        html {
+          background: #f7f6f2;
+        }
+        body {
+          width: 8.5in;
+          margin: 0.4in auto;
+          padding: 0.55in 0.6in;
+          background: #fff;
+          box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08);
+        }
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      h1,
+      h2 {
+        font-family: "Nohemi", "Geist", Arial, sans-serif;
+        font-weight: 500;
+        color: var(--ink);
+        letter-spacing: 0;
+      }
+
+      /* Header */
+      header {
+        padding-bottom: 12pt;
+        border-bottom: 1px solid var(--ink);
+      }
+
+      h1 {
+        font-size: 26pt;
+        line-height: 1;
+      }
+
+      .headline {
+        margin-top: 6pt;
+        font-size: 10.5pt;
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      .contact {
+        margin-top: 5pt;
+        font-size: 8.5pt;
+        white-space: nowrap;
+        color: var(--muted);
+      }
+
+      .contact a {
+        color: var(--ink-secondary);
+        text-decoration: underline;
+        text-decoration-color: var(--link);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+      }
+
+      .sep {
+        padding: 0 5pt;
+        color: var(--line);
+      }
+
+      /* Sections: a Nohemi title over a dashed hairline, the same rule the
+         site uses between panels. */
+      section {
+        margin-top: 13pt;
+      }
+
+      h2 {
+        font-size: 11.5pt;
+        line-height: 1;
+        padding-bottom: 5pt;
+        margin-bottom: 7pt;
+        background-image: linear-gradient(
+          to right,
+          var(--line) 4px,
+          transparent 2px
+        );
+        background-size: 6px 1px;
+        background-repeat: repeat-x;
+        background-position: bottom left;
+      }
+
+      .summary {
+        color: var(--ink-secondary);
+      }
+
+      /* Experience */
+      .company + .company {
+        margin-top: 10pt;
+      }
+
+      .company-name {
+        font-size: 10pt;
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      .company-name .where {
+        font-weight: 400;
+        color: var(--muted);
+      }
+
+      .role {
+        margin-top: 4pt;
+        break-inside: avoid;
+      }
+
+      .role-line {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12pt;
+      }
+
+      .title {
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      .date {
+        flex: none;
+        font-family: "Geist Mono", monospace;
+        font-size: 8pt;
+        color: var(--muted);
+        font-feature-settings: "liga" 0, "tnum" 1;
+      }
+
+      ul {
+        margin-top: 2pt;
+        padding-left: 11pt;
+      }
+
+      li {
+        padding-left: 2pt;
+      }
+
+      li + li {
+        margin-top: 1.5pt;
+      }
+
+      li::marker {
+        color: var(--muted);
+      }
+
+      strong {
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      /* Skills and the short lists */
+      .rows p + p {
+        margin-top: 2pt;
+      }
+
+      .label {
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12pt;
+      }
+
+      .item + .item {
+        margin-top: 2pt;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Tori Bryan</h1>
+      <p class="headline">
+        Product Designer, Design Systems and Design Engineering
+      </p>
+      <p class="contact">
+        Phoenix, AZ<span class="sep">|</span
+        ><a href="mailto:toribryan.design@gmail.com"
+          >toribryan.design@gmail.com</a
+        ><span class="sep">|</span
+        ><a href="https://toribryan.com">toribryan.com</a
+        ><span class="sep">|</span
+        ><a href="https://linkedin.com/in/victorialbryan/"
+          >linkedin.com/in/victorialbryan</a
+        ><span class="sep">|</span
+        ><a href="https://github.com/toribryan">github.com/toribryan</a>
+      </p>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p class="summary">
+        Product designer specializing in design systems, who ships the front end
+        they design. Five years building B2B products, component libraries, and
+        the tooling that connects design to production code, most recently
+        owning the multi-brand design system for a proctoring platform used by 8
+        million test takers.
+      </p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+
+      <div class="company">
+        <p class="company-name">
+          Tori Bryan Design Services
+          <span class="where">· Phoenix, AZ (Remote)</span>
+        </p>
+
+        <div class="role">
+          <div class="role-line">
+            <span class="title">Design Engineer</span>
+            <span class="date">Aug 2026 – Present</span>
+          </div>
+          <ul>
+            <li>
+              Design systems, product design, and the production front end that
+              ships them, mainly through SLV Technologies for their clients.
+            </li>
+            <li>
+              Contribute production code to the SLV Technologies codebase
+              through GitHub pull request review in Next.js, React, Tailwind
+              CSS, shadcn/ui, Base UI, Astro, and Storybook.
+            </li>
+            <li>
+              Built and ship toribryan.com as a live Next.js codebase, and fibo,
+              an open-source design system on shadcn/ui and Base UI published as
+              an installable shadcn registry.
+            </li>
+          </ul>
+        </div>
+
+        <div class="role">
+          <div class="role-line">
+            <span class="title">Product Designer (Contract)</span>
+            <span class="date">Feb 2023 – Jul 2026</span>
+          </div>
+          <ul>
+            <li>
+              <strong>Proctorio:</strong> designed the Review Center video player
+              and action bar, internal tools and dashboards, and 12+ documented
+              design system components. Redesigned the multi-audience help
+              center with role-based content visibility and an internal CMS.
+            </li>
+            <li>
+              <strong>Modern Care Homes:</strong> defined the design system for
+              the agent platform and designed a new family-facing senior living
+              search end to end: multi-criteria filtering, listings, and
+              profiles.
+            </li>
+            <li>
+              <strong>Iron Diamond Media:</strong> built one themed design
+              system shared by seven publications, starting with Arizona Bride,
+              and shipped its front-end styling and markup.
+            </li>
+            <li>
+              <strong>Hydra Endura, Mincredo:</strong> brand identities
+              including logo, brand guidelines, core UI components, and social
+              strategy.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="company">
+        <p class="company-name">
+          Proctorio <span class="where">· Scottsdale, AZ</span>
+        </p>
+
+        <div class="role">
+          <div class="role-line">
+            <span class="title">Staff Product Designer</span>
+            <span class="date">Sep 2025 – Aug 2026</span>
+          </div>
+          <ul>
+            <li>
+              Owned the multi-brand design system, its governance, and the
+              technical design standards design and engineering build from,
+              while leading design across three products and eight surfaces.
+            </li>
+            <li>
+              Led a legacy design system overhaul with two engineers: 37
+              components with an MVP in 60 days, button variants down 59% and
+              card variants down 94%, and button contrast from roughly 40%
+              failing WCAG to a 100% AAA pass.
+            </li>
+            <li>
+              Rebuilt design-to-engineering handoff around agentic tooling and
+              prototype-forward delivery, cutting spec production from 3 days–2
+              weeks to under 30 minutes and returning roughly 80 hours per cycle,
+              with 100% team adoption.
+            </li>
+            <li>
+              Authored the shared Claude Code skill framework behind it, with
+              hooks that cascade prototype changes into specs and release notes.
+            </li>
+            <li>
+              Shipped WebSweep as the first product on the overhauled system, and
+              took AuthorProof from an assigned brief to a production-ready MVP
+              in 4 to 6 weeks after testing the proposed solution against
+              research.
+            </li>
+            <li>
+              Designed data-dense operational screens, including Proctor
+              Coverage Analytics and the Support Agent Dashboard.
+            </li>
+            <li>
+              Reintroduced usability testing: ran the in-person Exam Precheck
+              study with six participants, and a 30+ customer beta reported
+              majority high satisfaction on every targeted area.
+            </li>
+            <li>
+              Coached designers on the system, reviewed work against its
+              standards, and mentored junior designers and interns.
+            </li>
+          </ul>
+        </div>
+
+        <div class="role">
+          <div class="role-line">
+            <span class="title">Product Designer</span>
+            <span class="date">Jun 2025 – Sep 2025</span>
+          </div>
+          <ul>
+            <li>
+              Rehired after two years of contracting and promoted to Staff 90
+              days later; shipped two product surfaces and wrote the 60-day
+              strategy that became the design system overhaul.
+            </li>
+          </ul>
+        </div>
+
+        <div class="role">
+          <div class="role-line">
+            <span class="title">Multimedia Designer</span>
+            <span class="date">2022 – Aug 2023</span>
+          </div>
+          <ul>
+            <li>
+              Led the full Proctorio rebrand (logo, color, visual language, and
+              asset library), grounded in personas, user research, and EdTech
+              competitive analysis.
+            </li>
+            <li>
+              Built the first design system from scratch, then moved into product
+              UI, guide sites for test takers and institutions, and internal
+              tools.
+            </li>
+          </ul>
+        </div>
+
+        <div class="role">
+          <div class="role-line">
+            <span class="title">Multimedia Design Intern</span>
+            <span class="date">Jun 2021 – 2022</span>
+          </div>
+          <ul>
+            <li>
+              First full-time design intern, helping start the design internship
+              program; designed landing pages, conference collateral, and the
+              digital brand template system.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <div class="rows">
+        <p>
+          <span class="label">Design:</span> Design systems, design system
+          governance, token architecture, product design, data-dense
+          interfaces, prototyping, accessibility (WCAG), brand design
+        </p>
+        <p>
+          <span class="label">Research:</span> Usability testing, user research,
+          competitive analysis, UserTesting, PostHog
+        </p>
+        <p>
+          <span class="label">Engineering:</span> React, Next.js, Tailwind CSS,
+          shadcn/ui, Base UI, Storybook, HTML, CSS, Git, GitHub
+        </p>
+        <p>
+          <span class="label">Tools:</span> Figma, Claude Code, Cursor, Framer,
+          Webflow, Adobe Creative Suite, Azure DevOps, Notion
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <div class="item">
+        <span
+          ><span class="title">Arizona State University</span>, Bachelor of
+          Arts, Digital Communication and Media/Multimedia</span
+        >
+        <span class="date">2019 – 2023</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Certifications</h2>
+      <div class="item">
+        <span
+          ><span class="title">IRB, Social and Behavioral Research</span>, CITI
+          Program</span
+        >
+        <span class="date">2023</span>
+      </div>
+      <div class="item">
+        <span
+          ><span class="title">Search Engine Optimization</span>, Stukent</span
+        >
+        <span class="date">2022</span>
+      </div>
+    </section>
+  </body>
+</html>
