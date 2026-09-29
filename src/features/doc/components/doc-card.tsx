@@ -73,7 +73,7 @@ export function DocCard({
         )}
         {image && video && (
           <video
-            className="absolute inset-y-0 left-1/2 aspect-square h-full -translate-x-1/2 object-cover grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 motion-reduce:hidden"
+            className="absolute inset-0 size-full rounded-(--image-radius) object-cover grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 motion-reduce:hidden"
             src={video}
             autoPlay
             loop
