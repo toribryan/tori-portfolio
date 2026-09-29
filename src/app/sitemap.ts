@@ -8,7 +8,13 @@ export const revalidate = false
 export const dynamic = "force-static"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/latest", "/fibo/figma"].map((route) => ({
+  const staticRoutes = [
+    "",
+    "/latest",
+    "/components/all",
+    "/recommendations",
+    "/fibo/figma",
+  ].map((route) => ({
     url: `${SITE_INFO.url}${route}`,
     lastModified: new Date().toISOString(),
   }))

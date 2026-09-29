@@ -24,6 +24,8 @@ import {
 } from "@/features/doc/data/documents"
 import type { Doc } from "@/features/doc/types/document"
 
+import { RepoViewer } from "./repo-viewer"
+
 /** What the neighbour tooltips call the thing you're moving between. */
 const NEIGHBOUR_NOUN: Record<string, string> = {
   [LATEST_CATEGORY]: "post",
@@ -183,7 +185,9 @@ export async function DocPage({
       )}
 
       <Prose className="px-4 pt-8 pb-4">
-        <p className="lead text-muted-foreground">{m.description}</p>
+        {!m.hideLead && (
+          <p className="lead text-muted-foreground">{m.description}</p>
+        )}
 
         {results.length > 0 ? (
           <dl
@@ -272,7 +276,7 @@ export async function DocPage({
         <TOCInline items={toc} />
 
         <div>
-          <MDX code={doc.content} />
+          <MDX code={doc.content} components={{ RepoViewer }} />
         </div>
 
         {m.gallery && m.gallery.length > 0 && (

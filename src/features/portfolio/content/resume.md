@@ -51,6 +51,6 @@ Scottsdale, AZ | Jun 2021 – Aug 2023
 
 ## Selected Work & Education
 
-Case studies at toribryan.com: [/work/author-proof](https://toribryan.com/work/author-proof) | [/work/design-system-overhaul](https://toribryan.com/work/design-system-overhaul) | [/work/support-agent-dashboard](https://toribryan.com/work/support-agent-dashboard) | [/work/modern-care-homes](https://toribryan.com/work/modern-care-homes)
+Case studies at toribryan.com: [/work/author-proof](https://toribryan.com/work/author-proof) | [/work/design-system-overhaul](https://toribryan.com/work/design-system-overhaul) | [/work/modern-care-homes](https://toribryan.com/work/modern-care-homes)
 
 **Arizona State University** | B.A. Digital Communication & Media / Multimedia | Dec 2023 | IRB Social & Behavioral Research (CITI)

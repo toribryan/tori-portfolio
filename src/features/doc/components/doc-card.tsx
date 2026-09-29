@@ -7,6 +7,8 @@ import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import type { Doc } from "@/features/doc/types/document"
 
+import { DOC_COVERS } from "./doc-covers"
+
 type HeadingTypes = "h2" | "h3" | "h4"
 
 /**
@@ -29,6 +31,7 @@ export function DocCard({
   const {
     image,
     imageHover,
+    video,
     title,
     period,
     createdAt,
@@ -38,11 +41,23 @@ export function DocCard({
     href,
   } = doc.metadata
   const external = href?.startsWith("http")
+  const Cover = DOC_COVERS[doc.slug]
 
   return (
-    <div className="group/doc-card relative flex h-full flex-col gap-2 p-2 transition-[background-color] ease-out hover:bg-accent-muted">
+    <div
+      data-doc-card
+      className="group/doc-card relative flex h-full flex-col gap-2 p-2 transition-[background-color] ease-out hover:bg-accent-muted"
+    >
       <div className="relative select-none [--image-radius:var(--radius-xl)]">
-        {image ? (
+        {Cover ? (
+          <div
+            className="relative aspect-1200/630 overflow-hidden rounded-(--image-radius) bg-muted/60 grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0"
+            aria-hidden
+            inert
+          >
+            <Cover />
+          </div>
+        ) : image ? (
           <Image
             className="aspect-1200/630 w-full rounded-(--image-radius) object-cover grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0"
             src={image}
@@ -54,7 +69,7 @@ export function DocCard({
             /**
              * Not negotiable while the password gate is on. `/_next/image`
              * fetches the source URL server-side with no session cookie, so
-             * middleware.ts bounces it to /login and the optimizer reports
+             * proxy.ts bounces it to /login and the optimizer reports
              * "The requested resource isn't a valid image". Covers are sized
              * to the card at export time instead.
              */
@@ -69,6 +84,17 @@ export function DocCard({
               {title}
             </span>
           </div>
+        )}
+        {image && video && (
+          <video
+            className="absolute inset-0 size-full rounded-(--image-radius) object-cover grayscale transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 motion-reduce:hidden"
+            src={video}
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden
+          />
         )}
         {image && imageHover && (
           <Image

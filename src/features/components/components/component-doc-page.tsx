@@ -16,11 +16,39 @@ import {
   getRegistryDocs,
   toMarkdown,
 } from "@/features/components/data/registry-docs"
+import { NICHE_PARTS } from "@/features/portfolio/data/fibo-niche"
 import { USER } from "@/features/portfolio/data/user"
 
 import { ComponentPageActions } from "./component-page-actions"
 import { ComponentPreview } from "./component-preview"
-import { InstallCommand } from "./install-command"
+import {
+  Anatomy,
+  ComponentRules,
+  DataAttributes,
+  Install,
+  RelatedComponents,
+  Tip,
+  UsageGuidelines,
+} from "./doc-blocks"
+import { DOC_PARTS } from "./doc-parts"
+import { Example } from "./example"
+
+/**
+ * What the ported fibo docs are written with: the doc blocks, the live
+ * examples, and the parts and icons their do's and don'ts render inline.
+ */
+const DOC_COMPONENTS = {
+  ...DOC_PARTS,
+  Anatomy,
+  ComponentPreview,
+  ComponentRules,
+  DataAttributes,
+  Example,
+  Install,
+  RelatedComponents,
+  Tip,
+  UsageGuidelines,
+}
 
 /**
  * The reading layout for a component doc: the header actions, the title, links to
@@ -35,7 +63,11 @@ export async function ComponentDocPage({
   entry: ComponentEntry
 }) {
   const toc = cleanTableOfContents(await getTableOfContents(doc.content))
-  const siblings = getRegistryDocs().filter((d) => d.slug in COMPONENTS)
+  // Previous and next follow the home page's order.
+  const siblings = NICHE_PARTS.flatMap(({ name }) => {
+    const sibling = getRegistryDocs().find((d) => d.slug === name)
+    return sibling && name in COMPONENTS ? [sibling] : []
+  })
   const index = siblings.findIndex((d) => d.slug === doc.slug)
   const post = entry.links.post
     ? await getTweet(entry.links.post.id).catch((error) => {
@@ -68,15 +100,33 @@ export async function ComponentDocPage({
             nativeButton={false}
             render={
               <a
-                href={entry.links.registry}
+                href={entry.links.storybook}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Open on 21st.dev
+                Open in fibo&apos;s Storybook
                 <ArrowUpRightIcon />
               </a>
             }
           />
+          {entry.links.registry && (
+            <Button
+              className="gap-1.5"
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              render={
+                <a
+                  href={entry.links.registry.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {entry.links.registry.label}
+                  <ArrowUpRightIcon />
+                </a>
+              }
+            />
+          )}
           {entry.links.post && (
             <Button
               className="gap-1.5"
@@ -106,10 +156,7 @@ export async function ComponentDocPage({
         <TOCInline items={toc} />
 
         <div>
-          <MDX
-            code={doc.content}
-            components={{ ComponentPreview, InstallCommand }}
-          />
+          <MDX code={doc.content} components={DOC_COMPONENTS} allowJS />
         </div>
       </Prose>
     </>

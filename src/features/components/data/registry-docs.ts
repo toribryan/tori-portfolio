@@ -44,24 +44,64 @@ export function getRegistryDoc(slug: string) {
   return getRegistryDocs().find((doc) => doc.slug === slug)
 }
 
+// Blocks that only make sense on the page: live demos and tables built from
+// JSX props. They are left out of the Markdown.
+const PAGE_ONLY = [
+  "ComponentPreview",
+  "Example",
+  "Anatomy",
+  "UsageGuidelines",
+  "ComponentRules",
+  "DataAttributes",
+  "RelatedComponents",
+]
+
 /**
- * The doc as plain Markdown: title, description and the body with the two
- * page-only blocks replaced by what they stand for, so a reader or a model
- * gets the same information the page shows.
+ * Drops each page-only block, from its opening tag to the line that closes
+ * it. Blocks written on one line close on the same line.
+ */
+function stripPageOnly(content: string) {
+  const out: string[] = []
+  let inBlock = false
+  for (const line of content.split("\n")) {
+    if (inBlock) {
+      if (/^\/>|^<\/[A-Z]/.test(line.trim())) inBlock = false
+      continue
+    }
+    const opens = PAGE_ONLY.some((name) =>
+      line.trimStart().startsWith(`<${name}`)
+    )
+    if (opens) {
+      if (!/\/>\s*$/.test(line)) inBlock = true
+      continue
+    }
+    out.push(line)
+  }
+  return out.join("\n").replace(/\n{3,}/g, "\n\n")
+}
+
+/**
+ * The doc as plain Markdown: title, description and the body with the
+ * page-only blocks left out and the rest replaced by what they stand for,
+ * so a reader or a model gets the same information the page shows.
  */
 export function toMarkdown(doc: RegistryDoc) {
-  const body = doc.content
-    .replace(/<ComponentPreview[^>]*\/>\n?/g, "")
+  const body = stripPageOnly(doc.content)
     .replace(
-      /<InstallCommand name="([^"]+)"\s*\/>/g,
-      (_, name: string) => "```bash\nnpx @21st-dev/cli add " + name + "\n```"
+      /<Install\s+name="([^"]+)"[\s\S]*?\/>/g,
+      (_, name: string) =>
+        "```bash\nnpx shadcn@latest add https://fibo.toribryan.com/r/" +
+        name +
+        ".json\n```"
     )
-    .replace(/<Callout>([\s\S]*?)<\/Callout>/g, (_, inner: string) =>
-      inner
-        .trim()
-        .split("\n")
-        .map((line) => `> ${line.trim()}`)
-        .join("\n")
+    .replace(
+      /<(Callout|Tip)[^>]*>([\s\S]*?)<\/\1>/g,
+      (_, _tag, inner: string) =>
+        inner
+          .trim()
+          .split("\n")
+          .map((line: string) => `> ${line.trim()}`)
+          .join("\n")
     )
   return `# ${doc.metadata.title}\n\n${doc.metadata.description}\n\n${body.trim()}\n`
 }

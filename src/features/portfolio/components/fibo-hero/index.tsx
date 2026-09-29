@@ -283,6 +283,10 @@ function Spiral({ geometry }: { geometry: Geometry }) {
  */
 const FIBO_SCALE = 2
 const FIBO_ASSEMBLE_MS = 1200
+// How long he stays in pieces after bursting, and how soon he starts
+// building back up after that.
+const FIBO_BURST_MS = 650
+const FIBO_REBUILD_MS = 150
 // Art pixels from his origin to his eyes, and how far the pointer must be
 // from them before he looks that way.
 const FIBO_EYES = { x: 6, y: -11 }
@@ -293,6 +297,9 @@ const FIBO_TURN = 4
 // How far round him, in art pixels from his origin, a click counts as being
 // on him: his outline plus a margin so a click beside him still lands.
 const FIBO_REACH = { left: 19, right: 21, top: 24, bottom: 8 }
+// His drawing itself, in art pixels from his origin, where the pointer
+// turns to a hand.
+const FIBO_BODY = { left: 10, right: 13, top: 15, bottom: 2 }
 
 const FIBO_HELLO_MS = 1000
 const FIBO_TYPE_MS = 35
@@ -384,7 +391,8 @@ function Fibo({
 }) {
   const svg = useRef<SVGSVGElement>(null)
   const [look, setLook] = useState<PixelSnailLook | null>(null)
-  const { speaking, text, typed, speak } = useSpeech(usePrefersReducedMotion())
+  const reduceMotion = usePrefersReducedMotion()
+  const { speaking, text, typed, speak } = useSpeech(reduceMotion)
   const pixel = geometry.stroke * FIBO_SCALE
   const { x, y } = geometry.fibo
   const [, , width = 1, height = 1] = geometry.viewBox.split(" ").map(Number)
@@ -393,6 +401,17 @@ function Fibo({
   useEffect(() => {
     reply.current = speak
   })
+
+  /*
+   * The first click on him bursts him apart. He builds back up, with the
+   * sound the browser held back until that click, and says "WOAH". Later
+   * clicks get his usual lines.
+   */
+  const [build, setBuild] = useState(0)
+  const [burst, setBurst] = useState<"none" | "apart" | "rebuilding">("none")
+  const burstDone = useRef(false)
+  // True from the burst until he says "WOAH"; clicks on him wait it out.
+  const bursting = useRef(false)
 
   // A click anywhere in the hero gets a line, bar the buttons and links,
   // which keep their own jobs.
@@ -410,11 +429,23 @@ function Fibo({
         at.dx <= FIBO_REACH.right &&
         at.dy >= -FIBO_REACH.top &&
         at.dy <= FIBO_REACH.bottom
+      if (onHim && bursting.current) return
+      if (onHim && !burstDone.current && !reduceMotion) {
+        burstDone.current = true
+        bursting.current = true
+        sfx.burst()
+        setBurst("apart")
+        window.setTimeout(() => {
+          setBuild((b) => b + 1)
+          setBurst("rebuilding")
+        }, FIBO_BURST_MS)
+        return
+      }
       reply.current(heckle({ onHim, at: performance.now() }))
     }
     node.addEventListener("click", respond)
     return () => node.removeEventListener("click", respond)
-  }, [area, geometry.fibo, pixel])
+  }, [area, geometry.fibo, pixel, reduceMotion])
 
   // Once per visit to the hero, a pointer that stays a while without
   // clicking gets a hello, from the fibo on show only.
@@ -480,24 +511,31 @@ function Fibo({
       >
         {seen ? (
           <PixelSnailSprite
+            key={build}
             className="text-foreground"
             transform={`translate(${x} ${y})`}
             pixel={pixel}
             mode="dance"
             look={look}
-            assembleDelay={FIBO_ASSEMBLE_MS}
+            burst={burst === "apart"}
+            assembleDelay={build > 0 ? FIBO_REBUILD_MS : FIBO_ASSEMBLE_MS}
             onAssemble={(step) => {
               if (!isShown(svg.current)) return
-              if (step === "whole") sfx.settle()
-              else sfx.pixels(step)
+              if (step !== "whole") return sfx.pixels(step)
+              sfx.settle()
+              if (burst === "rebuilding") {
+                bursting.current = false
+                setBurst("none")
+                reply.current("woah")
+              }
             }}
           />
         ) : null}
         <rect
-          x={x - FIBO_REACH.left * pixel}
-          y={y - FIBO_REACH.top * pixel}
-          width={(FIBO_REACH.left + FIBO_REACH.right) * pixel}
-          height={(FIBO_REACH.top + FIBO_REACH.bottom) * pixel}
+          x={x - FIBO_BODY.left * pixel}
+          y={y - FIBO_BODY.top * pixel}
+          width={(FIBO_BODY.left + FIBO_BODY.right) * pixel}
+          height={(FIBO_BODY.top + FIBO_BODY.bottom) * pixel}
           fill="transparent"
           pointerEvents="all"
           className="cursor-pointer"
@@ -663,7 +701,7 @@ function Interactive({ id, geometry }: { id: string; geometry: Geometry }) {
           strokeWidth={18}
           vectorEffect="non-scaling-stroke"
           pointerEvents="stroke"
-          className="cursor-pointer stroke-transparent"
+          className="stroke-transparent"
           onPointerDown={launch}
         />
         {geometry.lines.map((d) => (
@@ -714,13 +752,14 @@ const STACK: { icon: ComponentType<{ className?: string }>; title: string }[] =
 /*
  * The pitch is laid out in lattice cells (--u) so the buttons land on the dot
  * grid: their row starts on a dot row and they are whole cells tall. The text
- * above hangs off that row.
+ * above hangs off that row. Its left edge is the page's usual inset instead,
+ * so it lines up with the section headings below.
  */
 function Pitch({ width, className }: { width: number; className?: string }) {
   return (
     <div
       className={cn(
-        "grid grid-rows-[max(calc(var(--u)*13),round(up,15rem,var(--u)))_auto_auto] content-start overflow-hidden px-[calc(var(--u)*2)]",
+        "grid grid-rows-[max(calc(var(--u)*13),round(up,15rem,var(--u)))_auto_auto] content-start overflow-hidden pr-[calc(var(--u)*2)] pl-4",
         className
       )}
       style={{ "--u": `calc(100cqw * ${LATTICE} / ${width})` } as CSSProperties}

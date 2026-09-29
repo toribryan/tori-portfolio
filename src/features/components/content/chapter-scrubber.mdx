@@ -1,0 +1,321 @@
+---
+title: Chapter scrubber
+description: A rail of marks that swell under the pointer like the Dock, previewing the chapter at the crest.
+createdAt: 2026-09-28
+updatedAt: 2026-09-28
+new: true
+---
+
+A rail of marks, one per chapter, that swell under the pointer like the macOS
+Dock. The tallest mark, the crest, previews its chapter, so people can jump
+around a long piece without a table of contents.
+
+<ComponentPreview name="chapter-scrubber" />
+
+## Features
+
+- Marks swell in a wave around the pointer or keyboard focus, and the crest
+  previews its chapter as a card, a label, or nothing.
+- Runs vertically in a gutter or horizontally along a player, with ticks or
+  dots in three densities.
+- Works controlled or uncontrolled, so the marker can follow scroll or playback.
+- Respects reduced motion: the springs switch off, and the wave keeps its shape
+  but appears and follows instantly.
+
+## Installation
+
+<Install
+  name="chapter-scrubber"
+  exports={["ChapterScrubber", "type Chapter"]}
+/>
+
+It installs `motion` with it, for the springs.
+
+## Usage
+
+```tsx
+import { ChapterScrubber } from "@/components/ui/chapter-scrubber"
+
+const chapters = [
+  { id: "intro", title: "Introduction" },
+  { id: "tokens", title: "Token tiers", description: "Ramps, then roles." },
+  { id: "figma", title: "Figma variables", meta: "12:40" },
+]
+
+export function Contents() {
+  return <ChapterScrubber chapters={chapters} />
+}
+```
+
+Chapters sit on the rail in array order, one mark each. The `title` and
+`description` name each mark for screen readers.
+
+Each chapter takes:
+
+```ts
+type Chapter = {
+  id: string
+  title: string
+  description?: React.ReactNode // clamped to three lines
+  meta?: React.ReactNode // a small label beside the title, such as a timestamp
+}
+```
+
+## Anatomy
+
+Every part the component renders, with the `data-slot` it carries. You pass
+`chapters`; the component builds the rest.
+
+<Anatomy
+  root={{
+    name: "ChapterScrubber",
+    slot: "chapter-scrubber",
+    note: "The root. Carries data-orientation and data-variant.",
+    children: [
+      {
+        name: "rail",
+        note: "The listbox that holds the items.",
+        children: [
+          {
+            name: "item",
+            slot: "chapter-scrubber-item",
+            note: "One per chapter, in array order. The option people focus and click.",
+            children: [
+              {
+                name: "mark",
+                note: "The tick or dot. Carries data-current on the current chapter.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        name: "preview",
+        slot: "chapter-scrubber-preview",
+        note: "Beside the crest. Shows the chapter's meta, title and description.",
+      },
+    ],
+  }}
+/>
+
+## Guidelines
+
+<UsageGuidelines
+  guidelines={[
+    "Use it for content with a real sequence: a talk, a long read, a case study, a recording.",
+    "Keep between six and thirty chapters. Fewer reads as a list; more stops the wave from reaching the neighbours.",
+    <>
+      Pick <code>card</code> when chapters have descriptions, <code>label</code>{" "}
+      when the title says enough, and <code>none</code> when the page already
+      names the section.
+    </>,
+    <>
+      Leave <code>side</code> unset in most layouts. It prefers right or top and
+      flips on its own near the viewport edge.
+    </>,
+    <>
+      Set <code>currentIndex</code> from your scroll or playback position so the
+      marker keeps up with the reader between clicks.
+    </>,
+  ]}
+/>
+
+## Examples
+
+### Horizontal
+
+A rail along the top of a player or a slide deck. Ticks stand up from the
+baseline and the preview opens above.
+
+<Example of="chapter-scrubber.Horizontal" />
+
+### Dots
+
+`variant="dot"` swaps ticks for dots, for a softer rail that sits well beside
+imagery.
+
+<Example of="chapter-scrubber.Dots" />
+
+### Centred ticks
+
+`align="center"` grows ticks out from the middle line, which balances a rail
+placed on its own.
+
+<Example of="chapter-scrubber.Centered" />
+
+### Sizes
+
+`size` sets the density: `sm`, `default` and `lg`. `rowSize`, `restLength` and
+`peakLength` override it when you need an exact rhythm.
+
+<Example of="chapter-scrubber.Sizes" />
+
+### Controlled
+
+Buttons elsewhere on the page drive the same marker the rail sets, through
+`currentIndex` and `onCurrentIndexChange`.
+
+<Example of="chapter-scrubber.Controlled" />
+
+### In an article
+
+The rail in a sticky column beside a long read.
+
+<Example of="chapter-scrubber.InAnArticle" />
+
+## Do's and don'ts
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: (
+          <ChapterScrubber
+            preview="none"
+            size="sm"
+            defaultCurrentIndex={2}
+            chapters={Array.from({ length: 14 }, (_, i) => ({
+              id: String(i),
+              title: `Chapter ${i + 1}`,
+            }))}
+          />
+        ),
+        description:
+          "Give it enough chapters for the wave to have neighbours to lift.",
+      },
+      negative: {
+        component: (
+          <ChapterScrubber
+            preview="none"
+            size="sm"
+            chapters={Array.from({ length: 3 }, (_, i) => ({
+              id: String(i),
+              title: `Chapter ${i + 1}`,
+            }))}
+          />
+        ),
+        description:
+          "Don't use it for three items. Plain links say more in less space.",
+      },
+    },
+    {
+      positive: {
+        component: (
+          <span className="rounded-lg border border-border bg-popover px-3 py-2 text-sm font-medium shadow-sm">
+            Semantic roles
+          </span>
+        ),
+        description:
+          "Keep titles short enough to read in the moment the crest passes.",
+      },
+      negative: {
+        component: (
+          <span className="max-w-60 rounded-lg border border-border bg-popover px-3 py-2 text-sm font-medium shadow-sm">
+            In which we finally discuss how semantic roles came to be named
+          </span>
+        ),
+        description:
+          "Don't put the chapter's argument in its title. That belongs in the description.",
+      },
+    },
+  ]}
+/>
+
+## API reference
+
+| Prop                   | Type                                                | Default      | Description                                                                                                                                                                          |
+| ---------------------- | --------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `chapters`             | `Chapter[]`                                         |              | Chapters in order along the rail, one mark each.                                                                                                                                     |
+| `orientation`          | `"vertical" \| "horizontal"`                        | `"vertical"` | Which way the rail runs.                                                                                                                                                             |
+| `variant`              | `"tick" \| "dot"`                                   | `"tick"`     | Mark style: hairline ticks or dots.                                                                                                                                                  |
+| `size`                 | `"sm" \| "default" \| "lg"`                         | `"default"`  | Density preset. Numeric props below override it.                                                                                                                                     |
+| `side`                 | `"left" \| "right" \| "top" \| "bottom"`            |              | Where the preview opens. Vertical rails take left or right, horizontal rails top or bottom. Unset picks right or top, and it flips when the preferred side would leave the viewport. |
+| `align`                | `"edge" \| "center"`                                | `"edge"`     | Ticks grow from the rail's edge, or out from its centre line.                                                                                                                        |
+| `preview`              | `"card" \| "label" \| "none"`                       | `"card"`     | What shows beside the crest.                                                                                                                                                         |
+| `rowSize`              | `number`                                            |              | Row pitch along the rail, in pixels.                                                                                                                                                 |
+| `restLength`           | `number`                                            |              | Resting mark length (or dot diameter), in pixels.                                                                                                                                    |
+| `peakLength`           | `number`                                            |              | Mark length (or dot diameter) at the crest, in pixels.                                                                                                                               |
+| `radius`               | `number`                                            | `4`          | How far the wave reaches from the pointer, in rows.                                                                                                                                  |
+| `currentIndex`         | `number`                                            |              | The chapter marked as current. Pass it to control the marker.                                                                                                                        |
+| `defaultCurrentIndex`  | `number`                                            |              | The starting current chapter when uncontrolled.                                                                                                                                      |
+| `onCurrentIndexChange` | `(index: number, chapter: Chapter) => void`         |              | Fires when a chapter is chosen, with the new current index.                                                                                                                          |
+| `onActiveChange`       | `(chapter: Chapter \| null, index: number) => void` |              | Fires as the hovered or focused chapter changes; `null` on leave.                                                                                                                    |
+| `label`                | `string`                                            | `"Chapters"` | Accessible name for the rail.                                                                                                                                                        |
+
+Any other prop goes to the root `div`.
+
+### Data attributes
+
+Style parts by slot or state, for example with
+`[&_[data-slot=chapter-scrubber-preview]]:shadow-none`.
+
+<DataAttributes
+  rows={[
+    {
+      attribute: 'data-slot="chapter-scrubber"',
+      element: "The root",
+      when: "Always.",
+    },
+    {
+      attribute: 'data-slot="chapter-scrubber-item"',
+      element: "Each chapter's row on the rail",
+      when: "Always.",
+    },
+    {
+      attribute: 'data-slot="chapter-scrubber-preview"',
+      element: "The card or label beside the crest",
+      when: (
+        <>
+          Unless <code>preview</code> is <code>none</code>. It fades in while a
+          chapter is hovered or focused.
+        </>
+      ),
+    },
+    {
+      attribute: "data-orientation",
+      element: "The root",
+      when: (
+        <>
+          Always. <code>vertical</code> or <code>horizontal</code>.
+        </>
+      ),
+    },
+    {
+      attribute: "data-variant",
+      element: "The root",
+      when: (
+        <>
+          Always. <code>tick</code> or <code>dot</code>.
+        </>
+      ),
+    },
+    {
+      attribute: "data-current",
+      element: "The mark of the current chapter",
+      when: "The chapter is current.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+<UsageGuidelines
+  guidelines={[
+    <>
+      The rail is a listbox and every mark an option named by its title and
+      description. The current chapter is <code>aria-selected</code>.
+    </>,
+    "Only one mark is in the tab order. Arrow keys, Home and End move along the rail; Enter or Space makes a chapter current.",
+    "Focus raises the wave exactly as hover does, so keyboard users get the same preview.",
+  ]}
+/>
+
+## Related components
+
+<RelatedComponents names={["Integration visual", "Token flow", "Reactions"]} />
+
+## References
+
+- The macOS Dock, whose magnification the wave borrows
+- [WAI-ARIA listbox pattern](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/), for the keyboard model
+- [Motion](https://motion.dev), for the springs

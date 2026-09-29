@@ -53,6 +53,18 @@ function tone({ from, to = from, ms, volume, wave = "square", at = 0 }: Tone) {
 // Each line opens with its own tone of voice.
 const VOICES: Record<FiboLine, () => void> = {
   poke: () => tone({ from: 880, to: 220, ms: 90, volume: 0.04 }),
+  // Puffing himself up, then sinking back to snail size.
+  size: () => {
+    tone({ from: 180, to: 360, ms: 120, volume: 0.04 })
+    tone({
+      from: 360,
+      to: 140,
+      ms: 180,
+      volume: 0.03,
+      wave: "square",
+      at: 0.13,
+    })
+  },
   button: () => {
     tone({ from: 660, ms: 60, volume: 0.03 })
     tone({ from: 440, ms: 80, volume: 0.03, at: 0.08 })
@@ -74,6 +86,18 @@ const VOICES: Record<FiboLine, () => void> = {
   hello: () => {
     tone({ from: 523, ms: 90, volume: 0.04, wave: "triangle" })
     tone({ from: 784, ms: 140, volume: 0.04, wave: "triangle", at: 0.1 })
+  },
+  // A dizzy swoop down and back up, just back in one piece.
+  woah: () => {
+    tone({ from: 700, to: 260, ms: 220, volume: 0.04, wave: "triangle" })
+    tone({
+      from: 260,
+      to: 620,
+      ms: 260,
+      volume: 0.04,
+      wave: "triangle",
+      at: 0.2,
+    })
   },
 }
 
@@ -100,6 +124,11 @@ export const sfx = {
           volume: 0.03,
           wave: "triangle",
         }),
+  /** Bursting apart: a crunchy drop, noisy at the top. */
+  burst: () => {
+    tone({ from: 1400, to: 90, ms: 380, volume: 0.05, wave: "sawtooth" })
+    tone({ from: 300, to: 60, ms: 300, volume: 0.04, at: 0.03 })
+  },
   /** The last pixels settling: a chord. */
   settle: () => {
     for (const note of [523, 659, 784])

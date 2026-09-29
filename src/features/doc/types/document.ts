@@ -13,6 +13,11 @@ export type DocMetadata = {
    */
   imageHover?: string
   /**
+   * A looping clip that fills the cover, cropped to fit. `image` shows in
+   * its place under reduced motion.
+   */
+  video?: string
+  /**
    * Attribution shown directly under the cover image, for imagery that is
    * not the author's own (e.g. an employer's public product marketing).
    */
@@ -40,6 +45,11 @@ export type DocMetadata = {
    * library whose story is told by a case study.
    */
   href?: string
+  /**
+   * Leaves `description` out of the top of the doc's page, for a doc whose
+   * body opens on its own. It still describes the doc everywhere else.
+   */
+  hideLead?: boolean
   /** Pins the doc to the top of its list, above the date-sorted rest. */
   pinned?: boolean
   /**

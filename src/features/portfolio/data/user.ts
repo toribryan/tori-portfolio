@@ -14,7 +14,7 @@ export const USER: User = {
   bio: "Product Designer specializing in design systems. Five years building products, component libraries, and the tooling that connects design to production code.",
   flipSentences: [
     "questioning everything, all the time.",
-    "designing systems + shipping them",
+    "designing systems + pushing pixels",
   ],
   address: "Arizona, United States",
   emailB64: "dG9yaWJyeWFuLmRlc2lnbkBnbWFpbC5jb20=", // toribryan.design@gmail.com
@@ -36,7 +36,7 @@ export const USER: User = {
 - Always exploring new tools and ways to create. Currently learning the drums, and studying the history of the golden ratio and its relevance to design today.
 `,
   avatar: "/images/about/photo-1.jpg",
-  headerAvatar: "/images/header/avatar.webp",
+  headerAvatar: "/images/header/avatar.svg",
   portrait: "/images/header/avatar-square.webp",
   avatarVariants: {
     lightOff: "/images/about/photo-1.jpg",
@@ -47,7 +47,7 @@ export const USER: User = {
   /**
    * The 1200x630 social card, not a photo: it is what renders when the link is
    * texted or pasted into Slack. It has to stay reachable while the password
-   * gate is on, so it is exempt from the matcher in `src/middleware.ts`.
+   * gate is on, so it is exempt from the matcher in `src/proxy.ts`.
    */
   ogImage: "/og-cover.png",
   keywords: [

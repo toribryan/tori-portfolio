@@ -1,70 +1,228 @@
 ---
-title: Token Flow
-description: A color token walking from raw value to primitive to semantic utility, with a pulse along each wire. Theme aware.
+title: Token flow
+description: Walks a colour token from raw value to primitive to semantic role.
 createdAt: 2026-09-18
-updatedAt: 2026-09-18
+updatedAt: 2026-09-28
 new: true
 ---
 
+Token flow shows a colour moving through the token tiers, from raw value to
+primitive to semantic role.
+
 <ComponentPreview name="token-flow" />
+
+Switch the site theme: rows with a dark pair scramble to their dark
+values while the semantic name stays put.
 
 ## Features
 
-- One row per color, three chips wired left to right: the raw value, the primitive that names it, and the semantic utility that uses it.
-- A pulse travels along every wire, staggered per row, so the plate reads as a flow rather than a table.
-- Rows that carry a dark value swap to it when the theme changes, and the chips that change scramble for a second on the way. Nothing plays on first load, whichever theme it loads in.
-- Follows the document's `dark` class by default. Hosts that own the theme can pin it with `theme`.
-- Stacks vertically below `sm`, with the wires turning to run top to bottom.
+- One row per role: the raw value, the primitive and the semantic role, joined
+  by wires.
+- A pulse runs along each wire while the plate is on screen.
+- Rows with a `dark` pair scramble to their dark values when the theme changes,
+  while the role's name stays put.
+- `showUse` prints what each role is for under its chip.
 
 ## Installation
 
-<InstallCommand name="@iamtoribryan/token-flow" />
+<Install name="token-flow" exports={["TokenFlow", "type TokenRow"]} />
+
+No animation library: the pulse and the scramble use the Web Animations API and
+`requestAnimationFrame`.
 
 ## Usage
 
 ```tsx
 import { TokenFlow } from "@/components/ui/token-flow"
-import type { TokenRow } from "@/components/ui/token-flow"
+
+export function PrimaryToken() {
+  return (
+    <TokenFlow
+      rows={[
+        {
+          base: "oklch(0.205 0 0)",
+          primitive: "neutral-900",
+          semantic: "bg-primary",
+          dark: { base: "oklch(0.985 0 0)", primitive: "neutral-50" },
+        },
+      ]}
+    />
+  )
+}
 ```
 
-```tsx
-const rows: TokenRow[] = [
-  {
-    base: "oklch(0.141 0.005 285.823)",
-    primitive: "zinc-950",
-    semantic: "bg-primary",
-    use: "Primary actions, headings",
-    dark: { base: "oklch(0.985 0 0)", primitive: "zinc-50" },
-  },
-]
+Name the role the way people write it in code, and add a `dark` pair when the
+role resolves differently in the dark theme.
 
-<TokenFlow rows={rows} showUse />
-```
+## Anatomy
 
-Each row's `base` also colors the swatch on its three chips, so a row that swaps in the dark theme changes color along with its labels.
+Every part the component renders, with the `data-slot` it carries. You pass
+`rows`; the component builds the rest.
+
+<Anatomy
+  root={{
+    name: "TokenFlow",
+    slot: "token-flow",
+    note: "The plate.",
+    children: [
+      {
+        name: "tier labels",
+        note: "Base, Primitive and Semantic above the columns. Decorative.",
+      },
+      {
+        name: "row",
+        note: "One per entry in rows.",
+        children: [
+          {
+            name: "chip",
+            slot: "token-flow-chip",
+            note: "The value, the primitive and the role, three per row.",
+          },
+          {
+            name: "wire",
+            note: "Between chips, carrying the pulse. Decorative.",
+          },
+        ],
+      },
+    ],
+  }}
+/>
+
+## Guidelines
+
+<UsageGuidelines
+  guidelines={[
+    "Use it in docs, case studies and onboarding, where the point is how a token is built, not what it looks like.",
+    "Keep it to three to five rows, one per role.",
+    <>
+      Pick rows with a <code>dark</code> pair to show why semantic roles exist:
+      the name stays put while the value underneath changes.
+    </>,
+    <>
+      Turn on <code>showUse</code> when the reader doesn't know the role names
+      yet.
+    </>,
+  ]}
+/>
+
+<Tip>
+  By default the plate follows the document's <code>dark</code> class. A host
+  that owns its own theme, such as a preview frame, can pin it with{" "}
+  <code>theme</code>, and scope a <code>dark</code> class to a wrapper so the
+  surfaces follow too.
+</Tip>
+
+## Examples
+
+### Without use
+
+The default: three chips per row, with no `use` line.
+
+<Example of="token-flow.Default" />
+
+### Single row
+
+One role on its own, with `showUse` on.
+
+<Example of="token-flow.SingleRow" />
+
+## Do's and don'ts
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: (
+          <TokenFlow
+            className="w-full"
+            rows={[
+              {
+                base: "oklch(0.205 0 0)",
+                primitive: "neutral-900",
+                semantic: "bg-primary",
+              },
+            ]}
+          />
+        ),
+        description: "Name the semantic role the way people write it in code.",
+      },
+      negative: {
+        component: (
+          <TokenFlow
+            className="w-full"
+            rows={[
+              {
+                base: "oklch(0.205 0 0)",
+                primitive: "neutral-900",
+                semantic: "dark grey",
+              },
+            ]}
+          />
+        ),
+        description:
+          "Don't describe the colour in the last column. That's what the swatch is for.",
+      },
+    },
+  ]}
+/>
 
 ## API reference
 
-### TokenFlow
+Each row takes a `base` value, a `primitive` name and a `semantic` role, plus
+an optional `use` and a `dark` pair for roles that resolve differently in the
+dark theme.
 
-| Prop        | Type                | Default | Description                                                     |
-| ----------- | ------------------- | ------- | --------------------------------------------------------------- |
-| `rows`      | `TokenRow[]`        |         | One entry per color.                                            |
-| `showUse`   | `boolean`           | `false` | Print each row's `use` under its semantic chip.                 |
-| `theme`     | `"light" \| "dark"` |         | Pin the theme instead of following the document's `dark` class. |
-| `className` | `string`            |         | Classes for the outer plate.                                    |
+| Prop      | Type                | Default | Description                                                                                  |
+| --------- | ------------------- | ------- | -------------------------------------------------------------------------------------------- |
+| `rows`    | `TokenRow[]`        | —       | Required. One row per role: `base`, `primitive`, `semantic`, plus optional `use` and `dark`. |
+| `showUse` | `boolean`           | `false` | Print each row's `use` under its semantic chip.                                              |
+| `theme`   | `"light" \| "dark"` | —       | Force a theme instead of following the document's `dark` class.                              |
 
-### TokenRow
+#### TokenRow
 
-| Field       | Type                                  | Description                                                     |
-| ----------- | ------------------------------------- | --------------------------------------------------------------- |
-| `base`      | `string`                              | The raw value, as written in CSS.                               |
-| `primitive` | `string`                              | The primitive it is named as, such as a palette step.           |
-| `semantic`  | `string`                              | The semantic utility that points at the primitive.              |
-| `use`       | `string`                              | What the role is for. Shown when `showUse` is set.              |
-| `dark`      | `{ base: string; primitive: string }` | The value and primitive the role resolves to in the dark theme. |
+| Field       | Type                                  | Description                                                                          |
+| ----------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
+| `base`      | `string`                              | The raw value, as written in CSS.                                                    |
+| `primitive` | `string`                              | The primitive it is named as, e.g. a palette step.                                   |
+| `semantic`  | `string`                              | The semantic role that points at the primitive.                                      |
+| `use`       | `string`                              | What the role is for, shown under the semantic chip when `showUse` is set.           |
+| `dark`      | `{ base: string; primitive: string }` | The value and primitive the role resolves to under the dark theme, when they differ. |
 
-<Callout>
-  The pulse only runs while the plate is on screen, and holds still for readers
-  who ask for reduced motion. The scramble on a theme change does the same.
-</Callout>
+### Data attributes
+
+<DataAttributes
+  rows={[
+    {
+      attribute: 'data-slot="token-flow"',
+      element: "The plate",
+      when: "Always.",
+    },
+    {
+      attribute: 'data-slot="token-flow-chip"',
+      element: "Each chip",
+      when: "Always.",
+    },
+  ]}
+/>
+
+## Accessibility
+
+<UsageGuidelines
+  guidelines={[
+    <>
+      Every chip carries its tier in screen-reader text, so it reads as
+      "Primitive neutral-900" rather than a bare value.
+    </>,
+    "The scrambled text is hidden from assistive tech. Only the settled value is announced.",
+    "The pulse only runs while the plate is on screen, and neither the pulse nor the scramble plays under prefers-reduced-motion.",
+  ]}
+/>
+
+## Related components
+
+<RelatedComponents names={["Badge", "Reactions"]} />
+
+## References
+
+- [Web Animations API](https://developer.mozilla.org/docs/Web/API/Web_Animations_API)
+- [Intersection Observer](https://developer.mozilla.org/docs/Web/API/Intersection_Observer_API), which starts the pulse on screen
