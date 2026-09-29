@@ -10,13 +10,18 @@ import { useMediaQuery } from "@/hooks/use-media-query"
  * start in milliseconds, the first being rest. The sequence plays while the
  * card around the cover is hovered or focused. With `loop`, or on a touch
  * screen, where nothing can hover, it plays on its own while in view,
- * holding the last step for `hold` before starting over. With reduced
+ * holding the last step for `hold` before starting over. With `repeat` a
+ * hovered card starts over the same way rather than holding. With reduced
  * motion the cover shows the last step, still.
  */
 export function useCoverSteps(
   frame: RefObject<HTMLElement | null>,
   stepAt: number[],
-  { loop = false, hold = 2600 }: { loop?: boolean; hold?: number } = {}
+  {
+    loop = false,
+    repeat = false,
+    hold = 2600,
+  }: { loop?: boolean; repeat?: boolean; hold?: number } = {}
 ) {
   const [engaged, setEngaged] = useState(false)
   const [step, setStep] = useState(0)
@@ -38,15 +43,16 @@ export function useCoverSteps(
       })
     }
     play()
-    const id = autoplay
-      ? window.setInterval(play, starts[starts.length - 1] + hold)
-      : undefined
+    const id =
+      autoplay || repeat
+        ? window.setInterval(play, starts[starts.length - 1] + hold)
+        : undefined
     return () => {
       window.clearInterval(id)
       timers.forEach((timer) => window.clearTimeout(timer))
       setStep(0)
     }
-  }, [active, autoplay, reduceMotion, timing, hold])
+  }, [active, autoplay, repeat, reduceMotion, timing, hold])
 
   // Covers are inert, so they listen on the card or hero around them.
   useEffect(() => {
