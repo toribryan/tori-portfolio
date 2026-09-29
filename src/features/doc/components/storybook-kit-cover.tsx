@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  useRef,
-  type ComponentType,
-  type CSSProperties,
-  type ReactNode,
-} from "react"
+import { useRef, type ComponentType, type CSSProperties } from "react"
 import {
   BookmarkIcon,
   ChevronDownIcon,
@@ -26,14 +21,13 @@ import { ScaledStage } from "@/features/portfolio/components/components/covers"
 
 import { useCoverSteps } from "./use-cover-steps"
 
-/** Rest, Button opened, then one entry after another selected. */
-const STEP_AT = [0, 350, 900, 1500, 2100, 2700]
+/** Each step selects the next entry under Button, starting from Docs. */
+const STEP_AT = [0, 700, 1400, 2100]
 
 const ENTRIES = ["Docs", "Default", "All Variants", "Disabled"]
 
-/** Which entry each step selects: none at rest or while Button opens. */
 function selectedAt(step: number) {
-  return step >= 2 ? ENTRIES[step - 2] : null
+  return ENTRIES[step]
 }
 
 /*
@@ -50,20 +44,6 @@ const SB = {
   component: "#029cfd",
   story: "#37d5d3",
   docs: "#ff8300",
-}
-
-/** Grows a row in or out, so the list below it slides rather than jumps. */
-function Reveal({ open, children }: { open: boolean; children: ReactNode }) {
-  return (
-    <div
-      className={cn(
-        "grid transition-[grid-template-rows,opacity] duration-300 ease-out",
-        open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-      )}
-    >
-      <div className="flex min-h-0 flex-col overflow-hidden">{children}</div>
-    </div>
-  )
 }
 
 /*
@@ -136,7 +116,7 @@ const DefaultRow = ({
   chevron?: "open" | "closed"
 }) => (
   <span
-    className="flex items-center gap-1 rounded-[3px] py-[2.5px] pr-1 transition-colors duration-150"
+    className="flex h-[14px] items-center gap-1 rounded-[3px] pr-1 transition-colors duration-150"
     style={{
       paddingLeft: 4 + depth * 9,
       background: active ? SB.selected : "transparent",
@@ -213,20 +193,18 @@ function DefaultSidebar({ step }: { step: number }) {
           color={SB.component}
           label="Button"
           depth={0}
-          chevron={step >= 1 ? "open" : "closed"}
+          chevron="open"
         />
-        <Reveal open={step >= 1}>
-          {ENTRIES.map((entry) => (
-            <DefaultRow
-              key={entry}
-              icon={entry === "Docs" ? SbDocument : SbBookmark}
-              color={entry === "Docs" ? SB.docs : SB.story}
-              label={entry}
-              depth={1}
-              active={selected === entry}
-            />
-          ))}
-        </Reveal>
+        {ENTRIES.map((entry) => (
+          <DefaultRow
+            key={entry}
+            icon={entry === "Docs" ? SbDocument : SbBookmark}
+            color={entry === "Docs" ? SB.docs : SB.story}
+            label={entry}
+            depth={1}
+            active={selected === entry}
+          />
+        ))}
       </div>
     </div>
   )
@@ -258,7 +236,7 @@ const KitRow = ({
 
 function KitSidebar({ step }: { step: number }) {
   const selected = selectedAt(step)
-  const index = selected ? ENTRIES.indexOf(selected) : -1
+  const index = ENTRIES.indexOf(selected)
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden rounded-lg border border-line bg-card px-2 py-2.5 text-[8px] text-foreground shadow-[0_8px_24px_rgb(0_0_0/0.12)]">
@@ -298,40 +276,30 @@ function KitSidebar({ step }: { step: number }) {
           chevron="open"
         />
         <KitRow icon={ComponentIcon} label="Badge" depth={1} chevron="closed" />
-        <KitRow
-          icon={ComponentIcon}
-          label="Button"
-          depth={1}
-          chevron={step >= 1 ? "open" : "closed"}
-        />
-        <Reveal open={step >= 1}>
-          <div className="relative">
-            {/* One pill that slides to the selected entry, rather than a
+        <KitRow icon={ComponentIcon} label="Button" depth={1} chevron="open" />
+        <div className="relative">
+          {/* One pill that slides to the selected entry, rather than a
                 fill that jumps between rows. */}
+          <span
+            className="absolute inset-x-0 h-[15px] rounded-md bg-accent-muted transition-[translate] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            style={{ translate: `0 ${index * 15}px` }}
+          />
+          {ENTRIES.map((entry) => (
             <span
+              key={entry}
               className={cn(
-                "absolute inset-x-0 h-[15px] rounded-md bg-accent-muted transition-[translate,opacity] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
-                index < 0 && "opacity-0"
+                "relative transition-[font-weight]",
+                selected === entry ? "font-semibold" : "text-foreground"
               )}
-              style={{ translate: `0 ${Math.max(index, 0) * 15}px` }}
-            />
-            {ENTRIES.map((entry) => (
-              <span
-                key={entry}
-                className={cn(
-                  "relative transition-[font-weight]",
-                  selected === entry ? "font-semibold" : "text-foreground"
-                )}
-              >
-                <KitRow
-                  icon={entry === "Docs" ? FileTextIcon : BookmarkIcon}
-                  label={entry}
-                  depth={2}
-                />
-              </span>
-            ))}
-          </div>
-        </Reveal>
+            >
+              <KitRow
+                icon={entry === "Docs" ? FileTextIcon : BookmarkIcon}
+                label={entry}
+                depth={2}
+              />
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   )
@@ -339,8 +307,8 @@ function KitSidebar({ step }: { step: number }) {
 
 /**
  * What storybook-kit changes, side by side: Storybook's stock sidebar and
- * the designed one the kit ships, stepping through the same stories. They
- * move while the card is hovered or focused, or on a loop with `loop` or on
+ * the designed one the kit ships, with Button open, stepping through the
+ * same entries. They move while the card is hovered or focused, or on a loop with `loop` or on
  * a touch screen.
  */
 export function StorybookKitCover({ loop = false }: { loop?: boolean }) {
@@ -362,22 +330,14 @@ export function StorybookKitCover({ loop = false }: { loop?: boolean }) {
         aria-hidden
       />
       <ScaledStage width={480}>
-        <div className="flex h-full items-start justify-center gap-6 px-8 pt-3">
-          {[
-            ["Default", <DefaultSidebar key="default" step={step} />],
-            ["storybook-kit", <KitSidebar key="kit" step={step} />],
-          ].map(([label, sidebar]) => (
-            <div
-              key={label as string}
-              className="flex w-[168px] flex-col gap-1.5"
-            >
-              <p className="text-center font-mono text-[9px] tracking-wide text-muted-foreground uppercase">
-                {label}
-              </p>
-              {/* Taller than the cover, so it runs off the bottom edge. */}
-              <div className="h-[260px]">{sidebar}</div>
-            </div>
-          ))}
+        {/* Both run taller than the cover, off its bottom edge. */}
+        <div className="flex h-full items-start justify-center gap-6 px-8 pt-6">
+          <div className="h-[260px] w-[168px]">
+            <DefaultSidebar step={step} />
+          </div>
+          <div className="h-[260px] w-[168px]">
+            <KitSidebar step={step} />
+          </div>
         </div>
       </ScaledStage>
     </div>
