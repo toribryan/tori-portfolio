@@ -606,7 +606,7 @@ export function TokenVisualizer() {
         <figcaption className="flex max-w-md flex-col items-start gap-2">
           <Badge variant="outline">
             {system === "before"
-              ? "Neutral grey, a name per shade"
+              ? "Neutral gray, a name per shade"
               : "Slate, semantic tokens"}
           </Badge>
           <span className="text-sm text-muted-foreground">

@@ -16,8 +16,8 @@ skills:
   - "Base UI"
   - "Design tokens"
 problem: "A clickthrough prototype proves an interaction and then stops being useful. The Integrity Console existed as 25 hand-built screens of vanilla HTML: convincing to click through, impossible to hand to an engineer as anything but a picture."
-task: "Turn the prototype's decisions into a component library an engineer could build from: every surface, state and colour named once, and every component demonstrable in isolation."
-outcome: "40 components and 12 full page compositions, browsable in Storybook. The token names carried over from the prototype unchanged, so the two artefacts describe the same product."
+task: "Turn the prototype's decisions into a component library an engineer could build from: every surface, state and color named once, and every component demonstrable in isolation."
+outcome: "40 components and 12 full page compositions, browsable in Storybook. The token names carried over from the prototype unchanged, so the two artifacts describe the same product."
 results:
   - value: "40"
     label: "Components in the library"
@@ -30,7 +30,7 @@ results:
 <Pipeline>
   <Stage
     label="Tokens"
-    detail="One name per surface, state and colour"
+    detail="One name per surface, state and color"
     mark="layers"
   />
   <Stage
@@ -46,7 +46,7 @@ results:
   />
 </Pipeline>
 
-## Two artefacts, one product
+## Two artifacts, one product
 
 The [Support Agent Dashboard](/work/support-agent-dashboard) shipped as a
 25-screen clickthrough: vanilla HTML, CSS and JavaScript, no framework, no build
@@ -119,7 +119,7 @@ never at a call site.
   title="Foundations / Icons: selected state"
   width="760"
   height="500"
-  caption="Selection is a colour step. Unselected destinations sit in the muted foreground and the selected one moves to the full foreground on its chip, at the same stroke, so every icon reads the same weight. Search is an action and is never selected."
+  caption="Selection is a color step. Unselected destinations sit in the muted foreground and the selected one moves to the full foreground on its chip, at the same stroke, so every icon reads the same weight. Search is an action and is never selected."
 />
 
 ## Inbox
@@ -148,7 +148,7 @@ never at a call site.
   height="620"
 />
 
-Role colour carries meaning. Student, instructor and admin each own a
+Role color carries meaning. Student, instructor and admin each own a
 background/foreground pair, and the same three hues carry the chart series:
 an orange line on the Overview chart means the same thing an orange badge means
 in the Inbox.
@@ -179,7 +179,7 @@ the React build.
 }
 ```
 
-Every one of those tokens has a dark counterpart, so the warm grey ground, the
+Every one of those tokens has a dark counterpart, so the warm gray ground, the
 inbox row scale and the role pairs all survive a theme switch, and the brand red
 stays red rather than falling back to a stock white primary. The two blocks
 live inside a managed region, so a token sync from Figma writes there and
@@ -187,7 +187,7 @@ nowhere else.
 
 ### Role pairs
 
-The chart series reuse these hues, so a colour carries one meaning across the
+The chart series reuse these hues, so a color carries one meaning across the
 whole product.
 
 | Role       | Background                 | Foreground                 |
@@ -209,7 +209,7 @@ whole product.
 
 The one place the palette gets fussy, because three states have to be
 distinguishable at a glance down a long list. Unread reads _lighter_ than the
-ground; read reads a step darker; selected gets its own warm grey rather than
+ground; read reads a step darker; selected gets its own warm gray rather than
 borrowing `--sel`.
 
 | State    | Rest                      | Hover                     |
@@ -222,7 +222,7 @@ borrowing `--sel`.
 
 Geist Variable throughout: `--font-heading` is an alias of `--font-sans`, not a
 second family. Headings differentiate by weight and size against Tailwind's
-default scale; there is no bespoke scale to memorise, and no component reaches
+default scale; there is no bespoke scale to memorize, and no component reaches
 for an off-scale size to get there.
 
 ### Radius
