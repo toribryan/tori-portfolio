@@ -2,7 +2,14 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { HeartIcon, HomeIcon, MapPinIcon } from "lucide-react"
+import {
+  ChevronsUpDownIcon,
+  FileTextIcon,
+  HeartIcon,
+  HomeIcon,
+  MapPinIcon,
+  SettingsIcon,
+} from "lucide-react"
 import { useInView, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
@@ -12,7 +19,7 @@ import { ScaledStage } from "@/features/portfolio/components/components/covers"
  * The cover draws the product, not the site, so it keeps the marketplace's
  * own brand blue and white surfaces in both of the site's themes.
  */
-const BRAND = "#1a4fe0"
+const BRAND = "#1f5ce8"
 const PLATE = "#0b2a9a"
 
 /** Rest, availability switched on, the change travelling, the badge, the save. */
@@ -21,11 +28,33 @@ const STEP_AT = [0, 300, 950, 1450, 2150]
 /** How long the finished state holds before a looping cover starts over. */
 const LOOP_HOLD = 2600
 
+/** The listing both products show, as the home card's own screenshot has it. */
+const HOME = {
+  name: "Agavia Assisted Living",
+  address: "2427 West Desert Hills Estate Dr, Phoenix, AZ 85086",
+  price: "$7000",
+}
+
+/** The dashboard's sections under Availability, with their states. */
 const SECTIONS = [
   ["Photos", "10 photos"],
-  ["About", "Established in 2023"],
+  ["About", "Established in 2023, this luxurious"],
+  ["Amenities", "6 amenities"],
   ["Care services", "8 services"],
 ] as const
+
+/** The marketplace's logo mark: a roofline with a red heart under it. */
+function HouseHeart() {
+  return (
+    <svg viewBox="0 0 16 14" className="w-3" aria-hidden>
+      <path d="M8 1 1 7h2v6h10V7h2L8 1Z" fill="#1b2a4a" />
+      <path
+        d="M8 11.2 5.3 8.6a1.6 1.6 0 0 1 2.7-1.9 1.6 1.6 0 0 1 2.7 1.9L8 11.2Z"
+        fill="#e5383b"
+      />
+    </svg>
+  )
+}
 
 /**
  * One design system, two products: the agent platform's listing sidebar and
@@ -103,34 +132,46 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
       />
       <ScaledStage width={440}>
         <div className="relative flex h-full items-center justify-center gap-8">
-          {/* Agent platform: the listing, section by section. */}
-          <div className="flex w-[168px] flex-col overflow-hidden rounded-xl bg-[#f7f8f8] shadow-[0_8px_24px_rgb(0_0_0/0.25)]">
-            <div className="flex items-center gap-2 border-b border-[#e3e5e8] px-2.5 py-2">
-              <span
-                className="flex size-5 shrink-0 items-center justify-center rounded-md text-white"
-                style={{ background: BRAND }}
-              >
-                <HomeIcon className="size-3" />
+          {/* Agent platform: the icon rail and the listing, section by
+              section, as the dashboard draws them. */}
+          <div className="flex w-[184px] overflow-hidden rounded-xl bg-[#f7f8f8] shadow-[0_8px_24px_rgb(0_0_0/0.25)]">
+            <div className="flex w-7 shrink-0 flex-col items-center gap-1.5 border-r border-[#e6e8ea] py-2">
+              <span className="flex size-5 items-center justify-center rounded-md bg-white shadow-[0_1px_2px_rgb(0_0_0/0.12)]">
+                <HouseHeart />
               </span>
-              <span className="flex min-w-0 flex-col leading-tight">
-                <span className="truncate text-[9px] font-medium">
-                  A Loving Heart
-                </span>
-                <span className="text-[7px] text-[#6b7079]">Care home</span>
+              <span className="flex size-5 items-center justify-center rounded-md bg-[#eceeef] text-[#1b1d21]">
+                <FileTextIcon className="size-2.5" strokeWidth={1.75} />
               </span>
+              <SettingsIcon
+                className="size-2.5 text-[#1b1d21]"
+                strokeWidth={1.75}
+              />
             </div>
-            <div
-              className={cn(
-                "flex items-center justify-between gap-2 border-b border-[#e3e5e8] px-2.5 py-1.5 transition-colors duration-300",
-                open ? "bg-[#eaf0fd]" : "bg-transparent"
-              )}
-            >
-              <span className="flex min-w-0 flex-col leading-tight">
-                <span className="text-[9px] font-medium">Availability</span>
-                <span className="relative h-[10px] text-[7px] text-[#6b7079]">
+            <div className="flex min-w-0 flex-1 flex-col">
+              <div className="flex items-center gap-1.5 border-b border-[#e6e8ea] px-2 py-2">
+                <span
+                  className="flex size-[18px] shrink-0 items-center justify-center rounded-[5px] text-white"
+                  style={{ background: BRAND }}
+                >
+                  <HomeIcon className="size-2.5" strokeWidth={2} />
+                </span>
+                <span className="flex min-w-0 flex-1 flex-col leading-[1.2]">
+                  <span className="truncate text-[8.5px]">{HOME.name}</span>
+                  <span className="text-[7px] text-[#5d626b]">Care home</span>
+                </span>
+                <ChevronsUpDownIcon className="size-2.5 shrink-0 text-[#1b1d21]" />
+              </div>
+              <div
+                className={cn(
+                  "flex flex-col border-b border-[#e6e8ea] px-2 py-[5px] leading-[1.25] transition-colors duration-300",
+                  open ? "bg-[#eef0f0]" : "bg-transparent"
+                )}
+              >
+                <span className="text-[8.5px]">Availability</span>
+                <span className="relative h-[9px] text-[7px] text-[#5d626b]">
                   <span
                     className={cn(
-                      "absolute inset-0 whitespace-nowrap transition-opacity duration-300",
+                      "absolute inset-0 truncate transition-opacity duration-300",
                       open && "opacity-0"
                     )}
                   >
@@ -138,35 +179,26 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
                   </span>
                   <span
                     className={cn(
-                      "absolute inset-0 whitespace-nowrap transition-opacity duration-300",
+                      "absolute inset-0 truncate transition-opacity duration-300",
                       !open && "opacity-0"
                     )}
                   >
-                    Accepting · 1 of 1 rooms
+                    Accepting residents · 1 of 1 rooms
                   </span>
                 </span>
-              </span>
-              <span
-                className="relative h-3 w-5 shrink-0 rounded-full transition-colors duration-300"
-                style={{ background: open ? BRAND : "#c9cdd3" }}
-              >
-                <span
-                  className={cn(
-                    "absolute top-0.5 left-0.5 size-2 rounded-full bg-white shadow-sm transition-transform duration-300",
-                    open && "translate-x-2"
-                  )}
-                />
-              </span>
-            </div>
-            {SECTIONS.map(([title, detail]) => (
-              <div
-                key={title}
-                className="flex flex-col border-b border-[#e3e5e8] px-2.5 py-1.5 leading-tight last:border-b-0"
-              >
-                <span className="text-[9px] font-medium">{title}</span>
-                <span className="text-[7px] text-[#6b7079]">{detail}</span>
               </div>
-            ))}
+              {SECTIONS.map(([title, detail]) => (
+                <div
+                  key={title}
+                  className="flex flex-col border-b border-[#e6e8ea] px-2 py-[5px] leading-[1.25] last:border-b-0"
+                >
+                  <span className="text-[8.5px]">{title}</span>
+                  <span className="truncate text-[7px] text-[#5d626b]">
+                    {detail}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* The change crossing from one product to the other. */}
@@ -184,9 +216,10 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
             />
           </span>
 
-          {/* Marketplace: the home card families see. */}
-          <div className="flex w-[172px] flex-col gap-1.5 rounded-xl bg-white p-1.5 shadow-[0_8px_24px_rgb(0_0_0/0.25)]">
-            <div className="relative aspect-[480/225] overflow-hidden rounded-lg">
+          {/* Marketplace: the home card families see, on the white page it
+              sits on in search results. */}
+          <div className="flex w-[176px] flex-col gap-1 rounded-xl bg-white p-2 shadow-[0_8px_24px_rgb(0_0_0/0.25)]">
+            <div className="relative aspect-[16/10] overflow-hidden rounded-[9px]">
               <Image
                 className="size-full object-cover"
                 src="/case-studies/cover-house-mch.webp"
@@ -197,37 +230,42 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
               />
               <span
                 className={cn(
-                  "absolute top-1 left-1 rounded-full bg-[#22b24c] px-1.5 py-0.5 text-[7px] font-medium text-white transition-[opacity,scale] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                  "absolute top-[3px] left-[3px] rounded-full bg-[#22b24c] px-[5px] py-px text-[7px] leading-[1.4] text-white transition-[opacity,scale] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                   listed ? "scale-100 opacity-100" : "scale-50 opacity-0"
                 )}
               >
                 Available Now
               </span>
-              <span className="absolute top-1 right-1 flex size-4 items-center justify-center rounded-full bg-white">
+              <span className="absolute top-[3px] right-[3px] flex size-[15px] items-center justify-center rounded-full bg-[#f7f8fa]">
                 <HeartIcon
                   className={cn(
-                    "size-2.5 transition-[fill,scale] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                    "size-[9px] transition-[fill,scale] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
                     saved ? "scale-110" : "scale-100"
                   )}
+                  strokeWidth={2}
                   style={{ color: BRAND, fill: saved ? BRAND : "transparent" }}
                 />
               </span>
-              <span className="absolute bottom-1 left-1/2 flex -translate-x-1/2 gap-0.5 rounded-full bg-black/35 px-1 py-0.5">
-                <span className="h-0.5 w-1.5 rounded-full bg-white" />
-                <span className="size-0.5 rounded-full bg-white/70" />
-                <span className="size-0.5 rounded-full bg-white/70" />
+              <span className="absolute bottom-[5px] left-1/2 flex -translate-x-1/2 items-center gap-[3px] rounded-full bg-[#5a4a3e]/70 px-[5px] py-[3px]">
+                <span className="h-[3px] w-2 rounded-full bg-white" />
+                <span className="size-[3px] rounded-full bg-white/80" />
+                <span className="size-[3px] rounded-full bg-white/80" />
+                <span className="size-[3px] rounded-full bg-white/80" />
               </span>
             </div>
-            <div className="flex flex-col gap-px px-0.5 pb-0.5 leading-tight">
-              <span className="text-[9px] font-semibold">
-                A Loving Heart Assisted Living
+            <div className="flex flex-col gap-[2px] px-[3px] leading-[1.25]">
+              <span className="text-[9px] font-bold text-[#1b1d21]">
+                {HOME.name}
               </span>
-              <span className="flex items-center gap-0.5 text-[7px] text-[#6b7079]">
-                <MapPinIcon className="size-2 shrink-0" />
-                14302 West Becker Lane, Surprise, AZ
+              <span className="flex items-center gap-[3px] text-[8px] text-[#3e4249]">
+                <MapPinIcon
+                  className="size-[9px] shrink-0"
+                  strokeWidth={1.75}
+                />
+                <span className="truncate">{HOME.address}</span>
               </span>
               <span className="text-[8px] text-[#6b7079]">
-                Starting at $7,000
+                Starting at {HOME.price}
               </span>
             </div>
           </div>
