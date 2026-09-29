@@ -20,7 +20,7 @@ Five years in B2B and B2C product design. Started as Proctorio's first design in
 
 **Product Designer (Contract)** | Feb 2023 – Jul 2026
 
-- Contributed to Proctorio's design system as a contractor, with 12+ documented components, the Review Center video player, and a help center rebuilt for students, administrators, and IT admins.
+- Designed 12+ documented Proctorio design system components, the Review Center video player, and its help center.
 - For SLV Technologies clients, defined the design system for [Modern Care Homes' senior living marketplace](https://toribryan.com/work/modern-care-homes) and built one themed system for [Iron Diamond Media's 7 publications](https://toribryan.com/work/arizona-bride).
 
 ### Proctorio | Scottsdale, AZ
@@ -28,10 +28,10 @@ Five years in B2B and B2C product design. Started as Proctorio's first design in
 **Staff Product Designer** | Sep 2025 – Aug 2026
 
 - Owned the multi-brand design system and its governance while leading design across 3 products and 8 surfaces.
-- Led the [legacy system overhaul](https://toribryan.com/work/design-system-overhaul) with 2 engineers: a 37-component MVP in 60 days that cut card variants from 587 to 32 and button variants from 1,160 to 480, and took buttons from roughly 40% failing WCAG to 100% AAA.
-- Wrote the team's [Claude Code skill framework](https://toribryan.com/latest/design-skills-infrastructure) and [hooks that carry prototype changes into specs and release notes](https://toribryan.com/work/agentic-design-system). Specs that took 3 days to 2 weeks now take under 30 minutes, returning about 80 hours per cycle, and the whole team adopted it.
-- Designed dense operational screens, including Proctor Coverage Analytics and the Support Agent Dashboard, and took [AuthorProof](https://toribryan.com/work/author-proof) from brief to production-ready MVP in 4 to 6 weeks after research changed the plan.
-- Brought usability testing back into the process, and mentored junior designers and interns.
+- Led the [legacy system overhaul](https://toribryan.com/work/design-system-overhaul) with 2 engineers: a 37-component MVP in 60 days on rebuilt semantic tokens that cut card variants from 587 to 32 and button variants from 1,160 to 480, and took buttons from roughly 40% failing WCAG to 100% AAA.
+- Aligned the Figma library to the codebase 1:1 so an LLM could read it, then wrote the team's [Claude Code skill framework](https://toribryan.com/latest/design-skills-infrastructure) and [hooks that carry prototype changes into specs and release notes](https://toribryan.com/work/agentic-design-system). Specs that took 3 days to 2 weeks now take under 30 minutes, returning about 80 hours per cycle, and the whole team adopted it.
+- Took [AuthorProof](https://toribryan.com/work/author-proof), an AI authorship-verification tool, from brief to production-ready MVP in 4 to 6 weeks. An architecture audit found 4 constraints that broke its core promise, and the smaller flow pitched in its place cut the wait before a quiz from about 10 minutes to seconds.
+- Designed dense operational screens for Proctor Coverage Analytics and the Support Agent Dashboard, brought usability testing back into the process, and mentored junior designers and interns.
 
 **Product Designer** | Jun 2025 – Sep 2025
 
@@ -45,8 +45,8 @@ Five years in B2B and B2C product design. Started as Proctorio's first design in
 
 ## Skills
 
-- **Design:** Design systems, governance, token architecture, data-dense interfaces, prototyping, usability testing, WCAG, branding
-- **Engineering:** React, Next.js, Tailwind CSS, shadcn/ui, Base UI, Storybook, HTML, CSS, GitHub
+- **Design:** Design systems, token architecture, multi-brand theming, data-dense interfaces, prototyping, usability testing, WCAG
+- **Engineering:** React, Next.js, JavaScript, Tailwind CSS, shadcn/ui, Base UI, Astro, Storybook, HTML, CSS, GitHub
 - **Tools:** Figma, Claude Code, Cursor, MCP, Code Connect, Framer, Adobe Creative Suite, Notion
 
 ## Education
