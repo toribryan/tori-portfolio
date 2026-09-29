@@ -2,7 +2,7 @@
 
 `resume.html` is the source; `Tori-Bryan-Resume.pdf` is what gets sent.
 
-It uses the site's type (Nohemi headings, Geist text, Geist Mono dates) in a
+It is one page, and uses the site's type (Nohemi headings, Geist text, Geist Mono dates) in a
 single-column, reverse-chronological layout so applicant tracking systems parse
 it as plain text. Keep it that way: no tables, columns, icons or text in
 images, and standard section names.

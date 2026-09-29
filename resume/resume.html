@@ -50,7 +50,7 @@
 
       @page {
         size: letter;
-        margin: 0.55in 0.6in;
+        margin: 0.45in 0.55in;
       }
 
       * {
@@ -65,8 +65,8 @@
 
       body {
         font-family: "Geist", Arial, sans-serif;
-        font-size: 9.25pt;
-        line-height: 1.45;
+        font-size: 9pt;
+        line-height: 1.4;
         color: var(--ink-secondary);
         /* Ligatures extract as single glyphs (U+FB01 for "fi"), which breaks
            ATS keyword matching on words like "Certifications". */
@@ -84,7 +84,7 @@
         body {
           width: 8.5in;
           margin: 0.4in auto;
-          padding: 0.55in 0.6in;
+          padding: 0.45in 0.55in;
           background: #fff;
           box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08);
         }
@@ -105,24 +105,24 @@
 
       /* Header */
       header {
-        padding-bottom: 12pt;
+        padding-bottom: 9pt;
         border-bottom: 1px solid var(--ink);
       }
 
       h1 {
-        font-size: 26pt;
+        font-size: 24pt;
         line-height: 1;
       }
 
       .headline {
-        margin-top: 6pt;
+        margin-top: 5pt;
         font-size: 10.5pt;
         font-weight: 500;
         color: var(--ink);
       }
 
       .contact {
-        margin-top: 5pt;
+        margin-top: 3pt;
         font-size: 8.5pt;
         white-space: nowrap;
         color: var(--muted);
@@ -144,14 +144,15 @@
       /* Sections: a Nohemi title over a dashed hairline, the same rule the
          site uses between panels. */
       section {
-        margin-top: 13pt;
+        margin-top: 10pt;
       }
 
       h2 {
+        break-after: avoid;
         font-size: 11.5pt;
         line-height: 1;
-        padding-bottom: 5pt;
-        margin-bottom: 7pt;
+        padding-bottom: 4pt;
+        margin-bottom: 5pt;
         background-image: linear-gradient(
           to right,
           var(--line) 4px,
@@ -168,7 +169,7 @@
 
       /* Experience */
       .company + .company {
-        margin-top: 10pt;
+        margin-top: 8pt;
       }
 
       .company-name {
@@ -217,7 +218,7 @@
       }
 
       li + li {
-        margin-top: 1.5pt;
+        margin-top: 1pt;
       }
 
       li::marker {
@@ -255,16 +256,18 @@
     <header>
       <h1>Tori Bryan</h1>
       <p class="headline">
-        Product Designer, Design Systems and Design Engineering
+        Staff Product Designer, Design Systems and Design Engineering
       </p>
       <p class="contact">
-        Phoenix, AZ<span class="sep">|</span
+        Phoenix, AZ (open to relocating to NYC or SF)<span class="sep">|</span
+        >(480) 323-6343<span class="sep">|</span
         ><a href="mailto:toribryan.design@gmail.com"
           >toribryan.design@gmail.com</a
         ><span class="sep">|</span
-        ><a href="https://toribryan.com">toribryan.com</a
-        ><span class="sep">|</span
-        ><a href="https://linkedin.com/in/victorialbryan/"
+        ><a href="https://toribryan.com">toribryan.com</a>
+      </p>
+      <p class="contact">
+        <a href="https://linkedin.com/in/victorialbryan/"
           >linkedin.com/in/victorialbryan</a
         ><span class="sep">|</span
         ><a href="https://github.com/toribryan">github.com/toribryan</a>
@@ -274,11 +277,11 @@
     <section>
       <h2>Summary</h2>
       <p class="summary">
-        Product designer specializing in design systems, who ships the front end
-        they design. Five years building B2B products, component libraries, and
-        the tooling that connects design to production code, most recently
-        owning the multi-brand design system for a proctoring platform used by 8
-        million test takers.
+        Five years in B2B and B2C product design. Started as Proctorio's first
+        design intern, built its first design system, and came back as Staff to
+        own the multi-brand system behind a platform used by 8 million test
+        takers. Now a React and Next.js design
+        engineer.
       </p>
     </section>
 
@@ -298,18 +301,10 @@
           </div>
           <ul>
             <li>
-              Design systems, product design, and the production front end that
-              ships them, mainly through SLV Technologies for their clients.
+              Design and build production front ends for SLV Technologies clients in Next.js, React, Tailwind CSS, and Storybook, merged through GitHub review.
             </li>
             <li>
-              Contribute production code to the SLV Technologies codebase
-              through GitHub pull request review in Next.js, React, Tailwind
-              CSS, shadcn/ui, Base UI, Astro, and Storybook.
-            </li>
-            <li>
-              Built and ship toribryan.com as a live Next.js codebase, and fibo,
-              an open-source design system on shadcn/ui and Base UI published as
-              an installable shadcn registry.
+              Built fibo, an open-source design system on shadcn/ui and Base UI that installs as a shadcn registry.
             </li>
           </ul>
         </div>
@@ -321,26 +316,12 @@
           </div>
           <ul>
             <li>
-              <strong>Proctorio:</strong> designed the Review Center video player
-              and action bar, internal tools and dashboards, and 12+ documented
-              design system components. Redesigned the multi-audience help
-              center with role-based content visibility and an internal CMS.
+              Contributed to Proctorio's design system as a contractor, with 12+
+              documented components, the Review Center video player, and a help
+              center rebuilt for students, administrators, and IT admins.
             </li>
             <li>
-              <strong>Modern Care Homes:</strong> defined the design system for
-              the agent platform and designed a new family-facing senior living
-              search end to end: multi-criteria filtering, listings, and
-              profiles.
-            </li>
-            <li>
-              <strong>Iron Diamond Media:</strong> built one themed design
-              system shared by seven publications, starting with Arizona Bride,
-              and shipped its front-end styling and markup.
-            </li>
-            <li>
-              <strong>Hydra Endura, Mincredo:</strong> brand identities
-              including logo, brand guidelines, core UI components, and social
-              strategy.
+              For SLV Technologies clients, defined the design system for Modern Care Homes' senior living marketplace and built one themed system for Iron Diamond Media's 7 publications.
             </li>
           </ul>
         </div>
@@ -358,44 +339,24 @@
           </div>
           <ul>
             <li>
-              Owned the multi-brand design system, its governance, and the
-              technical design standards design and engineering build from,
-              while leading design across three products and eight surfaces.
+              Owned the multi-brand design system and its governance while
+              leading design across 3 products and 8 surfaces.
             </li>
             <li>
-              Led a legacy design system overhaul with two engineers: 37
-              components with an MVP in 60 days, button variants down 59% and
-              card variants down 94%, and button contrast from roughly 40%
-              failing WCAG to a 100% AAA pass.
+              Led the legacy system overhaul with 2 engineers: a 37-component MVP in 60 days that cut card variants from 587 to 32 and button variants from 1,160 to 480, and took buttons from roughly 40% failing WCAG to 100% AAA.
             </li>
             <li>
-              Rebuilt design-to-engineering handoff around agentic tooling and
-              prototype-forward delivery, cutting spec production from 3 days–2
-              weeks to under 30 minutes and returning roughly 80 hours per cycle,
-              with 100% team adoption.
+              Wrote the team's Claude Code skill framework and hooks that carry prototype changes into specs and release notes. Specs that took 3 days to 2 weeks now take under 30 minutes, returning about 80 hours
+              per cycle, and the whole team adopted it.
             </li>
             <li>
-              Authored the shared Claude Code skill framework behind it, with
-              hooks that cascade prototype changes into specs and release notes.
+              Designed dense operational screens, including Proctor Coverage
+              Analytics and the Support Agent Dashboard, and took AuthorProof
+              from brief to production-ready MVP in 4 to 6 weeks after research
+              changed the plan.
             </li>
             <li>
-              Shipped WebSweep as the first product on the overhauled system, and
-              took AuthorProof from an assigned brief to a production-ready MVP
-              in 4 to 6 weeks after testing the proposed solution against
-              research.
-            </li>
-            <li>
-              Designed data-dense operational screens, including Proctor
-              Coverage Analytics and the Support Agent Dashboard.
-            </li>
-            <li>
-              Reintroduced usability testing: ran the in-person Exam Precheck
-              study with six participants, and a 30+ customer beta reported
-              majority high satisfaction on every targeted area.
-            </li>
-            <li>
-              Coached designers on the system, reviewed work against its
-              standards, and mentored junior designers and interns.
+              Brought usability testing back into the process, and mentored junior designers and interns.
             </li>
           </ul>
         </div>
@@ -407,9 +368,9 @@
           </div>
           <ul>
             <li>
-              Rehired after two years of contracting and promoted to Staff 90
-              days later; shipped two product surfaces and wrote the 60-day
-              strategy that became the design system overhaul.
+              Rejoined full time after 2 years of contract work, shipped 2
+              product surfaces, and wrote the 60-day proposal that became the
+              design system overhaul. Promoted to Staff after 90 days.
             </li>
           </ul>
         </div>
@@ -419,30 +380,17 @@
             <span class="title">Multimedia Designer</span>
             <span class="date">2022 – Aug 2023</span>
           </div>
-          <ul>
-            <li>
-              Led the full Proctorio rebrand (logo, color, visual language, and
-              asset library), grounded in personas, user research, and EdTech
-              competitive analysis.
-            </li>
-            <li>
-              Built the first design system from scratch, then moved into product
-              UI, guide sites for test takers and institutions, and internal
-              tools.
-            </li>
-          </ul>
-        </div>
-
-        <div class="role">
           <div class="role-line">
             <span class="title">Multimedia Design Intern</span>
             <span class="date">Jun 2021 – 2022</span>
           </div>
           <ul>
             <li>
-              First full-time design intern, helping start the design internship
-              program; designed landing pages, conference collateral, and the
-              digital brand template system.
+              Joined as the first full-time design intern, then led the full rebrand: logo, color, visual language, and asset library.
+            </li>
+            <li>
+              Built Proctorio's first design system, then moved from marketing into
+              product UI.
             </li>
           </ul>
         </div>
@@ -453,21 +401,17 @@
       <h2>Skills</h2>
       <div class="rows">
         <p>
-          <span class="label">Design:</span> Design systems, design system
-          governance, token architecture, product design, data-dense
-          interfaces, prototyping, accessibility (WCAG), brand design
-        </p>
-        <p>
-          <span class="label">Research:</span> Usability testing, user research,
-          competitive analysis, UserTesting, PostHog
+          <span class="label">Design:</span> Design systems, governance, token
+          architecture, data-dense interfaces, prototyping, usability testing,
+          WCAG, branding
         </p>
         <p>
           <span class="label">Engineering:</span> React, Next.js, Tailwind CSS,
-          shadcn/ui, Base UI, Storybook, HTML, CSS, Git, GitHub
+          shadcn/ui, Base UI, Storybook, HTML, CSS, GitHub
         </p>
         <p>
-          <span class="label">Tools:</span> Figma, Claude Code, Cursor, Framer,
-          Webflow, Adobe Creative Suite, Azure DevOps, Notion
+          <span class="label">Tools:</span> Figma, Claude Code, Cursor, MCP,
+          Code Connect, Framer, Adobe Creative Suite, Notion
         </p>
       </div>
     </section>
@@ -476,28 +420,15 @@
       <h2>Education</h2>
       <div class="item">
         <span
-          ><span class="title">Arizona State University</span>, Bachelor of
-          Arts, Digital Communication and Media/Multimedia</span
+          ><span class="title">Arizona State University</span>, B.A. Digital
+          Communication and Media/Multimedia, Tempe, AZ</span
         >
-        <span class="date">2019 – 2023</span>
+        <span class="date">Dec 2023</span>
       </div>
-    </section>
-
-    <section>
-      <h2>Certifications</h2>
-      <div class="item">
-        <span
-          ><span class="title">IRB, Social and Behavioral Research</span>, CITI
-          Program</span
-        >
-        <span class="date">2023</span>
-      </div>
-      <div class="item">
-        <span
-          ><span class="title">Search Engine Optimization</span>, Stukent</span
-        >
-        <span class="date">2022</span>
-      </div>
+      <p>
+        <span class="label">Certifications:</span> IRB Social and Behavioral
+        Research (CITI Program), Search Engine Optimization (Stukent)
+      </p>
     </section>
   </body>
 </html>
