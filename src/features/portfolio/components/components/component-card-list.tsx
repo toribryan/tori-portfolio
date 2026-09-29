@@ -18,12 +18,13 @@ import { COVERS } from "./covers"
 const PLAYS_ON_HOVER = new Set(["reactions"])
 
 /**
- * fibo's special components as cover cards, three across, with the live
+ * fibo's special components as cover cards, two across on phones and three
+ * from md up, with the live
  * part standing in for the cover image.
  */
 export function ComponentCardList() {
   return (
-    <ul className="grid gap-px bg-line sm:grid-cols-2 md:grid-cols-3">
+    <ul className="grid grid-cols-2 gap-px bg-line md:grid-cols-3">
       {NICHE_PARTS.map((part) => (
         <li key={part.name} className="bg-background">
           <ComponentCard part={part} />
@@ -65,8 +66,8 @@ function ComponentCard({ part }: { part: NichePart }) {
         <div className="pointer-events-none absolute inset-0 rounded-xl inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15" />
       </div>
 
-      <div className="flex flex-col gap-1 p-2">
-        <h3 className="text-lg leading-snug font-medium text-balance">
+      <div className="flex flex-col gap-1 p-1 sm:p-2">
+        <h3 className="text-base leading-snug font-medium text-balance sm:text-lg">
           <Link
             href={`/components/${part.name}` as Route}
             onFocus={() => setFocused(true)}
@@ -77,7 +78,7 @@ function ComponentCard({ part }: { part: NichePart }) {
           </Link>
         </h3>
 
-        <p className="line-clamp-2 text-sm leading-snug text-pretty text-muted-foreground">
+        <p className="line-clamp-2 text-xs leading-snug text-pretty text-muted-foreground sm:text-sm">
           {part.description}
         </p>
       </div>

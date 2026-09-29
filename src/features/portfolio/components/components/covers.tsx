@@ -208,7 +208,12 @@ function ReactionsCover({ active }: CoverProps) {
   }, [active])
 
   return (
-    <div ref={root} className="flex size-full items-center justify-center">
+    // Two cards across a phone leave too little room for the pills on one
+    // row, so they're zoomed down there rather than wrapping against the edge.
+    <div
+      ref={root}
+      className="flex size-full items-center justify-center p-2 max-sm:[zoom:0.8]"
+    >
       <Reactions defaultReactions={SEEDED} />
     </div>
   )
