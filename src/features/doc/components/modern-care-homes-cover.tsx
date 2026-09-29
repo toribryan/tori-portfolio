@@ -113,7 +113,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage: `linear-gradient(${GRID} 1px, transparent 1px), linear-gradient(90deg, ${GRID} 1px, transparent 1px)`,
-          backgroundSize: "24px 24px",
+          backgroundSize: "12px 12px",
         }}
         aria-hidden
       />
