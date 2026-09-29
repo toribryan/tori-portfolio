@@ -1,5 +1,7 @@
-import { BriefcaseBusinessIcon, FileTextIcon, MapPinIcon } from "lucide-react"
+import { BriefcaseBusinessIcon, MapPinIcon } from "lucide-react"
 
+import { LinkedInIcon } from "@/components/icons"
+import { SOCIAL } from "@/features/portfolio/data/social-links"
 import { USER } from "@/features/portfolio/data/user"
 
 import { Panel, PanelContent } from "../panel"
@@ -15,7 +17,7 @@ import {
 /**
  * The facts under the header in two columns: what I do, where I am and how to
  * reach me on the left, and whether I'm available, my local time and my
- * résumé on the right, paired so each row reads across.
+ * LinkedIn on the right, paired so each row reads across.
  */
 export function Overview() {
   return (
@@ -59,10 +61,10 @@ export function Overview() {
 
         <IntroItem>
           <IntroItemIcon>
-            <FileTextIcon />
+            <LinkedInIcon className="size-3.5" />
           </IntroItemIcon>
           <IntroItemContent>
-            <IntroItemLink href="/resume.pdf">Resume</IntroItemLink>
+            <IntroItemLink href={SOCIAL.linkedin.href}>LinkedIn</IntroItemLink>
           </IntroItemContent>
         </IntroItem>
       </PanelContent>
