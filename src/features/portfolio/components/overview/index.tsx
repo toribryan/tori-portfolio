@@ -62,7 +62,7 @@ export function Overview() {
             <FileTextIcon />
           </IntroItemIcon>
           <IntroItemContent>
-            <IntroItemLink href="/resume.pdf">Résumé (PDF)</IntroItemLink>
+            <IntroItemLink href="/resume.pdf">Resume</IntroItemLink>
           </IntroItemContent>
         </IntroItem>
       </PanelContent>
