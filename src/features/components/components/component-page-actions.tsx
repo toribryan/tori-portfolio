@@ -240,14 +240,13 @@ function NeighbourLink({
             nativeButton={false}
             render={
               <Link href={`/components/${slug}` as Route}>
+                {icon}
                 <span className="sr-only">{label}</span>
               </Link>
             }
           />
         }
-      >
-        {icon}
-      </TooltipTrigger>
+      />
       <TooltipContent>{title}</TooltipContent>
     </Tooltip>
   )

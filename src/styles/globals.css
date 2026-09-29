@@ -282,7 +282,8 @@
   }
 }
 
-:root {
+:root,
+.light {
   /* white */
   --background: oklch(1 0 0);
 
@@ -794,7 +795,8 @@
       while `--brand` keeps the exact original value.
    --------------------------------------------------------------------------- */
 
-:root {
+:root,
+.light {
   /* surface */
   --background: #f7f6f2;
   /* surface, warm — case-study metadata blocks */

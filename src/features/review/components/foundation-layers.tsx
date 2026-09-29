@@ -98,7 +98,7 @@ function Panel({
   return (
     <div
       className={cn(
-        "flex flex-1 flex-col gap-3 rounded-xl bg-white p-4 text-(--mch-ink) inset-ring-1 inset-ring-(--mch-line)",
+        "flex flex-1 flex-col justify-center gap-3 rounded-xl bg-white p-4 text-(--mch-ink) inset-ring-1 inset-ring-(--mch-line)",
         className
       )}
       style={style}

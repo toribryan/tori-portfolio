@@ -32,13 +32,18 @@ const LEAD: Record<string, string> = {
   "token-flow": "WithUse",
 }
 
-// Token flow was published on 21st.dev and announced on X before fibo.
+// The parts also published on 21st.dev, under the same names.
+const ON_21ST = new Set([
+  "filter-menu",
+  "reactions",
+  "pixel-snail",
+  "integration-visual",
+  "token-flow",
+])
+
+// Token flow was announced on X before fibo.
 const EXTRA_LINKS: Record<string, Partial<ComponentEntry["links"]>> = {
   "token-flow": {
-    registry: {
-      label: "Open on 21st.dev",
-      url: "https://21st.dev/@iamtoribryan/components/token-flow",
-    },
     post: {
       id: "2100753096825786556",
       url: "https://x.com/iamtoribryan/status/2100753096825786556",
@@ -61,6 +66,12 @@ export const COMPONENTS: Record<string, ComponentEntry | undefined> =
         source: `${name}.tsx`,
         links: {
           storybook: nicheStorybookUrl(name),
+          ...(ON_21ST.has(name) && {
+            registry: {
+              label: "Open on 21st.dev",
+              url: `https://21st.dev/@iamtoribryan/components/${name}`,
+            },
+          }),
           ...EXTRA_LINKS[name],
         },
       },

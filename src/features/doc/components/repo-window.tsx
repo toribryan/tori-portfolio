@@ -107,12 +107,7 @@ export function RepoWindow({
   return (
     <figure className="my-6 overflow-hidden rounded-xl border border-line bg-card">
       <figcaption className="not-prose flex items-center gap-2 border-b border-line px-4 py-2.5">
-        <span className="flex gap-1.5" aria-hidden>
-          <span className="size-2.5 rounded-full bg-muted-foreground/25" />
-          <span className="size-2.5 rounded-full bg-muted-foreground/25" />
-          <span className="size-2.5 rounded-full bg-muted-foreground/25" />
-        </span>
-        <span className="ml-2 truncate font-mono text-xs text-muted-foreground">
+        <span className="truncate font-mono text-xs text-muted-foreground">
           {name}/<span className="text-foreground">{current}</span>
         </span>
         {guide && guide in documents && guide !== current && (

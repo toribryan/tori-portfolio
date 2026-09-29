@@ -68,7 +68,7 @@ const LEVELS: Level[] = [
   },
   {
     name: "Organisms",
-    line: "The home card and the agent platform’s sidebar, from the same atoms.",
+    line: "Larger parts built from the same atoms, like the home card.",
     height: 320,
     stories: [
       {
@@ -89,7 +89,10 @@ const LEVELS: Level[] = [
     line: "Filters, results, and the map, before any listing is real.",
     height: 480,
     stories: [
-      { id: "search-filterform--in-dialog-chrome", label: "Filter form" },
+      {
+        id: "components-search-filterform--in-dialog-chrome",
+        label: "Filter form",
+      },
     ],
   },
   {
@@ -124,7 +127,13 @@ function openUrl(id: string) {
 /** Storybook's own padding around a story's canvas. */
 const CANVAS_PADDING = 16
 
-function StoryFrame({ story, height }: { story: Story; height: number }) {
+export function StoryFrame({
+  story,
+  height,
+}: {
+  story: Story
+  height: number
+}) {
   const [width, controlHeight] =
     story.center === true ? [96, 40] : (story.center ?? [0, 0])
   return (
@@ -193,7 +202,25 @@ function StoryFrame({ story, height }: { story: Story; height: number }) {
  * row, its stories live on the right, from a button up to the live site.
  * Rows reveal in order so the build-up reads as one.
  */
-export function AtomicDesign({ className }: { className?: string }) {
+export function AtomicDesign({
+  className,
+  through,
+  omit = [],
+}: {
+  className?: string
+  /** The last level to show, by name, e.g. "Organisms". */
+  through?: string
+  /** Story labels to leave out, e.g. "Sidebar". */
+  omit?: string[]
+}) {
+  const last = through
+    ? LEVELS.findIndex((level) => level.name === through)
+    : LEVELS.length - 1
+  const levels = LEVELS.slice(0, last + 1).map((level) => ({
+    ...level,
+    stories: level.stories.filter((story) => !omit.includes(story.label)),
+  }))
+
   return (
     <ol
       className={cn(
@@ -201,7 +228,7 @@ export function AtomicDesign({ className }: { className?: string }) {
         className
       )}
     >
-      {LEVELS.map((level, i) => (
+      {levels.map((level, i) => (
         <Reveal key={level.name}>
           <li className="grid gap-4 py-5 md:grid-cols-[10rem_1fr] md:gap-8">
             <div className="flex flex-col gap-1.5">

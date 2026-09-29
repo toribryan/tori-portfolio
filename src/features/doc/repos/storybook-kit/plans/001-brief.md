@@ -30,14 +30,14 @@ Storybook from my Figma file", not run commands themselves.
 
 Taken from fibo's `apps/storybook/.storybook` and `src/blocks`:
 
-| From fibo                                         | Becomes                                             |
-| ------------------------------------------------- | --------------------------------------------------- |
-| `theme.ts` (hand-copied hex)                      | A manager theme generated from `brand.config.ts`    |
-| `manager-head.html` sidebar CSS                   | The same, with fibo's colours swapped for variables |
-| `manager.tsx` icons, status pills                 | The same, icon map driven by config                 |
-| `theme-sync.ts`, `preview.tsx`                    | Light and dark toggle, as is                        |
-| `docs-container.tsx`, `typography.tsx`            | Docs page layout and MDX typography                 |
-| `anatomy`, `guidelines`, `data-attributes` blocks | Docs blocks                                         |
+| From fibo                          | Becomes                                         |
+| ---------------------------------- | ----------------------------------------------- |
+| `theme.ts` (hand-copied hex)       | A manager theme generated from `brand.config.ts` |
+| `manager-head.html` sidebar CSS    | The same, with fibo's colours swapped for variables |
+| `manager.tsx` icons, status pills  | The same, icon map driven by config             |
+| `theme-sync.ts`, `preview.tsx`     | Light and dark toggle, as is                    |
+| `docs-container.tsx`, `typography.tsx` | Docs page layout and MDX typography         |
+| `anatomy`, `guidelines`, `data-attributes` blocks | Docs blocks                      |
 
 Stays in fibo: the welcome page, hero, pixel grid, sounds and the snail.
 
@@ -50,15 +50,15 @@ New for the kit:
 
 ## The skills
 
-| Skill           | Does                                                                       |
-| --------------- | -------------------------------------------------------------------------- |
+| Skill           | Does                                                                |
+| --------------- | ------------------------------------------------------------------- |
 | `setup`         | Scaffolds the template, installs, asks for name and logo, starts Storybook |
-| `sync-tokens`   | Reads Figma variables through the Figma MCP, writes the token CSS          |
-| `add-component` | Figma frame URL in; component, stories and docs page out                   |
-| `document`      | Writes usage and do/don't guidance in plain language                       |
-| `review`        | Checks token use, accessibility and missing states                         |
-| `publish`       | Deploys to Vercel or Chromatic and returns a link                          |
-| `upgrade`       | Bumps Storybook and repairs any sidebar selectors that broke               |
+| `sync-tokens`   | Reads Figma variables through the Figma MCP, writes the token CSS   |
+| `add-component` | Figma frame URL in; component, stories and docs page out            |
+| `document`      | Writes usage and do/don't guidance in plain language                |
+| `review`        | Checks token use, accessibility and missing states                 |
+| `publish`       | Deploys to Vercel or Chromatic and returns a link                   |
+| `upgrade`       | Bumps Storybook and repairs any sidebar selectors that broke        |
 
 ## Version 1
 
