@@ -1,37 +1,65 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { ArrowRightIcon } from "lucide-react"
+import { useInView, useReducedMotion } from "motion/react"
 import { useTheme } from "next-themes"
 
+import { cn } from "@/lib/utils"
 import { TokenFlow, type TokenRow } from "@/components/fibo/token-flow"
 import { ScaledStage } from "@/features/portfolio/components/components/covers"
+
+function subscribeToNothing() {
+  return () => {}
+}
 
 const OVERHAUL_ROW: TokenRow = {
   base: "#218358",
   primitive: "green-700",
-  semantic: "action-primary",
-  use: "every primary action",
+  semantic: "text-success",
   dark: { base: "#3DD68C", primitive: "green-400" },
 }
 
 /**
  * The overhaul in one colour: the legacy system's single-tier token beside
  * the same colour as a raw value, a primitive and a semantic role, stacked
- * top to bottom. The chain follows the site's theme and scrambles into the
- * other theme's values while the card is hovered or focused; the legacy
- * token has no second theme to change to, so it stays put.
+ * top to bottom. The cover follows the site's theme and switches wholesale
+ * to the other one, its chain scrambling into the other values, while the
+ * card is hovered or focused, or on a loop with `loop`. The legacy token has
+ * no second theme to change to, so it stays put.
  */
-export function DesignSystemOverhaulCover() {
+export function DesignSystemOverhaulCover({
+  loop = false,
+}: {
+  loop?: boolean
+}) {
   const frame = useRef<HTMLDivElement>(null)
   const [engaged, setEngaged] = useState(false)
+  const [flipped, setFlipped] = useState(false)
+  const inView = useInView(frame, { amount: 0.5 })
+  const reduceMotion = useReducedMotion()
   const { resolvedTheme } = useTheme()
-  const other = resolvedTheme === "dark" ? "light" : "dark"
+  // The server can't know the theme, so the class waits for the client.
+  const mounted = useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false
+  )
+  const site = resolvedTheme === "dark" ? "dark" : "light"
+  const other = site === "dark" ? "light" : "dark"
+  const switched = loop ? flipped : engaged
+
+  // Alternates between the two themes while the cover is on screen.
+  useEffect(() => {
+    if (!loop || !inView || reduceMotion) return
+    const timer = setInterval(() => setFlipped((value) => !value), 3200)
+    return () => clearInterval(timer)
+  }, [loop, inView, reduceMotion])
 
   // The cover is inert, so it listens on the card or hero around it.
   useEffect(() => {
     const card = frame.current?.closest("[data-cover-host]")
-    if (!card) return
+    if (!card || loop) return
     const on = () => setEngaged(true)
     const off = () => setEngaged(false)
     card.addEventListener("pointerenter", on)
@@ -44,10 +72,18 @@ export function DesignSystemOverhaulCover() {
       card.removeEventListener("focusin", on)
       card.removeEventListener("focusout", off)
     }
-  }, [])
+  }, [loop])
 
   return (
-    <div ref={frame} className="absolute inset-0">
+    // The theme's class scopes its tokens to the cover, so the plate, chips
+    // and labels switch along with the chain's values.
+    <div
+      ref={frame}
+      className={cn(
+        "absolute inset-0 bg-[color-mix(in_oklab,var(--muted)_60%,var(--background))] text-foreground transition-colors duration-500 motion-reduce:transition-none [&_*]:transition-[color,background-color,border-color] [&_*]:duration-500 motion-reduce:[&_*]:transition-none",
+        mounted && (switched ? other : site)
+      )}
+    >
       <div
         className="pointer-events-none absolute inset-0 opacity-20"
         style={{
@@ -100,8 +136,7 @@ export function DesignSystemOverhaulCover() {
               <TokenFlow
                 rows={[OVERHAUL_ROW]}
                 orientation="vertical"
-                showUse
-                theme={engaged ? other : undefined}
+                theme={switched ? other : undefined}
                 className="rounded-none border-0 bg-transparent px-0 py-0 [&>div:first-child]:hidden"
               />
             </div>

@@ -25,95 +25,148 @@ import { Badge } from "@/components/fibo/badge"
 type Mode = "light" | "dark"
 type System = "before" | "after"
 
-// Tailwind's neutral ramp, light to dark, with white in front. Spelled out in
-// full so Tailwind generates each class.
-const RAMP = [
-  ["white", "bg-white"],
-  ["50", "bg-neutral-50"],
-  ["100", "bg-neutral-100"],
-  ["200", "bg-neutral-200"],
-  ["300", "bg-neutral-300"],
-  ["400", "bg-neutral-400"],
-  ["500", "bg-neutral-500"],
-  ["600", "bg-neutral-600"],
-  ["700", "bg-neutral-700"],
-  ["800", "bg-neutral-800"],
-  ["900", "bg-neutral-900"],
-  ["950", "bg-neutral-950"],
-] as const
+type Step = {
+  /** What the swatch is called under it. */
+  label: string
+  /** The primitive a token points at to use this step. */
+  primitive: string
+}
 
-// Tailwind 4's values for the steps fibo uses, written out because this
-// site's build only emits the colour variables its own classes reference.
+/*
+ * Each system's grey ramp, light to dark, with white in front. The legacy
+ * system used Tailwind's neutral greys, but gave every shade a name of its
+ * own, so the scale had no order a new shade could slot into. The rebuild
+ * adopted a slate with numbered steps, a little less blue than Tailwind's.
+ */
+const RAMPS: Record<System, Step[]> = {
+  before: [
+    { label: "white", primitive: "white" },
+    { label: "snow", primitive: "neutral-50" },
+    { label: "cloud", primitive: "neutral-100" },
+    { label: "mist", primitive: "neutral-200" },
+    { label: "silver", primitive: "neutral-300" },
+    { label: "ash", primitive: "neutral-400" },
+    { label: "pewter", primitive: "neutral-500" },
+    { label: "stone", primitive: "neutral-600" },
+    { label: "iron", primitive: "neutral-700" },
+    {
+      label: "charcoal",
+
+      primitive: "neutral-800",
+    },
+    {
+      label: "graphite",
+
+      primitive: "neutral-900",
+    },
+    { label: "onyx", primitive: "neutral-950" },
+  ],
+  after: [
+    { label: "white", primitive: "white" },
+    { label: "50", primitive: "slate-50" },
+    { label: "100", primitive: "slate-100" },
+    { label: "200", primitive: "slate-200" },
+    { label: "300", primitive: "slate-300" },
+    { label: "400", primitive: "slate-400" },
+    { label: "500", primitive: "slate-500" },
+    { label: "600", primitive: "slate-600" },
+    { label: "700", primitive: "slate-700" },
+    { label: "800", primitive: "slate-800" },
+    { label: "900", primitive: "slate-900" },
+    { label: "950", primitive: "slate-950" },
+  ],
+}
+
+const STEPS = 12
+
+// Every colour the exhibit draws, written out because this site's build only
+// emits the colour variables its own classes reference. Neutral is
+// Tailwind 4's. Slate keeps Tailwind's lightness and hue at each step with
+// its chroma cut to 55%, so it reads as a cool grey rather than a blue.
 const COLOR: Record<string, string> = {
   white: "oklch(1 0 0)",
   "neutral-50": "oklch(0.985 0 0)",
   "neutral-100": "oklch(0.97 0 0)",
   "neutral-200": "oklch(0.922 0 0)",
+  "neutral-300": "oklch(0.87 0 0)",
   "neutral-400": "oklch(0.708 0 0)",
   "neutral-500": "oklch(0.556 0 0)",
+  "neutral-600": "oklch(0.439 0 0)",
+  "neutral-700": "oklch(0.371 0 0)",
   "neutral-800": "oklch(0.269 0 0)",
   "neutral-900": "oklch(0.205 0 0)",
   "neutral-950": "oklch(0.145 0 0)",
+  "slate-50": "oklch(0.984 0.0017 247.858)",
+  "slate-100": "oklch(0.968 0.0039 247.896)",
+  "slate-200": "oklch(0.929 0.0072 255.508)",
+  "slate-300": "oklch(0.869 0.0121 252.894)",
+  "slate-400": "oklch(0.704 0.022 256.788)",
+  "slate-500": "oklch(0.554 0.0253 257.417)",
+  "slate-600": "oklch(0.446 0.0237 257.281)",
+  "slate-700": "oklch(0.372 0.0242 257.287)",
+  "slate-800": "oklch(0.279 0.0226 260.031)",
+  "slate-900": "oklch(0.208 0.0231 265.755)",
+  "slate-950": "oklch(0.129 0.0231 264.695)",
   "green-400": "oklch(0.792 0.209 151.711)",
   "green-700": "oklch(0.527 0.154 150.069)",
 }
 
-// fibo's semantic tokens, by the primitive each points at per mode.
+// The semantic tokens, by the primitive each points at per mode.
 const PRIMITIVES: Record<Mode, Record<string, string>> = {
   light: {
     background: "white",
-    foreground: "neutral-950",
+    foreground: "slate-950",
     card: "white",
-    primary: "neutral-900",
-    "primary-foreground": "neutral-50",
-    muted: "neutral-100",
-    "muted-foreground": "neutral-500",
+    primary: "slate-900",
+    "primary-foreground": "slate-50",
+    muted: "slate-100",
+    "muted-foreground": "slate-500",
     success: "green-700",
-    border: "neutral-200",
-    ring: "neutral-400",
-    "ring-subtle": "neutral-400 at 50%",
+    border: "slate-200",
+    ring: "slate-400",
+    "ring-subtle": "slate-400 at 50%",
   },
   dark: {
-    background: "neutral-950",
-    foreground: "neutral-50",
-    card: "neutral-900",
-    primary: "neutral-50",
-    "primary-foreground": "neutral-900",
-    muted: "neutral-800",
-    "muted-foreground": "neutral-400",
+    background: "slate-950",
+    foreground: "slate-50",
+    card: "slate-900",
+    primary: "slate-50",
+    "primary-foreground": "slate-900",
+    muted: "slate-800",
+    "muted-foreground": "slate-400",
     success: "green-400",
     border: "white at 10%",
-    ring: "neutral-500",
-    "ring-subtle": "neutral-500 at 50%",
+    ring: "slate-500",
+    "ring-subtle": "slate-500 at 50%",
   },
 }
 
 /*
- * What the legacy system called each part: a name for the value, not the
- * job. Parts that shared a value shared a token, so changing the button's
- * fill meant changing the headline too.
+ * What the legacy system called each part: the name of a shade, not a job.
+ * Parts that shared a shade shared a name, so changing the button's fill
+ * meant changing the headline too.
  */
 const LEGACY: Record<string, string> = {
   background: "white",
   card: "white",
-  foreground: "gray-900",
-  primary: "gray-900",
+  foreground: "grey/graphite",
+  primary: "grey/graphite",
   "primary-foreground": "white",
-  muted: "gray-100",
-  "muted-foreground": "gray-500",
-  border: "gray-200",
-  ring: "gray-400",
+  muted: "grey/cloud",
+  "muted-foreground": "grey/pewter",
+  border: "grey/mist",
+  ring: "grey/ash",
   success: "green/apple",
 }
 
 // The primitive behind each legacy name: one name, one colour.
 const LEGACY_PRIMITIVE: Record<string, string> = {
   white: "white",
-  "gray-100": "neutral-100",
-  "gray-200": "neutral-200",
-  "gray-400": "neutral-400",
-  "gray-500": "neutral-500",
-  "gray-900": "neutral-900",
+  "grey/cloud": "neutral-100",
+  "grey/mist": "neutral-200",
+  "grey/ash": "neutral-400",
+  "grey/pewter": "neutral-500",
+  "grey/graphite": "neutral-900",
   "green/apple": "green-700",
 }
 
@@ -151,21 +204,27 @@ function modeVars(primitives: Record<string, string>) {
  * mode from 950, so most tokens keep their step number in both.
  */
 function stepOf(index: number, mode: Mode) {
-  return mode === "light" ? index + 1 : RAMP.length - index
+  return mode === "light" ? index + 1 : STEPS - index
 }
 
-const BANDS = [
-  { label: "Surfaces", from: 1, to: 2 },
-  { label: "Fills and borders", from: 3, to: 4 },
-  { label: "Focus and quiet text", from: 5, to: 10 },
-  { label: "Solids and text", from: 11, to: 12 },
-]
+// Before, nothing said which shade was for what, so one band covers them all.
+const BANDS: Record<System, { label: string; from: number; to: number }[]> = {
+  before: [{ label: "No defined defaults or semantics", from: 1, to: 12 }],
+  after: [
+    { label: "Surfaces", from: 1, to: 2 },
+    { label: "Fills and borders", from: 3, to: 4 },
+    { label: "Focus and quiet text", from: 5, to: 10 },
+    { label: "Solids and text", from: 11, to: 12 },
+  ],
+}
 
-function rampIndex(primitives: Record<string, string>, token: string) {
+function rampIndex(
+  ramp: Step[],
+  primitives: Record<string, string>,
+  token: string
+) {
   const base = primitives[token]?.replace(/ at \d+%$/, "")
-  return RAMP.findIndex(
-    ([step]) => base === (step === "white" ? "white" : `neutral-${step}`)
-  )
+  return ramp.findIndex((step) => step.primitive === base)
 }
 
 const NOISE = "_!X$0-+*#"
@@ -373,6 +432,7 @@ export function TokenVisualizer() {
   const [chosenMode, setMode] = useState<Mode>("light")
   const mode: Mode = system === "before" ? "light" : chosenMode
   const primitives = primitivesFor(system, mode)
+  const ramp = RAMPS[system]
   const [active, setActive] = useState<Active>(null)
 
   const frame = useRef<HTMLDivElement>(null)
@@ -390,7 +450,7 @@ export function TokenVisualizer() {
   const nameOf = (token: string) =>
     system === "before" ? LEGACY[token] : `--${token}`
   const stepFor = (token: string) => {
-    const index = rampIndex(primitives, token)
+    const index = rampIndex(ramp, primitives, token)
     return index < 0 ? null : stepOf(index, mode)
   }
   // Before, a part is picked along with every part that shares its name.
@@ -408,9 +468,7 @@ export function TokenVisualizer() {
         ? active.step
         : stepFor(active.token)
 
-  const names = RAMP.map(([step]) =>
-    step === "white" ? "white" : `neutral-${step}`
-  )
+  const names = ramp.map((step) => step.primitive)
   const ordered = mode === "light" ? names : [...names].reverse()
 
   // A mouse picks by hovering; a tap picks and a second tap lets go.
@@ -443,8 +501,9 @@ export function TokenVisualizer() {
         className="grid gap-x-1.5 gap-y-3"
         style={{ gridTemplateColumns: `repeat(${count}, minmax(0, 1fr))` }}
       >
-        {BANDS.filter(({ from, to }) => to >= first && from <= last).map(
-          ({ label, from, to }) => (
+        {BANDS[system]
+          .filter(({ from, to }) => to >= first && from <= last)
+          .map(({ label, from, to }) => (
             <div
               key={label}
               className="flex flex-col items-center justify-end gap-2"
@@ -452,17 +511,23 @@ export function TokenVisualizer() {
                 gridColumn: `${Math.max(from, first) - first + 1} / ${Math.min(to, last) - first + 2}`,
               }}
             >
-              <span className="text-center text-[11px] leading-tight text-balance text-muted-foreground sm:text-xs">
+              <span
+                className={cn(
+                  "text-center leading-tight text-balance",
+                  system === "before"
+                    ? "text-sm font-medium text-foreground sm:text-base"
+                    : "text-[11px] text-muted-foreground sm:text-xs"
+                )}
+              >
                 {label}
               </span>
               <span className="h-px w-full bg-gradient-to-r from-transparent via-border to-transparent" />
             </div>
-          )
-        )}
+          ))}
         {Array.from({ length: count }, (_, i) => {
           const slot = first - 1 + i
-          const [step, className] =
-            RAMP[mode === "light" ? slot : RAMP.length - 1 - slot]
+          const { label: step, primitive } =
+            ramp[mode === "light" ? slot : STEPS - 1 - slot]
           const picked = activeStep === slot + 1
           return (
             <button
@@ -484,10 +549,10 @@ export function TokenVisualizer() {
               <span
                 className={cn(
                   "h-10 rounded-md border border-border sm:h-12",
-                  className,
                   picked &&
                     "ring-2 ring-foreground ring-offset-2 ring-offset-card"
                 )}
+                style={{ background: COLOR[primitive] }}
               />
               <span className="text-center font-mono text-[10px] text-muted-foreground">
                 <Scramble text={step} />
@@ -540,11 +605,13 @@ export function TokenVisualizer() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <figcaption className="flex max-w-md flex-col items-start gap-2">
           <Badge variant="outline">
-            {system === "before" ? "Legacy tokens" : "Semantic tokens"}
+            {system === "before"
+              ? "Neutral grey, a name per shade"
+              : "Slate, semantic tokens"}
           </Badge>
           <span className="text-sm text-muted-foreground">
             {system === "before"
-              ? "Named for their values. Point at gray-900: it colours the headline and the button, and there is no dark mode."
+              ? "Every shade had its own name, and nothing said which to use where. Point at grey/graphite: it colours the headline and the button, and there is no dark mode."
               : "Named for their jobs. Pick a token or a step to trace it, and switch modes to watch the ramp turn over."}
           </span>
         </figcaption>

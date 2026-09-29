@@ -215,32 +215,18 @@ const TOKEN_ROWS: TokenRow[] = [
 ]
 
 /**
- * The three tiers as fibo's TokenFlow, with a switch that swaps every row to
- * the other theme so the semantic names can be seen holding still.
+ * The three tiers as fibo's TokenFlow. It follows the site's theme, so
+ * switching it shows the values change while the semantic names hold still.
  */
 export function TokenRoles() {
-  const [theme, setTheme] = useState<"light" | "dark">("light")
-  const next = theme === "light" ? "dark" : "light"
-
   return (
     <Plate
-      meta={
-        <Button
-          size="xs"
-          variant="outline"
-          className="font-sans"
-          onClick={() => setTheme(next)}
-        >
-          Show {next} theme
-        </Button>
-      }
-      caption="The old system had values and primitives, and no roles. Switch the theme: the values change, the roles stay."
+      caption="The old system had values and primitives, and no roles. Switch the site's theme: the values change, the roles stay."
       className="p-0 sm:p-0"
     >
       <TokenFlow
         rows={TOKEN_ROWS}
         showUse
-        theme={theme}
         className="rounded-none border-0 bg-transparent py-6 [&>div:first-child]:hidden"
       />
     </Plate>

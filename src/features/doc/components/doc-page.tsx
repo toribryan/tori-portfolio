@@ -192,15 +192,15 @@ export async function DocPage({
       </h1>
 
       {Cover ? (
-        // The same live cover as the doc's card, larger. Hovering the hero
-        // plays it the way hovering the card does.
+        // The same live cover as the doc's card, larger, switching themes on
+        // a loop instead of on hover.
         <div data-cover-host className="screen-line-bottom p-4">
           <div
             className="relative aspect-1200/630 overflow-hidden rounded-xl bg-muted/60 inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
             aria-hidden
             inert
           >
-            <Cover />
+            <Cover loop />
           </div>
         </div>
       ) : (
