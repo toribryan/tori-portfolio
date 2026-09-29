@@ -17,6 +17,7 @@ import {
 import { useInView, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { ScaledStage } from "@/features/portfolio/components/components/covers"
 
 /*
@@ -84,9 +85,9 @@ function Photo({ src, className }: { src: string; className?: string }) {
 /**
  * The agent platform on two screens: the desktop sidebar that lists the
  * listing section by section, and the same dashboard on a phone. While the
- * card is hovered or focused, or on a loop with `loop`, the agent opens a
- * room, moves on to Photos and previews the gallery families will see, and
- * the sidebar follows along.
+ * card is hovered or focused, or on a loop with `loop` or on a touch screen,
+ * the agent opens a room, moves on to Photos and previews the gallery
+ * families will see, and the sidebar follows along.
  */
 export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
   const frame = useRef<HTMLDivElement>(null)
@@ -94,7 +95,10 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
   const [step, setStep] = useState(0)
   const inView = useInView(frame, { amount: 0.5 })
   const reduceMotion = useReducedMotion()
-  const active = loop ? inView : engaged
+  // Touch screens have no hover to start it, so there it plays on its own.
+  const touch = useMediaQuery("(hover: none)")
+  const autoplay = loop || touch
+  const active = autoplay ? inView : engaged
 
   useEffect(() => {
     if (!active || reduceMotion) return
@@ -105,7 +109,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
       })
     }
     play()
-    const id = loop
+    const id = autoplay
       ? window.setInterval(play, STEP_AT[LAST_STEP] + LOOP_HOLD)
       : undefined
     return () => {
@@ -113,12 +117,12 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
       timers.forEach((timer) => window.clearTimeout(timer))
       setStep(0)
     }
-  }, [active, loop, reduceMotion])
+  }, [active, autoplay, reduceMotion])
 
   // The cover is inert, so it listens on the card or hero around it.
   useEffect(() => {
     const card = frame.current?.closest("[data-cover-host]")
-    if (!card || loop) return
+    if (!card || autoplay) return
     const on = () => setEngaged(true)
     const off = () => setEngaged(false)
     card.addEventListener("pointerenter", on)
@@ -131,7 +135,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
       card.removeEventListener("focusin", on)
       card.removeEventListener("focusout", off)
     }
-  }, [loop])
+  }, [autoplay])
 
   // With reduced motion the cover shows where the story ends, still.
   const shown = !active ? 0 : reduceMotion ? LAST_STEP : step
