@@ -223,8 +223,9 @@ function PixelSnailCover({ active }: CoverProps) {
   return (
     <div className="flex size-full items-center justify-center text-foreground">
       <svg
-        viewBox="-10 -15 23 17"
-        className="aspect-23/17 h-2/5 w-auto overflow-visible"
+        // fibo's stories frame the dancing sprite with this box.
+        viewBox="-13 -16 27 18"
+        className="aspect-27/18 h-2/5 w-auto overflow-visible"
         shapeRendering="crispEdges"
         fill="currentColor"
         aria-hidden
