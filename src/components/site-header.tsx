@@ -5,6 +5,7 @@ import Link from "next/link"
 import { MAIN_NAV } from "@/config/site"
 import { Separator } from "@/components/base/ui/separator"
 import { NavDesktop } from "@/components/nav-desktop"
+import { ResumeMenu } from "@/components/resume-menu"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 const BrandContextMenu = dynamic(
@@ -34,6 +35,14 @@ export function SiteHeader() {
         <div className="flex-1" />
 
         <NavDesktop items={MAIN_NAV} />
+
+        {/* Outside the nav so it stays on small screens, where the nav hides
+            and the résumé is still the thing a recruiter came for. */}
+        <ResumeMenu
+          placement="header"
+          side="bottom"
+          className="group/resume inline-flex items-center gap-1 text-sm font-medium tracking-wide text-muted-foreground transition-[color] hover:text-foreground aria-expanded:text-foreground"
+        />
 
         <div className="flex items-center">
           {MAIN_NAV.length > 0 && (

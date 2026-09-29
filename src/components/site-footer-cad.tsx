@@ -169,7 +169,10 @@ export function SiteFooterCad() {
               className="data-vertical:h-4 data-vertical:self-center"
             />
 
-            <ResumeMenu className="group/resume inline-flex items-center gap-1 link-underline transition-[color] hover:text-foreground aria-expanded:text-foreground" />
+            <ResumeMenu
+              placement="footer"
+              className="group/resume inline-flex items-center gap-1 link-underline transition-[color] hover:text-foreground aria-expanded:text-foreground"
+            />
           </div>
         </div>
       </div>

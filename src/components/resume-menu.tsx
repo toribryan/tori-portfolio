@@ -21,14 +21,25 @@ const RESUME_PDF = "/resume.pdf"
 const RESUME_MARKDOWN = "/resume.md"
 
 /**
- * The footer's Resume link, as a menu of formats: the PDF, the Markdown
- * version served at `/resume.md`, or that Markdown straight to the clipboard.
+ * The Resume link in the header and footer, as a menu of formats: the PDF,
+ * the Markdown version served at `/resume.md`, or that Markdown straight to
+ * the clipboard.
  *
  * The two link rows are real anchors so they open in a new tab like the plain
  * link they replace. The copy row fetches the same route the "view" row links
  * to, so there is one copy of the text to keep current.
  */
-export function ResumeMenu({ className }: { className?: string }) {
+export function ResumeMenu({
+  className,
+  side = "top",
+  placement,
+}: {
+  className?: string
+  /** Which way the menu opens: up from the footer, down from the header. */
+  side?: "top" | "bottom"
+  /** Where the menu sits, sent with each event to tell the two apart. */
+  placement: "header" | "footer"
+}) {
   const { success, error } = useTiks()
   // `interrupt` so a repeat copy restarts the blip instead of layering one
   // over the other, the same as every other copy on the site.
@@ -60,7 +71,7 @@ export function ResumeMenu({ className }: { className?: string }) {
     toast.success("Resume copied as Markdown")
     trackEvent({
       name: "resume_menu_action",
-      properties: { format: "copy" },
+      properties: { format: "copy", placement },
     })
   }
 
@@ -74,7 +85,7 @@ export function ResumeMenu({ className }: { className?: string }) {
         />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="end" side="top" className="w-fit">
+      <DropdownMenuContent align="end" side={side} className="w-fit">
         <DropdownMenuLinkItem
           href={RESUME_PDF}
           target="_blank"
@@ -82,7 +93,7 @@ export function ResumeMenu({ className }: { className?: string }) {
           onClick={() =>
             trackEvent({
               name: "resume_menu_action",
-              properties: { format: "pdf" },
+              properties: { format: "pdf", placement },
             })
           }
         >
@@ -97,7 +108,7 @@ export function ResumeMenu({ className }: { className?: string }) {
           onClick={() =>
             trackEvent({
               name: "resume_menu_action",
-              properties: { format: "markdown" },
+              properties: { format: "markdown", placement },
             })
           }
         >
