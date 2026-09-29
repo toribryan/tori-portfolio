@@ -24,7 +24,43 @@ import {
 } from "@/features/doc/data/documents"
 import type { Doc } from "@/features/doc/types/document"
 
+import { DOC_COVERS } from "./doc-covers"
+import {
+  Item,
+  Numbered,
+  Phase,
+  Phases,
+  Principle,
+  Principles,
+  Side,
+  Sides,
+} from "./fibo-blocks"
+import {
+  SlotComposition,
+  SwitchSprawl,
+  ThemeSwap,
+  TokenRoles,
+  VariantWall,
+} from "./overhaul-diagrams"
 import { RepoViewer } from "./repo-viewer"
+
+/** Components a doc's MDX can use beyond the shared set. */
+const DOC_COMPONENTS = {
+  Item,
+  Numbered,
+  Phase,
+  Phases,
+  Principle,
+  Principles,
+  RepoViewer,
+  Side,
+  Sides,
+  SlotComposition,
+  SwitchSprawl,
+  ThemeSwap,
+  TokenRoles,
+  VariantWall,
+}
 
 /** What the neighbour tooltips call the thing you're moving between. */
 const NEIGHBOUR_NOUN: Record<string, string> = {
@@ -64,6 +100,7 @@ export async function DocPage({
   const { previous, next } = findNeighbour(siblings, doc.slug)
   const noun = NEIGHBOUR_NOUN[category] ?? "page"
   const basePath = CATEGORY_BASE_PATH[category]
+  const Cover = DOC_COVERS[doc.slug]
 
   const facts = [
     ["Company", m.company],
@@ -152,36 +189,50 @@ export async function DocPage({
         {m.title}
       </h1>
 
-      {m.image && (
-        <div className="screen-line-bottom p-4">
-          <Image
-            className="w-full rounded-xl object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
-            src={m.image}
-            alt={m.title}
-            width={1200}
-            height={630}
-            quality={100}
-            priority
-            // The optimizer can't reach gated images — see doc-card.tsx.
-            unoptimized
-          />
-          {m.imageCredit && (
-            <p className="mt-2 text-xs text-muted-foreground">
-              {m.imageCreditUrl ? (
-                <a
-                  className="underline underline-offset-4"
-                  href={m.imageCreditUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {m.imageCredit}
-                </a>
-              ) : (
-                m.imageCredit
-              )}
-            </p>
-          )}
+      {Cover ? (
+        // The same live cover as the doc's card, larger. Hovering the hero
+        // plays it the way hovering the card does.
+        <div data-cover-host className="screen-line-bottom p-4">
+          <div
+            className="relative aspect-1200/630 overflow-hidden rounded-xl bg-muted/60 inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
+            aria-hidden
+            inert
+          >
+            <Cover />
+          </div>
         </div>
+      ) : (
+        m.image && (
+          <div className="screen-line-bottom p-4">
+            <Image
+              className="w-full rounded-xl object-cover inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
+              src={m.image}
+              alt={m.title}
+              width={1200}
+              height={630}
+              quality={100}
+              priority
+              // The optimizer can't reach gated images — see doc-card.tsx.
+              unoptimized
+            />
+            {m.imageCredit && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {m.imageCreditUrl ? (
+                  <a
+                    className="underline underline-offset-4"
+                    href={m.imageCreditUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {m.imageCredit}
+                  </a>
+                ) : (
+                  m.imageCredit
+                )}
+              </p>
+            )}
+          </div>
+        )
       )}
 
       <Prose className="px-4 pt-8 pb-4">
@@ -276,7 +327,7 @@ export async function DocPage({
         <TOCInline items={toc} />
 
         <div>
-          <MDX code={doc.content} components={{ RepoViewer }} />
+          <MDX code={doc.content} components={DOC_COMPONENTS} />
         </div>
 
         {m.gallery && m.gallery.length > 0 && (

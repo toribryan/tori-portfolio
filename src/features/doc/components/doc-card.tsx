@@ -45,7 +45,7 @@ export function DocCard({
 
   return (
     <div
-      data-doc-card
+      data-cover-host
       className="group/doc-card relative flex h-full flex-col gap-2 p-2 transition-[background-color] ease-out hover:bg-accent-muted"
     >
       <div className="relative select-none [--image-radius:var(--radius-xl)]">

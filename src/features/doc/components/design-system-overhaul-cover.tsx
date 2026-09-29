@@ -28,9 +28,9 @@ export function DesignSystemOverhaulCover() {
   const { resolvedTheme } = useTheme()
   const other = resolvedTheme === "dark" ? "light" : "dark"
 
-  // The cover is inert, so it listens on the card around it.
+  // The cover is inert, so it listens on the card or hero around it.
   useEffect(() => {
-    const card = frame.current?.closest("[data-doc-card]")
+    const card = frame.current?.closest("[data-cover-host]")
     if (!card) return
     const on = () => setEngaged(true)
     const off = () => setEngaged(false)
