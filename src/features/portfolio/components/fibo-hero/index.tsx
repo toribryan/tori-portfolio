@@ -297,6 +297,9 @@ const FIBO_TURN = 4
 // How far round him, in art pixels from his origin, a click counts as being
 // on him: his outline plus a margin so a click beside him still lands.
 const FIBO_REACH = { left: 19, right: 21, top: 24, bottom: 8 }
+// His drawing itself, in art pixels from his origin, where the pointer
+// turns to a hand.
+const FIBO_BODY = { left: 10, right: 13, top: 15, bottom: 2 }
 
 const FIBO_HELLO_MS = 1000
 const FIBO_TYPE_MS = 35
@@ -529,10 +532,10 @@ function Fibo({
           />
         ) : null}
         <rect
-          x={x - FIBO_REACH.left * pixel}
-          y={y - FIBO_REACH.top * pixel}
-          width={(FIBO_REACH.left + FIBO_REACH.right) * pixel}
-          height={(FIBO_REACH.top + FIBO_REACH.bottom) * pixel}
+          x={x - FIBO_BODY.left * pixel}
+          y={y - FIBO_BODY.top * pixel}
+          width={(FIBO_BODY.left + FIBO_BODY.right) * pixel}
+          height={(FIBO_BODY.top + FIBO_BODY.bottom) * pixel}
           fill="transparent"
           pointerEvents="all"
           className="cursor-pointer"
@@ -698,7 +701,7 @@ function Interactive({ id, geometry }: { id: string; geometry: Geometry }) {
           strokeWidth={18}
           vectorEffect="non-scaling-stroke"
           pointerEvents="stroke"
-          className="cursor-pointer stroke-transparent"
+          className="stroke-transparent"
           onPointerDown={launch}
         />
         {geometry.lines.map((d) => (
