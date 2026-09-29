@@ -2,10 +2,10 @@
 
 import { useRef, type ComponentType, type CSSProperties } from "react"
 import {
-  BookmarkIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   ComponentIcon,
+  DiamondIcon,
   FileTextIcon,
   HouseIcon,
   LayoutGridIcon,
@@ -281,7 +281,7 @@ function KitSidebar({ step }: { step: number }) {
           {/* One pill that slides to the selected entry, rather than a
                 fill that jumps between rows. */}
           <span
-            className="absolute inset-x-0 h-[15px] rounded-md bg-accent-muted transition-[translate] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            className="absolute inset-x-0 h-[15px] rounded-md bg-accent transition-[translate] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
             style={{ translate: `0 ${index * 15}px` }}
           />
           {ENTRIES.map((entry) => (
@@ -293,7 +293,7 @@ function KitSidebar({ step }: { step: number }) {
               )}
             >
               <KitRow
-                icon={entry === "Docs" ? FileTextIcon : BookmarkIcon}
+                icon={entry === "Docs" ? FileTextIcon : DiamondIcon}
                 label={entry}
                 depth={2}
               />
