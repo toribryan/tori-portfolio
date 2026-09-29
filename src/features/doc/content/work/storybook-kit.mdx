@@ -21,25 +21,14 @@ rather than the components themselves.
 storybook-kit lifts that shell out, makes it configurable, and wraps it in
 skills so the agent does the setup.
 
+## Who it is for
+
+Product designers looking to build out a Figma design system, or the
+components for a project.
+
 ## What is in it
 
 <RepoViewer repo="storybook-kit" guide="docs/getting-started.md" />
-
-## Who it is for
-
-A designer with a Figma file, Claude Code or Cursor, and little development
-experience. The agent is their interface: they ask it to set up a Storybook
-from their Figma file rather than running commands themselves.
-
-## Decisions so far
-
-- **One stack.** React, Vite, Tailwind CSS 4 and Storybook 10. Supporting
-  every framework would work against "minimal development knowledge".
-- **Storybook pinned exactly.** The sidebar styling targets Storybook's
-  internal class names, so version bumps go through an `upgrade` skill that
-  repairs whatever broke.
-- **Its own repo, not a fibo package.** fibo stays a design system; this is a
-  tool for making one.
 
 ## Where it is
 
