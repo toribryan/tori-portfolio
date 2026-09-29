@@ -279,16 +279,19 @@ function KitSidebar({ step }: { step: number }) {
         <KitRow icon={ComponentIcon} label="Button" depth={1} chevron="open" />
         <div className="relative">
           {/* One pill that slides to the selected entry, rather than a
-                fill that jumps between rows. */}
+              fill that jumps between rows. It moves by `top`, not a
+              transform: a transform lifts it onto its own layer mid-slide,
+              and inside the scaled cover that nudges the icons around it
+              by a fraction of a pixel. */}
           <span
-            className="absolute inset-x-0 h-[15px] rounded-md bg-accent transition-[translate] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
-            style={{ translate: `0 ${index * 15}px` }}
+            className="absolute inset-x-0 h-[15px] rounded-md bg-accent transition-[top] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            style={{ top: index * 15 }}
           />
           {ENTRIES.map((entry) => (
             <span
               key={entry}
               className={cn(
-                "relative transition-[font-weight]",
+                "relative",
                 selected === entry ? "font-semibold" : "text-foreground"
               )}
             >
@@ -329,7 +332,7 @@ export function StorybookKitCover({ loop = false }: { loop?: boolean }) {
         }}
         aria-hidden
       />
-      <ScaledStage width={480}>
+      <ScaledStage width={480} zoom>
         {/* Both run taller than the cover, off its bottom edge. */}
         <div className="flex h-full items-start justify-center gap-6 px-8 pt-6">
           <div className="h-[260px] w-[168px]">
