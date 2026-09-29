@@ -279,6 +279,9 @@ function typeInto(input: HTMLInputElement, text: string) {
  */
 function FilterMenuCover({ active }: CoverProps) {
   const [stage, setStage] = useState<HTMLDivElement | null>(null)
+  // The popup's own layer over the row, so its portal never takes a place
+  // in the row and nudges the chips.
+  const [layer, setLayer] = useState<HTMLDivElement | null>(null)
   const [value, setValue] = useState<FilterValue>({})
   const labelOf = (fieldId: string, optionValue: string) =>
     FIELDS.find((f) => f.id === fieldId)?.options.find(
@@ -328,28 +331,28 @@ function FilterMenuCover({ active }: CoverProps) {
 
   return (
     <ScaledStage width={340}>
-      <div
-        ref={setStage}
-        className="relative flex h-full flex-wrap content-start items-center gap-2 p-5"
-      >
-        <FilterMenu
-          fields={FIELDS}
-          value={value}
-          onValueChange={setValue}
-          search="button"
-          container={stage}
-        />
-        {Object.entries(value).map(([fieldId, values]) => (
-          <span
-            key={fieldId}
-            className="inline-flex h-8 animate-in items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm fade-in-0 zoom-in-95"
-          >
-            <span className="text-muted-foreground">
-              {FIELDS.find((f) => f.id === fieldId)?.label}
+      <div ref={setStage} className="relative h-full">
+        <div className="flex flex-wrap content-start items-center gap-2 p-5">
+          <FilterMenu
+            fields={FIELDS}
+            value={value}
+            onValueChange={setValue}
+            search="button"
+            container={layer}
+          />
+          {Object.entries(value).map(([fieldId, values]) => (
+            <span
+              key={fieldId}
+              className="inline-flex h-8 animate-in items-center gap-1.5 rounded-full border border-border bg-card px-3 text-sm fade-in-0 zoom-in-95"
+            >
+              <span className="text-muted-foreground">
+                {FIELDS.find((f) => f.id === fieldId)?.label}
+              </span>
+              {values.map((v) => labelOf(fieldId, v)).join(", ")}
             </span>
-            {values.map((v) => labelOf(fieldId, v)).join(", ")}
-          </span>
-        ))}
+          ))}
+        </div>
+        <div ref={setLayer} className="absolute inset-0" />
       </div>
     </ScaledStage>
   )
