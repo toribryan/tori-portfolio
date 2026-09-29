@@ -23,7 +23,7 @@ export function Default() {
 
 export function Sizes() {
   return (
-    <div className="flex items-end gap-8">
+    <div className="flex flex-wrap items-end justify-center gap-4 sm:gap-8">
       <PixelSnail {...args} size="sm" />
       <PixelSnail {...args} size="default" />
       <PixelSnail {...args} size="lg" />
@@ -33,7 +33,7 @@ export function Sizes() {
 
 export function Travel() {
   return (
-    <div className="w-96">
+    <div className="w-full max-w-96">
       <PixelSnail {...args} travel size="lg" />
     </div>
   )
@@ -62,7 +62,7 @@ function Sprite(props: ComponentProps<typeof PixelSnailSprite>) {
   return (
     <svg
       viewBox={SPRITE_BOX}
-      className="h-18 w-27 overflow-visible text-foreground"
+      className="h-14 w-21 overflow-visible text-foreground sm:h-18 sm:w-27"
       aria-hidden
     >
       <PixelSnailSprite {...props} />
@@ -72,7 +72,7 @@ function Sprite(props: ComponentProps<typeof PixelSnailSprite>) {
 
 export function Modes() {
   return (
-    <div className="flex items-end gap-10">
+    <div className="flex flex-wrap items-end justify-center gap-4 sm:gap-10">
       {(["crawl", "rest", "dance"] as const).map((mode) => (
         <figure key={mode} className="m-0 flex flex-col items-center gap-3">
           <Sprite mode={mode} />
@@ -157,7 +157,7 @@ export function FollowsThePointer() {
       <svg
         ref={svg}
         viewBox={SPRITE_BOX}
-        className="h-18 w-27 overflow-visible text-foreground"
+        className="h-14 w-21 overflow-visible text-foreground sm:h-18 sm:w-27"
         aria-hidden
       >
         <PixelSnailSprite mode="dance" look={look} />

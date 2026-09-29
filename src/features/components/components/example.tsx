@@ -14,7 +14,7 @@ export function Example({ of, className }: { of: string; className?: string }) {
   return (
     <div
       className={cn(
-        "not-prose my-6 flex min-h-48 items-center justify-center overflow-x-auto rounded-xl border border-line bg-background p-6",
+        "not-prose my-6 flex min-h-48 items-center justify-center overflow-x-auto rounded-xl border border-line bg-background p-4 sm:p-6",
         className
       )}
     >

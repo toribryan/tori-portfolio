@@ -25,6 +25,7 @@ import {
   Anatomy,
   ComponentRules,
   DataAttributes,
+  DocTable,
   Install,
   RelatedComponents,
   Tip,
@@ -48,6 +49,7 @@ const DOC_COMPONENTS = {
   RelatedComponents,
   Tip,
   UsageGuidelines,
+  table: DocTable,
 }
 
 /**

@@ -103,7 +103,8 @@ export function ComponentPageActions({
         render={
           <Link href="/">
             <ArrowLeftIcon />
-            Home
+            {/* Icon only on the narrowest phones, so the actions fit. */}
+            <span className="max-[22.5rem]:sr-only">Home</span>
           </Link>
         }
       />

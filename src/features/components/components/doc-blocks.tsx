@@ -1,4 +1,10 @@
-import type { ReactNode } from "react"
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+} from "react"
 import type { Route } from "next"
 import Link from "next/link"
 import {
@@ -93,14 +99,24 @@ function Guides({ rails, last }: { rails: boolean[]; last: boolean }) {
 export function Anatomy({ root }: { root: Part }) {
   const rows = flatten(root.children ?? [])
   const mono = "font-mono text-[0.8125rem] whitespace-nowrap"
+  // Phones have no room for three columns, so the slot and notes fold under
+  // each part's name, inside the cell that draws the tree's guides.
+  const folded = (part: Part) => (
+    <div className="pb-1 font-sans text-sm whitespace-normal text-muted-foreground sm:hidden">
+      {part.slot ? (
+        <div className="font-mono text-[0.8125rem]">{part.slot}</div>
+      ) : null}
+      {part.note ? <div>{part.note}</div> : null}
+    </div>
+  )
   return (
     <div className="not-prose my-6 overflow-x-auto rounded-xl border border-line bg-card">
-      <table className="w-full min-w-xl border-collapse text-left">
+      <table className="w-full border-collapse text-left sm:min-w-xl">
         <thead>
           <tr className="border-b border-line text-xs text-muted-foreground">
             <th className="px-5 py-2.5 font-medium">Part</th>
-            <th className="px-5 py-2.5 font-medium">data-slot</th>
-            <th className="px-5 py-2.5 font-medium">Notes</th>
+            <th className="px-5 py-2.5 font-medium max-sm:hidden">data-slot</th>
+            <th className="px-5 py-2.5 font-medium max-sm:hidden">Notes</th>
           </tr>
         </thead>
         <tbody className="text-sm leading-6">
@@ -112,11 +128,17 @@ export function Anatomy({ root }: { root: Part }) {
               )}
             >
               {root.name}
+              {folded(root)}
             </td>
-            <td className={cn("px-5 pt-3 pb-1.5 text-muted-foreground", mono)}>
+            <td
+              className={cn(
+                "px-5 pt-3 pb-1.5 text-muted-foreground max-sm:hidden",
+                mono
+              )}
+            >
               {root.slot}
             </td>
-            <td className="px-5 pt-3 pb-1.5 text-muted-foreground">
+            <td className="px-5 pt-3 pb-1.5 text-muted-foreground max-sm:hidden">
               {root.note}
             </td>
           </tr>
@@ -128,11 +150,19 @@ export function Anatomy({ root }: { root: Part }) {
               >
                 <Guides rails={rails} last={last} />
                 {part.name}
+                {folded(part)}
               </td>
-              <td className={cn("px-5 py-1.5 text-muted-foreground", mono)}>
+              <td
+                className={cn(
+                  "px-5 py-1.5 text-muted-foreground max-sm:hidden",
+                  mono
+                )}
+              >
                 {part.slot}
               </td>
-              <td className="px-5 py-1.5 text-muted-foreground">{part.note}</td>
+              <td className="px-5 py-1.5 text-muted-foreground max-sm:hidden">
+                {part.note}
+              </td>
             </tr>
           ))}
           <tr aria-hidden="true">
@@ -279,29 +309,37 @@ type DataAttribute = {
 export function DataAttributes({ rows }: { rows: DataAttribute[] }) {
   return (
     <div className="not-prose my-6 overflow-x-auto">
-      <table className="w-full min-w-lg border-collapse text-left text-sm">
-        <thead>
+      {/* On phones each row stacks: the attribute, then the element and when
+          it's present, each named since the header row is hidden. */}
+      <table className="w-full border-collapse text-left text-sm max-sm:block sm:min-w-lg">
+        <thead className="max-sm:hidden">
           <tr className="border-b border-line text-foreground">
             <th className="py-2.5 pr-4 font-medium">Attribute</th>
             <th className="py-2.5 pr-4 font-medium">Element</th>
             <th className="py-2.5 font-medium">Present when</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="max-sm:block">
           {rows.map((row) => (
             <tr
               key={row.attribute}
-              className="border-b border-line align-top last:border-b-0"
+              className="border-b border-line align-top last:border-b-0 max-sm:flex max-sm:flex-col max-sm:gap-1 max-sm:py-3"
             >
-              <td className="py-3 pr-4">
-                <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.8125rem] whitespace-nowrap text-foreground">
+              <td className="py-3 pr-4 max-sm:p-0">
+                <code className="rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.8125rem] whitespace-nowrap text-foreground max-sm:break-all max-sm:whitespace-normal">
                   {row.attribute}
                 </code>
               </td>
-              <td className="py-3 pr-4 leading-6 text-muted-foreground">
+              <td className="py-3 pr-4 leading-6 text-muted-foreground max-sm:p-0">
+                <span className="font-medium text-foreground sm:hidden">
+                  Element:{" "}
+                </span>
                 {row.element}
               </td>
-              <td className="py-3 leading-6 text-muted-foreground">
+              <td className="py-3 leading-6 text-muted-foreground max-sm:p-0">
+                <span className="font-medium text-foreground sm:hidden">
+                  Present when:{" "}
+                </span>
                 {row.when}
               </td>
             </tr>
@@ -413,5 +451,84 @@ export function RelatedComponents({ names }: { names: string[] }) {
         )
       })}
     </ul>
+  )
+}
+
+function textOf(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return `${node}`
+  if (Array.isArray(node)) return (node as ReactNode[]).map(textOf).join("")
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    return textOf(node.props.children)
+  }
+  return ""
+}
+
+/** Element children only, skipping the whitespace MDX leaves between tags. */
+function elementsOf(node: ReactNode) {
+  return Children.toArray(node).filter((child) =>
+    isValidElement<{ children?: ReactNode }>(child)
+  ) as ReactElement<{ children?: ReactNode; className?: string }>[]
+}
+
+/**
+ * The docs' Markdown tables, which are API references four columns wide. On
+ * a phone that doesn't fit, so each row stacks instead: the first cell leads,
+ * and the rest follow under the header they came from, which is read from the
+ * table's own head row so any table works.
+ */
+export function DocTable({ children }: { children?: ReactNode }) {
+  const sections = elementsOf(children)
+  const head = sections.find((section) => section.type === "thead")
+  const headerRow = head ? elementsOf(head.props.children)[0] : undefined
+  const labels = headerRow
+    ? elementsOf(headerRow.props.children).map((cell) =>
+        textOf(cell.props.children)
+      )
+    : []
+
+  return (
+    <table className="max-sm:block max-sm:border-b-0">
+      {sections.map((section, index) => {
+        if (section.type === "thead") {
+          return cloneElement(section, {
+            key: index,
+            className: "max-sm:sr-only",
+          })
+        }
+        if (section.type !== "tbody") return section
+        return cloneElement(section, {
+          key: index,
+          className: "max-sm:block",
+          children: elementsOf(section.props.children).map((row, rowIndex) =>
+            cloneElement(row, {
+              key: rowIndex,
+              className:
+                "max-sm:flex max-sm:flex-col max-sm:gap-1.5 max-sm:border-t max-sm:border-line max-sm:py-3",
+              children: elementsOf(row.props.children).map((cell, cellIndex) =>
+                cloneElement(cell, {
+                  key: cellIndex,
+                  // An empty cell would leave its label standing alone.
+                  className: cn(
+                    "max-sm:border-none max-sm:p-0",
+                    !textOf(cell.props.children).trim() && "max-sm:hidden"
+                  ),
+                  children:
+                    cellIndex === 0 ? (
+                      cell.props.children
+                    ) : (
+                      <>
+                        <span className="mr-2 text-xs font-medium text-foreground sm:hidden">
+                          {labels[cellIndex]}
+                        </span>
+                        {cell.props.children}
+                      </>
+                    ),
+                })
+              ),
+            })
+          ),
+        })
+      })}
+    </table>
   )
 }
