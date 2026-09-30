@@ -16,6 +16,23 @@ import { cn } from "@/lib/utils"
 const FIELD = "/images/header/bunny-field.json"
 const PHOTO = "/images/header/bunny-field-photo.jpg"
 
+// The site's light surface and ink, read from the theme tokens. The strip
+// stays a light plate in dark mode too, since the dark background would
+// swallow the ink cells.
+function lightTokens() {
+  const probe = document.createElement("div")
+  probe.className = "light"
+  probe.hidden = true
+  document.body.append(probe)
+  const style = getComputedStyle(probe)
+  const tokens = {
+    paper: style.getPropertyValue("--background").trim(),
+    ink: style.getPropertyValue("--foreground").trim(),
+  }
+  probe.remove()
+  return tokens
+}
+
 export function HeroDither({ className }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null)
 
@@ -32,6 +49,7 @@ export function HeroDither({ className }: { className?: string }) {
       .then((field) => {
         if (cancelled) return
         stop = ditherField(canvas, field, {
+          ...lightTokens(),
           photo,
           lens: [96, 54],
           align: "right",

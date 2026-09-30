@@ -311,12 +311,14 @@ export function playSheet(canvas, sheetUrl, meta) {
  *
  * opts: photo (loaded <img> of field.photo), build (true), pinWindow (show the exported --window at
  * rest), lens ([w, h] in cells, or null), flicker (cells lit at once), idleFps, ripple (true),
- * align ("center" | "left" | "right").
+ * align ("center" | "left" | "right"), paper and ink (any canvas color, to match a host page instead
+ * of the preset's).
  */
 export function ditherField(canvas, field, opts = {}) {
   const {
     photo = null, build = true, pinWindow = false, lens = [26, 14],
     flicker = 24, idleFps = 10, ripple = true, seed = 11, align = "center",
+    paper = field.paper, ink = field.ink,
   } = opts;
   const { cols, rows, cell, gap, ox, oy } = field;
   const n = cols * rows;
@@ -387,9 +389,9 @@ export function ditherField(canvas, field, opts = {}) {
   const draw = (now) => {
     const bw = canvas.width;
     const bh = canvas.height;
-    ctx.fillStyle = field.paper;
+    ctx.fillStyle = paper;
     ctx.fillRect(0, 0, bw, bh);
-    ctx.fillStyle = field.ink;
+    ctx.fillStyle = ink;
     const r = wave ? (now - wave.t0) * 0.09 : -1;
     for (let i = 0; i < n; i++) {
       const x = i % cols;
