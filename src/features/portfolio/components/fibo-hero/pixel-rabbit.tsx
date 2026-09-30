@@ -121,8 +121,8 @@ type Pose = {
   dy?: -1 | 0 | 1
   /** The mouth, at rest or nudged along a pixel. */
   mouth?: 0 | 1
-  /** A row shorter, or a row taller, at the legs. */
-  legs?: "squash" | "stretch"
+  /** A row shorter at the legs. */
+  legs?: "squash"
 }
 
 const cell = (c: string | undefined): Cell =>
@@ -166,8 +166,6 @@ function compose(pose: Pose): Grid {
     })
   }
   if (pose.legs === "squash") return g.filter((_, i) => i !== LEG_ROW)
-  if (pose.legs === "stretch")
-    return [...g.slice(0, LEG_ROW), [...g[LEG_ROW]!], ...g.slice(LEG_ROW)]
   return g
 }
 
@@ -224,30 +222,17 @@ function Runs({ grid, value }: { grid: Grid; value: Cell }) {
   return rects
 }
 
-type RabbitSound = "hop" | "land" | "thump" | "flinch"
+type RabbitSound = "thump" | "flinch"
 
 type Step = {
   pose: Pose
   ms: number
-  /** Pixels off the ground. */
-  lift?: number
   /** Pixels sideways, for a shudder. */
   nudge?: number
   sound?: RabbitSound
 }
 
-/*
- * An 8-bit hop: three held frames on a 12 fps beat, one jump height, no
- * easing. Idle hops are silent; only a reply makes noise.
- */
-const HOP: Step[] = [
-  { pose: { legs: "squash" }, ms: 166 },
-  { pose: { legs: "stretch", ears: "perk" }, ms: 250, lift: 4 },
-  { pose: { legs: "squash" }, ms: 83 },
-  { pose: {}, ms: 250 },
-]
-
-// Resting: blinks, twitches an ear, sniffs, glances about, hops in place.
+// Resting: blinks, twitches an ear, sniffs, glances about.
 // The holds are uneven on purpose; an even beat reads as a machine.
 const IDLE: Step[] = [
   { pose: {}, ms: 1800 },
@@ -266,9 +251,7 @@ const IDLE: Step[] = [
   { pose: { dx: 1, dy: -1 }, ms: 600 },
   { pose: {}, ms: 700 },
   { pose: { eyes: "shut" }, ms: 130 },
-  { pose: {}, ms: 900 },
-  ...HOP,
-  { pose: {}, ms: 1400 },
+  { pose: {}, ms: 2300 },
 ]
 
 const ACTIONS = {
@@ -318,19 +301,10 @@ const ACTIONS = {
   ],
   // A click beside him: one ear folds while he works out what you meant.
   wonder: [{ pose: { ears: "lean", dx: 1 }, ms: 1400 }],
-  // Back in one piece after bursting: a startled hop, then his ears wobble
+  // Back in one piece after bursting: ears up in surprise, then a wobble
   // while he steadies himself.
   woah: [
-    { pose: { ears: "perk", mouth: 1 }, ms: 140 },
-    { pose: { legs: "squash" }, ms: 166 },
-    {
-      pose: { legs: "stretch", ears: "perk" },
-      ms: 250,
-      lift: 4,
-      sound: "hop",
-    },
-    { pose: { legs: "squash" }, ms: 83, sound: "land" },
-    { pose: {}, ms: 250 },
+    { pose: { ears: "perk", mouth: 1 }, ms: 500 },
     { pose: { ears: "lean" }, ms: 200 },
     { pose: { ears: "perk" }, ms: 200 },
     { pose: { ears: "lean" }, ms: 200 },
@@ -609,10 +583,9 @@ function PixelRabbitSprite({
   const [burstFrom, setBurstFrom] = useState<Grid | null>(null)
   if (burst && !burstFrom) setBurstFrom(grid)
   if (!burst && burstFrom) setBurstFrom(null)
-  const lift = acting || !look ? (step.lift ?? 0) : 0
   const nudge = acting ? (step.nudge ?? 0) : 0
   const flip = facing === 1 ? -1 : 1
-  const origin = `translate(${nudge * pixel} 0) scale(${pixel * flip} ${pixel}) translate(${-WIDTH / 2} ${-grid.length - lift})`
+  const origin = `translate(${nudge * pixel} 0) scale(${pixel * flip} ${pixel}) translate(${-WIDTH / 2} ${-grid.length})`
 
   return (
     <g
