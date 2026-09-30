@@ -17,6 +17,10 @@ import { cn } from "@/lib/utils"
 const FIELD = "/images/header/bunny-field.json"
 const PHOTO = "/images/header/bunny-field-photo.jpg"
 
+// pixel-studio's heart.sprite at 2x and 4x, with its hotspot at the center.
+const CURSOR =
+  'image-set(url("/images/header/heart-cursor.png") 1x, url("/images/header/heart-cursor@2x.png") 2x) 13 11, crosshair'
+
 // The site's surface and ink for a theme, read from its tokens. In dark mode
 // the cells invert too: light cells draw the white bunny on the dark page,
 // where only swapping the colors would turn the photo into a negative.
@@ -81,7 +85,8 @@ export function HeroDither({ className }: { className?: string }) {
         ref={ref}
         role="img"
         aria-label="A white bunny wearing earbuds, drawn in 1-bit dither"
-        className="absolute inset-0 size-full cursor-crosshair"
+        className="absolute inset-0 size-full"
+        style={{ cursor: CURSOR }}
       />
     </div>
   )
