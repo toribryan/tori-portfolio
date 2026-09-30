@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react"
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+} from "react"
 
 /*
  * fibo, a pixel rabbit, as an SVG sprite for the fibo hero. He is drawn
@@ -312,6 +318,24 @@ const ACTIONS = {
   ],
   // A click beside him: one ear folds while he works out what you meant.
   wonder: [{ pose: { ears: "lean", dx: 1 }, ms: 1400 }],
+  // Back in one piece after bursting: a startled hop, then his ears wobble
+  // while he steadies himself.
+  woah: [
+    { pose: { ears: "perk", mouth: 1 }, ms: 140 },
+    { pose: { legs: "squash" }, ms: 166 },
+    {
+      pose: { legs: "stretch", ears: "perk" },
+      ms: 250,
+      lift: 4,
+      sound: "hop",
+    },
+    { pose: { legs: "squash" }, ms: 83, sound: "land" },
+    { pose: {}, ms: 250 },
+    { pose: { ears: "lean" }, ms: 200 },
+    { pose: { ears: "perk" }, ms: 200 },
+    { pose: { ears: "lean" }, ms: 200 },
+    { pose: { ears: "perk", mouth: 1 }, ms: 1000 },
+  ],
 } satisfies Record<string, Step[]>
 
 type RabbitAction = keyof typeof ACTIONS
@@ -444,6 +468,46 @@ function Mosaic({
     ))
 }
 
+// Where a burst flies out from: the middle of his body.
+const BURST_CENTER = { x: WIDTH / 2, y: 12 + HEADROOM }
+
+/*
+ * The art bursting apart: every pixel of one value flies out from the
+ * middle of his body, spinning a little and fading. Distances and spins
+ * come from the pixel's position, so the burst is the same each time and
+ * does not jitter as the component re-renders.
+ */
+function Burst({ grid, value }: { grid: Grid; value: Cell }) {
+  const rects = []
+  for (let y = 0; y < grid.length; y++)
+    for (let x = 0; x < WIDTH; x++) {
+      if (grid[y]![x] !== value) continue
+      const seed = Math.abs(scatter(x, y)) / 97
+      const dx = x - BURST_CENTER.x + (seed - 0.5) * 2
+      const dy = y - BURST_CENTER.y - 2 - seed * 3
+      const length = Math.hypot(dx, dy) || 1
+      const reach = 6 + seed * 10
+      rects.push(
+        <rect
+          key={`${x}:${y}`}
+          x={x}
+          y={y}
+          width={1}
+          height={1}
+          className="[transform-origin:center] animate-[pixel-burst_600ms_cubic-bezier(0.2,0.7,0.3,1)_forwards] [transform-box:fill-box]"
+          style={
+            {
+              "--dx": `${(dx / length) * reach}px`,
+              "--dy": `${(dy / length) * reach}px`,
+              "--spin": `${(seed - 0.5) * 360}deg`,
+            } as CSSProperties
+          }
+        />
+      )
+    }
+  return rects
+}
+
 type RabbitLook = {
   /** Behind, level or ahead, from where he faces. */
   x: -1 | 0 | 1
@@ -464,6 +528,12 @@ type PixelRabbitSpriteProps = {
   assembleDelay?: number
   /** Called as the build-up moves on, for syncing sound to the pixels. */
   onAssemble?: (step: { block: number; shown: number } | "whole") => void
+  /**
+   * Bursts him apart: the pose he is in when it turns on flies out pixel by
+   * pixel and fades. Remount the sprite with `assembleDelay` to build him
+   * back up.
+   */
+  burst?: boolean
   /** Called for each sound a reply makes. */
   onSound?: (sound: RabbitSound) => void
   transform?: string
@@ -480,6 +550,7 @@ function PixelRabbitSprite({
   action = null,
   assembleDelay,
   onAssemble,
+  burst = false,
   onSound,
   transform,
   className,
@@ -534,6 +605,10 @@ function PixelRabbitSprite({
           ears: "perk",
         }
   const grid = compose(pose)
+  // The pose at the moment the burst starts, held while it flies apart.
+  const [burstFrom, setBurstFrom] = useState<Grid | null>(null)
+  if (burst && !burstFrom) setBurstFrom(grid)
+  if (!burst && burstFrom) setBurstFrom(null)
   const lift = acting || !look ? (step.lift ?? 0) : 0
   const nudge = acting ? (step.nudge ?? 0) : 0
   const flip = facing === 1 ? -1 : 1
@@ -547,7 +622,16 @@ function PixelRabbitSprite({
       transform={transform ? `${transform} ${origin}` : origin}
       className={className}
     >
-      {assembly === "hidden" ? null : building ? (
+      {burstFrom ? (
+        <>
+          <g className="dark:hidden">
+            <Burst grid={burstFrom} value={1} />
+          </g>
+          <g className="hidden dark:inline">
+            <Burst grid={invert(burstFrom)} value={2} />
+          </g>
+        </>
+      ) : assembly === "hidden" ? null : building ? (
         <Mosaic grid={grid} block={block} shown={shown} />
       ) : (
         <>

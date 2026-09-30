@@ -264,6 +264,10 @@ function Construction({ geometry }: { geometry: Geometry }) {
  */
 const FIBO_SCALE = 2
 const FIBO_ASSEMBLE_MS = 800
+// How long he stays in pieces after bursting, and how soon he starts
+// building back up after that.
+const FIBO_BURST_MS = 650
+const FIBO_REBUILD_MS = 150
 // Art pixels from his origin to his eyes, and how far the pointer must be
 // from them before he looks that way.
 const FIBO_EYES = { x: 5, y: -10 }
@@ -373,7 +377,8 @@ function Fibo({
     kind: RabbitAction
     id: number
   } | null>(null)
-  const { speaking, text, typed, speak } = useSpeech(usePrefersReducedMotion())
+  const reduceMotion = usePrefersReducedMotion()
+  const { speaking, text, typed, speak } = useSpeech(reduceMotion)
   const pixel = geometry.stroke * FIBO_SCALE
   const { x, y } = geometry.fibo
   const [, , width = 1, height = 1] = geometry.viewBox.split(" ").map(Number)
@@ -387,6 +392,17 @@ function Fibo({
   useEffect(() => {
     reply.current = act
   })
+
+  /*
+   * The first click on him bursts him apart. He builds back up, with the
+   * sound the browser held back until that click, and says "WOAH". Later
+   * clicks get his usual lines.
+   */
+  const [build, setBuild] = useState(0)
+  const [burst, setBurst] = useState<"none" | "apart" | "rebuilding">("none")
+  const burstDone = useRef(false)
+  // True from the burst until he says "WOAH"; clicks on him wait it out.
+  const bursting = useRef(false)
 
   // A click anywhere in the hero gets a line, bar the buttons and links,
   // which keep their own jobs.
@@ -404,6 +420,18 @@ function Fibo({
         at.dx <= FIBO_REACH.right &&
         at.dy >= -FIBO_REACH.top &&
         at.dy <= FIBO_REACH.bottom
+      if (onHim && bursting.current) return
+      if (onHim && !burstDone.current && !reduceMotion) {
+        burstDone.current = true
+        bursting.current = true
+        sfx.burst()
+        setBurst("apart")
+        window.setTimeout(() => {
+          setBuild((b) => b + 1)
+          setBurst("rebuilding")
+        }, FIBO_BURST_MS)
+        return
+      }
       const line = heckle({ onHim, at: performance.now() })
       // Rage clicks frighten him; a poke makes him flinch; a click beside
       // him leaves him puzzled.
@@ -414,7 +442,7 @@ function Fibo({
     }
     node.addEventListener("click", respond)
     return () => node.removeEventListener("click", respond)
-  }, [area, geometry.fibo, pixel])
+  }, [area, geometry.fibo, pixel, reduceMotion])
 
   // Once per visit to the hero, a pointer that stays a while without
   // clicking gets a hello, from the fibo on show only.
@@ -480,16 +508,23 @@ function Fibo({
       >
         {seen ? (
           <PixelRabbitSprite
+            key={build}
             className="text-foreground"
             transform={`translate(${x} ${y})`}
             pixel={pixel}
             look={look}
             action={action}
-            assembleDelay={FIBO_ASSEMBLE_MS}
+            burst={burst === "apart"}
+            assembleDelay={build > 0 ? FIBO_REBUILD_MS : FIBO_ASSEMBLE_MS}
             onAssemble={(step) => {
               if (!isShown(svg.current)) return
-              if (step === "whole") sfx.settle()
-              else sfx.pixels(step)
+              if (step !== "whole") return sfx.pixels(step)
+              sfx.settle()
+              if (burst === "rebuilding") {
+                bursting.current = false
+                setBurst("none")
+                reply.current("woah", "woah")
+              }
             }}
             onSound={(sound) => {
               if (isShown(svg.current)) sfx[sound]()
