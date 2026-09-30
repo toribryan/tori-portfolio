@@ -17,9 +17,10 @@ import { cn } from "@/lib/utils"
 const FIELD = "/images/header/bunny-field.json"
 const PHOTO = "/images/header/bunny-field-photo.jpg"
 
-// pixel-studio's heart.sprite at 2x and 4x, with its hotspot at the center.
+// pixel-studio's golden-spiral.sprite at 2x and 4x, with the hotspot in the
+// eye of the curl.
 const CURSOR =
-  'image-set(url("/images/header/heart-cursor.png") 1x, url("/images/header/heart-cursor@2x.png") 2x) 13 11, crosshair'
+  'image-set(url("/images/header/spiral-cursor.png") 1x, url("/images/header/spiral-cursor@2x.png") 2x) 13 9, crosshair'
 
 // The site's surface and ink for a theme, read from its tokens. In dark mode
 // the cells invert too: light cells draw the white bunny on the dark page,
