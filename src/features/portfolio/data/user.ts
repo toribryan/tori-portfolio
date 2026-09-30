@@ -34,6 +34,7 @@ export const USER: User = {
 `,
   avatar: "/images/about/photo-1.jpg",
   headerAvatar: "/images/header/avatar.svg",
+  headshot: "/images/header/profile-photo.webp",
   portrait: "/images/header/avatar-square.webp",
   avatarVariants: {
     lightOff: "/images/about/photo-1.jpg",
