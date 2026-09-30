@@ -31,7 +31,11 @@ export function HeroDither({ className }: { className?: string }) {
       .then((res) => res.json())
       .then((field) => {
         if (cancelled) return
-        stop = ditherField(canvas, field, { photo, lens: [96, 54] })
+        stop = ditherField(canvas, field, {
+          photo,
+          lens: [96, 54],
+          align: "right",
+        })
       })
       .catch(() => {})
 
@@ -43,13 +47,13 @@ export function HeroDither({ className }: { className?: string }) {
 
   return (
     <div className={cn("overflow-hidden", className)}>
-      {/* Height-fit and right-aligned, so narrow screens crop the dark
-          field on the left and keep the bunny. */}
+      {/* The field covers the strip anchored right, so narrow screens crop
+          the dark field on the left and keep the bunny. */}
       <canvas
         ref={ref}
         role="img"
         aria-label="A white bunny wearing earbuds, drawn in 1-bit dither"
-        className="absolute top-0 right-0 h-full w-auto max-w-none cursor-crosshair [image-rendering:pixelated]"
+        className="absolute inset-0 size-full cursor-crosshair"
       />
     </div>
   )

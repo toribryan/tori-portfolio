@@ -304,24 +304,39 @@ export function playSheet(canvas, sheetUrl, meta) {
  * flipped cells out from the point. With reduced motion it draws the finished field and keeps only
  * the lens. Returns stop().
  *
+ * The canvas is drawn at device resolution with a whole number of device pixels per cell, so the
+ * browser never rescales the grid (a fractional scale doubles a pixel column every so often, and on
+ * a 1px-gap grid those beat into visible bands). Size the canvas with CSS; the field covers it like
+ * object-fit: cover, anchored by `align`.
+ *
  * opts: photo (loaded <img> of field.photo), build (true), pinWindow (show the exported --window at
- * rest), lens ([w, h] in cells, or null), flicker (cells lit at once), idleFps, ripple (true).
+ * rest), lens ([w, h] in cells, or null), flicker (cells lit at once), idleFps, ripple (true),
+ * align ("center" | "left" | "right").
  */
 export function ditherField(canvas, field, opts = {}) {
   const {
     photo = null, build = true, pinWindow = false, lens = [26, 14],
-    flicker = 24, idleFps = 10, ripple = true, seed = 11,
+    flicker = 24, idleFps = 10, ripple = true, seed = 11, align = "center",
   } = opts;
-  const { width: W, height: H, cols, rows, cell, gap, ox, oy } = field;
+  const { cols, rows, cell, gap, ox, oy } = field;
   const n = cols * rows;
   const still = reducedMotion();
-  // Trimmed to the cells, so the field ends on ink with no paper margin against the page.
-  const CW = cols * cell - gap;
-  const CH = rows * cell - gap;
-  canvas.width = CW;
-  canvas.height = CH;
-  canvas.style.imageRendering = "pixelated";
   canvas.style.touchAction = "pan-y";
+  // c and g are the cell and gap in device pixels; x0, y0 place the grid in the canvas.
+  let c = cell, g = gap, x0 = 0, y0 = 0;
+  const layout = () => {
+    const dpr = globalThis.devicePixelRatio || 1;
+    const bw = Math.round(canvas.clientWidth * dpr) || cols * cell;
+    const bh = Math.round(canvas.clientHeight * dpr) || rows * cell;
+    canvas.width = bw;
+    canvas.height = bh;
+    c = Math.max(1, Math.ceil(bh / rows - 0.01), Math.ceil(bw / cols - 0.01));
+    g = c > 1 ? Math.max(1, Math.round((gap * c) / cell)) : 0;
+    const spare = bw - cols * c;
+    x0 = align === "left" ? 0 : align === "right" ? spare : Math.round(spare / 2);
+    y0 = Math.round((bh - rows * c) / 2);
+  };
+  layout();
   const ctx = canvas.getContext("2d");
   const rng = mulberry32(seed);
 
@@ -366,32 +381,39 @@ export function ditherField(canvas, field, opts = {}) {
     const h = Math.max(1, Math.round(lens[1] * lensState.size));
     const cx = Math.min(Math.max(Math.round(lensState.x - w / 2), 0), cols - w);
     const cy = Math.min(Math.max(Math.round(lensState.y - h / 2), 0), rows - h);
-    return [ox + cx * cell, oy + cy * cell, w * cell - gap, h * cell - gap];
+    return [cx, cy, w, h];
   };
 
   const draw = (now) => {
-    ctx.setTransform(1, 0, 0, 1, -ox, -oy);
+    const bw = canvas.width;
+    const bh = canvas.height;
     ctx.fillStyle = field.paper;
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillRect(0, 0, bw, bh);
     ctx.fillStyle = field.ink;
     const r = wave ? (now - wave.t0) * 0.09 : -1;
     for (let i = 0; i < n; i++) {
       const x = i % cols;
+      const px = x0 + x * c;
+      if (px + c <= 0 || px >= bw) continue;
       const y = (i / cols) | 0;
       let v = bits[i] ^ (blinks.has(i) ? 1 : 0);
       if (wave && Math.abs(Math.hypot(x - wave.x, y - wave.y) - r) < 1.2) v ^= 1;
-      if (v) ctx.fillRect(ox + x * cell, oy + y * cell, cell - gap, cell - gap);
+      if (v) ctx.fillRect(px, y0 + y * c, c - g, c - g);
     }
     if (!photo || !photo.complete) return;
-    const rect = lensRect() ?? (pinWindow && field.window
-      ? [field.window[0], field.window[1], field.window[2] - field.window[0], field.window[3] - field.window[1]]
+    const win = field.window;
+    const rect = lensRect() ?? (pinWindow && win
+      ? [(win[0] - ox) / cell, (win[1] - oy) / cell, (win[2] - win[0]) / cell, (win[3] - win[1]) / cell]
       : null);
-    if (rect) ctx.drawImage(photo, ...rect, ...rect);
+    if (!rect) return;
+    const [cx, cy, w, h] = rect;
+    ctx.drawImage(photo, ox + cx * cell, oy + cy * cell, w * cell - gap, h * cell - gap,
+      x0 + cx * c, y0 + cy * c, w * c - g, h * c - g);
   };
 
   const toCells = (e) => {
     const b = canvas.getBoundingClientRect();
-    return [((e.clientX - b.left) * (CW / b.width)) / cell, ((e.clientY - b.top) * (CH / b.height)) / cell];
+    return [((e.clientX - b.left) * (canvas.width / b.width) - x0) / c, ((e.clientY - b.top) * (canvas.height / b.height) - y0) / c];
   };
   let dirty = true;
   const onMove = (e) => {
@@ -414,6 +436,11 @@ export function ditherField(canvas, field, opts = {}) {
   canvas.addEventListener("pointerup", onUp);
   canvas.addEventListener("pointercancel", onLeave);
   photo?.addEventListener?.("load", () => { dirty = true; });
+
+  const ro = typeof ResizeObserver === "function"
+    ? new ResizeObserver(() => { layout(); dirty = true; schedule(); })
+    : null;
+  ro?.observe(canvas);
 
   let visible = true;
   const io = typeof IntersectionObserver === "function"
@@ -455,6 +482,7 @@ export function ditherField(canvas, field, opts = {}) {
     stopped = true;
     cancelAnimationFrame(raf);
     io?.disconnect();
+    ro?.disconnect();
     canvas.removeEventListener("pointermove", onMove);
     canvas.removeEventListener("pointerleave", onLeave);
     canvas.removeEventListener("pointerdown", onDown);
