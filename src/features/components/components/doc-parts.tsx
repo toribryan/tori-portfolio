@@ -12,8 +12,6 @@ import { PixelSnail, PixelSnailSprite } from "@/components/fibo/pixel-snail"
 import { Reactions } from "@/components/fibo/reactions"
 import { TokenFlow } from "@/components/fibo/token-flow"
 
-import { PixelGrid } from "./pixel-grid"
-
 /**
  * The fibo parts and icons the docs render inline, in their do's and
  * don'ts and diagrams, by the names the MDX uses.
@@ -26,7 +24,6 @@ export const DOC_PARTS = {
   IntegrationVisual,
   MailIcon,
   MessageSquareIcon,
-  PixelGrid,
   PixelSnail,
   PixelSnailSprite,
   Reactions,

@@ -120,7 +120,7 @@ export function Sides() {
       <IntegrationVisual
         {...args}
         layout="sides"
-        pulse="outward"
+        pulse="through"
         items={pipeline}
       />
     </Frame>

@@ -14,10 +14,6 @@ import Link from "next/link"
 import { ArrowRightIcon, Volume2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import {
-  PixelSnailSprite,
-  type PixelSnailLook,
-} from "@/components/ui/pixel-snail"
 import { Button } from "@/components/base/ui/button"
 
 import {
@@ -31,15 +27,20 @@ import {
 } from "./brand-icons"
 import { createHeckle, FIBO_LINES, type FiboLine } from "./lines"
 import { FIBO } from "./links"
+import {
+  PixelRabbitSprite,
+  type RabbitAction,
+  type RabbitLook,
+} from "./pixel-rabbit"
 import { listenForUnlock, sfx } from "./sounds"
 
 /*
  * Geometry is ncdai's hero-01 (@ncdai/hero-01): a golden rectangle whose
- * large square holds the copy, a few hairlines marking the cuts, and a
- * spiral from the pole out past the frame. `wide` is the landscape frame;
- * `tall` turns it upright for narrow containers. fibo adds the motion: the
- * spiral draws outward from the pole, and fibo, a pixel snail, builds up on
- * a line clear of it and dances there.
+ * large square holds the copy and a few hairlines marking the cuts. fibo's
+ * brand draws no spirals, so only the construction is kept: the cuts, the
+ * squares and the dashed diagonals. `wide` is the landscape frame; `tall`
+ * turns it upright for narrow containers. fibo, a pixel rabbit, builds up
+ * on a line clear of the copy and idles there.
  */
 type Geometry = {
   viewBox: string
@@ -52,15 +53,10 @@ type Geometry = {
     height: number
     transform?: string
   }[]
-  /** Pole to the frame's edge. */
-  spiral: string
   /** Where fibo stands: a point on a cut or the frame's edge, under his foot. */
   fibo: { x: number; y: number }
-  /** The last quarter turn, which leaves the frame. */
-  tail: string
-  /** Stroke and dot size in viewBox units, about 2px and 7px at full size. */
+  /** Stroke weight in viewBox units, about 2px at full size. */
   stroke: number
-  dot: number
   /** The part of the frame without copy. Hover and click targets are clipped
    * to it so they never sit over the heading, text or buttons. */
   open: { x: number; y: number; width: number; height: number }
@@ -71,7 +67,7 @@ type Geometry = {
 type Sketch = {
   /** Dimension lines below the frame, each with end ticks and a label. */
   dimensions: { d: string; label: string; x: number; y: number }[]
-  /** Where the spiral converges: the crossing of the two diagonals. */
+  /** Where the two diagonals cross. */
   pole: { x: number; y: number }
 }
 
@@ -87,12 +83,8 @@ const WIDE: Geometry = {
     { x: 240, y: 60.5, width: 20, height: 20 },
     { x: 240, y: 50.5, width: 20, height: 10 },
   ],
-  spiral:
-    "M239.897 60.3571C239.897 54.894 244.414 50.381 249.882 50.381C255.35 50.381 259.868 54.894 259.868 60.3571C259.868 71.2835 250.833 80.3095 239.897 80.3095C223.493 80.3095 209.941 66.7704 209.941 50.381C209.941 23.0652 232.527 0.499999 259.868 0.5C303.613 0.499995 339.75 36.6043 339.75 80.3095C339.75 151.33 281.027 210 209.941 210C95.1103 210 0.25 115.226 0.25 0.5",
   fibo: { x: 300, y: 80.5 },
-  tail: "C0.250008 -185.69 154.06 -339.5 340.25 -339.5",
   stroke: 0.62,
-  dot: 2.2,
   open: { x: 210, y: -400, width: 600, height: 1000 },
   sketch: {
     dimensions: [
@@ -150,12 +142,8 @@ const TALL: Geometry = {
       transform: "rotate(90 159.5 240)",
     },
   ],
-  spiral:
-    "M149.643 239.897C155.106 239.897 159.619 244.414 159.619 249.882C159.619 255.35 155.106 259.868 149.643 259.868C138.717 259.868 129.69 250.833 129.69 239.897C129.69 223.493 143.23 209.941 159.619 209.941C186.935 209.941 209.5 232.527 209.5 259.868C209.5 303.613 173.396 339.75 129.69 339.75C58.6695 339.75 0 281.027 0 209.941C0 95.1103 94.7738 0.24998 209.5 0.249985",
   fibo: { x: 30, y: 340 },
-  tail: "C395.69 0.250001 549.5 154.06 549.5 340.25",
   stroke: 0.9,
-  dot: 3,
   open: { x: -400, y: 210, width: 1000, height: 600 },
 }
 
@@ -181,9 +169,8 @@ type Rect = Geometry["rects"][number]
 // a border.
 const LINE_OPACITY = 0.55
 
-function Spiral({ geometry }: { geometry: Geometry }) {
-  const { viewBox, diagonals, lines, rects, spiral, tail, stroke, sketch } =
-    geometry
+function Construction({ geometry }: { geometry: Geometry }) {
+  const { viewBox, diagonals, lines, rects, sketch } = geometry
   return (
     <svg
       className="pointer-events-none absolute inset-0 size-full overflow-visible"
@@ -220,12 +207,6 @@ function Spiral({ geometry }: { geometry: Geometry }) {
             />
           ))}
         </g>
-        <path
-          d={spiral + tail}
-          pathLength={1}
-          strokeWidth={stroke}
-          className="fibo-draw fibo-draw--spiral stroke-border"
-        />
       </g>
 
       {sketch ? (
@@ -255,7 +236,7 @@ function Spiral({ geometry }: { geometry: Geometry }) {
             </g>
           </g>
           <g
-            className="fibo-tile fill-muted-foreground font-handwritten"
+            className="fibo-tile fill-muted-foreground font-mono"
             style={{ animationDelay: "1s" }}
           >
             {sketch.dimensions.map((dimension) => (
@@ -278,28 +259,24 @@ function Spiral({ geometry }: { geometry: Geometry }) {
 }
 
 /*
- * fibo stands at twice the spiral's weight per pixel, so he reads as the
+ * fibo stands at twice the construction's weight per pixel, so he reads as the
  * logo rather than a mark on the drawing.
  */
 const FIBO_SCALE = 2
-const FIBO_ASSEMBLE_MS = 1200
-// How long he stays in pieces after bursting, and how soon he starts
-// building back up after that.
-const FIBO_BURST_MS = 650
-const FIBO_REBUILD_MS = 150
+const FIBO_ASSEMBLE_MS = 800
 // Art pixels from his origin to his eyes, and how far the pointer must be
 // from them before he looks that way.
-const FIBO_EYES = { x: 6, y: -11 }
+const FIBO_EYES = { x: 5, y: -10 }
 const FIBO_GLANCE = 1.5
 // How far past his middle the pointer must go before he turns round. The
 // gap between the two sides keeps him from flipping back and forth.
 const FIBO_TURN = 4
 // How far round him, in art pixels from his origin, a click counts as being
 // on him: his outline plus a margin so a click beside him still lands.
-const FIBO_REACH = { left: 19, right: 21, top: 24, bottom: 8 }
+const FIBO_REACH = { left: 16, right: 16, top: 28, bottom: 8 }
 // His drawing itself, in art pixels from his origin, where the pointer
 // turns to a hand.
-const FIBO_BODY = { left: 10, right: 13, top: 15, bottom: 2 }
+const FIBO_BODY = { left: 10, right: 10, top: 21, bottom: 1 }
 
 const FIBO_HELLO_MS = 1000
 const FIBO_TYPE_MS = 35
@@ -373,10 +350,11 @@ function glance(offset: number): -1 | 0 | 1 {
 }
 
 /*
- * fibo builds up from coarse blocks once the spiral has drawn, then dances.
- * With the pointer anywhere in the hero he stops and turns to it: eyes, head
- * and neck follow, and he turns round when it goes behind him. Clicking him
- * earns a remark; his click area is padded so a click beside him counts.
+ * fibo builds up from coarse blocks once the construction is in, then idles:
+ * blinks, ear twitches and the odd hop. With the pointer anywhere in the
+ * hero he turns to it, eyes following and ears up, and turns round when it
+ * goes behind him. Clicking him earns a remark and a reaction; his click
+ * area is padded so a click beside him counts.
  */
 function Fibo({
   geometry,
@@ -390,28 +368,25 @@ function Fibo({
   seen: boolean
 }) {
   const svg = useRef<SVGSVGElement>(null)
-  const [look, setLook] = useState<PixelSnailLook | null>(null)
-  const reduceMotion = usePrefersReducedMotion()
-  const { speaking, text, typed, speak } = useSpeech(reduceMotion)
+  const [look, setLook] = useState<RabbitLook | null>(null)
+  const [action, setAction] = useState<{
+    kind: RabbitAction
+    id: number
+  } | null>(null)
+  const { speaking, text, typed, speak } = useSpeech(usePrefersReducedMotion())
   const pixel = geometry.stroke * FIBO_SCALE
   const { x, y } = geometry.fibo
   const [, , width = 1, height = 1] = geometry.viewBox.split(" ").map(Number)
   const opensRight = x < width / 2
-  const reply = useRef(speak)
+  // Each reply is a line and something to do with it.
+  const act = (line: FiboLine, kind: RabbitAction) => {
+    speak(line)
+    setAction((last) => ({ kind, id: (last?.id ?? 0) + 1 }))
+  }
+  const reply = useRef(act)
   useEffect(() => {
-    reply.current = speak
+    reply.current = act
   })
-
-  /*
-   * The first click on him bursts him apart. He builds back up, with the
-   * sound the browser held back until that click, and says "WOAH". Later
-   * clicks get his usual lines.
-   */
-  const [build, setBuild] = useState(0)
-  const [burst, setBurst] = useState<"none" | "apart" | "rebuilding">("none")
-  const burstDone = useRef(false)
-  // True from the burst until he says "WOAH"; clicks on him wait it out.
-  const bursting = useRef(false)
 
   // A click anywhere in the hero gets a line, bar the buttons and links,
   // which keep their own jobs.
@@ -429,23 +404,17 @@ function Fibo({
         at.dx <= FIBO_REACH.right &&
         at.dy >= -FIBO_REACH.top &&
         at.dy <= FIBO_REACH.bottom
-      if (onHim && bursting.current) return
-      if (onHim && !burstDone.current && !reduceMotion) {
-        burstDone.current = true
-        bursting.current = true
-        sfx.burst()
-        setBurst("apart")
-        window.setTimeout(() => {
-          setBuild((b) => b + 1)
-          setBurst("rebuilding")
-        }, FIBO_BURST_MS)
-        return
-      }
-      reply.current(heckle({ onHim, at: performance.now() }))
+      const line = heckle({ onHim, at: performance.now() })
+      // Rage clicks frighten him; a poke makes him flinch; a click beside
+      // him leaves him puzzled.
+      reply.current(
+        line,
+        line === "rage" ? "thump" : onHim ? "flinch" : "wonder"
+      )
     }
     node.addEventListener("click", respond)
     return () => node.removeEventListener("click", respond)
-  }, [area, geometry.fibo, pixel, reduceMotion])
+  }, [area, geometry.fibo, pixel])
 
   // Once per visit to the hero, a pointer that stays a while without
   // clicking gets a hello, from the fibo on show only.
@@ -457,7 +426,7 @@ function Fibo({
     const arrive = () => {
       cancel()
       wait = window.setTimeout(() => {
-        if (isShown(svg.current)) reply.current("hello")
+        if (isShown(svg.current)) reply.current("hello", "hello")
       }, FIBO_HELLO_MS)
     }
     node.addEventListener("pointerenter", arrive)
@@ -510,24 +479,20 @@ function Fibo({
         aria-hidden="true"
       >
         {seen ? (
-          <PixelSnailSprite
-            key={build}
+          <PixelRabbitSprite
             className="text-foreground"
             transform={`translate(${x} ${y})`}
             pixel={pixel}
-            mode="dance"
             look={look}
-            burst={burst === "apart"}
-            assembleDelay={build > 0 ? FIBO_REBUILD_MS : FIBO_ASSEMBLE_MS}
+            action={action}
+            assembleDelay={FIBO_ASSEMBLE_MS}
             onAssemble={(step) => {
               if (!isShown(svg.current)) return
-              if (step !== "whole") return sfx.pixels(step)
-              sfx.settle()
-              if (burst === "rebuilding") {
-                bursting.current = false
-                setBurst("none")
-                reply.current("woah")
-              }
+              if (step === "whole") sfx.settle()
+              else sfx.pixels(step)
+            }}
+            onSound={(sound) => {
+              if (isShown(svg.current)) sfx[sound]()
             }}
           />
         ) : null}
@@ -553,7 +518,7 @@ function Fibo({
             ...(opensRight
               ? { left: `${((x - 12 * pixel) / width) * 100}%` }
               : { right: `${(1 - (x + 12 * pixel) / width) * 100}%` }),
-            bottom: `${(1 - (y - 18 * pixel) / height) * 100}%`,
+            bottom: `${(1 - (y - 25 * pixel) / height) * 100}%`,
           }}
         >
           {text.slice(0, typed)}
@@ -619,46 +584,6 @@ function Trace({ shape, width }: { shape: Shape; width: number }) {
   )
 }
 
-/** One dot launched by a click: rides in from the frame's edge and fades. */
-function LaunchedDot({ href, r }: { href: string; r: number }) {
-  const motion = useRef<SVGAnimateMotionElement>(null)
-  const fade = useRef<SVGAnimateElement>(null)
-
-  useEffect(() => {
-    motion.current?.beginElement()
-    fade.current?.beginElement()
-  }, [])
-
-  return (
-    <circle r={r} opacity={0} className="pointer-events-none fill-ring">
-      <animate
-        ref={fade}
-        attributeName="opacity"
-        values="0;1;1;0"
-        keyTimes="0;0.08;0.85;1"
-        dur="3.4s"
-        begin="indefinite"
-        fill="freeze"
-      />
-      <animateMotion
-        ref={motion}
-        dur="3.4s"
-        begin="indefinite"
-        fill="freeze"
-        keyPoints="1;0"
-        keyTimes="0;1"
-        calcMode="spline"
-        keySplines="0.3 0 0.2 1"
-      >
-        <mpath href={href} />
-      </animateMotion>
-    </circle>
-  )
-}
-
-const LAUNCH_MS = 3500
-const MAX_LAUNCHED = 8
-
 /*
  * The pointer layer, drawn over the copy's grid so it can receive events.
  * The SVG itself ignores the pointer; only the clipped hit strokes take it,
@@ -666,21 +591,9 @@ const MAX_LAUNCHED = 8
  */
 function Interactive({ id, geometry }: { id: string; geometry: Geometry }) {
   const reduced = usePrefersReducedMotion()
-  const [launched, setLaunched] = useState<number[]>([])
-  const next = useRef(0)
 
   if (reduced) return null
 
-  const launch = () => {
-    const key = next.current++
-    setLaunched((keys) => [...keys.slice(-(MAX_LAUNCHED - 1)), key])
-    window.setTimeout(
-      () => setLaunched((keys) => keys.filter((k) => k !== key)),
-      LAUNCH_MS
-    )
-  }
-
-  const ride = `${id}-ride`
   const clip = `${id}-open`
   return (
     <svg
@@ -693,17 +606,8 @@ function Interactive({ id, geometry }: { id: string; geometry: Geometry }) {
         <clipPath id={clip}>
           <rect {...geometry.open} />
         </clipPath>
-        <path id={ride} d={geometry.spiral} />
       </defs>
       <g clipPath={`url(#${clip})`}>
-        <path
-          d={geometry.spiral}
-          strokeWidth={18}
-          vectorEffect="non-scaling-stroke"
-          pointerEvents="stroke"
-          className="stroke-transparent"
-          onPointerDown={launch}
-        />
         {geometry.lines.map((d) => (
           <Trace key={d} shape={{ path: d }} width={geometry.stroke} />
         ))}
@@ -715,9 +619,6 @@ function Interactive({ id, geometry }: { id: string; geometry: Geometry }) {
           />
         ))}
       </g>
-      {launched.map((key) => (
-        <LaunchedDot key={key} href={`#${ride}`} r={geometry.dot} />
-      ))}
     </svg>
   )
 }
@@ -765,7 +666,7 @@ function Pitch({ width, className }: { width: number; className?: string }) {
       style={{ "--u": `calc(100cqw * ${LATTICE} / ${width})` } as CSSProperties}
     >
       <div className="flex flex-col justify-end">
-        <h2 className="fibo-tile m-0 mb-[max(0.75rem,1.2cqw)] text-[clamp(3.5rem,11cqw,5rem)] leading-none font-semibold tracking-[-0.035em] text-foreground">
+        <h2 className="fibo-tile m-0 mb-[max(0.75rem,1.2cqw)] text-[clamp(3.5rem,11cqw,5rem)] leading-none font-medium text-foreground">
           fibo
         </h2>
         <p
@@ -928,7 +829,7 @@ function Frame({
   return (
     <div className="relative">
       <Plate id={id} geometry={geometry} />
-      <Spiral geometry={geometry} />
+      <Construction geometry={geometry} />
       <div className={cn("relative grid", className)}>{children}</div>
       <Interactive id={id} geometry={geometry} />
       <Fibo geometry={geometry} area={area} seen={seen} />
@@ -937,8 +838,8 @@ function Frame({
 }
 
 /*
- * fibo's hero, in the page column. The spiral and dots run on past the frame
- * and are clipped at the column's edges, so the clipping sits on an inner
+ * fibo's hero, in the page column. The construction runs on past the frame
+ * and is clipped at the column's edges, so the clipping sits on an inner
  * box: the page's hairlines are drawn out past the section and would be cut
  * off with it. The frame ends 2.5rem above the section, over the dimension
  * lines, and its full-width hairline is drawn from out here for that reason.
@@ -990,7 +891,7 @@ export function FiboHero() {
         <div className="hidden @xl:block">
           <Frame
             geometry={WIDE}
-            id="fibo-hero-spiral"
+            id="fibo-hero"
             area={area}
             seen={seen}
             className="aspect-[1.618/1] grid-cols-[1.618fr_minmax(0,1fr)] grid-rows-[1fr_1.618fr]"
@@ -1001,7 +902,7 @@ export function FiboHero() {
         <div className="@xl:hidden">
           <Frame
             geometry={TALL}
-            id="fibo-hero-spiral-tall"
+            id="fibo-hero-tall"
             area={area}
             seen={seen}
             className="aspect-[1/1.618] grid-cols-[1.618fr_minmax(0,1fr)] grid-rows-[1.618fr_1fr]"

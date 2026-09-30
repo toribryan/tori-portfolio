@@ -2,7 +2,7 @@
 title: Chapter scrubber
 description: A rail of marks that swell under the pointer like the Dock, previewing the chapter at the crest.
 createdAt: 2026-09-28
-updatedAt: 2026-09-28
+updatedAt: 2026-09-30
 new: true
 ---
 
@@ -92,7 +92,7 @@ Every part the component renders, with the `data-slot` it carries. You pass
       {
         name: "preview",
         slot: "chapter-scrubber-preview",
-        note: "Beside the crest. Shows the chapter's meta, title and description.",
+        note: "Beside the crest, portalled to the body so no container clips it. Shows the chapter's meta, title and description.",
       },
     ],
   }}
@@ -232,6 +232,7 @@ The rail in a sticky column beside a long read.
 | `side`                 | `"left" \| "right" \| "top" \| "bottom"`            |              | Where the preview opens. Vertical rails take left or right, horizontal rails top or bottom. Unset picks right or top, and it flips when the preferred side would leave the viewport. |
 | `align`                | `"edge" \| "center"`                                | `"edge"`     | Ticks grow from the rail's edge, or out from its center line.                                                                                                                        |
 | `preview`              | `"card" \| "label" \| "none"`                       | `"card"`     | What shows beside the crest.                                                                                                                                                         |
+| `previewClassName`     | `string`                                            |              | Classes for the preview. It's portalled to the body, so a selector on the rail can't reach it.                                                                                       |
 | `rowSize`              | `number`                                            |              | Row pitch along the rail, in pixels.                                                                                                                                                 |
 | `restLength`           | `number`                                            |              | Resting mark length (or dot diameter), in pixels.                                                                                                                                    |
 | `peakLength`           | `number`                                            |              | Mark length (or dot diameter) at the crest, in pixels.                                                                                                                               |
@@ -247,7 +248,9 @@ Any other prop goes to the root `div`.
 ### Data attributes
 
 Style parts by slot or state, for example with
-`[&_[data-slot=chapter-scrubber-preview]]:shadow-none`.
+`[&_[data-slot=chapter-scrubber-item]]:rounded-none`. The preview renders in a
+portal on the body, out of reach of the rail's selectors, so style it with
+`previewClassName`, such as `previewClassName="shadow-none"`.
 
 <DataAttributes
   rows={[
