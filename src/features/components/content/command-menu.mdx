@@ -120,25 +120,35 @@ type CommandMenuItem = {
 
 ## Anatomy
 
-Seven parts, shown here mid-search so every one of them is on screen.
+The dialog is three regions stacked over a backdrop: the search field, the
+list of commands with an optional preview pane beside it, and the keyboard
+hints.
 
 <Exhibit
-  of="command-menu.Anatomy"
-  description="A search for r across files and people, with the first result highlighted."
+  of="command-menu.AnatomyDialog"
+  title="The dialog"
+  description="Mid-search, so every region is on screen."
 >
-<ExhibitCode label="Slots">
+<ExhibitCode label="Structure">
 
-| Part             | `data-slot`                                                                             |
-| ---------------- | --------------------------------------------------------------------------------------- |
-| Search field     | `command-menu-search`, with `command-menu-back` and `command-menu-breadcrumb` on a page |
-| Group label      | `command-menu-group-label`, inside `command-menu-group`                                 |
-| Highlighted item | `command-menu-item` with `data-highlighted`                                             |
-| Context          | `command-menu-context`                                                                  |
-| Preview pane     | `command-menu-preview`                                                                  |
-| Keyboard hints   | `command-menu-hints`                                                                    |
-| Backdrop         | `command-menu-backdrop`                                                                 |
-
-The dialog itself is `command-menu`, and the list `command-menu-list`.
+```text
+CommandMenu
+├─ trigger              command-menu-trigger
+├─ backdrop             command-menu-backdrop
+└─ dialog               command-menu
+   ├─ search            command-menu-search
+   │  ├─ back           command-menu-back        (on a page)
+   │  └─ breadcrumb     command-menu-breadcrumb  (on a page)
+   ├─ list              command-menu-list
+   │  └─ group          command-menu-group
+   │     ├─ label       command-menu-group-label
+   │     └─ item        command-menu-item
+   │        ├─ context  command-menu-context
+   │        └─ shortcut command-menu-shortcut
+   ├─ empty             command-menu-empty
+   ├─ preview           command-menu-preview
+   └─ hints             command-menu-hints
+```
 
 </ExhibitCode>
 <ExhibitCode label="Data attributes">
@@ -195,6 +205,30 @@ The dialog itself is `command-menu`, and the list `command-menu-list`.
     },
   ]}
 />
+
+</ExhibitCode>
+</Exhibit>
+
+Each row carries a label and, when it has them, an icon, where it lives, a
+shortcut and a chevron for a page.
+
+<Exhibit
+  of="command-menu.AnatomyRow"
+  title="A row"
+  description="One of each kind: highlighted, with a shortcut, opening a page, and disabled."
+>
+<ExhibitCode>
+
+```tsx
+{
+  value: "new-file",
+  label: "New file",
+  icon: <FilePlusIcon />,       // Icon
+  shortcut: ["⌘", "N"],         // Shortcut
+  items: [/* … */],             // Page: the chevron
+  disabled: true,               // Disabled row
+}
+```
 
 </ExhibitCode>
 </Exhibit>
