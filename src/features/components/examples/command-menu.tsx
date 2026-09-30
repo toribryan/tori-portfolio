@@ -412,7 +412,6 @@ export function DontPreview() {
 
 type Callout = {
   label: string
-  note: string
   side: "left" | "right"
   /** Finds the part once the menu has reached its state. */
   find: (stage: HTMLElement) => Element | null | undefined
@@ -563,17 +562,9 @@ function AnatomyMap({
               ? { top: labelY, right: bounds.width - edge("left") }
               : { top: labelY, left: edge("right") }
           }
-          className={cn(
-            "absolute z-60 flex w-max max-w-40 -translate-y-1/2 flex-col gap-0.5 rounded-md bg-background px-2 py-1.5 shadow-xs ring-1 ring-border",
-            callout.side === "left" ? "items-end text-right" : "items-start"
-          )}
+          className="absolute z-60 w-max -translate-y-1/2 rounded-lg bg-background px-3 py-2 text-lg leading-none font-medium whitespace-nowrap shadow-xs ring-1 ring-border"
         >
-          <span className="text-xs leading-none font-medium">
-            {callout.label}
-          </span>
-          <span className="text-[11px] leading-snug text-pretty text-muted-foreground">
-            {callout.note}
-          </span>
+          {callout.label}
         </div>
       ))}
     </div>
@@ -589,40 +580,34 @@ const rowAt = (stage: HTMLElement, index: number) =>
 const DIALOG_PARTS: Callout[] = [
   {
     label: "Search field",
-    note: "Searches every page",
     side: "left",
     find: slot("command-menu-search"),
     outline: true,
   },
   {
     label: "Group label",
-    note: "Recent, a group, a page or Results",
     side: "left",
     find: slot("command-menu-group-label"),
   },
   {
     label: "Item",
-    note: "Enter runs the highlight",
     side: "left",
     find: slot("command-menu-item"),
   },
   {
     label: "Keyboard hints",
-    note: "Can be turned off",
     side: "left",
     find: slot("command-menu-hints"),
     outline: true,
   },
   {
     label: "Backdrop",
-    note: "Dims the page behind",
     side: "right",
     find: slot("command-menu-backdrop"),
     around: true,
   },
   {
     label: "Preview pane",
-    note: "Follows the highlight",
     side: "right",
     find: slot("command-menu-preview"),
     outline: true,
@@ -648,43 +633,36 @@ export function AnatomyDialog() {
 const ROW_PARTS: Callout[] = [
   {
     label: "Group label",
-    note: "Names the rows below it",
     side: "left",
     find: slot("command-menu-group-label"),
   },
   {
     label: "Highlighted row",
-    note: "Follows the arrows and the pointer",
     side: "left",
     find: (stage) => rowAt(stage, 0),
   },
   {
     label: "Icon",
-    note: "Optional, helps people scan",
     side: "left",
     find: (stage) => rowAt(stage, 1)?.querySelector("span"),
   },
   {
     label: "Disabled row",
-    note: "Shown faded, can't be run",
     side: "left",
     find: (stage) => rowAt(stage, 3),
   },
   {
     label: "Context",
-    note: "Where a recent command or result lives",
     side: "right",
     find: slot("command-menu-context"),
   },
   {
     label: "Shortcut",
-    note: "A label only, the app wires the keys",
     side: "right",
     find: slot("command-menu-shortcut"),
   },
   {
     label: "Page",
-    note: "The chevron means it opens a page",
     side: "right",
     find: (stage) =>
       [...(rowAt(stage, 2)?.querySelectorAll("svg") ?? [])].at(-1),
