@@ -18,7 +18,7 @@ export const USER: User = {
   website: "https://toribryan.com",
   jobTitle: "Design Engineer",
   /** Shown under the name in the hero; broader than the job title. */
-  discipline: "Product + Design Engineering",
+  discipline: "Product Designer",
   availability: "Open to work",
   jobs: [
     {
