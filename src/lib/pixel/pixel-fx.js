@@ -312,13 +312,14 @@ export function playSheet(canvas, sheetUrl, meta) {
  * opts: photo (loaded <img> of field.photo), build (true), pinWindow (show the exported --window at
  * rest), lens ([w, h] in cells, or null), flicker (cells lit at once), idleFps, ripple (true),
  * align ("center" | "left" | "right"), paper and ink (any canvas color, to match a host page instead
- * of the preset's).
+ * of the preset's), invert (fill the paper cells instead of the ink ones: with a dark paper and light
+ * ink this keeps the photo right-way-round for a dark theme instead of turning it into a negative).
  */
 export function ditherField(canvas, field, opts = {}) {
   const {
     photo = null, build = true, pinWindow = false, lens = [26, 14],
     flicker = 24, idleFps = 10, ripple = true, seed = 11, align = "center",
-    paper = field.paper, ink = field.ink,
+    paper = field.paper, ink = field.ink, invert = false,
   } = opts;
   const { cols, rows, cell, gap, ox, oy } = field;
   const n = cols * rows;
@@ -398,7 +399,7 @@ export function ditherField(canvas, field, opts = {}) {
       const px = x0 + x * c;
       if (px + c <= 0 || px >= bw) continue;
       const y = (i / cols) | 0;
-      let v = bits[i] ^ (blinks.has(i) ? 1 : 0);
+      let v = bits[i] ^ (blinks.has(i) ? 1 : 0) ^ (invert ? 1 : 0);
       if (wave && Math.abs(Math.hypot(x - wave.x, y - wave.y) - r) < 1.2) v ^= 1;
       if (v) ctx.fillRect(px, y0 + y * c, c - g, c - g);
     }

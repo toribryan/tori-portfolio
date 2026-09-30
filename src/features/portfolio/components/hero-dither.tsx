@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useTheme } from "next-themes"
 
 import { ditherField } from "@/lib/pixel/pixel-fx"
 import { cn } from "@/lib/utils"
@@ -16,18 +17,19 @@ import { cn } from "@/lib/utils"
 const FIELD = "/images/header/bunny-field.json"
 const PHOTO = "/images/header/bunny-field-photo.jpg"
 
-// The site's light surface and ink, read from the theme tokens. The strip
-// stays a light plate in dark mode too, since the dark background would
-// swallow the ink cells.
-function lightTokens() {
+// The site's surface and ink for a theme, read from its tokens. In dark mode
+// the cells invert too: light cells draw the white bunny on the dark page,
+// where only swapping the colors would turn the photo into a negative.
+function themeTokens(theme: "light" | "dark") {
   const probe = document.createElement("div")
-  probe.className = "light"
+  probe.className = theme
   probe.hidden = true
   document.body.append(probe)
   const style = getComputedStyle(probe)
   const tokens = {
     paper: style.getPropertyValue("--background").trim(),
     ink: style.getPropertyValue("--foreground").trim(),
+    invert: theme === "dark",
   }
   probe.remove()
   return tokens
@@ -35,33 +37,41 @@ function lightTokens() {
 
 export function HeroDither({ className }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null)
+  const photo = useRef<HTMLImageElement | null>(null)
+  const built = useRef(false)
+  const [field, setField] = useState<Record<string, unknown> | null>(null)
+  const { resolvedTheme } = useTheme()
 
   useEffect(() => {
-    const canvas = ref.current
-    if (!canvas) return
-    let stop: (() => void) | undefined
     let cancelled = false
-
-    const photo = new Image()
-    photo.src = PHOTO
+    const img = new Image()
+    img.src = PHOTO
+    photo.current = img
     fetch(FIELD)
       .then((res) => res.json())
-      .then((field) => {
-        if (cancelled) return
-        stop = ditherField(canvas, field, {
-          ...lightTokens(),
-          photo,
-          lens: [96, 54],
-          align: "right",
-        })
+      .then((data) => {
+        if (!cancelled) setField(data as Record<string, unknown>)
       })
       .catch(() => {})
-
     return () => {
       cancelled = true
-      stop?.()
     }
   }, [])
+
+  // Builds from paper once; a theme switch redraws the finished field.
+  useEffect(() => {
+    const canvas = ref.current
+    if (!canvas || !field || !resolvedTheme) return
+    const stop = ditherField(canvas, field, {
+      ...themeTokens(resolvedTheme === "dark" ? "dark" : "light"),
+      photo: photo.current,
+      build: !built.current,
+      lens: [96, 54],
+      align: "right",
+    })
+    built.current = true
+    return stop
+  }, [field, resolvedTheme])
 
   return (
     <div className={cn("overflow-hidden", className)}>
