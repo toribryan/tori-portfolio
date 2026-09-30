@@ -25,7 +25,7 @@ export function Components() {
         </PanelTitle>
       </PanelHeader>
 
-      <ComponentCardList />
+      <ComponentCardList home />
 
       <div className="screen-line-top flex justify-center py-4">
         <Button

@@ -19,6 +19,7 @@ import {
   ChapterScrubber,
   type Chapter,
 } from "@/components/fibo/chapter-scrubber"
+import { CommandMenu } from "@/components/fibo/command-menu"
 import {
   FilterMenu,
   type FilterField,
@@ -31,6 +32,7 @@ import {
 import { PixelSnailSprite } from "@/components/fibo/pixel-snail"
 import { Reactions, type Reaction } from "@/components/fibo/reactions"
 import { TokenFlow, type TokenRow } from "@/components/fibo/token-flow"
+import { FILES } from "@/features/components/examples/command-menu-data"
 
 type CoverProps = { active: boolean }
 
@@ -364,12 +366,83 @@ function FilterMenuCover({ active }: CoverProps) {
   )
 }
 
+/**
+ * The palette with its preview pane, held open over the backdrop inside the
+ * cover. While active it arrows down through the files and people, so the
+ * pane follows the highlight, then types "gr" to rank Grace Hopper to the
+ * top, and starts over. It never takes focus or locks the page's scroll.
+ */
+function CommandMenuCover({ active }: CoverProps) {
+  const [stage, setStage] = useState<HTMLDivElement | null>(null)
+  const [layer, setLayer] = useState<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!active || !stage) return
+    const input = () =>
+      stage.querySelector<HTMLInputElement>("[data-slot=command-menu] input")
+    const press = (key: string) =>
+      input()?.dispatchEvent(
+        new KeyboardEvent("keydown", { key, bubbles: true })
+      )
+    const timers: number[] = []
+    const at = (ms: number, act: () => void) =>
+      timers.push(window.setTimeout(() => uninerted(stage, act), ms))
+
+    const run = () => {
+      ;[0, 1, 2, 3].forEach((i) =>
+        at(1200 + i * 1100, () => press("ArrowDown"))
+      )
+      ;["g", "gr"].forEach((text, i) =>
+        at(6000 + i * 220, () => {
+          const box = input()
+          if (box) typeInto(box, text)
+        })
+      )
+      at(8200, () => {
+        const box = input()
+        if (box) typeInto(box, "")
+      })
+      timers.push(window.setTimeout(run, 8800))
+    }
+    run()
+
+    return () => {
+      timers.forEach((id) => window.clearTimeout(id))
+      const box = input()
+      if (box) uninerted(stage, () => typeInto(box, ""))
+    }
+  }, [active, stage])
+
+  return (
+    <ScaledStage width={600}>
+      <div ref={setStage} className="relative h-full">
+        {/* The trigger sits on the page; the dialog opens into the layer. */}
+        <div className="p-6">
+          {layer && (
+            <CommandMenu
+              groups={FILES}
+              open
+              modal={false}
+              hotkey={null}
+              container={layer}
+              placeholder="Search files, people and actions…"
+              popupClassName="top-14 h-[340px] w-[580px] max-w-none data-preview:max-w-none"
+            />
+          )}
+        </div>
+        <div ref={setLayer} className="absolute inset-0" />
+      </div>
+    </ScaledStage>
+  )
+}
+
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "filter-menu": FilterMenuCover,
   "chapter-scrubber": ChapterScrubberCover,
   "integration-visual": IntegrationVisualCover,
   reactions: ReactionsCover,
   "token-flow": TokenFlowCover,
+  "command-menu": CommandMenuCover,
   "pixel-snail": PixelSnailCover,
 }
 

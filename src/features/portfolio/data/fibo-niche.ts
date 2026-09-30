@@ -3,6 +3,8 @@ export type NichePart = {
   name: string
   title: string
   description: string
+  /** `false` keeps the part off the home page; it still has a card on /components/all. */
+  home?: boolean
 }
 
 /**
@@ -42,10 +44,17 @@ export const NICHE_PARTS: NichePart[] = [
       "A hub and the tools wired into it, with pulses along the routes.",
   },
   {
+    name: "command-menu",
+    title: "Command menu",
+    description:
+      "A Cmd+K palette with nested pages, recent commands, ranked search and a preview pane.",
+  },
+  {
     name: "token-flow",
     title: "Token flow",
     description:
       "Walks a color token from raw value to primitive to semantic role.",
+    home: false,
   },
 ]
 
