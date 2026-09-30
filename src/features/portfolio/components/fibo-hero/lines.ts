@@ -5,21 +5,24 @@
  * fast rabbits multiply. Three clicks in a quick burst skip straight to the
  * rage clicks, and so does any line he would repeat before he has called
  * them out; after that his lines can come round again. A visitor who
- * lingers without clicking gets a hello.
+ * lingers without clicking gets a hello. The first poke bursts him apart,
+ * and once he's back together he says "WOAH".
  */
 export const FIBO_LINES = {
   poke: "i thump for less than this.",
+  size: "hey buddy poke on someone your own size",
   miss: "missed. i'm quicker than i look.",
   button: "this isn't a button. well, i guess it is now.",
   bruise: "careful, i bruise in 8-bit.",
   rage: "keep clicking and there'll be eight of me by next month.",
   hello: "oh, hi.",
+  woah: "WOAH",
 }
 
 export type FiboLine = keyof typeof FIBO_LINES
 
 const ORDER: Record<"on" | "off", FiboLine[]> = {
-  on: ["poke", "bruise", "rage"],
+  on: ["poke", "size", "bruise", "rage"],
   off: ["button", "miss", "rage"],
 }
 // A pause this long between clicks lets him cool off and start over.
