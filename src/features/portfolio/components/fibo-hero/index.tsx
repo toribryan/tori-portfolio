@@ -355,7 +355,7 @@ function glance(offset: number): -1 | 0 | 1 {
 
 /*
  * fibo builds up from coarse blocks once the construction is in, then idles:
- * blinks, ear twitches and the odd hop. With the pointer anywhere in the
+ * blinks, ear twitches and glances about. With the pointer anywhere in the
  * hero he turns to it, eyes following and ears up, and turns round when it
  * goes behind him. Clicking him earns a remark and a reaction; his click
  * area is padded so a click beside him counts.
