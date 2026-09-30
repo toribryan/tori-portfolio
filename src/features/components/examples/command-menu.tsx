@@ -562,7 +562,7 @@ function AnatomyMap({
               ? { top: labelY, right: bounds.width - edge("left") }
               : { top: labelY, left: edge("right") }
           }
-          className="absolute z-60 w-max -translate-y-1/2 rounded-lg bg-background px-3 py-2 text-lg leading-none font-medium whitespace-nowrap shadow-xs ring-1 ring-border"
+          className="absolute z-60 w-max -translate-y-1/2 rounded-md bg-background px-2.5 py-1.5 text-sm leading-none font-medium whitespace-nowrap shadow-xs ring-1 ring-border"
         >
           {callout.label}
         </div>
