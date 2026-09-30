@@ -8,7 +8,7 @@ import { TweetQuote } from "@/components/ui/tweet-card"
 import { Button } from "@/components/base/ui/button"
 import { Prose } from "@/components/base/ui/typography"
 import { MDX } from "@/components/mdx"
-import { TOCInline } from "@/components/toc-inline"
+import { codeOnlyHeadings } from "@/features/components/data/code-only-headings"
 import type { ComponentEntry } from "@/features/components/data/registry"
 import { COMPONENTS } from "@/features/components/data/registry"
 import type { RegistryDoc } from "@/features/components/data/registry-docs"
@@ -32,6 +32,7 @@ import {
   UsageGuidelines,
 } from "./doc-blocks"
 import { DOC_PARTS } from "./doc-parts"
+import { DocTOC, DocViewToggle, ForCode } from "./doc-view"
 import { Example } from "./example"
 
 /**
@@ -45,6 +46,7 @@ const DOC_COMPONENTS = {
   ComponentRules,
   DataAttributes,
   Example,
+  ForCode,
   Install,
   RelatedComponents,
   Tip,
@@ -96,6 +98,7 @@ export async function ComponentDocPage({
 
       <Prose className="px-4 pt-8 pb-4">
         <div className="not-prose mb-6 flex flex-wrap items-center gap-2">
+          <DocViewToggle className="mr-auto" />
           <Button
             className="gap-1.5"
             size="sm"
@@ -155,7 +158,7 @@ export async function ComponentDocPage({
           </div>
         )}
 
-        <TOCInline items={toc} />
+        <DocTOC items={toc} codeOnly={codeOnlyHeadings(doc.content, toc)} />
 
         <div>
           <MDX code={doc.content} components={DOC_COMPONENTS} allowJS />

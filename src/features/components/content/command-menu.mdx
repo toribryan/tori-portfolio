@@ -15,18 +15,20 @@ one.
 
 ## Features
 
-- **Nested pages.** An item with `items` opens a page instead of running,
-  sliding in with a breadcrumb in the search row. Backspace on an empty
-  search, the back button or Escape steps out.
-- **Recents.** Commands you run float to the top of the first page under
-  Recent, labelled with the page they live on. `storageKey` keeps them across
-  visits.
+- **Nested pages.** A command can open a page of its own, such as Change
+  theme opening Light, Dark and System. The page slides in with a back button
+  and a breadcrumb, and Backspace or Escape steps back out.
+- **Recents.** Commands you run come first next time, under Recent, labelled
+  with the page they live on. They can be kept between visits.
 - **Ranked search.** From the first page, a search reaches into every page.
   Whole-label matches rank first, then label starts, word starts, anywhere in
   the label, then keywords, with recent commands nudged up. The matched
   letters are bold.
-- **Preview pane.** Items with a `preview` open a pane beside the list that
-  follows the highlight. Below the `sm` breakpoint the pane hides.
+- **Preview pane.** Commands can carry a preview, such as a file or a person.
+  The dialog widens and a pane beside the list follows the highlight. On small
+  screens the pane hides.
+
+<ForCode>
 
 ## Installation
 
@@ -104,6 +106,8 @@ type CommandMenuItem = {
 
 Render one command menu per page. Its shortcut listens on the whole
 document, so two menus with the same `hotkey` would both open.
+
+</ForCode>
 
 ## Anatomy
 
@@ -208,37 +212,39 @@ document, so two menus with the same `hotkey` would both open.
 />
 
 <Tip>
-  A shortcut on an item is only a label. Wire the same keys up in your app, or
-  leave `shortcut` off.
+  A shortcut shown on a command is only a label. Make sure the app answers to
+  the same keys, or leave it off.
 </Tip>
 
 ## Examples
 
 ### With preview
 
-Files and people carry a `preview`, so the dialog widens and a pane follows
-the highlight. Actions without one show a placeholder.
+Files and people carry a preview, so the dialog widens and a pane follows the
+highlight. Actions without one show a placeholder.
 
 <Example of="command-menu.WithPreview" />
 
 ### With recents
 
-`defaultRecent` starts the menu with recent commands. A nested one names its
+The menu opens with three recent commands. One that lives on a page names the
 page on the right.
 
 <Example of="command-menu.WithRecents" />
 
 ### No matches
 
-A search with no results says so, using `emptyText`.
+A search with no results says so. Type something that matches nothing to see it.
 
 <Example of="command-menu.NoMatches" />
 
 ### Custom trigger
 
-`trigger` swaps the search button for your own element.
+Any button can open the menu in place of the search field.
 
 <Example of="command-menu.CustomTrigger" />
+
+<ForCode>
 
 ### Controlled
 
@@ -248,6 +254,8 @@ preview at the top of this page listens for Cmd+K, so the examples don't all
 open at once.
 
 <Example of="command-menu.Controlled" />
+
+</ForCode>
 
 ## Do's and don'ts
 
@@ -279,6 +287,8 @@ open at once.
     },
   ]}
 />
+
+<ForCode>
 
 ## API reference
 
@@ -359,6 +369,8 @@ open at once.
     },
   ]}
 />
+
+</ForCode>
 
 ## Accessibility
 

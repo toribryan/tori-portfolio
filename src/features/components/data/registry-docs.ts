@@ -86,7 +86,10 @@ function stripPageOnly(content: string) {
  * so a reader or a model gets the same information the page shows.
  */
 export function toMarkdown(doc: RegistryDoc) {
+  // The markdown is for developers and agents, so it keeps the code-only
+  // sections and drops just their wrappers.
   const body = stripPageOnly(doc.content)
+    .replace(/^<\/?ForCode>\n/gm, "")
     .replace(
       /<Install\s+name="([^"]+)"[\s\S]*?\/>/g,
       (_, name: string) =>
