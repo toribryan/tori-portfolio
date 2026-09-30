@@ -33,6 +33,7 @@ import {
 } from "./doc-blocks"
 import { DOC_PARTS } from "./doc-parts"
 import { Example } from "./example"
+import { Exhibit, ExhibitCode, ExhibitGrid, Live } from "./exhibit"
 
 /**
  * What the ported fibo docs are written with: the doc blocks, the live
@@ -45,7 +46,11 @@ const DOC_COMPONENTS = {
   ComponentRules,
   DataAttributes,
   Example,
+  Exhibit,
+  ExhibitCode,
+  ExhibitGrid,
   Install,
+  Live,
   RelatedComponents,
   Tip,
   UsageGuidelines,

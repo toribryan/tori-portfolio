@@ -87,6 +87,17 @@ function stripPageOnly(content: string) {
  */
 export function toMarkdown(doc: RegistryDoc) {
   const body = stripPageOnly(doc.content)
+    // An exhibit is a live example with its code: keep its title as a label
+    // and its code panes, and drop the wrappers.
+    .replace(
+      /<ExhibitGrid>\n|<\/ExhibitGrid>\n|<\/Exhibit>\n|<\/ExhibitCode>\n/g,
+      ""
+    )
+    .replace(/<Exhibit\b[^>]*?title="([^"]*)"[^>]*>\n/g, "**$1**\n\n")
+    .replace(/<Exhibit\b[^>]*>\n/g, "")
+    .replace(/<ExhibitCode(?: label="([^"]*)")?>\n/g, (_, label?: string) =>
+      label ? `_${label}_\n` : ""
+    )
     .replace(
       /<Install\s+name="([^"]+)"[\s\S]*?\/>/g,
       (_, name: string) =>

@@ -6,39 +6,27 @@ updatedAt: 2026-09-30
 new: true
 ---
 
-A Cmd+K palette for moving around an app and running actions. Items can open
-pages of their own, the commands you ran last come first, a search ranks
+A Cmd+K palette for moving around an app and running actions. Commands can
+open pages of their own, the ones you ran last come first, a search ranks
 every command across every page, and a side pane previews the highlighted
 one.
 
-<ComponentPreview name="command-menu" />
+<Exhibit
+  of="command-menu.Default"
+  title="Command menu"
+  description="Click the field, or press Cmd+K or Ctrl+K anywhere on this page."
+>
+<ExhibitCode label="Install">
 
-## Features
-
-- **Nested pages.** An item with `items` opens a page instead of running,
-  sliding in with a breadcrumb in the search row. Backspace on an empty
-  search, the back button or Escape steps out.
-- **Recents.** Commands you run float to the top of the first page under
-  Recent, labelled with the page they live on. `storageKey` keeps them across
-  visits.
-- **Ranked search.** From the first page, a search reaches into every page.
-  Whole-label matches rank first, then label starts, word starts, anywhere in
-  the label, then keywords, with recent commands nudged up. The matched
-  letters are bold.
-- **Preview pane.** Items with a `preview` open a pane beside the list that
-  follows the highlight. Below the `sm` breakpoint the pane hides.
-
-## Installation
-
-<Install
-  name="command-menu"
-  exports={["CommandMenu", "type CommandMenuGroup", "type CommandMenuItem"]}
-/>
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/command-menu.json
+```
 
 It installs the Button and Kbd components, the `motion` package, and the
 `--backdrop` token.
 
-## Usage
+</ExhibitCode>
+<ExhibitCode label="Usage">
 
 ```tsx
 import { useRouter } from "next/navigation"
@@ -83,204 +71,11 @@ export function AppCommands({ setTheme }: { setTheme: (t: string) => void }) {
 }
 ```
 
-Every `value` must be unique across the whole menu, nested pages included:
-recents and ranking find commands by it. An item runs its own `onSelect`,
-then the menu's `onSelect` gets the item, and the menu closes.
+Every `value` must be unique across the whole menu, nested pages included.
+Render one command menu per page: its shortcut listens on the whole document.
 
-```ts
-type CommandMenuItem = {
-  value: string
-  label: string
-  icon?: React.ReactNode
-  shortcut?: string[]
-  keywords?: string[]
-  disabled?: boolean
-  onSelect?: () => void
-  items?: CommandMenuItem[] // makes the item a page
-  placeholder?: string // the search hint on that page
-  preview?: React.ReactNode // shown in the side pane
-}
-```
-
-Render one command menu per page. Its shortcut listens on the whole
-document, so two menus with the same `hotkey` would both open.
-
-## Anatomy
-
-<Anatomy
-  root={{
-    name: "CommandMenu",
-    note: "Renders the trigger, and the dialog while it's open.",
-    children: [
-      {
-        name: "trigger",
-        slot: "command-menu-trigger",
-        note: "The search button, unless trigger is null.",
-      },
-      {
-        name: "backdrop",
-        slot: "command-menu-backdrop",
-        note: "In a portal on the body.",
-      },
-      {
-        name: "dialog",
-        slot: "command-menu",
-        note: "In a portal on the body. Carries data-page and data-preview.",
-        children: [
-          {
-            name: "search",
-            slot: "command-menu-search",
-            children: [
-              {
-                name: "back",
-                slot: "command-menu-back",
-                note: "On a page.",
-              },
-              {
-                name: "breadcrumb",
-                slot: "command-menu-breadcrumb",
-                note: "On a page, naming it.",
-              },
-            ],
-          },
-          {
-            name: "list",
-            slot: "command-menu-list",
-            children: [
-              {
-                name: "group",
-                slot: "command-menu-group",
-                note: "Recent, a group, a page, or Results.",
-                children: [
-                  { name: "group label", slot: "command-menu-group-label" },
-                  {
-                    name: "item",
-                    slot: "command-menu-item",
-                    children: [
-                      {
-                        name: "context",
-                        slot: "command-menu-context",
-                        note: "Where a result or recent command lives.",
-                      },
-                      {
-                        name: "shortcut",
-                        slot: "command-menu-shortcut",
-                        note: "When the item has one.",
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: "empty",
-            slot: "command-menu-empty",
-            note: "Shows emptyText when a search matches nothing.",
-          },
-          {
-            name: "preview",
-            slot: "command-menu-preview",
-            note: "When any item on screen has a preview.",
-          },
-          {
-            name: "hints",
-            slot: "command-menu-hints",
-            note: "The keyboard hints, unless hints is false.",
-          },
-        ],
-      },
-    ],
-  }}
-/>
-
-## Guidelines
-
-<UsageGuidelines
-  guidelines={[
-    "Use it for moving around an app and running actions people would otherwise hunt for in menus.",
-    "Start labels with a verb for actions (New file, Change theme) and use the plain name for places and things (Inbox, Roadmap 2027).",
-    "Make an item a page when it needs a choice before it can run: a theme, a person, a status. Keep pages one or two levels deep.",
-    "Add keywords for the words people might type instead: appearance for Change theme, create for New file.",
-    "Give previews to things people pick between by content, such as files and people. Leave them off plain actions.",
-    "Don't make it the only way to reach something. It speeds up people who know it's there.",
-  ]}
-/>
-
-<Tip>
-  A shortcut on an item is only a label. Wire the same keys up in your app, or
-  leave `shortcut` off.
-</Tip>
-
-## Examples
-
-### With preview
-
-Files and people carry a `preview`, so the dialog widens and a pane follows
-the highlight. Actions without one show a placeholder.
-
-<Example of="command-menu.WithPreview" />
-
-### With recents
-
-`defaultRecent` starts the menu with recent commands. A nested one names its
-page on the right.
-
-<Example of="command-menu.WithRecents" />
-
-### No matches
-
-A search with no results says so, using `emptyText`.
-
-<Example of="command-menu.NoMatches" />
-
-### Custom trigger
-
-`trigger` swaps the search button for your own element.
-
-<Example of="command-menu.CustomTrigger" />
-
-### Controlled
-
-`trigger={null}` renders no trigger, and `open` with `onOpenChange` puts the
-state in your hands, here opened by a button elsewhere on the page. Only the
-preview at the top of this page listens for Cmd+K, so the examples don't all
-open at once.
-
-<Example of="command-menu.Controlled" />
-
-## Do's and don'ts
-
-<ComponentRules
-  rules={[
-    {
-      positive: {
-        component: (
-          <div className="flex flex-col gap-1 text-sm">
-            <span className="font-medium">Change theme</span>
-            <span className="pl-4 text-muted-foreground">
-              Light, Dark, System
-            </span>
-          </div>
-        ),
-        description: "Group the choices for one action on a page of their own.",
-      },
-      negative: {
-        component: (
-          <div className="flex flex-col gap-1 text-sm">
-            <span className="font-medium">Switch to light theme</span>
-            <span className="font-medium">Switch to dark theme</span>
-            <span className="font-medium">Switch to system theme</span>
-          </div>
-        ),
-        description:
-          "Don't list every variant on the first page. It buries the other commands.",
-      },
-    },
-  ]}
-/>
-
-## API reference
+</ExhibitCode>
+<ExhibitCode label="Props">
 
 | Prop             | Type                                     | Default                       | Description                                                                                                                          |
 | ---------------- | ---------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -305,7 +100,58 @@ open at once.
 | `className`      | `string`                                 |                               | Classes for the trigger.                                                                                                             |
 | `popupClassName` | `string`                                 |                               | Classes for the dialog.                                                                                                              |
 
-### Data attributes
+```ts
+type CommandMenuItem = {
+  value: string
+  label: string
+  icon?: React.ReactNode
+  shortcut?: string[]
+  keywords?: string[]
+  disabled?: boolean
+  onSelect?: () => void
+  items?: CommandMenuItem[] // makes the item a page
+  placeholder?: string // the search hint on that page
+  preview?: React.ReactNode // shown in the side pane
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+The dialog is three regions stacked over a backdrop: the search field, the
+list of commands with an optional preview pane beside it, and the keyboard
+hints.
+
+<Exhibit
+  of="command-menu.AnatomyDialog"
+  title="The dialog"
+  description="Mid-search, so every region is on screen."
+>
+<ExhibitCode label="Structure">
+
+```text
+CommandMenu
+├─ trigger              command-menu-trigger
+├─ backdrop             command-menu-backdrop
+└─ dialog               command-menu
+   ├─ search            command-menu-search
+   │  ├─ back           command-menu-back        (on a page)
+   │  └─ breadcrumb     command-menu-breadcrumb  (on a page)
+   ├─ list              command-menu-list
+   │  └─ group          command-menu-group
+   │     ├─ label       command-menu-group-label
+   │     └─ item        command-menu-item
+   │        ├─ context  command-menu-context
+   │        └─ shortcut command-menu-shortcut
+   ├─ empty             command-menu-empty
+   ├─ preview           command-menu-preview
+   └─ hints             command-menu-hints
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
 
 <DataAttributes
   rows={[
@@ -360,27 +206,313 @@ open at once.
   ]}
 />
 
-## Accessibility
+</ExhibitCode>
+</Exhibit>
+
+Each row carries a label and, when it has them, an icon, where it lives, a
+shortcut and a chevron for a page.
+
+<Exhibit
+  of="command-menu.AnatomyRow"
+  title="A row"
+  description="One of each kind: highlighted, with a shortcut, opening a page, and disabled."
+>
+<ExhibitCode>
+
+```tsx
+{
+  value: "new-file",
+  label: "New file",
+  icon: <FilePlusIcon />,       // Icon
+  shortcut: ["⌘", "N"],         // Shortcut
+  items: [/* … */],             // Page: the chevron
+  disabled: true,               // Disabled row
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+### Views
+
+The menu has three views, and a few states within them.
+
+<ExhibitGrid>
+<Exhibit
+  of="command-menu.Home"
+  title="Home"
+  description="Recent commands first, then your groups in order."
+>
+<ExhibitCode>
+
+```tsx
+<CommandMenu groups={groups} storageKey="app-commands" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="command-menu.Results"
+  title="Search results"
+  description="One ranked list across every page, each row naming where it lives."
+>
+<ExhibitCode>
+
+```tsx
+// Typing is enough: labels and keywords are both searched.
+{ value: "theme", label: "Change theme", keywords: ["appearance", "mode"] }
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="command-menu.PageOpen"
+  title="Page open"
+  description="A back button, a breadcrumb and the page's own hint."
+>
+<ExhibitCode>
+
+```tsx
+{
+  value: "theme",
+  label: "Change theme",
+  placeholder: "Pick a theme…",
+  items: [
+    { value: "theme-light", label: "Light" },
+    { value: "theme-dark", label: "Dark" },
+  ],
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="command-menu.Empty"
+  title="No matches"
+  description="A search with no results says so."
+>
+<ExhibitCode>
+
+```tsx
+<CommandMenu groups={groups} emptyText="No results found" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="command-menu.NoHints"
+  title="Without hints"
+  description="For apps where people already know the keys."
+>
+<ExhibitCode>
+
+```tsx
+<CommandMenu groups={groups} hints={false} />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### With a preview
+
+When anything on screen has a preview, the dialog widens and a pane follows
+the highlight. Commands without one show No preview. On small screens the
+pane hides.
+
+<Exhibit
+  of="command-menu.Preview"
+  title="Preview pane"
+  description="Files show a thumbnail and an excerpt, people their role."
+>
+<ExhibitCode>
+
+```tsx
+{
+  value: "roadmap",
+  label: "Roadmap 2027",
+  icon: <FileTextIcon />,
+  preview: <FilePreview title="Roadmap 2027" edited="2 hours ago" />,
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Rows
+
+Each row can carry an icon, a shortcut and a chevron for a page. Recent
+commands and search results also name where they live, and a disabled row
+fades.
+
+<Exhibit
+  of="command-menu.Rows"
+  title="Row states"
+  description="Highlighted with context, a shortcut, a page, and disabled."
+>
+<ExhibitCode>
+
+```tsx
+;[
+  { value: "new-file", label: "New file", shortcut: ["⌘", "N"] },
+  { value: "theme", label: "Change theme", items: [/* … */] },
+  { value: "archive", label: "Archive", disabled: true },
+]
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Usage
 
 <UsageGuidelines
   guidelines={[
-    "It's a modal dialog named by label. Focus moves to the search box when it opens, stays inside while it's open, and returns to the trigger when it closes.",
-    "The search box is a combobox that points at the highlighted command with aria-activedescendant, so screen readers read each one as the arrows move.",
-    "On a page, the search box is named after it, such as Command menu, Change theme, and the back button says where it goes. Items that open a page say so.",
-    "Escape steps back one level at a time: it clears the search, then leaves the page, then closes the menu without running anything.",
-    "A search announces how many results it found, and the preview pane is a polite live region.",
-    "The keyboard hints are hidden from screen readers, which announce the combobox's keys themselves.",
-    <>
-      Every piece of text the menu writes can be translated with{" "}
-      <code>labels</code>, alongside <code>placeholder</code>,{" "}
-      <code>emptyText</code> and <code>label</code>.
-    </>,
+    "Use it for moving around an app and running actions people would otherwise hunt for in menus.",
+    "Put the commands people use most in the first group, and keep groups to a handful each.",
+    "Make a command a page when it needs a choice before it can run: a theme, a person, a status. Keep pages one or two levels deep.",
+    "Add the words people might type instead: appearance for Change theme, create for New file.",
+    "Don't make it the only way to reach something. It speeds up people who know it's there.",
+  ]}
+/>
+
+### In a header
+
+The usual home: a search field in the app's header, where people look for search.
+
+<Exhibit of="command-menu.InHeader" description="Click the field in the header.">
+<ExhibitCode>
+
+```tsx
+<header className="flex items-center gap-4">
+  <Logo />
+  <nav>…</nav>
+  <CommandMenu groups={groups} className="ml-auto w-52" />
+</header>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Your own trigger
+
+Any button can open it in place of the search field.
+
+<Exhibit of="command-menu.CustomTrigger" description="A ghost button labelled Commands.">
+<ExhibitCode>
+
+```tsx
+<CommandMenu
+  groups={groups}
+  trigger={
+    <Button variant="ghost" size="sm">
+      Commands
+    </Button>
+  }
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Opened from anywhere
+
+With no trigger, the app decides when it opens, from a button, a menu item or
+the shortcut.
+
+<Exhibit of="command-menu.Controlled" description="Open it, run a command, and the page shows which.">
+<ExhibitCode>
+
+```tsx
+const [open, setOpen] = useState(false)
+
+<Button onClick={() => setOpen(true)}>Open commands</Button>
+<CommandMenu
+  groups={groups}
+  trigger={null}
+  open={open}
+  onOpenChange={setOpen}
+  onSelect={(item) => console.log(item.label)}
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="command-menu.DoNested" />,
+        description: "Group the choices for one action on a page of their own.",
+      },
+      negative: {
+        component: <Live of="command-menu.DontFlat" />,
+        description:
+          "Don't list every variant on the first page. It buries the other commands.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="command-menu.DoLabels" />,
+        description:
+          "Start actions with a verb and name places plainly, so the list scans.",
+      },
+      negative: {
+        component: <Live of="command-menu.DontLabels" />,
+        description:
+          "Don't write sentences or mix styles. People read the list as they type.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="command-menu.DoPreview" />,
+        description:
+          "Give previews to things people choose between by content: files, people, records.",
+      },
+      negative: {
+        component: <Live of="command-menu.DontPreview" />,
+        description:
+          "Don't preview plain actions. The pane widens the dialog and mostly says No preview.",
+      },
+    },
+  ]}
+/>
+
+<Tip>
+  A shortcut shown on a command is only a label. Make sure the app answers to
+  the same keys, or leave it off.
+</Tip>
+
+## Accessibility
+
+Everything works from the keyboard, and the keys are the ones people know
+from other palettes.
+
+| Key                                                                                               | Does                                                 |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| <KbdGroup><Kbd>⌘</Kbd><Kbd>K</Kbd></KbdGroup> or <KbdGroup><Kbd>Ctrl</Kbd><Kbd>K</Kbd></KbdGroup> | Opens and closes the menu from anywhere on the page  |
+| <KbdGroup><Kbd>↑</Kbd><Kbd>↓</Kbd></KbdGroup>                                                     | Moves the highlight                                  |
+| <Kbd>↵</Kbd>                                                                                      | Runs the highlighted command, or opens its page      |
+| <Kbd>⌫</Kbd>                                                                                      | On an empty search, steps back out of a page         |
+| <Kbd>Esc</Kbd>                                                                                    | Clears the search, then leaves the page, then closes |
+
+<UsageGuidelines
+  guidelines={[
+    "It's a modal dialog named Command menu. Focus goes to the search field when it opens, stays inside while it's open, and returns to the trigger when it closes.",
+    "A screen reader reads each command as the highlight moves, says which group it's in, and says when a command opens a page.",
+    "On a page, the search field is named after it, and the back button says where it goes.",
+    "A search announces how many results it found, and the preview pane is announced as it changes.",
+    "Every piece of text the menu writes can be translated.",
   ]}
 />
 
 ## Related components
 
-<RelatedComponents names={["Filter menu", "Kbd", "Avatar"]} />
+<RelatedComponents names={["Filter menu", "Kbd"]} />
 
 ## References
 
