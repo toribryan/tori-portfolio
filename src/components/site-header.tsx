@@ -3,6 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 
 import { MAIN_NAV } from "@/config/site"
+import { USER } from "@/features/portfolio/data/user"
 import { Separator } from "@/components/base/ui/separator"
 import { NavDesktop } from "@/components/nav-desktop"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -17,14 +18,12 @@ export function SiteHeader() {
       <div className="screen-line-top screen-line-bottom mx-auto flex h-(--header-height) items-center gap-2 border-r border-line pr-2 group-has-data-[slot=layout-wide]/layout:container after:z-1 after:bg-border sm:gap-4 md:max-w-3xl">
         <BrandContextMenu>
           <Link href="/" aria-label="Home">
-            {/* A photo rather than the pixel mark: the mark still carries the
-                favicon and app icons, but the header wants a face. */}
             <Image
-              className="size-8 shrink-0 rounded-md object-cover select-none"
-              src="/images/header/nav-photo.webp"
+              className="size-8 shrink-0 select-none"
+              src={USER.headerAvatar}
               alt=""
-              width={128}
-              height={128}
+              width={165}
+              height={166}
               priority
               unoptimized
             />

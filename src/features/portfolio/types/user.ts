@@ -36,8 +36,10 @@ export type User = {
   about: string
   /** Public URL to avatar image */
   avatar: string
-  /** The pixel avatar in the home page header, reused wherever the site speaks as its owner. */
+  /** The pixel avatar in the site header, reused wherever the site speaks as its owner. */
   headerAvatar: string
+  /** The headshot on the home page profile. */
+  headshot: string
   /** The same portrait on a flat square, for the hero's grid cell. */
   portrait: string
   /** Different avatar variants based on theme and lighting */
