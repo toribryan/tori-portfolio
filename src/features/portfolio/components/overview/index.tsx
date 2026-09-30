@@ -14,6 +14,11 @@ import {
   IntroItemLink,
 } from "./intro-item"
 
+// Shown like the email address, as the profile path without the scheme.
+const linkedInHandle = SOCIAL.linkedin.href
+  .replace(/^https?:\/\/(www\.)?/, "")
+  .replace(/\/$/, "")
+
 /**
  * The facts under the header in two columns: what I do, where I am and how to
  * reach me on the left, and whether I'm available, my local time and my
@@ -64,7 +69,12 @@ export function Overview() {
             <LinkedInIcon className="size-3.5" />
           </IntroItemIcon>
           <IntroItemContent>
-            <IntroItemLink href={SOCIAL.linkedin.href}>LinkedIn</IntroItemLink>
+            <IntroItemLink
+              href={SOCIAL.linkedin.href}
+              aria-label={`LinkedIn: ${linkedInHandle}`}
+            >
+              {linkedInHandle}
+            </IntroItemLink>
           </IntroItemContent>
         </IntroItem>
       </PanelContent>
