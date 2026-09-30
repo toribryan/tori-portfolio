@@ -26,6 +26,7 @@ export type ComponentEntry = {
 const LEAD: Record<string, string> = {
   "filter-menu": "AppliedAsChips",
   "chapter-scrubber": "Default",
+  "command-menu": "Default",
   reactions: "InMessage",
   "pixel-snail": "Default",
   "integration-visual": "Default",

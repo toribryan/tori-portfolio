@@ -70,6 +70,7 @@
   --color-input-subtle: var(--input-subtle);
   --color-input-subtle-hover: var(--input-subtle-hover);
   --color-ring-subtle: var(--ring-subtle);
+  --color-backdrop: var(--backdrop);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
@@ -980,4 +981,11 @@
   --input-subtle: color-mix(in oklch, var(--input) 20%, transparent);
   --input-subtle-hover: color-mix(in oklch, var(--input) 50%, transparent);
   --ring-subtle: color-mix(in oklch, var(--ring) 50%, transparent);
+  --backdrop: color-mix(in oklch, var(--color-zinc-950) 20%, transparent);
+}
+
+/* The scrim behind fibo's dialogs darkens further in dark mode, where a light
+   tint of the page would not read as a layer. */
+.dark {
+  --backdrop: color-mix(in oklch, var(--color-black) 60%, transparent);
 }

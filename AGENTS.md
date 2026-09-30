@@ -38,17 +38,25 @@ fibo's special components are a separate feature. The parts themselves are
 installed as source from fibo's registry into `src/components/fibo/` (`npx
 shadcn@latest add https://fibo.toribryan.com/r/<name>.json --path
 src/components/fibo`); re-run that to update one, and check its imports still
-point at `@/components/fibo/`. Three parts carry local changes. `filter-menu.tsx`
+point at `@/components/fibo/`; the install also drops a stray `utils.ts`
+and a `cn` package, and writes dark values for fibo's extra roles into
+`globals.css` that this site mixes itself, so revert those. Four parts carry
+local changes. `filter-menu.tsx`
 has a `container` prop for where its popup renders, and keeps focus and
 scrolling inside the menu so opening it never scrolls the page; the home
 page cover needs both. `token-flow.tsx` carries an `orientation` prop so the
 Design System Overhaul card cover can stack its tiers at any width. `chapter-scrubber.tsx` fits its preview to the screen: on a
 narrow one it opens on the side with more room and narrows to fit, and it
-closes once the rail scrolls out of view. Put
+closes once the rail scrolls out of view. `command-menu.tsx` has a `modal` prop:
+`false` opens it without locking the page's scroll or moving focus, which the
+home page cover needs. Its preview pane also shows by the dialog's own width
+(`@xl/command-menu`) rather than the viewport's, so the pane stays in the
+scaled cover on a phone. Put
 these back after reinstalling; fibo's own filter menu has since gained a
 `container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
 lists them, which drives the home page section, `/components/all` and the
-docs. Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
+docs; `home: false` keeps a part off the home page (Token flow, whose slot
+the Command menu took). Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
 `src/features/components/content/<slug>.mdx` is the body,
 `examples/<slug>.tsx` holds its live examples (named after the fibo stories
 they port), and `data/registry.tsx` wires the lead preview and links. The

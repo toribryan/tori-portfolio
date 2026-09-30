@@ -22,10 +22,18 @@ const PLAYS_ON_HOVER = new Set(["reactions"])
  * from md up, with the live
  * part standing in for the cover image.
  */
-export function ComponentCardList() {
+export function ComponentCardList({
+  home = false,
+}: {
+  /** Only the parts the home page features, rather than every part. */
+  home?: boolean
+}) {
+  const parts = home
+    ? NICHE_PARTS.filter((part) => part.home !== false)
+    : NICHE_PARTS
   return (
     <ul className="grid grid-cols-2 gap-px bg-line md:grid-cols-3">
-      {NICHE_PARTS.map((part) => (
+      {parts.map((part) => (
         <li key={part.name} className="bg-background">
           <ComponentCard part={part} />
         </li>
