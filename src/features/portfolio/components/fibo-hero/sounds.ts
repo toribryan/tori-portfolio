@@ -124,11 +124,6 @@ export const sfx = {
           volume: 0.03,
           wave: "triangle",
         }),
-  /** Leaving the ground on a hop. */
-  hop: () => tone({ from: 330, to: 760, ms: 110, volume: 0.03 }),
-  /** Landing from a hop. */
-  land: () =>
-    tone({ from: 160, to: 90, ms: 70, volume: 0.04, wave: "triangle" }),
   /** A back foot thumped on the ground. */
   thump: () => {
     tone({ from: 110, to: 45, ms: 140, volume: 0.12, wave: "sine" })
