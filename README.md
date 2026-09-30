@@ -1,4 +1,4 @@
-# tori-portfolio
+# toribryan.com
 
 The source for [toribryan.com](https://www.toribryan.com) — the portfolio of
 Tori Bryan, a Staff Product Designer working at the seam of product design and

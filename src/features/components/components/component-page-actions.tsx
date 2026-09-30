@@ -36,7 +36,7 @@ import {
 } from "@/components/icons"
 
 const GITHUB_CONTENT =
-  "https://github.com/toribryan/tori-portfolio/blob/main/src/features/components/content"
+  "https://github.com/toribryan/toribryan.com/blob/main/src/features/components/content"
 
 function openInPrompt(markdownUrl: string) {
   return `Read ${markdownUrl}, I want to ask questions about it.`
