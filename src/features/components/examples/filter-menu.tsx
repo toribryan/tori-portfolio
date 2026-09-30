@@ -71,7 +71,7 @@ function Story(props: Partial<FilterMenuProps>) {
         placeholder="Filter by…"
         emptyText="No matching filters"
         align="start"
-        search="inline"
+        search="button"
         {...props}
       />
     </div>
@@ -82,16 +82,16 @@ export function Default() {
   return <Story />
 }
 
+export function InlineSearch() {
+  return <Story search="inline" />
+}
+
 export function KeyboardOnly() {
   return <Story />
 }
 
 export function NoMatches() {
   return <Story />
-}
-
-export function SearchButton() {
-  return <Story search="button" />
 }
 
 function WithChips() {

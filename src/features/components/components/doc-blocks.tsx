@@ -439,7 +439,7 @@ export function RelatedComponents({ names }: { names: string[] }) {
               </Link>
             ) : (
               <a
-                href={`https://fibo.toribryan.com/?path=/docs/components-${slug}--docs`}
+                href={`https://fibo.toribryan.com/?path=/docs/base-components-${slug}--docs`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={className}

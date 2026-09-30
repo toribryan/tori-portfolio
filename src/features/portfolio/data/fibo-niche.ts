@@ -50,5 +50,5 @@ export const NICHE_PARTS: NichePart[] = [
 ]
 
 export function nicheStorybookUrl(name: string) {
-  return `https://fibo.toribryan.com/?path=/docs/niche-${name}--docs`
+  return `https://fibo.toribryan.com/?path=/docs/special-components-${name}--docs`
 }
