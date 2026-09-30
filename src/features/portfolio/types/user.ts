@@ -21,7 +21,7 @@ export type User = {
   website: string
   /** Primary/current role shown on profile */
   jobTitle: string
-  /** The role shown under the name in the hero, e.g. "Product + Design Engineering". */
+  /** The role shown under the name in the hero, e.g. "Product Designer". */
   discipline: string
   /** Shown in the overview, e.g. "Open to work". Omit to hide it. */
   availability?: string
