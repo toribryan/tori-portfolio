@@ -21,6 +21,10 @@ export const MAIN_NAV: NavItem<Route>[] = [
     title: "Blog",
     href: "/latest",
   },
+  {
+    title: "Components",
+    href: "/components/all",
+  },
 ]
 
 export const MOBILE_NAV: NavItem<Route>[] = [

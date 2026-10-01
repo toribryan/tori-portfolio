@@ -4,6 +4,7 @@ import { MOBILE_NAV } from "@/config/site"
 import { NavMobileBar } from "@/components/nav-mobile-bar"
 import { SiteFooterCad } from "@/components/site-footer-cad"
 import { SiteHeader } from "@/components/site-header"
+import { HomeBanner } from "@/features/portfolio/components/home-banner"
 
 const ScrollToTop = dynamic(() =>
   import("@/components/scroll-to-top").then((mod) => mod.ScrollToTop)
@@ -15,6 +16,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     // - https://base-ui.com/react/overview/quick-start#portals
     // - https://base-ui.com/react/overview/quick-start#ios-26-safari
     <div className="group/layout relative isolate">
+      <HomeBanner />
       <SiteHeader />
       <main className="max-w-screen overflow-x-clip px-2">{children}</main>
       <SiteFooterCad />

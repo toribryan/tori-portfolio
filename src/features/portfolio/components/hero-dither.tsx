@@ -19,7 +19,9 @@ const PHOTO = "/images/header/bunny-field-photo.jpg"
 
 // The site's surface and ink for a theme, read from its tokens. In dark mode
 // the cells invert too: light cells draw the white bunny on the dark page,
-// where only swapping the colors would turn the photo into a negative.
+// where only swapping the colors would turn the photo into a negative. Light
+// mode inks in pure black: the gaps between cells wash the foreground out, so
+// the strip reads paler than text in the same color.
 function themeTokens(theme: "light" | "dark") {
   const probe = document.createElement("div")
   probe.className = theme
@@ -28,14 +30,21 @@ function themeTokens(theme: "light" | "dark") {
   const style = getComputedStyle(probe)
   const tokens = {
     paper: style.getPropertyValue("--background").trim(),
-    ink: style.getPropertyValue("--foreground").trim(),
+    ink:
+      theme === "light" ? "#000" : style.getPropertyValue("--foreground").trim(),
     invert: theme === "dark",
   }
   probe.remove()
   return tokens
 }
 
-export function HeroDither({ className }: { className?: string }) {
+export function HeroDither({
+  id,
+  className,
+}: {
+  id?: string
+  className?: string
+}) {
   const ref = useRef<HTMLCanvasElement>(null)
   const photo = useRef<HTMLImageElement | null>(null)
   const built = useRef(false)
@@ -74,7 +83,7 @@ export function HeroDither({ className }: { className?: string }) {
   }, [field, resolvedTheme])
 
   return (
-    <div className={cn("overflow-hidden", className)}>
+    <div id={id} className={cn("overflow-hidden", className)}>
       {/* The field covers the strip anchored right, so narrow screens crop
           the dark field on the left and keep the bunny. */}
       <canvas
