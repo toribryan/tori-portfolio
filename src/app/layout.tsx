@@ -27,10 +27,9 @@ function getWebSiteJsonLd(): WithContext<WebSite> {
 // Thanks @shadcn-ui, @tailwindcss
 const darkModeScript = String.raw`
   try {
-    // No stored preference means light (the app default), so only an explicit
-    // 'dark', or 'system' on a dark OS, paints the dark theme-color.
+    // No stored preference follows the OS, like an explicit 'system'.
     // ASCII only in here: this whole script is passed through btoa().
-    if (localStorage.theme === 'dark' || (localStorage.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    if (localStorage.theme === 'dark' || ((!localStorage.theme || localStorage.theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.querySelector('meta[name="theme-color"]').setAttribute('content', '${META_THEME_COLORS.dark}')
     }
   } catch (_) {}
