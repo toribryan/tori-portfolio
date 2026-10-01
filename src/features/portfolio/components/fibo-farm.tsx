@@ -1,9 +1,11 @@
 "use client"
 
-import { useState } from "react"
-import { RotateCcwIcon } from "lucide-react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { PauseIcon, PlayIcon } from "lucide-react"
+import { useInView } from "motion/react"
 
 import { cn } from "@/lib/utils"
+import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/base/ui/button"
 
 import { PixelRabbitSprite } from "./fibo-hero/pixel-rabbit"
@@ -22,8 +24,11 @@ const COLUMNS = 7
 const CELL = 48
 const ROW = 52
 const PHI = (1 + Math.sqrt(5)) / 2
+// Long enough for a month's newborns to finish building themselves up.
+const MONTH_MS = 1600
+const HOLD_MS = 4000
 
-const FIRST: Pair[] = [{ id: 0, age: 0 }]
+const SEQUENCE = Array.from({ length: LAST_MONTH }, (_, i) => countFor(i + 1))
 
 // Fibonacci's rules: a pair needs a month to grow up, then has a new pair
 // every month, and nobody dies.
@@ -34,6 +39,14 @@ function nextMonth(pairs: Pair[]): Pair[] {
   return [...pairs.map((pair) => ({ ...pair, age: pair.age + 1 })), ...born]
 }
 
+// Replayed from the first pair, so a rabbit keeps its id, and its sprite,
+// from month to month.
+function pairsFor(month: number) {
+  let pairs: Pair[] = [{ id: 0, age: 0 }]
+  for (let m = 1; m < month; m++) pairs = nextMonth(pairs)
+  return pairs
+}
+
 function countFor(month: number) {
   let [a, b] = [0, 1]
   for (let m = 1; m < month; m++) [a, b] = [b, a + b]
@@ -41,52 +54,62 @@ function countFor(month: number) {
 }
 
 /**
- * Fibonacci's rabbit puzzle, one month per click. Each pair is one rabbit:
- * grown pairs at double size, newborns at single size, building themselves
- * up as they arrive.
+ * Fibonacci's rabbit puzzle, playing a month at a time while it's on screen,
+ * then starting over. Each pair is one rabbit: grown pairs at double size,
+ * newborns at single size, building themselves up as they arrive. With
+ * reduced motion it holds on the last month.
  */
 export function FiboFarm() {
-  const [month, setMonth] = useState(1)
-  const [pairs, setPairs] = useState(FIRST)
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { amount: 0.4 })
+  // Matches the server on the first render, then switches, so hydration
+  // doesn't trip over the month.
+  const reduced = useMediaQuery("(prefers-reduced-motion: reduce)")
+  const [playing, setPlaying] = useState(true)
+  const [step, setStep] = useState(1)
 
-  const sequence = Array.from({ length: LAST_MONTH }, (_, i) => countFor(i + 1))
+  const month = reduced ? LAST_MONTH : step
+  const pairs = useMemo(() => pairsFor(month), [month])
   const count = pairs.length
   const previous = month > 1 ? countFor(month - 1) : null
 
+  useEffect(() => {
+    if (reduced || !playing || !inView) return
+    const id = window.setTimeout(
+      () => setStep(step === LAST_MONTH ? 1 : step + 1),
+      step === LAST_MONTH ? HOLD_MS : MONTH_MS
+    )
+    return () => window.clearTimeout(id)
+  }, [reduced, playing, inView, step])
+
   return (
-    <div className="not-prose flex flex-col overflow-hidden rounded-xl border border-line bg-card">
-      <div className="flex items-center justify-between gap-2 border-b border-line py-2 pr-2 pl-4">
-        <span className="font-mono text-sm">
+    <div
+      ref={ref}
+      className="not-prose flex flex-col overflow-hidden rounded-xl border border-line bg-card"
+    >
+      <p className="sr-only">
+        An animation of Fibonacci&apos;s rabbit puzzle. Over eight months the
+        pairs go {SEQUENCE.join(", ")}.
+      </p>
+
+      <div className="flex min-h-12 items-center justify-between gap-2 border-b border-line py-2 pr-2 pl-4">
+        <span className="font-mono text-sm" aria-hidden>
           Month {month}
           <span className="text-muted-foreground">
             {" "}
             · {count} {count === 1 ? "pair" : "pairs"}
           </span>
         </span>
-        <div className="flex gap-1.5">
+        {reduced ? null : (
           <Button
             size="icon-sm"
             variant="ghost"
-            aria-label="Start over"
-            disabled={month === 1}
-            onClick={() => {
-              setMonth(1)
-              setPairs(FIRST)
-            }}
+            aria-label={playing ? "Pause the animation" : "Play the animation"}
+            onClick={() => setPlaying(!playing)}
           >
-            <RotateCcwIcon />
+            {playing ? <PauseIcon /> : <PlayIcon />}
           </Button>
-          <Button
-            size="sm"
-            disabled={month === LAST_MONTH}
-            onClick={() => {
-              setMonth(month + 1)
-              setPairs(nextMonth(pairs))
-            }}
-          >
-            Next month
-          </Button>
-        </div>
+        )}
       </div>
 
       <svg
@@ -98,15 +121,18 @@ export function FiboFarm() {
           <PixelRabbitSprite
             key={pair.id}
             pixel={pair.age >= 1 ? 2 : 1}
-            assembleDelay={pair.delay}
+            assembleDelay={reduced ? undefined : pair.delay}
             transform={`translate(${(i % COLUMNS) * CELL + CELL / 2} ${(Math.floor(i / COLUMNS) + 1) * ROW - 4})`}
           />
         ))}
       </svg>
 
-      <div className="flex flex-col gap-2 border-t border-line px-4 py-3">
+      <div
+        className="flex flex-col gap-2 border-t border-line px-4 py-3"
+        aria-hidden
+      >
         <ol className="m-0 flex list-none flex-wrap gap-1.5 p-0 font-mono text-sm">
-          {sequence.map((n, i) => (
+          {SEQUENCE.map((n, i) => (
             <li
               key={i}
               className={cn(
@@ -122,19 +148,11 @@ export function FiboFarm() {
             </li>
           ))}
         </ol>
-        <p
-          className="m-0 font-mono text-xs text-muted-foreground"
-          aria-live="polite"
-        >
+        <p className="m-0 font-mono text-xs text-muted-foreground">
           {previous === null
-            ? "One newborn pair. Click Next month."
+            ? "One newborn pair."
             : `${count} ÷ ${previous} = ${(count / previous).toFixed(3)}, φ = ${PHI.toFixed(3)}`}
         </p>
-        {month === LAST_MONTH ? (
-          <p className="m-0 text-xs text-muted-foreground">
-            That&apos;s as many as fit. They don&apos;t stop, though.
-          </p>
-        ) : null}
       </div>
     </div>
   )

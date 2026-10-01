@@ -104,7 +104,10 @@ export function FiboStory() {
           (It&apos;s a math puzzle, not a farm.) How many pairs are there after
           a year?
         </p>
-        <p>Try it. Each rabbit below is a pair; the small ones are newborns.</p>
+        <p>
+          Here&apos;s how it plays out. Each rabbit is a pair; the small ones
+          are newborns.
+        </p>
       </Chapter>
 
       <Chapter title="Why it adds up">
