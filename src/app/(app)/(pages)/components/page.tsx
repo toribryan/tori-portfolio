@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
-import { ArrowUpRightIcon } from "lucide-react"
 
 import { jsonLdBreadcrumbList, JsonLdScript } from "@/lib/json-ld"
+import { ArrowUpRightIcon } from "@/components/animated-icons/arrow-up-right-icon"
 import { Button } from "@/components/base/ui/button"
 import {
   PageHeading,
