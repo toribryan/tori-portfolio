@@ -98,15 +98,19 @@ export function FiboStory() {
           wrote a book called <em>Liber Abaci</em>, and tucked inside it is a
           puzzle about rabbits.
         </p>
+        <p>The puzzle has four rules:</p>
+        <ol>
+          <li>Start with one pair of baby rabbits.</li>
+          <li>A pair takes a month to grow up.</li>
+          <li>
+            From the month after that, it has one new baby pair every month.
+          </li>
+          <li>Nobody ever dies. (It&apos;s a math puzzle, not a farm.)</li>
+        </ol>
         <p>
-          Put one newborn pair of rabbits in a field. A pair takes a month to
-          grow up, then has a new pair every month, forever. Nobody ever dies.
-          (It&apos;s a math puzzle, not a farm.) How many pairs are there after
-          a year?
-        </p>
-        <p>
-          Here&apos;s how it plays out, a month to a row. Each rabbit is a pair;
-          the small ones are newborns, and the lines show who came from whom.
+          How many pairs are there after a year? Below, each row is a month and
+          each rabbit is a pair: small for babies, big once grown. Watch the
+          first eight months play out.
         </p>
       </Chapter>
 
