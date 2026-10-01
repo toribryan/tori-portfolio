@@ -691,7 +691,15 @@ const STACK: { icon: ComponentType<{ className?: string }>; title: string }[] =
  * above hangs off that row. Its left edge is the page's usual inset instead,
  * so it lines up with the section headings below.
  */
-function Pitch({ width, className }: { width: number; className?: string }) {
+function Pitch({
+  width,
+  heading: Heading,
+  className,
+}: {
+  width: number
+  heading: "h1" | "h2"
+  className?: string
+}) {
   return (
     <div
       className={cn(
@@ -701,9 +709,9 @@ function Pitch({ width, className }: { width: number; className?: string }) {
       style={{ "--u": `calc(100cqw * ${LATTICE} / ${width})` } as CSSProperties}
     >
       <div className="flex flex-col justify-end">
-        <h2 className="fibo-tile m-0 mb-[max(0.75rem,1.2cqw)] text-[clamp(3.5rem,11cqw,5rem)] leading-none font-medium text-foreground">
+        <Heading className="fibo-tile m-0 mb-[max(0.75rem,1.2cqw)] text-[clamp(3.5rem,11cqw,5rem)] leading-none font-medium text-foreground">
           fibo
-        </h2>
+        </Heading>
         <p
           className="fibo-tile m-0 mb-[max(1rem,1.8cqw)] flex items-center gap-1 font-mono text-xl text-muted-foreground"
           style={{ animationDelay: "0.1s" }}
@@ -906,7 +914,12 @@ function useSeen(ref: RefObject<HTMLElement | null>) {
   return seen
 }
 
-export function FiboHero() {
+export function FiboHero({
+  heading = "h2",
+}: {
+  /** `h1` when the hero opens fibo's own page rather than a home page section. */
+  heading?: "h1" | "h2"
+}) {
   const area = useRef<HTMLElement>(null)
   const seen = useSeen(area)
   useEffect(listenForUnlock, [])
@@ -931,7 +944,11 @@ export function FiboHero() {
             seen={seen}
             className="aspect-[1.618/1] grid-cols-[1.618fr_minmax(0,1fr)] grid-rows-[1fr_1.618fr]"
           >
-            <Pitch width={340} className="col-1 row-[1/span_2]" />
+            <Pitch
+              width={340}
+              heading={heading}
+              className="col-1 row-[1/span_2]"
+            />
           </Frame>
         </div>
         <div className="@xl:hidden">
@@ -942,7 +959,11 @@ export function FiboHero() {
             seen={seen}
             className="aspect-[1/1.618] grid-cols-[1.618fr_minmax(0,1fr)] grid-rows-[1.618fr_1fr]"
           >
-            <Pitch width={210} className="col-[1/span_2] row-1" />
+            <Pitch
+              width={210}
+              heading={heading}
+              className="col-[1/span_2] row-1"
+            />
           </Frame>
         </div>
       </div>
