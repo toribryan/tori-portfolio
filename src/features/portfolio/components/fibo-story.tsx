@@ -105,8 +105,8 @@ export function FiboStory() {
           a year?
         </p>
         <p>
-          Here&apos;s how it plays out. Each rabbit is a pair; the small ones
-          are newborns.
+          Here&apos;s how it plays out, a month to a row. Each rabbit is a pair;
+          the small ones are newborns, and the lines show who came from whom.
         </p>
       </Chapter>
 

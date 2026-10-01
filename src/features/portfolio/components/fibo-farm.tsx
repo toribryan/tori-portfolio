@@ -1,10 +1,9 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 import { PauseIcon, PlayIcon } from "lucide-react"
 import { useInView } from "motion/react"
 
-import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/base/ui/button"
 
@@ -13,55 +12,79 @@ import { PixelRabbitSprite } from "./fibo-hero/pixel-rabbit"
 type Pair = {
   id: number
   age: number
-  /** When a newborn starts building itself up. Fixed at birth, so a pair
-   * that grows up doesn't build again. */
+  /** The pair in the month above this one comes from: itself, or the parent
+   * of a newborn. */
+  from?: number
+  /** When a newborn starts building itself up. */
   delay?: number
 }
 
-// Month 8 is 21 pairs, three full rows. Past that they stop fitting.
 const LAST_MONTH = 8
-const COLUMNS = 7
-const CELL = 48
-const ROW = 52
 const PHI = (1 + Math.sqrt(5)) / 2
 // Long enough for a month's newborns to finish building themselves up.
 const MONTH_MS = 1600
 const HOLD_MS = 4000
 
-const SEQUENCE = Array.from({ length: LAST_MONTH }, (_, i) => countFor(i + 1))
+// A month per row, centred right of a gutter for the row's count. Grown
+// pairs draw at two units per art pixel, newborns at one.
+const GUTTER = 40
+const SLOT = { grown: 44, newborn: 26 }
+const ROW = 54
+const WIDTH = GUTTER + 13 * SLOT.grown + 8 * SLOT.newborn + 24
+const HEIGHT = LAST_MONTH * ROW + 2
+const ART = 20
 
 // Fibonacci's rules: a pair needs a month to grow up, then has a new pair
-// every month, and nobody dies.
-function nextMonth(pairs: Pair[]): Pair[] {
-  const born = pairs
-    .filter((pair) => pair.age >= 1)
-    .map((_, i) => ({ id: pairs.length + i, age: 0, delay: i * 120 }))
-  return [...pairs.map((pair) => ({ ...pair, age: pair.age + 1 })), ...born]
+// every month, and nobody dies. Each newborn sits right after its parent, so
+// the lines down the tree barely cross.
+function buildMonths() {
+  const months: Pair[][] = [[{ id: 0, age: 0 }]]
+  let nextId = 1
+  for (let m = 1; m < LAST_MONTH; m++) {
+    const row: Pair[] = []
+    let born = 0
+    for (const pair of months[m - 1]) {
+      row.push({ id: pair.id, age: pair.age + 1, from: pair.id })
+      if (pair.age >= 1) {
+        row.push({ id: nextId++, age: 0, from: pair.id, delay: born++ * 120 })
+      }
+    }
+    months.push(row)
+  }
+  return months
 }
 
-// Replayed from the first pair, so a rabbit keeps its id, and its sprite,
-// from month to month.
-function pairsFor(month: number) {
-  let pairs: Pair[] = [{ id: 0, age: 0 }]
-  for (let m = 1; m < month; m++) pairs = nextMonth(pairs)
-  return pairs
-}
+const MONTHS = buildMonths()
 
-function countFor(month: number) {
-  let [a, b] = [0, 1]
-  for (let m = 1; m < month; m++) [a, b] = [b, a + b]
-  return b
-}
+const isGrown = (pair: Pair) => pair.age >= 1
+
+// Where each pair stands in its month's row: x under its feet, and the row's
+// baseline.
+const LAYOUT = MONTHS.map((row, m) => {
+  const width = row.reduce(
+    (sum, pair) => sum + (isGrown(pair) ? SLOT.grown : SLOT.newborn),
+    0
+  )
+  let x = GUTTER + (WIDTH - GUTTER - width) / 2
+  const y = (m + 1) * ROW - 8
+  const at = new Map<number, number>()
+  for (const pair of row) {
+    const slot = isGrown(pair) ? SLOT.grown : SLOT.newborn
+    at.set(pair.id, x + slot / 2)
+    x += slot
+  }
+  return { y, at }
+})
 
 /**
- * Fibonacci's rabbit puzzle, playing a month at a time while it's on screen,
- * then starting over. Each pair is one rabbit: grown pairs at double size,
- * newborns at single size, building themselves up as they arrive. With
- * reduced motion it holds on the last month.
+ * Fibonacci's rabbit puzzle as a family tree, a month a row, growing down
+ * while it's on screen and then starting over. Lines join each pair to
+ * itself a month earlier, and each newborn to its parent. With reduced
+ * motion the whole tree shows at once.
  */
 export function FiboFarm() {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { amount: 0.4 })
+  const inView = useInView(ref, { amount: 0.3 })
   // Matches the server on the first render, then switches, so hydration
   // doesn't trip over the month.
   const reduced = useMediaQuery("(prefers-reduced-motion: reduce)")
@@ -69,9 +92,8 @@ export function FiboFarm() {
   const [step, setStep] = useState(1)
 
   const month = reduced ? LAST_MONTH : step
-  const pairs = useMemo(() => pairsFor(month), [month])
-  const count = pairs.length
-  const previous = month > 1 ? countFor(month - 1) : null
+  const count = MONTHS[month - 1].length
+  const previous = month > 1 ? MONTHS[month - 2].length : null
 
   useEffect(() => {
     if (reduced || !playing || !inView) return
@@ -88,50 +110,61 @@ export function FiboFarm() {
       className="not-prose flex flex-col overflow-hidden rounded-xl border border-line bg-card"
     >
       <p className="sr-only">
-        An animation of Fibonacci&apos;s rabbit puzzle. Over eight months the
-        pairs go {SEQUENCE.join(", ")}.
+        An animation of Fibonacci&apos;s rabbit puzzle as a family tree, one row
+        per month. Over eight months the pairs go{" "}
+        {MONTHS.map((row) => row.length).join(", ")}.
       </p>
 
       <svg
-        viewBox={`0 0 ${COLUMNS * CELL} ${3 * ROW}`}
-        className="block w-full text-foreground"
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        className="block w-full px-2 pt-2 text-foreground"
         aria-hidden
       >
-        {pairs.map((pair, i) => (
-          <PixelRabbitSprite
-            key={pair.id}
-            pixel={pair.age >= 1 ? 2 : 1}
-            assembleDelay={reduced ? undefined : pair.delay}
-            transform={`translate(${(i % COLUMNS) * CELL + CELL / 2} ${(Math.floor(i / COLUMNS) + 1) * ROW - 4})`}
-          />
-        ))}
+        {MONTHS.slice(0, month).map((row, m) => {
+          const { y, at } = LAYOUT[m]
+          const above = m > 0 ? LAYOUT[m - 1] : null
+          return (
+            <Fragment key={m}>
+              <text
+                x={8}
+                y={y - 6}
+                className="fill-muted-foreground font-mono"
+                fontSize={16}
+              >
+                {row.length}
+              </text>
+              {above
+                ? row.map((pair) => (
+                    <line
+                      key={`line-${pair.id}`}
+                      x1={above.at.get(pair.from!)}
+                      y1={above.y + 3}
+                      x2={at.get(pair.id)}
+                      y2={y - (isGrown(pair) ? 2 : 1) * ART - 3}
+                      className="stroke-line"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))
+                : null}
+              {row.map((pair) => (
+                <PixelRabbitSprite
+                  key={pair.id}
+                  pixel={isGrown(pair) ? 2 : 1}
+                  assembleDelay={reduced ? undefined : pair.delay}
+                  transform={`translate(${at.get(pair.id)} ${y})`}
+                />
+              ))}
+            </Fragment>
+          )
+        })}
       </svg>
 
-      <div className="flex items-start justify-between gap-2 border-t border-line py-3 pr-2 pl-4">
-        <div className="flex flex-col gap-2" aria-hidden>
-          <ol className="m-0 flex list-none flex-wrap gap-1.5 p-0 font-mono text-sm">
-            {SEQUENCE.map((n, i) => (
-              <li
-                key={i}
-                className={cn(
-                  "rounded-md px-1.5 py-0.5 tabular-nums transition-colors",
-                  i + 1 === month
-                    ? "bg-foreground text-background"
-                    : i + 1 < month
-                      ? "text-foreground"
-                      : "text-muted-foreground/50"
-                )}
-              >
-                {n}
-              </li>
-            ))}
-          </ol>
-          <p className="m-0 font-mono text-xs text-muted-foreground">
-            {previous === null
-              ? "One newborn pair."
-              : `${count} ÷ ${previous} = ${(count / previous).toFixed(3)}, φ = ${PHI.toFixed(3)}`}
-          </p>
-        </div>
+      <div className="flex items-center justify-between gap-2 border-t border-line py-2 pr-2 pl-4">
+        <p className="m-0 font-mono text-xs text-muted-foreground" aria-hidden>
+          {previous === null
+            ? "Month 1: one newborn pair."
+            : `Month ${month}: ${count} ÷ ${previous} = ${(count / previous).toFixed(3)}, φ = ${PHI.toFixed(3)}`}
+        </p>
         {reduced ? null : (
           <Button
             size="icon-sm"
