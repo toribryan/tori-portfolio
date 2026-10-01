@@ -56,7 +56,7 @@ command menu doc mid-page on load). Its preview pane also shows by the dialog's 
 scaled cover on a phone. Put
 these back after reinstalling; fibo's own filter menu has since gained a
 `container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
-lists them, which drives the home page section, `/components/all` and the
+lists them, which drives the home page section, `/components` and the
 docs; `home: false` keeps a part off the home page (Token flow, whose slot
 the Command menu took). Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
 `src/features/components/content/<slug>.mdx` is the body,
@@ -67,6 +67,14 @@ arrays and elements as props; `components/doc-blocks.tsx` and
 `doc-parts.tsx` are everything it can use. Adding one means installing the
 part, a `fibo-niche.ts` entry, an MDX file, an examples module and a home
 page cover in `features/portfolio/components/components/covers.tsx`.
+
+fibo has two pages here. `/components` lists the special components with an
+install block per package manager (`fibo-install.tsx`); `/components/all`
+redirects there. `/fibo` is the lore: `FiboHero` with `variant="page"` (an
+`h1`, and buttons out to the Storybook, Figma and GitHub), then
+`fibo-story.tsx`, with the rabbit farm (`fibo-farm.tsx`) that steps through
+Fibonacci's puzzle and the dither plates in `public/images/fibo/`. On the
+home page the hero's buttons go to those two pages instead.
 
 `src/components/ui/token-flow.tsx`, the site's own copy, still backs the
 archived review deck; `.21st/token-flow.tsx` is generated from it by `npm run
@@ -140,7 +148,7 @@ constant-time `safeEqual` rather than `===`.
   elsewhere", and `comingSoon: true` marks one as not yet written. `bab.mdx`
   uses the former (its reference lives in `content/work/bab-design-system.mdx`);
   `iron.mdx` and `modern.mdx` use the latter. On Projects cards, `href`
-  already works: `work/fibo.mdx` sends its card to fibo.toribryan.com.
+  already works: `work/fibo.mdx` sends its card to `/fibo`.
   `comingSoon` only matters once the archived Components page is restored.
 
 <!-- BEGIN:nextjs-agent-rules -->

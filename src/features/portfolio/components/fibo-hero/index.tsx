@@ -11,7 +11,7 @@ import {
   type RefObject,
 } from "react"
 import Link from "next/link"
-import { Volume2Icon } from "lucide-react"
+import { RabbitIcon, Volume2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
@@ -692,7 +692,16 @@ const STACK: { icon: ComponentType<{ className?: string }>; title: string }[] =
  * above hangs off that row. Its left edge is the page's usual inset instead,
  * so it lines up with the section headings below.
  */
-function Pitch({ width, className }: { width: number; className?: string }) {
+function Pitch({
+  width,
+  variant,
+  className,
+}: {
+  width: number
+  variant: HeroVariant
+  className?: string
+}) {
+  const Heading = variant === "page" ? "h1" : "h2"
   return (
     <div
       className={cn(
@@ -702,9 +711,9 @@ function Pitch({ width, className }: { width: number; className?: string }) {
       style={{ "--u": `calc(100cqw * ${LATTICE} / ${width})` } as CSSProperties}
     >
       <div className="flex flex-col justify-end">
-        <h2 className="fibo-tile m-0 mb-[max(0.75rem,1.2cqw)] text-[clamp(3.5rem,11cqw,5rem)] leading-none font-medium text-foreground">
+        <Heading className="fibo-tile m-0 mb-[max(0.75rem,1.2cqw)] text-[clamp(3.5rem,11cqw,5rem)] leading-none font-medium text-foreground">
           fibo
-        </h2>
+        </Heading>
         <p
           className="fibo-tile m-0 mb-[max(1rem,1.8cqw)] flex items-center gap-1 font-mono text-xl text-muted-foreground"
           style={{ animationDelay: "0.1s" }}
@@ -733,35 +742,63 @@ function Pitch({ width, className }: { width: number; className?: string }) {
         className="fibo-tile flex flex-wrap gap-2"
         style={{ animationDelay: "0.3s" }}
       >
-        <Button
-          size="lg"
-          nativeButton={false}
-          render={<a href={FIBO.catalog} target="_blank" rel="noreferrer" />}
-          className="h-[round(up,1.5rem,var(--u))] w-[round(up,8rem,var(--u))]"
-        >
-          Components
-          <ArrowRightIcon data-icon="inline-end" />
-        </Button>
-        <Button
-          size="lg"
-          variant="outline"
-          nativeButton={false}
-          className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
-          render={<Link href="/fibo/figma" />}
-        >
-          <FigmaIcon data-icon="inline-start" />
-          <span className="max-sm:sr-only">Figma</span>
-        </Button>
-        <Button
-          size="lg"
-          variant="outline"
-          nativeButton={false}
-          className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
-          render={<a href={FIBO.github} target="_blank" rel="noreferrer" />}
-        >
-          <GithubIcon data-icon="inline-start" />
-          <span className="max-sm:sr-only">GitHub</span>
-        </Button>
+        {variant === "page" ? (
+          <>
+            <Button
+              size="lg"
+              nativeButton={false}
+              render={
+                <a href={FIBO.catalog} target="_blank" rel="noreferrer" />
+              }
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,8rem,var(--u))]"
+            >
+              Components
+              <ArrowRightIcon data-icon="inline-end" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              nativeButton={false}
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
+              render={<Link href="/fibo/figma" />}
+            >
+              <FigmaIcon data-icon="inline-start" />
+              <span className="max-sm:sr-only">Figma</span>
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              nativeButton={false}
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
+              render={<a href={FIBO.github} target="_blank" rel="noreferrer" />}
+            >
+              <GithubIcon data-icon="inline-start" />
+              <span className="max-sm:sr-only">GitHub</span>
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              size="lg"
+              nativeButton={false}
+              render={<Link href="/components" />}
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,8rem,var(--u))]"
+            >
+              Components
+              <ArrowRightIcon data-icon="inline-end" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              nativeButton={false}
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent"
+              render={<Link href="/fibo" />}
+            >
+              <RabbitIcon data-icon="inline-start" />
+              Lore
+            </Button>
+          </>
+        )}
       </div>
       <ul
         className="fibo-tile m-0 mt-[var(--u)] flex min-h-[var(--u)] list-none flex-wrap items-center gap-x-4 gap-y-2 p-0"
@@ -907,7 +944,18 @@ function useSeen(ref: RefObject<HTMLElement | null>) {
   return seen
 }
 
-export function FiboHero() {
+type HeroVariant = "section" | "page"
+
+export function FiboHero({
+  variant = "section",
+}: {
+  /**
+   * `section` is the home page's: an `h2`, linking to the components and the
+   * lore. `page` opens fibo's own page: an `h1`, linking out to the Storybook,
+   * Figma and GitHub.
+   */
+  variant?: HeroVariant
+}) {
   const area = useRef<HTMLElement>(null)
   const seen = useSeen(area)
   useEffect(listenForUnlock, [])
@@ -932,7 +980,11 @@ export function FiboHero() {
             seen={seen}
             className="aspect-[1.618/1] grid-cols-[1.618fr_minmax(0,1fr)] grid-rows-[1fr_1.618fr]"
           >
-            <Pitch width={340} className="col-1 row-[1/span_2]" />
+            <Pitch
+              width={340}
+              variant={variant}
+              className="col-1 row-[1/span_2]"
+            />
           </Frame>
         </div>
         <div className="@xl:hidden">
@@ -943,7 +995,11 @@ export function FiboHero() {
             seen={seen}
             className="aspect-[1/1.618] grid-cols-[1.618fr_minmax(0,1fr)] grid-rows-[1.618fr_1fr]"
           >
-            <Pitch width={210} className="col-[1/span_2] row-1" />
+            <Pitch
+              width={210}
+              variant={variant}
+              className="col-[1/span_2] row-1"
+            />
           </Frame>
         </div>
       </div>

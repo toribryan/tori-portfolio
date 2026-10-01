@@ -23,7 +23,7 @@ export const MAIN_NAV: NavItem<Route>[] = [
   },
   {
     title: "Components",
-    href: "/components/all",
+    href: "/components",
   },
 ]
 

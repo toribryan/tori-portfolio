@@ -121,6 +121,11 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/components/all",
+        destination: "/components",
+        permanent: true,
+      },
+      {
         source: "/:section(blog|components)/writing-effect-inspired-by-apple",
         destination: "/:section/apple-hello-effect",
         permanent: true,
