@@ -68,6 +68,11 @@ arrays and elements as props; `components/doc-blocks.tsx` and
 part, a `fibo-niche.ts` entry, an MDX file, an examples module and a home
 page cover in `features/portfolio/components/components/covers.tsx`.
 
+`/fibo` is fibo's page on this site: the home page's `FiboHero` (as the
+page's `h1`) and `Components`, then its story (`fibo-story.tsx`, the lore
+with the dither plates in `public/images/fibo/`) and how to install it
+(`fibo-use.tsx`). Docs stay in fibo's Storybook; the page links there.
+
 `src/components/ui/token-flow.tsx`, the site's own copy, still backs the
 review deck; `.21st/token-flow.tsx` is generated from it by `npm run
 sync:token-flow` for 21st.dev.
@@ -135,7 +140,7 @@ constant-time `safeEqual` rather than `===`.
   elsewhere", and `comingSoon: true` marks one as not yet written. `bab.mdx`
   uses the former (its reference lives in `content/work/bab-design-system.mdx`);
   `iron.mdx` and `modern.mdx` use the latter. On Projects cards, `href`
-  already works: `work/fibo.mdx` sends its card to fibo.toribryan.com.
+  already works: `work/fibo.mdx` sends its card to `/fibo`.
   `comingSoon` only matters once the archived Components page is restored.
 
 <!-- BEGIN:nextjs-agent-rules -->
