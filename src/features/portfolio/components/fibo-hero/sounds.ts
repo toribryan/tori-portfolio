@@ -69,8 +69,6 @@ const VOICES: Record<FiboLine, () => void> = {
     tone({ from: 660, ms: 60, volume: 0.03 })
     tone({ from: 440, ms: 80, volume: 0.03, at: 0.08 })
   },
-  miss: () =>
-    tone({ from: 330, to: 165, ms: 320, volume: 0.05, wave: "triangle" }),
   bruise: () => tone({ from: 520, to: 110, ms: 160, volume: 0.04 }),
   rage: () => {
     for (const step of [0, 0.09, 0.18])
