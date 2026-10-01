@@ -2,10 +2,12 @@ import type { Route } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { getTableOfContents } from "fumadocs-core/content/toc"
-import { ArrowLeftIcon, ArrowRightIcon, ExternalLinkIcon } from "lucide-react"
+import { ExternalLinkIcon } from "lucide-react"
 
 import { cleanTableOfContents } from "@/lib/toc"
 import { cn } from "@/lib/utils"
+import { ArrowLeftIcon } from "@/components/animated-icons/arrow-left-icon"
+import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
 import { Button } from "@/components/base/ui/button"
 import {
   Tooltip,

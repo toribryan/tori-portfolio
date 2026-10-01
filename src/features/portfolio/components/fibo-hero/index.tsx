@@ -11,9 +11,10 @@ import {
   type RefObject,
 } from "react"
 import Link from "next/link"
-import { ArrowRightIcon, Volume2Icon } from "lucide-react"
+import { Volume2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
 import { Button } from "@/components/base/ui/button"
 
 import {

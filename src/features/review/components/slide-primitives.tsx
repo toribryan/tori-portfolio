@@ -1,11 +1,12 @@
 "use client"
 
 import Image from "next/image"
-import { ArrowRightIcon, ArrowUpRightIcon } from "lucide-react"
+import { ArrowRightIcon } from "lucide-react"
 import type { Variants } from "motion/react"
 import { motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
+import { ArrowUpRightIcon } from "@/components/animated-icons/arrow-up-right-icon"
 import { Button } from "@/components/base/ui/button"
 
 /** The site's expo-out, as a cubic bezier motion can run. */

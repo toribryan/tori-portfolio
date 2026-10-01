@@ -2,19 +2,14 @@
 
 import type { Route } from "next"
 import Link from "next/link"
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  CheckIcon,
-  ChevronDownIcon,
-  CopyIcon,
-  ShareIcon,
-} from "lucide-react"
+import { CheckIcon, ChevronDownIcon, CopyIcon, ShareIcon } from "lucide-react"
 import { toast } from "sonner"
 
 import { trackEvent } from "@/lib/events"
 import { cn } from "@/lib/utils"
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
+import { ArrowLeftIcon } from "@/components/animated-icons/arrow-left-icon"
+import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
 import { Button } from "@/components/base/ui/button"
 import {
   DropdownMenu,

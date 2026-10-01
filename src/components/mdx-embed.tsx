@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ArrowUpRightIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { ArrowUpRightIcon } from "@/components/animated-icons/arrow-up-right-icon"
 
 /**
  * A live prototype or Storybook build, embedded from `public/`.
