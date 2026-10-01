@@ -5,6 +5,7 @@ import { PauseIcon, PlayIcon } from "lucide-react"
 import { useInView } from "motion/react"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { SpecialText } from "@/components/ui/special-text"
 import { Button } from "@/components/base/ui/button"
 
 import { PixelRabbitSprite } from "./fibo-hero/pixel-rabbit"
@@ -15,14 +16,14 @@ type Pair = {
   /** The pair in the month above this one comes from: itself, or the parent
    * of a newborn. */
   from?: number
-  /** When a newborn starts building itself up. */
-  delay?: number
 }
 
 const LAST_MONTH = 8
 const PHI = (1 + Math.sqrt(5)) / 2
-// Long enough for a month's newborns to finish building themselves up.
-const MONTH_MS = 1600
+// Long enough for the widest row to finish building itself up.
+const MONTH_MS = 1800
+// A row's rabbits build up left to right, the whole row within this.
+const ROW_STAGGER_MS = 600
 const HOLD_MS = 4000
 
 // A month per row, centred right of a gutter for the row's count. Grown
@@ -42,11 +43,10 @@ function buildMonths() {
   let nextId = 1
   for (let m = 1; m < LAST_MONTH; m++) {
     const row: Pair[] = []
-    let born = 0
     for (const pair of months[m - 1]) {
       row.push({ id: pair.id, age: pair.age + 1, from: pair.id })
       if (pair.age >= 1) {
-        row.push({ id: nextId++, age: 0, from: pair.id, delay: born++ * 120 })
+        row.push({ id: nextId++, age: 0, from: pair.id })
       }
     }
     months.push(row)
@@ -90,6 +90,8 @@ export function FiboFarm() {
   const reduced = useMediaQuery("(prefers-reduced-motion: reduce)")
   const [playing, setPlaying] = useState(true)
   const [step, setStep] = useState(1)
+  // Bumped on each loop, so every row mounts and builds up afresh.
+  const [cycle, setCycle] = useState(0)
 
   const month = reduced ? LAST_MONTH : step
   const count = MONTHS[month - 1].length
@@ -98,11 +100,15 @@ export function FiboFarm() {
   useEffect(() => {
     if (reduced || !playing || !inView) return
     const id = window.setTimeout(
-      () => setStep(step === LAST_MONTH ? 1 : step + 1),
+      () => {
+        if (step < LAST_MONTH) return setStep(step + 1)
+        setStep(1)
+        setCycle(cycle + 1)
+      },
       step === LAST_MONTH ? HOLD_MS : MONTH_MS
     )
     return () => window.clearTimeout(id)
-  }, [reduced, playing, inView, step])
+  }, [reduced, playing, inView, step, cycle])
 
   return (
     <div
@@ -115,49 +121,71 @@ export function FiboFarm() {
         {MONTHS.map((row) => row.length).join(", ")}.
       </p>
 
-      <svg
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-        className="block w-full px-2 pt-2 text-foreground"
-        aria-hidden
-      >
-        {MONTHS.slice(0, month).map((row, m) => {
-          const { y, at } = LAYOUT[m]
-          const above = m > 0 ? LAYOUT[m - 1] : null
-          return (
-            <Fragment key={m}>
-              <text
-                x={8}
-                y={y - 6}
-                className="fill-muted-foreground font-mono"
-                fontSize={16}
-              >
-                {row.length}
-              </text>
-              {above
-                ? row.map((pair) => (
-                    <line
-                      key={`line-${pair.id}`}
-                      x1={above.at.get(pair.from!)}
-                      y1={above.y + 3}
-                      x2={at.get(pair.id)}
-                      y2={y - (isGrown(pair) ? 2 : 1) * ART - 3}
-                      className="stroke-line"
-                      vectorEffect="non-scaling-stroke"
-                    />
-                  ))
-                : null}
-              {row.map((pair) => (
-                <PixelRabbitSprite
-                  key={pair.id}
-                  pixel={isGrown(pair) ? 2 : 1}
-                  assembleDelay={reduced ? undefined : pair.delay}
-                  transform={`translate(${at.get(pair.id)} ${y})`}
-                />
-              ))}
-            </Fragment>
-          )
-        })}
-      </svg>
+      <div className="relative px-2 pt-2">
+        <svg
+          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+          className="block w-full text-foreground"
+          aria-hidden
+        >
+          {MONTHS.slice(0, month).map((row, m) => {
+            const { y, at } = LAYOUT[m]
+            const above = m > 0 ? LAYOUT[m - 1] : null
+            const stagger = Math.min(80, ROW_STAGGER_MS / row.length)
+            return (
+              <Fragment key={`${cycle}-${m}`}>
+                {above
+                  ? row.map((pair) => (
+                      <line
+                        key={`line-${pair.id}`}
+                        x1={above.at.get(pair.from!)}
+                        y1={above.y + 3}
+                        x2={at.get(pair.id)}
+                        y2={y - (isGrown(pair) ? 2 : 1) * ART - 3}
+                        className="stroke-line"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    ))
+                  : null}
+                {row.map((pair, i) => (
+                  <PixelRabbitSprite
+                    key={pair.id}
+                    pixel={isGrown(pair) ? 2 : 1}
+                    assembleDelay={reduced ? undefined : i * stagger}
+                    transform={`translate(${at.get(pair.id)} ${y})`}
+                  />
+                ))}
+              </Fragment>
+            )
+          })}
+        </svg>
+
+        {/* The counts are HTML over the tree so they stay legible when it
+          scales down. They mount once the farm is in view, never on the
+          server, so the scramble can't trip hydration. */}
+        <div
+          className="pointer-events-none absolute inset-x-2 top-2 bottom-0"
+          aria-hidden
+        >
+          {inView || reduced
+            ? MONTHS.slice(0, month).map((row, m) => (
+                <span
+                  key={`${cycle}-${m}`}
+                  className="absolute -translate-y-full font-mono text-xs text-muted-foreground sm:text-sm"
+                  style={{
+                    left: `${(8 / WIDTH) * 100}%`,
+                    top: `${((LAYOUT[m].y - 4) / HEIGHT) * 100}%`,
+                  }}
+                >
+                  {reduced ? (
+                    row.length
+                  ) : (
+                    <SpecialText speed={60}>{String(row.length)}</SpecialText>
+                  )}
+                </span>
+              ))
+            : null}
+        </div>
+      </div>
 
       <div className="flex items-center justify-between gap-2 border-t border-line py-2 pr-2 pl-4">
         <p className="m-0 font-mono text-xs text-muted-foreground" aria-hidden>
