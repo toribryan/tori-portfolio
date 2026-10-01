@@ -392,7 +392,8 @@ function CommandMenu({
     if (item.disabled) return
     if (item.items) {
       enter(item)
-      inputRef.current?.focus()
+      // A non-modal menu never pulls focus: focusing scrolls the page to it.
+      if (modal) inputRef.current?.focus()
       return
     }
     item.onSelect?.()

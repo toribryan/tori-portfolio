@@ -49,7 +49,9 @@ Design System Overhaul card cover can stack its tiers at any width. `chapter-scr
 narrow one it opens on the side with more room and narrows to fit, and it
 closes once the rail scrolls out of view. `command-menu.tsx` has a `modal` prop:
 `false` opens it without locking the page's scroll or moving focus, which the
-home page cover needs. Its preview pane also shows by the dialog's own width
+home page cover needs, and then opening an item's page doesn't pull focus
+into it either (focusing scrolls the page to the menu, which dropped the
+command menu doc mid-page on load). Its preview pane also shows by the dialog's own width
 (`@xl/command-menu`) rather than the viewport's, so the pane stays in the
 scaled cover on a phone. Put
 these back after reinstalling; fibo's own filter menu has since gained a
