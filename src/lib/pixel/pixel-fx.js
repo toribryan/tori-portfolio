@@ -300,8 +300,9 @@ export function playSheet(canvas, sheetUrl, meta) {
 
 /**
  * Live poster dither from `pixel.py poster --field`. Plays the exported build, then idles with a few
- * cells blinking in textured areas. A lens of photo follows the pointer; a press sends a ring of
- * flipped cells out from the point. With reduced motion it draws the finished field and keeps only
+ * cells blinking in textured areas. A lens of photo follows a mouse; on touch a tap opens it, a drag
+ * moves it, and another tap reopens it where you tap. A press or tap sends a ring of flipped cells
+ * out from the point. With reduced motion it draws the finished field and keeps only
  * the lens. Returns stop().
  *
  * The canvas is drawn at device resolution with a whole number of device pixels per cell, so the
@@ -382,8 +383,13 @@ export function ditherField(canvas, field, opts = {}) {
     if (!lens || !photo || lensState.size <= 0) return null;
     const w = Math.max(1, Math.round(lens[0] * lensState.size));
     const h = Math.max(1, Math.round(lens[1] * lensState.size));
-    const cx = Math.min(Math.max(Math.round(lensState.x - w / 2), 0), cols - w);
-    const cy = Math.min(Math.max(Math.round(lensState.y - h / 2), 0), rows - h);
+    // Kept inside the cells that are on screen, which on a narrow canvas is less than the field.
+    const left = Math.max(0, Math.ceil(-x0 / c));
+    const right = Math.min(cols, Math.floor((canvas.width - x0) / c));
+    const top = Math.max(0, Math.ceil(-y0 / c));
+    const bottom = Math.min(rows, Math.floor((canvas.height - y0) / c));
+    const cx = Math.min(Math.max(Math.round(lensState.x - w / 2), left), right - w);
+    const cy = Math.min(Math.max(Math.round(lensState.y - h / 2), top), bottom - h);
     return [cx, cy, w, h];
   };
 
@@ -419,25 +425,85 @@ export function ditherField(canvas, field, opts = {}) {
     return [((e.clientX - b.left) * (canvas.width / b.width) - x0) / c, ((e.clientY - b.top) * (canvas.height / b.height) - y0) / c];
   };
   let dirty = true;
-  const onMove = (e) => {
-    [lensState.x, lensState.y] = toCells(e);
+  const sendWave = (x, y) => {
+    if (ripple && !still) wave = { x, y, t0: performance.now() };
+  };
+  const placeLens = (x, y) => {
+    lensState.x = x;
+    lensState.y = y;
     lensState.target = 1;
     dirty = true;
   };
-  const onLeave = () => { lensState.target = 0; };
+  const closeLens = () => {
+    lensState.target = 0;
+    canvas.style.touchAction = "pan-y";
+  };
+
+  // Mouse: the lens follows the pointer and closes when it leaves; a press ripples.
+  // Touch: a tap opens the lens there and it stays open; dragging moves it (from inside the
+  // lens it keeps its grip, from elsewhere it jumps under the finger); another tap reopens it
+  // at the new spot; a tap off the canvas closes it. While it's open the canvas takes the drag
+  // instead of scrolling the page.
+  let touch = null;
+  const inLens = (x, y) => {
+    const r = lensRect();
+    return r && x >= r[0] && x < r[0] + r[2] && y >= r[1] && y < r[1] + r[3];
+  };
   const onDown = (e) => {
-    onMove(e);
-    if (ripple && !still) {
-      const [x, y] = toCells(e);
-      wave = { x, y, t0: performance.now() };
+    const [x, y] = toCells(e);
+    if (e.pointerType === "mouse") {
+      placeLens(x, y);
+      sendWave(x, y);
+      return;
+    }
+    const grip = inLens(x, y) ? [x - lensState.x, y - lensState.y] : null;
+    touch = { id: e.pointerId, sx: e.clientX, sy: e.clientY, grip, dragging: false };
+    try {
+      canvas.setPointerCapture?.(e.pointerId);
+    } catch {
+      // The touch can end before capture lands; the drag still works while it stays on the canvas.
     }
   };
-  const onUp = (e) => { if (e.pointerType !== "mouse") onLeave(); };
-  canvas.addEventListener("pointermove", onMove);
-  canvas.addEventListener("pointerleave", onLeave);
+  const onMove = (e) => {
+    const [x, y] = toCells(e);
+    if (e.pointerType === "mouse") {
+      placeLens(x, y);
+      return;
+    }
+    if (!touch || touch.id !== e.pointerId) return;
+    if (!touch.dragging && Math.hypot(e.clientX - touch.sx, e.clientY - touch.sy) < 8) return;
+    touch.dragging = true;
+    const [gx, gy] = touch.grip ?? [0, 0];
+    placeLens(x - gx, y - gy);
+    canvas.style.touchAction = "none";
+  };
+  const onUp = (e) => {
+    if (e.pointerType === "mouse" || !touch || touch.id !== e.pointerId) return;
+    if (!touch.dragging) {
+      const [x, y] = toCells(e);
+      lensState.size = 0;
+      placeLens(x, y);
+      sendWave(x, y);
+    }
+    touch = null;
+    canvas.style.touchAction = "none";
+  };
+  const onCancel = (e) => {
+    if (e.pointerType === "mouse") return;
+    touch = null;
+  };
+  const onLeave = (e) => {
+    if (e.pointerType === "mouse") closeLens();
+  };
+  const onOutside = (e) => {
+    if (e.pointerType !== "mouse" && e.target !== canvas) closeLens();
+  };
   canvas.addEventListener("pointerdown", onDown);
+  canvas.addEventListener("pointermove", onMove);
   canvas.addEventListener("pointerup", onUp);
-  canvas.addEventListener("pointercancel", onLeave);
+  canvas.addEventListener("pointercancel", onCancel);
+  canvas.addEventListener("pointerleave", onLeave);
+  document.addEventListener("pointerdown", onOutside);
   photo?.addEventListener?.("load", () => { dirty = true; });
 
   const ro = typeof ResizeObserver === "function"
@@ -486,10 +552,11 @@ export function ditherField(canvas, field, opts = {}) {
     cancelAnimationFrame(raf);
     io?.disconnect();
     ro?.disconnect();
-    canvas.removeEventListener("pointermove", onMove);
-    canvas.removeEventListener("pointerleave", onLeave);
     canvas.removeEventListener("pointerdown", onDown);
+    canvas.removeEventListener("pointermove", onMove);
     canvas.removeEventListener("pointerup", onUp);
-    canvas.removeEventListener("pointercancel", onLeave);
+    canvas.removeEventListener("pointercancel", onCancel);
+    canvas.removeEventListener("pointerleave", onLeave);
+    document.removeEventListener("pointerdown", onOutside);
   };
 }
