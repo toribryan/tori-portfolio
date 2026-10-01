@@ -2,16 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  FileTextIcon,
-  XIcon,
-} from "lucide-react"
+import { FileTextIcon, XIcon } from "lucide-react"
 import type { Variants } from "motion/react"
 import { AnimatePresence, motion, MotionConfig } from "motion/react"
 
 import { Kbd } from "@/components/ui/kbd"
+import { ArrowLeftIcon } from "@/components/animated-icons/arrow-left-icon"
+import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
 import { Button } from "@/components/base/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { ChapterScrubber } from "@/registry/components/chapter-scrubber"

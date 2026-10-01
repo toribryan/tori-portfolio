@@ -1,6 +1,5 @@
-import { ArrowUpRightIcon } from "lucide-react"
-
 import { cn } from "@/lib/utils"
+import { ArrowUpRightIcon } from "@/components/animated-icons/arrow-up-right-icon"
 import { Button } from "@/components/base/ui/button"
 
 /**

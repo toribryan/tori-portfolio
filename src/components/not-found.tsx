@@ -1,6 +1,6 @@
 import Link from "next/link"
-import { ArrowRightIcon } from "lucide-react"
 
+import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
 import { Button } from "@/components/base/ui/button"
 
 export function NotFound() {
