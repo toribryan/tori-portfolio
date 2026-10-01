@@ -8,7 +8,7 @@ import { useMediaQuery } from "@/hooks/use-media-query"
 import { SpecialText } from "@/components/ui/special-text"
 import { Button } from "@/components/base/ui/button"
 
-import { PixelRabbitSprite } from "./fibo-hero/pixel-rabbit"
+import { ASSEMBLE_MS, PixelRabbitSprite } from "./fibo-hero/pixel-rabbit"
 
 type Pair = {
   id: number
@@ -20,10 +20,16 @@ type Pair = {
 
 const LAST_MONTH = 8
 const PHI = (1 + Math.sqrt(5)) / 2
-// Long enough for the widest row to finish building itself up.
-const MONTH_MS = 1800
+// Long enough for the widest row to build itself up and power up.
+const MONTH_MS = 2200
 // A row's rabbits build up left to right, the whole row within this.
 const ROW_STAGGER_MS = 600
+// Mario's power-up: once its row has built, a pair that just grew up flickers
+// between its old and new size, in step with the rest of the row, then stays
+// big.
+const POWER_UP = [2, 1, 2, 1, 2, 1, 2] as const
+const POWER_UP_FRAME_MS = 70
+const POWER_UP_AFTER_MS = ROW_STAGGER_MS + ASSEMBLE_MS + 120
 const HOLD_MS = 4000
 
 // A month per row, centred right of a gutter for the row's count. Grown
@@ -75,6 +81,35 @@ const LAYOUT = MONTHS.map((row, m) => {
   }
   return { y, at }
 })
+
+/** A pair that just grew up: it builds in at newborn size, then powers up. */
+function PowerUpRabbit({
+  assembleDelay,
+  transform,
+}: {
+  assembleDelay: number
+  transform: string
+}) {
+  const [frame, setFrame] = useState(-1)
+
+  useEffect(() => {
+    const ids = POWER_UP.map((_, i) =>
+      window.setTimeout(
+        () => setFrame(i),
+        POWER_UP_AFTER_MS + i * POWER_UP_FRAME_MS
+      )
+    )
+    return () => ids.forEach((id) => window.clearTimeout(id))
+  }, [])
+
+  return (
+    <PixelRabbitSprite
+      pixel={frame < 0 ? 1 : POWER_UP[frame]}
+      assembleDelay={assembleDelay}
+      transform={transform}
+    />
+  )
+}
 
 /**
  * Fibonacci's rabbit puzzle as a family tree, a month a row, growing down
@@ -146,14 +181,22 @@ export function FiboFarm() {
                       />
                     ))
                   : null}
-                {row.map((pair, i) => (
-                  <PixelRabbitSprite
-                    key={pair.id}
-                    pixel={isGrown(pair) ? 2 : 1}
-                    assembleDelay={reduced ? undefined : i * stagger}
-                    transform={`translate(${at.get(pair.id)} ${y})`}
-                  />
-                ))}
+                {row.map((pair, i) =>
+                  pair.age === 1 && !reduced ? (
+                    <PowerUpRabbit
+                      key={pair.id}
+                      assembleDelay={i * stagger}
+                      transform={`translate(${at.get(pair.id)} ${y})`}
+                    />
+                  ) : (
+                    <PixelRabbitSprite
+                      key={pair.id}
+                      pixel={isGrown(pair) ? 2 : 1}
+                      assembleDelay={reduced ? undefined : i * stagger}
+                      transform={`translate(${at.get(pair.id)} ${y})`}
+                    />
+                  )
+                )}
               </Fragment>
             )
           })}

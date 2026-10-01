@@ -626,5 +626,5 @@ function PixelRabbitSprite({
   )
 }
 
-export { PixelRabbitSprite }
+export { ASSEMBLE_MS, PixelRabbitSprite }
 export type { RabbitAction, RabbitLook, RabbitSound }
