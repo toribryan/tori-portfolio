@@ -350,7 +350,13 @@ export function DataAttributes({ rows }: { rows: DataAttribute[] }) {
   )
 }
 
-function CommandLine({ label, value }: { label: string; value: string }) {
+export function CommandLine({
+  label,
+  value,
+}: {
+  label: string
+  value: string
+}) {
   return (
     <div className="flex items-center gap-4 py-2 pr-2 pl-4">
       <span className="w-14 shrink-0 text-xs font-medium text-muted-foreground">
