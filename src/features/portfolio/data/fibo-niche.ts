@@ -3,7 +3,7 @@ export type NichePart = {
   name: string
   title: string
   description: string
-  /** `false` keeps the part off the home page; it still has a card on /components/all. */
+  /** `false` keeps the part off the home page; it still has a card on /components. */
   home?: boolean
 }
 

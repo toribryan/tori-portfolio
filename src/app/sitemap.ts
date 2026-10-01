@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     "",
     "/latest",
-    "/components/all",
+    "/components",
     "/recommendations",
     "/fibo/figma",
   ].map((route) => ({

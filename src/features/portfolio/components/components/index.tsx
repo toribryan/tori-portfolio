@@ -33,7 +33,7 @@ export function Components() {
           variant="outline"
           size="sm"
           nativeButton={false}
-          render={<Link href="/components/all" />}
+          render={<Link href="/components" />}
         >
           View all
           <ArrowRightIcon />
