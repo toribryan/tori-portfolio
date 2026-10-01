@@ -1,10 +1,10 @@
 import { getTableOfContents } from "fumadocs-core/content/toc"
-import { ArrowUpRightIcon } from "lucide-react"
 import { getTweet } from "react-tweet/api"
 
 import { cleanTableOfContents } from "@/lib/toc"
 import { absoluteUrl } from "@/lib/utils"
 import { TweetQuote } from "@/components/ui/tweet-card"
+import { ArrowUpRightIcon } from "@/components/animated-icons/arrow-up-right-icon"
 import { Button } from "@/components/base/ui/button"
 import { Prose } from "@/components/base/ui/typography"
 import { MDX } from "@/components/mdx"

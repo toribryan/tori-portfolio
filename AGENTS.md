@@ -77,8 +77,13 @@ Fibonacci's puzzle and the dither plates in `public/images/fibo/`. On the
 home page the hero's buttons go to those two pages instead.
 
 `src/components/ui/token-flow.tsx`, the site's own copy, still backs the
-review deck; `.21st/token-flow.tsx` is generated from it by `npm run
+archived review deck; `.21st/token-flow.tsx` is generated from it by `npm run
 sync:token-flow` for 21st.dev.
+
+The portfolio review deck is archived: its `/review` route was removed, but
+`src/features/review/` remains, since case studies use its slides through
+`components/mdx-review-artifacts.tsx`, and the deck can be restored by
+reverting that commit.
 
 The brand design system docs under `components/` are archived: their list
 and detail routes and the nav link were removed, but the MDX and

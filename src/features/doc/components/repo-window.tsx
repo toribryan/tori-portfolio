@@ -1,14 +1,10 @@
 "use client"
 
 import { useRef, useState, type MouseEvent, type ReactNode } from "react"
-import {
-  ArrowRightIcon,
-  FileTextIcon,
-  FolderIcon,
-  FolderOpenIcon,
-} from "lucide-react"
+import { FileTextIcon, FolderIcon, FolderOpenIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
 
 type TreeRow = {
   path: string
