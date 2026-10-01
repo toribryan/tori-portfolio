@@ -92,26 +92,6 @@ export function FiboFarm() {
         pairs go {SEQUENCE.join(", ")}.
       </p>
 
-      <div className="flex min-h-12 items-center justify-between gap-2 border-b border-line py-2 pr-2 pl-4">
-        <span className="font-mono text-sm" aria-hidden>
-          Month {month}
-          <span className="text-muted-foreground">
-            {" "}
-            · {count} {count === 1 ? "pair" : "pairs"}
-          </span>
-        </span>
-        {reduced ? null : (
-          <Button
-            size="icon-sm"
-            variant="ghost"
-            aria-label={playing ? "Pause the animation" : "Play the animation"}
-            onClick={() => setPlaying(!playing)}
-          >
-            {playing ? <PauseIcon /> : <PlayIcon />}
-          </Button>
-        )}
-      </div>
-
       <svg
         viewBox={`0 0 ${COLUMNS * CELL} ${3 * ROW}`}
         className="block w-full text-foreground"
@@ -127,32 +107,42 @@ export function FiboFarm() {
         ))}
       </svg>
 
-      <div
-        className="flex flex-col gap-2 border-t border-line px-4 py-3"
-        aria-hidden
-      >
-        <ol className="m-0 flex list-none flex-wrap gap-1.5 p-0 font-mono text-sm">
-          {SEQUENCE.map((n, i) => (
-            <li
-              key={i}
-              className={cn(
-                "rounded-md px-1.5 py-0.5 tabular-nums transition-colors",
-                i + 1 === month
-                  ? "bg-foreground text-background"
-                  : i + 1 < month
-                    ? "text-foreground"
-                    : "text-muted-foreground/50"
-              )}
-            >
-              {n}
-            </li>
-          ))}
-        </ol>
-        <p className="m-0 font-mono text-xs text-muted-foreground">
-          {previous === null
-            ? "One newborn pair."
-            : `${count} ÷ ${previous} = ${(count / previous).toFixed(3)}, φ = ${PHI.toFixed(3)}`}
-        </p>
+      <div className="flex items-start justify-between gap-2 border-t border-line py-3 pr-2 pl-4">
+        <div className="flex flex-col gap-2" aria-hidden>
+          <ol className="m-0 flex list-none flex-wrap gap-1.5 p-0 font-mono text-sm">
+            {SEQUENCE.map((n, i) => (
+              <li
+                key={i}
+                className={cn(
+                  "rounded-md px-1.5 py-0.5 tabular-nums transition-colors",
+                  i + 1 === month
+                    ? "bg-foreground text-background"
+                    : i + 1 < month
+                      ? "text-foreground"
+                      : "text-muted-foreground/50"
+                )}
+              >
+                {n}
+              </li>
+            ))}
+          </ol>
+          <p className="m-0 font-mono text-xs text-muted-foreground">
+            {previous === null
+              ? "One newborn pair."
+              : `${count} ÷ ${previous} = ${(count / previous).toFixed(3)}, φ = ${PHI.toFixed(3)}`}
+          </p>
+        </div>
+        {reduced ? null : (
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            className="shrink-0"
+            aria-label={playing ? "Pause the animation" : "Play the animation"}
+            onClick={() => setPlaying(!playing)}
+          >
+            {playing ? <PauseIcon /> : <PlayIcon />}
+          </Button>
+        )}
       </div>
     </div>
   )
