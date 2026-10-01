@@ -67,7 +67,7 @@ export function Controlled() {
  * The exhibits below hold the real menu open in one state, inside a scaled
  * stage, so a doc can show every view side by side. Each opens the menu in
  * place without moving focus or locking the page, then gets it to its state
- * the way a person would: opening a page, typing, arrowing down.
+ * the way a person would: opening a page, typing, pointing at a row.
  */
 
 function typeInto(input: HTMLInputElement, text: string) {
@@ -83,7 +83,7 @@ type FrozenProps = Partial<CommandMenuProps> & {
   page?: string
   /** Typed into the search box once the menu is open. */
   query?: string
-  /** How many times to press the down arrow. */
+  /** Which row to highlight, counting from 0 at the top. */
   down?: number
   /** Widens the dialog enough for its preview pane. */
   wide?: boolean
@@ -142,11 +142,20 @@ function Frozen({
         "[data-slot=command-menu] input"
       )
       if (box && query) typeInto(box, query)
-      for (let i = 0; i < down; i++) {
+      if (down) {
         await wait(30)
-        box?.dispatchEvent(
-          new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true })
+        // Hovered rather than arrowed to: Base UI scrolls a row highlighted by
+        // keyboard into view, which scrolls the whole page to this exhibit.
+        const row = stage.querySelectorAll<HTMLElement>(
+          "[data-slot=command-menu-item]"
+        )[down]
+        row?.dispatchEvent(
+          new PointerEvent("pointermove", {
+            bubbles: true,
+            pointerType: "mouse",
+          })
         )
+        row?.dispatchEvent(new MouseEvent("mousemove", { bubbles: true }))
       }
       // Let a page's slide settle before anything measures the menu.
       await wait(300)
