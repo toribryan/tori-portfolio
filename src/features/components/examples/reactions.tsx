@@ -4,15 +4,21 @@ import { useState } from "react"
 
 import { Reactions, type Reaction } from "@/components/fibo/reactions"
 
-const seeded: Reaction[] = [
-  { emoji: "👍", label: "Thumbs up", count: 5 },
-  { emoji: "❤️", label: "Heart", count: 3, active: true },
-  { emoji: "😂", label: "Laughing", count: 1 },
-]
+import { AnatomyMap, slot, type Callout } from "../components/anatomy-map"
+import {
+  BUSY,
+  HEART,
+  LAUGH,
+  Message,
+  PickerHeldOpen,
+  SEEDED,
+  THUMBS,
+  WALL,
+} from "./reactions-data"
 
 const base = {
   variant: "inline",
-  defaultReactions: seeded,
+  defaultReactions: SEEDED,
   showCounts: true,
   particles: 7,
 } as const
@@ -26,21 +32,15 @@ export function Empty() {
 }
 
 export function BusyPost() {
-  return (
-    <Reactions
-      {...base}
-      defaultReactions={[
-        { emoji: "👍", label: "Thumbs up", count: 12_847 },
-        { emoji: "❤️", label: "Heart", count: 3_420, active: true },
-        { emoji: "😂", label: "Laughing", count: 961 },
-        { emoji: "🎉", label: "Celebrate", count: 1_205 },
-      ]}
-    />
-  )
+  return <Reactions {...base} defaultReactions={BUSY} />
 }
 
 export function WithoutCounts() {
   return <Reactions {...base} showCounts={false} />
+}
+
+export function PickerOpen() {
+  return <PickerHeldOpen reactions={[SEEDED[1]!]} />
 }
 
 // The floating bar is fixed to the viewport. A transformed wrapper becomes
@@ -49,14 +49,15 @@ export function WithoutCounts() {
 export function Floating() {
   return (
     <div className="relative w-full [transform:translateZ(0)]">
-      <div className="min-h-[28rem] p-8">
-        <p className="max-w-prose text-base text-muted-foreground">
-          The floating variant is fixed to a corner of the viewport and stays
-          put as the page scrolls. It sits on the same translucent bar the site
-          nav uses, clears the safe area on a notched phone, and counts every
-          reaction on the item beside its trigger. Particles rise from the bar
-          itself rather than from the emoji that was picked.
-        </p>
+      <div className="min-h-[20rem] p-6">
+        <article className="flex max-w-prose flex-col gap-2">
+          <p className="text-base font-medium">Designing for one tap</p>
+          <p className="text-sm text-muted-foreground">
+            A reaction should cost less than a reply. One tap, a small burst of
+            joy, and back to reading. The bar keeps to its corner as the page
+            scrolls, ready whenever the reader is.
+          </p>
+        </article>
         <Reactions {...base} variant="floating" />
       </div>
     </div>
@@ -65,31 +66,14 @@ export function Floating() {
 
 export function InMessage() {
   return (
-    <div className="max-w-lg rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center gap-2.5">
-        <span className="grid size-8 place-content-center rounded-full bg-primary text-xs font-medium text-primary-foreground">
-          TB
-        </span>
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-card-foreground">
-            Tori Bryan
-          </span>
-          <span className="text-xs font-medium text-muted-foreground">
-            12:45 PM
-          </span>
-        </div>
-      </div>
-      <p className="mt-3 mb-3 text-sm text-card-foreground">
-        Just shipped the reactions component. Picking one turns a click into a
-        small celebration, which is the whole point.
-      </p>
+    <Message>
       <Reactions {...base} />
-    </div>
+    </Message>
   )
 }
 
 export function Controlled() {
-  const [reactions, setReactions] = useState<Reaction[]>(seeded)
+  const [reactions, setReactions] = useState<Reaction[]>(SEEDED)
   const total = reactions.reduce((sum, item) => sum + (item.count ?? 0), 0)
 
   return (
@@ -104,5 +88,111 @@ export function Controlled() {
         {reactions.length} {reactions.length === 1 ? "kind" : "kinds"}
       </p>
     </div>
+  )
+}
+
+export function DoUnder() {
+  return (
+    <Message>
+      <Reactions {...base} particles={0} />
+    </Message>
+  )
+}
+
+export function DontAbove() {
+  return (
+    <Message above>
+      <Reactions {...base} particles={0} />
+    </Message>
+  )
+}
+
+export function DoFew() {
+  return <Reactions {...base} particles={0} />
+}
+
+export function DontWall() {
+  return (
+    <div className="max-w-64">
+      <Reactions {...base} particles={0} defaultReactions={WALL} />
+    </div>
+  )
+}
+
+const pill = (emoji: string) => (root: HTMLElement) =>
+  root.querySelector(`[data-slot=reactions-pill][data-emoji="${emoji}"]`)
+
+const below = (part: DOMRect) => ({
+  x: part.left + part.width / 2,
+  y: part.bottom + 4,
+})
+
+const above = (part: DOMRect) => ({
+  x: part.left + part.width / 2,
+  y: part.top - 4,
+})
+
+const ROW_PARTS: Callout[] = [
+  { label: "Pill", side: "left", find: pill(THUMBS) },
+  {
+    label: "Emoji",
+    side: "left",
+    find: (root) => pill(THUMBS)(root)?.querySelector("span"),
+    point: below,
+  },
+  { label: "Your reaction", side: "right", find: pill(HEART), point: above },
+  { label: "Add button", side: "right", find: slot("reactions-trigger") },
+  {
+    label: "Count",
+    side: "right",
+    find: (root) =>
+      pill(LAUGH)(root)?.querySelector("[data-slot=reactions-pill-count]"),
+    point: below,
+  },
+]
+
+/** The row of pills, with each part labelled. */
+export function AnatomyRow() {
+  return (
+    <AnatomyMap callouts={ROW_PARTS}>
+      <div className="flex justify-center px-40 py-16">
+        <div data-anatomy-subject>
+          <Reactions defaultReactions={SEEDED} particles={0} />
+        </div>
+      </div>
+    </AnatomyMap>
+  )
+}
+
+const choice = (index: number) => (root: HTMLElement) =>
+  root.querySelectorAll("[data-slot=reactions-choice]")[index]
+
+const PICKER_PARTS: Callout[] = [
+  { label: "Choice", side: "left", find: choice(0) },
+  {
+    label: "Already yours",
+    side: "right",
+    find: (root) =>
+      root.querySelector("[data-slot=reactions-choice][data-active]"),
+    point: above,
+  },
+  {
+    label: "Picker",
+    side: "right",
+    find: slot("reactions-panel"),
+    outline: true,
+  },
+  { label: "Open add button", side: "right", find: slot("reactions-trigger") },
+]
+
+/** The picker held open over its row, with each part labelled. */
+export function AnatomyPicker() {
+  const [ready, setReady] = useState(false)
+  return (
+    <AnatomyMap callouts={PICKER_PARTS} measureKey={ready}>
+      <div className="flex justify-center px-40 py-10">
+        <PickerHeldOpen onReady={() => setReady(true)} />
+      </div>
+    </AnatomyMap>
   )
 }

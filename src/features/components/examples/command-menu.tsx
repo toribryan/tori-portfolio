@@ -1,12 +1,6 @@
 "use client"
 
-import {
-  useEffect,
-  useEffectEvent,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react"
+import { useEffect, useEffectEvent, useState, type ReactNode } from "react"
 import { ArchiveIcon, FilePlusIcon, MoonIcon, PaletteIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -18,6 +12,7 @@ import {
 } from "@/components/fibo/command-menu"
 import { ScaledStage } from "@/features/portfolio/components/components/covers"
 
+import { AnatomyMap, slot, type Callout } from "../components/anatomy-map"
 import { FILES, GROUPS } from "./command-menu-data"
 
 // Only the lead example listens for Cmd+K: every menu on the page would open
@@ -413,175 +408,20 @@ export function DontPreview() {
   )
 }
 
-/*
- * Anatomy as an annotated map: the real menu with a label beside each part,
- * a leader line to it, and a dashed outline around the regions, so a
- * designer reads the parts off the picture instead of a tree.
- */
+const popup = slot("command-menu")
 
-type Callout = {
-  label: string
-  side: "left" | "right"
-  /** Finds the part once the menu has reached its state. */
-  find: (stage: HTMLElement) => Element | null | undefined
-  /** Outlines the part, for a region such as the search field. */
-  outline?: boolean
-  /** Points into the space around the dialog, for the backdrop. */
-  around?: boolean
-}
-
-type Placed = {
-  callout: Callout
-  x: number
-  y: number
-  labelY: number
-  box?: { x: number; y: number; w: number; h: number }
-}
-
-// Space between one label's bottom and the next one's top on the same side.
-const LABEL_GAP = 8
-
-function AnatomyMap({
+/** A frozen menu under an anatomy map, measured once it reaches its state. */
+function MenuMap({
   callouts,
   ...frozen
 }: FrozenProps & { callouts: Callout[] }) {
-  const frame = useRef<HTMLDivElement>(null)
   const [stage, setStage] = useState<HTMLDivElement | null>(null)
-  const [placed, setPlaced] = useState<Placed[]>([])
-  const [bounds, setBounds] = useState({ width: 0, left: 0, right: 0 })
-  const labels = useRef(new Map<string, HTMLDivElement>())
-
-  useEffect(() => {
-    const root = frame.current
-    if (!stage || !root) return
-    const measure = () => {
-      const base = root.getBoundingClientRect()
-      const popup = stage
-        .querySelector("[data-slot=command-menu]")
-        ?.getBoundingClientRect()
-      if (!popup) return
-      const left = popup.left - base.left
-      const right = popup.right - base.left
-      const rows: Placed[] = []
-      for (const callout of callouts) {
-        const el = callout.find(stage)
-        if (!el) continue
-        const r = el.getBoundingClientRect()
-        const box = {
-          x: r.left - base.left,
-          y: r.top - base.top,
-          w: r.width,
-          h: r.height,
-        }
-        // The dot sits just outside the part, so it never covers its text.
-        const x = callout.around
-          ? right + 12
-          : callout.side === "left"
-            ? box.x - 4
-            : box.x + box.w + 4
-        const y = callout.around ? popup.top - base.top + 24 : box.y + box.h / 2
-        rows.push({
-          callout,
-          x,
-          y,
-          labelY: y,
-          box: callout.outline ? box : undefined,
-        })
-      }
-      // Labels keep to their part's height, pushed apart by their own
-      // heights where parts crowd. Before the first paint they're guessed.
-      for (const side of ["left", "right"] as const) {
-        let bottom = -Infinity
-        for (const row of rows
-          .filter((r) => r.callout.side === side)
-          .sort((a, b) => a.y - b.y)) {
-          const half =
-            (labels.current.get(row.callout.label)?.offsetHeight ?? 44) / 2
-          row.labelY = Math.max(row.y, bottom + LABEL_GAP + half)
-          bottom = row.labelY + half
-        }
-      }
-      setPlaced(rows)
-      setBounds({ width: base.width, left, right })
-    }
-    measure()
-    // Measured again once the labels exist, so their real heights space them.
-    const frameId = requestAnimationFrame(measure)
-    const observer = new ResizeObserver(measure)
-    observer.observe(root)
-    return () => {
-      cancelAnimationFrame(frameId)
-      observer.disconnect()
-    }
-  }, [stage, callouts])
-
-  const edge = (side: Callout["side"]) =>
-    side === "left" ? bounds.left - 20 : bounds.right + 24
-
   return (
-    <div ref={frame} className="relative w-full min-w-[680px]">
+    <AnatomyMap callouts={callouts} subject={popup} measureKey={stage}>
       <Frozen {...frozen} onReady={setStage} />
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-60 size-full overflow-visible text-foreground"
-      >
-        {placed.map(({ callout, x, y, labelY, box }) => (
-          <g key={callout.label}>
-            {box ? (
-              <rect
-                x={box.x - 3}
-                y={box.y - 3}
-                width={box.w + 6}
-                height={box.h + 6}
-                rx={8}
-                fill="none"
-                stroke="currentColor"
-                strokeOpacity={0.5}
-                strokeDasharray="4 3"
-              />
-            ) : null}
-            <line
-              x1={edge(callout.side)}
-              y1={labelY}
-              x2={x}
-              y2={y}
-              stroke="currentColor"
-              strokeOpacity={0.7}
-            />
-            <circle
-              cx={x}
-              cy={y}
-              r={3.5}
-              fill="currentColor"
-              stroke="var(--background)"
-              strokeWidth={1.5}
-            />
-          </g>
-        ))}
-      </svg>
-      {placed.map(({ callout, labelY }) => (
-        <div
-          key={callout.label}
-          ref={(node) => {
-            if (node) labels.current.set(callout.label, node)
-            else labels.current.delete(callout.label)
-          }}
-          style={
-            callout.side === "left"
-              ? { top: labelY, right: bounds.width - edge("left") }
-              : { top: labelY, left: edge("right") }
-          }
-          className="absolute z-60 w-max -translate-y-1/2 rounded-md bg-background px-2.5 py-1.5 text-sm leading-none font-medium whitespace-nowrap shadow-xs ring-1 ring-border"
-        >
-          {callout.label}
-        </div>
-      ))}
-    </div>
+    </AnatomyMap>
   )
 }
-
-const slot = (name: string) => (stage: HTMLElement) =>
-  stage.querySelector(`[data-slot=${name}]`)
 
 const rowAt = (stage: HTMLElement, index: number) =>
   stage.querySelectorAll("[data-slot=command-menu-item]")[index]
@@ -613,7 +453,8 @@ const DIALOG_PARTS: Callout[] = [
     label: "Backdrop",
     side: "right",
     find: slot("command-menu-backdrop"),
-    around: true,
+    // The backdrop is everything around the dialog, so point into that.
+    point: (_, dialog) => ({ x: dialog.right + 12, y: dialog.top + 24 }),
   },
   {
     label: "Preview pane",
@@ -626,7 +467,7 @@ const DIALOG_PARTS: Callout[] = [
 /** The whole dialog, mid-search, with every region labelled. */
 export function AnatomyDialog() {
   return (
-    <AnatomyMap
+    <MenuMap
       callouts={DIALOG_PARTS}
       wide
       groups={FILES}
@@ -681,7 +522,7 @@ const ROW_PARTS: Callout[] = [
 /** One of each kind of row, labelled. */
 export function AnatomyRow() {
   return (
-    <AnatomyMap
+    <MenuMap
       callouts={ROW_PARTS}
       groups={ROWS}
       defaultRecent={["theme-dark"]}

@@ -9,6 +9,8 @@ import {
   type PixelSnailLook,
 } from "@/components/fibo/pixel-snail"
 
+import { AnatomyMap, slot, type Callout } from "../components/anatomy-map"
+
 const args = {
   size: "default",
   pace: "default",
@@ -29,6 +31,18 @@ export function Sizes() {
       <PixelSnail {...args} size="lg" />
     </div>
   )
+}
+
+export function Slow() {
+  return <PixelSnail {...args} size="lg" pace="slow" />
+}
+
+export function Fast() {
+  return <PixelSnail {...args} size="lg" pace="fast" />
+}
+
+export function NoGround() {
+  return <PixelSnail {...args} size="lg" ground={false} />
 }
 
 export function Travel() {
@@ -70,16 +84,25 @@ function Sprite(props: ComponentProps<typeof PixelSnailSprite>) {
   )
 }
 
+function Captioned({
+  caption,
+  ...props
+}: ComponentProps<typeof PixelSnailSprite> & { caption: string }) {
+  return (
+    <figure className="m-0 flex flex-col items-center gap-3">
+      <Sprite {...props} />
+      <figcaption className="font-mono text-xs text-muted-foreground">
+        {caption}
+      </figcaption>
+    </figure>
+  )
+}
+
 export function Modes() {
   return (
     <div className="flex flex-wrap items-end justify-center gap-4 sm:gap-10">
       {(["crawl", "rest", "dance"] as const).map((mode) => (
-        <figure key={mode} className="m-0 flex flex-col items-center gap-3">
-          <Sprite mode={mode} />
-          <figcaption className="font-mono text-xs text-muted-foreground">
-            {mode}
-          </figcaption>
-        </figure>
+        <Captioned key={mode} mode={mode} caption={mode} />
       ))}
     </div>
   )
@@ -113,6 +136,24 @@ export function BuildUp() {
       >
         Build again
       </Button>
+    </div>
+  )
+}
+
+const POSES: { caption: string; look: PixelSnailLook }[] = [
+  { caption: "ahead", look: { x: 1, y: 0 } },
+  { caption: "up", look: { x: 0, y: -1 } },
+  { caption: "down", look: { x: 0, y: 1 } },
+  { caption: "behind", look: { x: 1, y: 0, facing: -1 } },
+]
+
+/** He holds each pose for as long as the look is held. */
+export function Looks() {
+  return (
+    <div className="flex flex-wrap items-end justify-center gap-4 sm:gap-8">
+      {POSES.map(({ caption, look }) => (
+        <Captioned key={caption} look={look} caption={caption} />
+      ))}
     </div>
   )
 }
@@ -163,5 +204,138 @@ export function FollowsThePointer() {
         <PixelSnailSprite mode="dance" look={look} />
       </svg>
     </div>
+  )
+}
+
+/** The sprite standing on a line in a drawing of your own. */
+export function OnALine() {
+  return (
+    <svg
+      viewBox="0 0 200 40"
+      className="w-full max-w-md text-foreground"
+      aria-hidden
+    >
+      <line
+        x1={0}
+        y1={30}
+        x2={200}
+        y2={30}
+        stroke="currentColor"
+        strokeOpacity={0.4}
+        strokeDasharray="2 3"
+      />
+      <PixelSnailSprite
+        transform="translate(100 30)"
+        pixel={1.5}
+        mode="dance"
+      />
+    </svg>
+  )
+}
+
+/*
+ * Best practices, drawn with the real snail: each pair shows him used the
+ * right way and the wrong way.
+ */
+
+export function DoLabelled() {
+  return (
+    <div className="flex flex-col items-center gap-2 py-4">
+      <PixelSnail label="Loading your projects" />
+      <span className="text-sm text-muted-foreground">
+        Fetching your projects
+      </span>
+    </div>
+  )
+}
+
+export function DontRow() {
+  return (
+    <div className="flex justify-center gap-2 py-4">
+      {[0, 1, 2, 3].map((i) => (
+        <PixelSnail key={i} size="sm" ground={false} />
+      ))}
+    </div>
+  )
+}
+
+export function DoLongWait() {
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5">
+      <span className="text-sm font-medium">Importing 2,400 contacts</span>
+      <PixelSnail travel label="Importing your contacts" />
+      <span className="text-sm text-muted-foreground">
+        This can take a minute. You can leave this page.
+      </span>
+    </div>
+  )
+}
+
+export function DontQuickSave() {
+  return (
+    <div className="flex w-full items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-2.5 text-sm">
+      <span className="font-medium">Q3 plan</span>
+      <span className="flex items-center gap-2 text-muted-foreground">
+        <PixelSnail size="sm" ground={false} label="Saving" />
+        Saving
+      </span>
+    </div>
+  )
+}
+
+/*
+ * The anatomy map points into the drawing by art pixel. The drawing spans
+ * 24 columns from column -1 and 17 rows from row -4, so an art pixel's
+ * screen position is its offset from that corner times the rendered scale.
+ */
+const snailArt = (root: HTMLElement) =>
+  root.querySelector("[data-slot=pixel-snail] svg")
+
+const art =
+  (x: number, y: number, side: "left" | "right") =>
+  (r: DOMRect): { x: number; y: number } => {
+    const unit = r.width / 24
+    const nudge = side === "left" ? -unit / 2 - 3 : unit / 2 + 3
+    return {
+      x: r.left + (x + 1.5) * unit + nudge,
+      y: r.top + (y + 4.5) * unit,
+    }
+  }
+
+const LOADER_PARTS: Callout[] = [
+  {
+    label: "Status region",
+    side: "left",
+    find: slot("pixel-snail"),
+    outline: true,
+    point: (r) => ({ x: r.left - 4, y: r.top + 8 }),
+  },
+  { label: "Shell", side: "left", find: snailArt, point: art(1, 3, "left") },
+  { label: "Foot", side: "left", find: snailArt, point: art(0, 10, "left") },
+  {
+    label: "Eyes on stalks",
+    side: "right",
+    find: snailArt,
+    point: art(20, -1, "right"),
+  },
+  { label: "Head", side: "right", find: snailArt, point: art(17, 6, "right") },
+  {
+    label: "Ground",
+    side: "right",
+    find: snailArt,
+    point: (r) => ({ x: r.right + 4, y: r.top + (12 + 4.5) * (r.width / 24) }),
+  },
+]
+
+/** The loader, doubled in size so each part has room for its marker. */
+export function AnatomyLoader() {
+  return (
+    <AnatomyMap callouts={LOADER_PARTS}>
+      <div className="flex justify-center py-16">
+        <div data-anatomy-subject className="scale-200">
+          <PixelSnail size="lg" />
+        </div>
+      </div>
+    </AnatomyMap>
   )
 }

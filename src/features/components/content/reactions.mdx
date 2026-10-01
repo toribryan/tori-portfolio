@@ -7,29 +7,25 @@ new: true
 ---
 
 Reactions let people respond to content with an emoji in one tap. They sit
-inline under the content or float in a corner of the page.
+under a message or post as a row of pills, or float in a corner of the page.
 
-<ComponentPreview name="reactions" />
+<Exhibit
+  of="reactions.InMessage"
+  title="Reactions"
+  description="Tap a pill to add or take back yours, or the smiley to pick another."
+>
+<ExhibitCode label="Install">
 
-## Features
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/reactions.json
+```
 
-- Inline pills under the content, or a floating bar pinned to a corner of the
-  viewport.
-- One tap to react or take it back, with a particle burst. Counts past a
-  thousand shorten to 1.2K.
-- A picker of six common reactions, plus any already on the item. It's a
-  Base UI popover, so a card that clips its overflow can't cut it off, and it
-  flips to whichever side has room.
-- Controlled or uncontrolled. Particles and pill motion switch off under
-  reduced motion.
+It installs Base UI for the picker, plus the `--popover-overlay`,
+`--primary-subtle` and `--ring-subtle` tokens. No animation library: the
+burst and the pill motion use the Web Animations API.
 
-## Installation
-
-<Install name="reactions" exports={["Reactions", "type Reaction"]} />
-
-No animation library: the burst and the pill motion use the Web Animations API.
-
-## Usage
+</ExhibitCode>
+<ExhibitCode label="Usage">
 
 ```tsx
 import { Reactions } from "@/components/ui/reactions"
@@ -38,7 +34,7 @@ export function MessageReactions() {
   return (
     <Reactions
       defaultReactions={[
-        { emoji: "👍", label: "Thumbs up", count: 5 },
+        { emoji: "\u{1F44D}", label: "Thumbs up", count: 5 },
         { emoji: "❤️", label: "Heart", count: 3, active: true },
       ]}
     />
@@ -49,187 +45,63 @@ export function MessageReactions() {
 A reaction's `emoji` is its identity, so keep it unique. Its `label` is what
 screen readers hear.
 
-## Anatomy
-
-Every part the component renders, with the `data-slot` it carries. You pass
-the reactions; the component builds the rest.
-
-<Anatomy
-  root={{
-    name: "Reactions",
-    slot: "reactions",
-    note: "The root. Carries data-variant.",
-    children: [
-      {
-        name: "pill",
-        slot: "reactions-pill",
-        note: "Inline only. One toggle per reaction.",
-        children: [
-          { name: "emoji", slot: "reactions-pill-emoji" },
-          {
-            name: "count",
-            slot: "reactions-pill-count",
-            note: "While showCounts is on.",
-          },
-        ],
-      },
-      {
-        name: "picker",
-        slot: "reactions-picker",
-        note: "Holds the trigger and the panel.",
-        children: [
-          {
-            name: "panel",
-            slot: "reactions-panel",
-            note: "The choices, while the picker is open. Portalled to the body.",
-            children: [
-              {
-                name: "choice",
-                slot: "reactions-choice",
-                note: "One per choice.",
-              },
-            ],
-          },
-          {
-            name: "badge",
-            slot: "reactions-badge",
-            note: 'Floating only, while showCounts is on. The total count, read as "12 reactions".',
-          },
-          {
-            name: "trigger",
-            slot: "reactions-trigger",
-            note: "Opens and closes the panel.",
-          },
-        ],
-      },
-    ],
-  }}
-/>
-
-The particles fly in one fixed layer, `reactions-particles`, added to
-`document.body` on the first burst so no container clips them.
-
-## Guidelines
-
-<UsageGuidelines
-  guidelines={[
-    "Use inline beside the content it belongs to, such as a message, comment or post.",
-    "Use floating for a page-level reaction, such as the end of an article. It pins to a viewport corner.",
-    "Offer five or six choices at most. More turns a quick tap into a decision.",
-    <>
-      Leave <code>choices</code> unset to get six common reactions. Anything
-      already on the item is added to them.
-    </>,
-    "A reaction nobody holds any more disappears instead of lingering as a zero.",
-    "Counts past a thousand shorten to 1.2K, so a busy post keeps its pills small.",
-  ]}
-/>
-
-<Tip>
-  Pass <code>reactions</code> and <code>onReactionsChange</code> to control the
-  state from your data layer. Without them the component keeps its own state,
-  seeded from <code>defaultReactions</code>.
-</Tip>
-
-## Examples
-
-### Inline
-
-The default: pills under the content, with the picker's trigger at the end.
-
-<Example of="reactions.Default" />
-
-### No reactions yet
-
-With nothing on the item, only the trigger shows.
-
-<Example of="reactions.Empty" />
-
-### Busy post
-
-Counts past a thousand shorten, such as 1.2K, so the pills stay small.
-
-<Example of="reactions.BusyPost" />
-
-### Without counts
-
-`showCounts={false}` hides the numbers: the pill counts, and the total on the
-floating bar.
-
-<Example of="reactions.WithoutCounts" />
-
-### Floating
-
-`variant="floating"` pins a bar to a viewport corner, chosen with `position`.
-
-<Example of="reactions.Floating" />
-
-### Controlled
-
-`reactions` and `onReactionsChange` hand the state to your data layer.
-
-<Example of="reactions.Controlled" />
-
-## Do's and don'ts
-
-<ComponentRules
-  rules={[
-    {
-      positive: {
-        component: (
-          <Reactions
-            particles={0}
-            defaultReactions={[
-              { emoji: "👍", label: "Thumbs up", count: 5 },
-              { emoji: "❤️", label: "Heart", count: 3, active: true },
-            ]}
-          />
-        ),
-        description: "Keep reactions right under the content they respond to.",
-      },
-      negative: {
-        component: (
-          <Reactions
-            particles={0}
-            defaultReactions={[
-              "👍",
-              "❤️",
-              "😂",
-              "🎉",
-              "😮",
-              "🔥",
-              "👀",
-              "🙌",
-              "💯",
-            ].map((emoji, i) => ({ emoji, label: emoji, count: 9 - i }))}
-          />
-        ),
-        description:
-          "Don't let every emoji become a pill. A wall of reactions reads as noise; offer fewer choices.",
-      },
-    },
-  ]}
-/>
-
-## API reference
+</ExhibitCode>
+<ExhibitCode label="Props">
 
 | Prop                | Type                                                           | Default             | Description                                                                            |
 | ------------------- | -------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------- |
 | `variant`           | `"inline" \| "floating"`                                       | `"inline"`          | Pills under the content, or a bar pinned to a viewport corner.                         |
 | `position`          | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left"` | `"bottom-right"`    | Viewport corner. Applies to the floating variant only.                                 |
-| `reactions`         | `Reaction[]`                                                   | —                   | The reactions on the item. Pass it to control the state yourself.                      |
+| `reactions`         | `Reaction[]`                                                   |                     | The reactions on the item. Pass it to control the state yourself.                      |
 | `defaultReactions`  | `Reaction[]`                                                   | `[]`                | The starting reactions when uncontrolled.                                              |
-| `choices`           | `Reaction[]`                                                   | —                   | What the picker offers. Defaults to six common reactions plus any already on the item. |
-| `onReactionsChange` | `(reactions: Reaction[]) => void`                              | —                   | Fires with the whole new list after every change.                                      |
-| `onReact`           | `(reaction: Reaction, active: boolean) => void`                | —                   | Fires with the reaction that changed and whether it is now on.                         |
+| `choices`           | `Reaction[]`                                                   |                     | What the picker offers. Defaults to six common reactions plus any already on the item. |
+| `onReactionsChange` | `(reactions: Reaction[]) => void`                              |                     | Fires with the whole new list after every change.                                      |
+| `onReact`           | `(reaction: Reaction, active: boolean) => void`                |                     | Fires with the reaction that changed and whether it is now on.                         |
 | `showCounts`        | `boolean`                                                      | `true`              | Show the count on each pill, or the total on the floating bar.                         |
 | `particles`         | `number`                                                       | `7`                 | Emoji thrown up on each new reaction. `0` turns the burst off.                         |
 | `triggerLabel`      | `string`                                                       | `"Add reaction"`    | Accessible name of the button that opens the picker.                                   |
 | `panelLabel`        | `string`                                                       | `"Pick a reaction"` | Accessible name of the group of choices.                                               |
 
-A `Reaction` is `{ emoji, label, count?, active? }`: the emoji is its identity, the label is what screen readers hear, and `active` marks whether the current person has reacted with it.
+```ts
+type Reaction = {
+  emoji: string // its identity, so keep it unique
+  label: string // what screen readers hear
+  count?: number
+  active?: boolean // the current person has reacted with it
+}
+```
 
-### Data attributes
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+The row is a pill per reaction, each an emoji and a count, then an add
+button. Your own reactions are tinted.
+
+<Exhibit
+  of="reactions.AnatomyRow"
+  title="The row"
+  description="Three reactions, one of them yours."
+>
+<ExhibitCode label="Structure">
+
+```text
+Reactions               reactions
+├─ pill                 reactions-pill          (inline, one per reaction)
+│  ├─ emoji             reactions-pill-emoji
+│  └─ count             reactions-pill-count    (while counts show)
+└─ picker               reactions-picker
+   ├─ panel             reactions-panel         (while open, portalled)
+   │  └─ choice         reactions-choice
+   ├─ badge             reactions-badge         (floating, while counts show)
+   └─ trigger           reactions-trigger
+
+particles               reactions-particles     (on the body, after a burst)
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
 
 <DataAttributes
   rows={[
@@ -269,24 +141,234 @@ A `Reaction` is `{ emoji, label, count?, active? }`: the emoji is its identity, 
   ]}
 />
 
-## Accessibility
+</ExhibitCode>
+</Exhibit>
+
+The add button opens a picker of six common reactions, plus any already on
+the item. The ones you've picked are tinted here too.
+
+<Exhibit
+  of="reactions.AnatomyPicker"
+  title="The picker"
+  description="Held open over its row."
+>
+<ExhibitCode>
+
+```tsx
+// Leave choices unset for the six defaults, or pass your own.
+<Reactions
+  choices={[
+    { emoji: "\u{1F44D}", label: "Thumbs up" },
+    { emoji: "\u{1F440}", label: "Looking" },
+  ]}
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+### Inline
+
+The default: pills under the content, with the add button at the end.
+
+<ExhibitGrid>
+<Exhibit
+  of="reactions.Default"
+  title="With reactions"
+  description="Tap one to add yours. It tints, pops and throws a burst of its emoji."
+>
+<ExhibitCode>
+
+```tsx
+<Reactions defaultReactions={reactions} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="reactions.PickerOpen"
+  title="Picker open"
+  description="It opens above the button, or below when there's no room."
+>
+<ExhibitCode>
+
+```tsx
+<Reactions defaultReactions={reactions} triggerLabel="Add reaction" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="reactions.Empty"
+  title="No reactions yet"
+  description="Only the add button shows."
+>
+<ExhibitCode>
+
+```tsx
+<Reactions defaultReactions={[]} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="reactions.BusyPost"
+  title="Busy post"
+  description="Counts past a thousand shorten to 1.2K, so the pills stay small."
+>
+<ExhibitCode>
+
+```tsx
+{ emoji: "\u{1F44D}", label: "Thumbs up", count: 12_847 } // shows 12.8K
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="reactions.WithoutCounts"
+  title="Without counts"
+  description="Just the emoji, for places where numbers invite comparison."
+>
+<ExhibitCode>
+
+```tsx
+<Reactions defaultReactions={reactions} showCounts={false} />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Floating
+
+A bar pinned to a corner of the page, for reacting to the page as a whole,
+such as the end of an article. It shows the total beside the add button, and
+the burst rises from the bar.
+
+<Exhibit
+  of="reactions.Floating"
+  title="Floating"
+  description="Pinned to this frame's corner here. On a page it pins to the window's."
+>
+<ExhibitCode>
+
+```tsx
+<Reactions
+  variant="floating"
+  position="bottom-right"
+  defaultReactions={reactions}
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Usage
 
 <UsageGuidelines
   guidelines={[
-    <>
-      Each pill is a toggle button named by the reaction's label and count, such
-      as "Heart, 3 reactions", with <code>aria-pressed</code> for whether you've
-      reacted. The emoji itself is hidden from screen readers.
-    </>,
-    'A polite live region announces each change: "Added Heart", "Removed Heart". On the floating bar, with counts on, it adds the new total: "Added Heart, 13 reactions in total".',
-    "With showCounts off, pills are named by their label alone, so screen readers hear what sighted users see.",
-    "Choices you've already picked show as pressed in the picker too.",
-    "Arrow keys, Home and End move through the choices. Escape closes the picker and returns focus to its trigger; tabbing away closes it too.",
-    "Particles and pill motion switch off under prefers-reduced-motion.",
-    <>
-      Override <code>triggerLabel</code> and <code>panelLabel</code> when your
-      product speaks another language.
-    </>,
+    "Put the row right under the message, comment or post it responds to.",
+    "Use the floating bar for a reaction to the whole page, such as the end of an article. One per page.",
+    "Offer five or six choices at most. More turns a quick tap into a decision.",
+    "Leave the choices at their six defaults unless your product has its own vocabulary. Anything already on the item is added to them.",
+    "A reaction nobody holds any more disappears instead of lingering as a zero.",
+    "Hide the counts where numbers would turn reactions into a contest.",
+  ]}
+/>
+
+### Under a message
+
+The usual home: a row under each message in a thread.
+
+<Exhibit of="reactions.InMessage" description="Tap a pill, or the smiley to add another.">
+<ExhibitCode>
+
+```tsx
+<article>
+  <MessageHeader />
+  <p>{message.body}</p>
+  <Reactions defaultReactions={message.reactions} />
+</article>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Saved to your data
+
+The row can report every change so your app saves it, and anything else on
+the page can read the same numbers.
+
+<Exhibit of="reactions.Controlled" description="The line below updates as you react.">
+<ExhibitCode>
+
+```tsx
+const [reactions, setReactions] = useState(message.reactions)
+
+<Reactions reactions={reactions} onReactionsChange={setReactions} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="reactions.DoUnder" />,
+        description: "Keep reactions right under the content they respond to.",
+      },
+      negative: {
+        component: <Live of="reactions.DontAbove" />,
+        description:
+          "Don't put them above the content. People react after they read.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="reactions.DoFew" />,
+        description: "Keep the set small, so each reaction means something.",
+      },
+      negative: {
+        component: <Live of="reactions.DontWall" />,
+        description:
+          "Don't let every emoji become a pill. A wall of reactions reads as noise.",
+      },
+    },
+  ]}
+/>
+
+<Tip>
+  Give every reaction a plain label, such as Heart or Celebrate. Screen readers
+  read the label, never the emoji.
+</Tip>
+
+## Accessibility
+
+Every pill and the add button is a regular button, so the row works from the
+keyboard in tab order.
+
+| Key                                           | Does                                                    |
+| --------------------------------------------- | ------------------------------------------------------- |
+| <Kbd>Tab</Kbd>                                | Moves between the pills and the add button              |
+| <Kbd>Space</Kbd> or <Kbd>↵</Kbd>              | Adds or takes back a reaction, or opens the picker      |
+| <KbdGroup><Kbd>←</Kbd><Kbd>→</Kbd></KbdGroup> | Moves through the choices in the picker                 |
+| <Kbd>Home</Kbd> or <Kbd>End</Kbd>             | Jumps to the first or last choice                       |
+| <Kbd>Esc</Kbd>                                | Closes the picker and puts focus back on the add button |
+
+<UsageGuidelines
+  guidelines={[
+    "Each pill reads as its label and count, such as Heart, 3 reactions, and says whether you've pressed it. The emoji itself is skipped.",
+    "Every change is announced: Added Heart, Removed Heart. On the floating bar it adds the new total.",
+    "With counts hidden, a pill reads as its label alone, matching what people see.",
+    "Choices you've already picked read as pressed in the picker too.",
+    "Tabbing away from the picker closes it.",
+    "The burst and the pill motion switch off for people who ask for reduced motion.",
+    "The add button and the picker have their own names, which can be translated.",
   ]}
 />
 

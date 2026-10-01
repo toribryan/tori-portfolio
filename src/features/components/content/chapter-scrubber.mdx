@@ -10,28 +10,21 @@ A rail of marks, one per chapter, that swell under the pointer like the macOS
 Dock. The tallest mark, the crest, previews its chapter, so people can jump
 around a long piece without a table of contents.
 
-<ComponentPreview name="chapter-scrubber" />
+<Exhibit
+  of="chapter-scrubber.Default"
+  title="Chapter scrubber"
+  description="Move the pointer along the rail, or tab to it and use the arrow keys."
+>
+<ExhibitCode label="Install">
 
-## Features
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/chapter-scrubber.json
+```
 
-- Marks swell in a wave around the pointer or keyboard focus, and the crest
-  previews its chapter as a card, a label, or nothing.
-- Runs vertically in a gutter or horizontally along a player, with ticks or
-  dots in three densities.
-- Works controlled or uncontrolled, so the marker can follow scroll or playback.
-- Respects reduced motion: the springs switch off, and the wave keeps its shape
-  but appears and follows instantly.
+It installs the `motion` package with it, for the springs.
 
-## Installation
-
-<Install
-  name="chapter-scrubber"
-  exports={["ChapterScrubber", "type Chapter"]}
-/>
-
-It installs `motion` with it, for the springs.
-
-## Usage
+</ExhibitCode>
+<ExhibitCode label="Usage">
 
 ```tsx
 import { ChapterScrubber } from "@/components/ui/chapter-scrubber"
@@ -50,178 +43,8 @@ export function Contents() {
 Chapters sit on the rail in array order, one mark each. The `title` and
 `description` name each mark for screen readers.
 
-Each chapter takes:
-
-```ts
-type Chapter = {
-  id: string
-  title: string
-  description?: React.ReactNode // clamped to three lines
-  meta?: React.ReactNode // a small label beside the title, such as a timestamp
-}
-```
-
-## Anatomy
-
-Every part the component renders, with the `data-slot` it carries. You pass
-`chapters`; the component builds the rest.
-
-<Anatomy
-  root={{
-    name: "ChapterScrubber",
-    slot: "chapter-scrubber",
-    note: "The root. Carries data-orientation and data-variant.",
-    children: [
-      {
-        name: "rail",
-        note: "The listbox that holds the items.",
-        children: [
-          {
-            name: "item",
-            slot: "chapter-scrubber-item",
-            note: "One per chapter, in array order. The option people focus and click.",
-            children: [
-              {
-                name: "mark",
-                note: "The tick or dot. Carries data-current on the current chapter.",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        name: "preview",
-        slot: "chapter-scrubber-preview",
-        note: "Beside the crest, portalled to the body so no container clips it. Shows the chapter's meta, title and description.",
-      },
-    ],
-  }}
-/>
-
-## Guidelines
-
-<UsageGuidelines
-  guidelines={[
-    "Use it for content with a real sequence: a talk, a long read, a case study, a recording.",
-    "Keep between six and thirty chapters. Fewer reads as a list; more stops the wave from reaching the neighbors.",
-    <>
-      Pick <code>card</code> when chapters have descriptions, <code>label</code>{" "}
-      when the title says enough, and <code>none</code> when the page already
-      names the section.
-    </>,
-    <>
-      Leave <code>side</code> unset in most layouts. It prefers right or top and
-      flips on its own near the viewport edge.
-    </>,
-    <>
-      Set <code>currentIndex</code> from your scroll or playback position so the
-      marker keeps up with the reader between clicks.
-    </>,
-  ]}
-/>
-
-## Examples
-
-### Horizontal
-
-A rail along the top of a player or a slide deck. Ticks stand up from the
-baseline and the preview opens above.
-
-<Example of="chapter-scrubber.Horizontal" />
-
-### Dots
-
-`variant="dot"` swaps ticks for dots, for a softer rail that sits well beside
-imagery.
-
-<Example of="chapter-scrubber.Dots" />
-
-### Centered ticks
-
-`align="center"` grows ticks out from the middle line, which balances a rail
-placed on its own.
-
-<Example of="chapter-scrubber.Centered" />
-
-### Sizes
-
-`size` sets the density: `sm`, `default` and `lg`. `rowSize`, `restLength` and
-`peakLength` override it when you need an exact rhythm.
-
-<Example of="chapter-scrubber.Sizes" />
-
-### Controlled
-
-Buttons elsewhere on the page drive the same marker the rail sets, through
-`currentIndex` and `onCurrentIndexChange`.
-
-<Example of="chapter-scrubber.Controlled" />
-
-### In an article
-
-The rail in a sticky column beside a long read.
-
-<Example of="chapter-scrubber.InAnArticle" />
-
-## Do's and don'ts
-
-<ComponentRules
-  rules={[
-    {
-      positive: {
-        component: (
-          <ChapterScrubber
-            preview="none"
-            size="sm"
-            defaultCurrentIndex={2}
-            chapters={Array.from({ length: 14 }, (_, i) => ({
-              id: String(i),
-              title: `Chapter ${i + 1}`,
-            }))}
-          />
-        ),
-        description:
-          "Give it enough chapters for the wave to have neighbors to lift.",
-      },
-      negative: {
-        component: (
-          <ChapterScrubber
-            preview="none"
-            size="sm"
-            chapters={Array.from({ length: 3 }, (_, i) => ({
-              id: String(i),
-              title: `Chapter ${i + 1}`,
-            }))}
-          />
-        ),
-        description:
-          "Don't use it for three items. Plain links say more in less space.",
-      },
-    },
-    {
-      positive: {
-        component: (
-          <span className="rounded-lg border border-border bg-popover px-3 py-2 text-sm font-medium shadow-sm">
-            Semantic roles
-          </span>
-        ),
-        description:
-          "Keep titles short enough to read in the moment the crest passes.",
-      },
-      negative: {
-        component: (
-          <span className="max-w-60 rounded-lg border border-border bg-popover px-3 py-2 text-sm font-medium shadow-sm">
-            In which we finally discuss how semantic roles came to be named
-          </span>
-        ),
-        description:
-          "Don't put the chapter's argument in its title. That belongs in the description.",
-      },
-    },
-  ]}
-/>
-
-## API reference
+</ExhibitCode>
+<ExhibitCode label="Props">
 
 | Prop                   | Type                                                | Default      | Description                                                                                                                                                                          |
 | ---------------------- | --------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -245,12 +68,41 @@ The rail in a sticky column beside a long read.
 
 Any other prop goes to the root `div`.
 
-### Data attributes
+```ts
+type Chapter = {
+  id: string
+  title: string
+  description?: React.ReactNode // clamped to three lines
+  meta?: React.ReactNode // a small label beside the title, such as a timestamp
+}
+```
 
-Style parts by slot or state, for example with
-`[&_[data-slot=chapter-scrubber-item]]:rounded-none`. The preview renders in a
-portal on the body, out of reach of the rail's selectors, so style it with
-`previewClassName`, such as `previewClassName="shadow-none"`.
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+A rail of marks, one per chapter. Under the pointer a wave lifts the marks
+around it, and the tallest, the crest, opens a preview of its chapter beside
+the rail. The current chapter's mark stays darker at rest.
+
+<Exhibit
+  of="chapter-scrubber.Anatomy"
+  title="Mid-scrub"
+  description="Held on one chapter, so the wave, the crest and the preview card are all on screen."
+>
+<ExhibitCode label="Structure">
+
+```text
+ChapterScrubber          chapter-scrubber
+├─ rail                  (listbox)
+│  └─ item               chapter-scrubber-item    (one per chapter)
+│     └─ mark            (data-current on the current chapter)
+└─ preview               chapter-scrubber-preview (portalled to the body)
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
 
 <DataAttributes
   rows={[
@@ -300,16 +152,318 @@ portal on the body, out of reach of the rail's selectors, so style it with
   ]}
 />
 
-## Accessibility
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+### Rest and scrubbing
+
+At rest the rail is a quiet column of hairlines. Under the pointer or keyboard
+focus the wave swells, and the crest previews its chapter as a card, a single
+line, or nothing at all.
+
+<ExhibitGrid>
+<Exhibit
+  of="chapter-scrubber.AtRest"
+  title="At rest"
+  description="Even marks, with the current chapter darker."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} defaultCurrentIndex={3} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="chapter-scrubber.ScrubbingCard"
+  title="Scrubbing with a card"
+  description="Title, time and description beside the crest. The default."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} preview="card" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="chapter-scrubber.ScrubbingLabel"
+  title="Scrubbing with a label"
+  description="Just the time and title, for chapters the title sums up."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} preview="label" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="chapter-scrubber.ScrubbingNone"
+  title="Scrubbing without a preview"
+  description="Only the wave, for pages that already name the section."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} preview="none" />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Direction and marks
+
+The rail runs down a gutter or along a player, with hairline ticks or dots.
+Ticks grow toward the preview, or out from the middle line on a rail that
+stands on its own.
+
+<ExhibitGrid>
+<Exhibit
+  of="chapter-scrubber.HorizontalTicks"
+  title="Horizontal"
+  description="Ticks stand up from the baseline and the preview opens above."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} orientation="horizontal" preview="label" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="chapter-scrubber.HorizontalDots"
+  title="Horizontal dots"
+  description="A softer rail that sits well under imagery."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber
+  chapters={chapters}
+  orientation="horizontal"
+  variant="dot"
+  preview="label"
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="chapter-scrubber.Dots"
+  title="Vertical dots"
+  description="Dots grow from their centers as the wave passes."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} variant="dot" preview="label" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="chapter-scrubber.Centered"
+  title="Centered ticks"
+  description="Ticks grow both ways from the middle line."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} align="center" preview="label" />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Sizes
+
+Three densities, from a tight rail for a sidebar to a roomy one for a page of
+its own. Each is held on the same chapter so the wave heights compare.
+
+<Exhibit
+  of="chapter-scrubber.Sizes"
+  title="Small, default and large"
+  description="Spacing, resting length and crest height all scale together."
+>
+<ExhibitCode>
+
+```tsx
+<ChapterScrubber chapters={chapters} size="sm" />
+<ChapterScrubber chapters={chapters} />
+<ChapterScrubber chapters={chapters} size="lg" />
+
+// For an exact rhythm, set the numbers yourself.
+<ChapterScrubber chapters={chapters} rowSize={12} restLength={16} peakLength={64} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Usage
 
 <UsageGuidelines
   guidelines={[
-    <>
-      The rail is a listbox and every mark an option named by its title and
-      description. The current chapter is <code>aria-selected</code>.
-    </>,
-    "Only one mark is in the tab order. Arrow keys, Home and End move along the rail; Enter or Space makes a chapter current.",
-    "Focus raises the wave exactly as hover does, so keyboard users get the same preview.",
+    "Use it for content with a real sequence: a talk, a long read, a case study, a recording.",
+    "Keep between six and thirty chapters. Fewer reads as a list, and more stops the wave from reaching its neighbors.",
+    "Show a card when chapters have descriptions, a label when the title says enough, and no preview when the page already names the section.",
+    "Let the preview pick its side. It prefers the right or the top, and flips on its own near the edge of the screen.",
+    "Keep the current chapter in step with where the reader is, so the rail follows scroll or playback between clicks.",
+  ]}
+/>
+
+### Along a player
+
+A horizontal rail under a video or a slide deck, with the card opening above.
+
+<Exhibit
+  of="chapter-scrubber.OnAPlayer"
+  description="Pick a chapter and the player jumps to it."
+>
+<ExhibitCode>
+
+```tsx
+const [current, setCurrent] = useState(0)
+
+<Player chapter={chapters[current]} />
+<ChapterScrubber
+  chapters={chapters}
+  orientation="horizontal"
+  rowSize={28}
+  currentIndex={current}
+  onCurrentIndexChange={setCurrent}
+  label="Talk chapters"
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### In an article
+
+The rail in a sticky column beside a long read.
+
+<Exhibit
+  of="chapter-scrubber.InAnArticle"
+  description="The heading follows the section you pick."
+>
+<ExhibitCode>
+
+```tsx
+<aside className="sticky top-10 self-start">
+  <ChapterScrubber
+    chapters={sections}
+    size="lg"
+    preview="label"
+    currentIndex={current}
+    onCurrentIndexChange={setCurrent}
+    label="Sections"
+  />
+</aside>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Driven from elsewhere
+
+Buttons elsewhere on the page move the same marker the rail sets.
+
+<Exhibit
+  of="chapter-scrubber.Controlled"
+  description="Use Previous and Next, or pick a chapter on the rail."
+>
+<ExhibitCode>
+
+```tsx
+const [current, setCurrent] = useState(3)
+
+<ChapterScrubber
+  chapters={chapters}
+  currentIndex={current}
+  onCurrentIndexChange={setCurrent}
+/>
+<Button onClick={() => setCurrent(current - 1)}>Previous</Button>
+<Button onClick={() => setCurrent(current + 1)}>Next</Button>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="chapter-scrubber.DoEnough" />,
+        description:
+          "Give it enough chapters for the wave to have neighbors to lift.",
+      },
+      negative: {
+        component: <Live of="chapter-scrubber.DontFew" />,
+        description:
+          "Don't use it for three items. Plain links say more in less space.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="chapter-scrubber.DoShortTitles" />,
+        description:
+          "Keep titles short enough to read in the moment the crest passes.",
+      },
+      negative: {
+        component: <Live of="chapter-scrubber.DontLongTitles" />,
+        description:
+          "Don't put the chapter's argument in its title. It gets cut off, and it belongs in the description.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="chapter-scrubber.DoCard" />,
+        description:
+          "Use the card when chapters have a time and a line of description to show.",
+      },
+      negative: {
+        component: <Live of="chapter-scrubber.DontCard" />,
+        description:
+          "Don't open a card for titles alone. A label says the same in less room.",
+      },
+    },
+  ]}
+/>
+
+<Tip>
+  Reduced motion is respected: the springs switch off, and the wave keeps its
+  shape but appears and follows instantly.
+</Tip>
+
+## Accessibility
+
+The rail is a single stop in the tab order, and the arrow keys move along it.
+Focus raises the wave exactly as the pointer does, so keyboard users get the
+same preview.
+
+| Key                                                                                            | Does                                                  |
+| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| <Kbd>Tab</Kbd>                                                                                 | Moves onto the rail, at the current chapter           |
+| <KbdGroup><Kbd>↑</Kbd><Kbd>↓</Kbd></KbdGroup> or <KbdGroup><Kbd>←</Kbd><Kbd>→</Kbd></KbdGroup> | Moves to the previous or next chapter and previews it |
+| <Kbd>Home</Kbd> or <Kbd>End</Kbd>                                                              | Jumps to the first or last chapter                    |
+| <Kbd>↵</Kbd> or <Kbd>Space</Kbd>                                                               | Makes the focused chapter current                     |
+
+<UsageGuidelines
+  guidelines={[
+    "The rail is a list named Chapters, or whatever name you give it, and each mark is an option.",
+    "A screen reader reads each chapter's title and description as focus moves, and says which one is current.",
+    "The preview card is decoration for sighted readers. Everything in it is already in the mark's name.",
   ]}
 />
 
