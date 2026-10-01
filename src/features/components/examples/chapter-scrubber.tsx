@@ -3,117 +3,12 @@
 import { useState, type ReactNode } from "react"
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
+import { cn } from "@/lib/utils"
 import { Button } from "@/components/fibo/button"
-import {
-  ChapterScrubber,
-  type Chapter,
-  type ChapterScrubberProps,
-} from "@/components/fibo/chapter-scrubber"
+import { ChapterScrubber } from "@/components/fibo/chapter-scrubber"
 
-const talk: Chapter[] = [
-  {
-    id: "intro",
-    meta: "00:00",
-    title: "Why a design system",
-    description:
-      "The problem: four products, four button styles, no shared names.",
-  },
-  {
-    id: "audit",
-    meta: "02:14",
-    title: "The audit",
-    description: "Every color in production, clustered and counted.",
-  },
-  {
-    id: "tokens",
-    meta: "05:40",
-    title: "Primitive tokens",
-    description: "Ramps first, named for what they are, not what they do.",
-  },
-  {
-    id: "roles",
-    meta: "08:02",
-    title: "Semantic roles",
-    description: "Primary, muted, destructive: names components can rely on.",
-  },
-  {
-    id: "opacity",
-    meta: "10:31",
-    title: "No opacity modifiers",
-    description: "Why every tint became a named role Figma can bind.",
-  },
-  {
-    id: "contrast",
-    meta: "12:48",
-    title: "Measuring contrast",
-    description: "Moving status tones to the 700 step to clear AA.",
-  },
-  {
-    id: "figma",
-    meta: "15:05",
-    title: "One name on both sides",
-    description: "Variables in Figma that match the CSS one to one.",
-  },
-  {
-    id: "registry",
-    meta: "17:36",
-    title: "The registry",
-    description:
-      "Copying source into projects instead of depending on a package.",
-  },
-  {
-    id: "docs",
-    meta: "20:12",
-    title: "Docs people read",
-    description: "Usage rules and do's and don'ts beside every part.",
-  },
-  {
-    id: "adoption",
-    meta: "23:40",
-    title: "Adoption",
-    description: "What got teams to switch, and what did not.",
-  },
-  {
-    id: "motion",
-    meta: "26:05",
-    title: "Motion",
-    description: "Springs, reduced motion, and when to leave things still.",
-  },
-  {
-    id: "niche",
-    meta: "28:50",
-    title: "Niche parts",
-    description: "Room for the playful components next to the standard ones.",
-  },
-  {
-    id: "next",
-    meta: "31:22",
-    title: "What is next",
-    description: "Charts, forms, and a second theme.",
-  },
-  { id: "qa", meta: "33:10", title: "Questions" },
-]
-
-const essay: Chapter[] = [
-  { id: "problem", meta: "01", title: "The problem" },
-  { id: "research", meta: "02", title: "Research" },
-  { id: "principles", meta: "03", title: "Principles" },
-  { id: "tokens", meta: "04", title: "Tokens" },
-  { id: "components", meta: "05", title: "Components" },
-  { id: "rollout", meta: "06", title: "Rollout" },
-  { id: "outcome", meta: "07", title: "Outcome" },
-]
-
-const args: ChapterScrubberProps = {
-  chapters: talk,
-  orientation: "vertical",
-  variant: "tick",
-  size: "default",
-  align: "edge",
-  preview: "card",
-  radius: 4,
-  defaultCurrentIndex: 3,
-}
+import { AnatomyMap, type Callout } from "../components/anatomy-map"
+import { ARGS, ESSAY, Held, numbered, TALK } from "./chapter-scrubber-data"
 
 function Frame({ children }: { children: ReactNode }) {
   return (
@@ -123,40 +18,163 @@ function Frame({ children }: { children: ReactNode }) {
   )
 }
 
+/*
+ * A grid cell or a do/don't. Held rails sit near the start so the preview
+ * that opens beside the crest stays inside the frame.
+ */
+function Cell({
+  children,
+  center = false,
+}: {
+  children: ReactNode
+  center?: boolean
+}) {
+  return (
+    <div
+      className={cn(
+        "flex min-h-56 w-full items-center px-2",
+        center ? "justify-center" : "justify-start"
+      )}
+    >
+      {children}
+    </div>
+  )
+}
+
 export function Default() {
   return (
     <Frame>
-      <ChapterScrubber {...args} />
+      <ChapterScrubber {...ARGS} />
     </Frame>
   )
 }
 
-export function Horizontal() {
+const PREVIEW_HOOK = "chapter-scrubber-anatomy"
+const ANATOMY_CREST = 9
+
+const markAt = (root: HTMLElement, index: number) =>
+  root.querySelectorAll("[data-slot=chapter-scrubber-item]")[index]
+    ?.firstElementChild
+const previewOf = (root: HTMLElement) =>
+  root.ownerDocument.querySelector(`.${PREVIEW_HOOK}`)
+
+const PARTS: Callout[] = [
+  {
+    label: "Rail",
+    side: "left",
+    find: (root) => root.querySelector("[role=listbox]"),
+    outline: true,
+  },
+  { label: "Mark", side: "left", find: (root) => markAt(root, 0) },
+  {
+    label: "Current chapter",
+    side: "left",
+    find: (root) => root.querySelector("[data-current]"),
+  },
+  { label: "Crest", side: "left", find: (root) => markAt(root, ANATOMY_CREST) },
+  { label: "Preview card", side: "right", find: previewOf, outline: true },
+  {
+    label: "Meta",
+    side: "right",
+    find: (root) => previewOf(root)?.querySelector("span"),
+  },
+  {
+    label: "Description",
+    side: "right",
+    find: (root) => previewOf(root)?.querySelector("p"),
+  },
+]
+
+/** Held mid-scrub, so the wave, the crest and the preview are all on screen. */
+export function Anatomy() {
+  const [settled, setSettled] = useState(0)
   return (
-    <Frame>
-      <ChapterScrubber
-        {...args}
+    <AnatomyMap callouts={PARTS} measureKey={settled}>
+      <div className="flex justify-center py-10">
+        {/* Spans the rail and the room its preview opens into, so the
+        markers on the right clear the card. */}
+        <div data-anatomy-subject className="flex">
+          <Held
+            {...ARGS}
+            size="lg"
+            at={ANATOMY_CREST}
+            previewClassName={PREVIEW_HOOK}
+            onHeld={() => setSettled((n) => n + 1)}
+          />
+          <span className="w-[264px] shrink-0" />
+        </div>
+      </div>
+    </AnatomyMap>
+  )
+}
+
+export function AtRest() {
+  return (
+    <Cell center>
+      <ChapterScrubber {...ARGS} />
+    </Cell>
+  )
+}
+
+export function ScrubbingCard() {
+  return (
+    <Cell>
+      <Held {...ARGS} at={6} />
+    </Cell>
+  )
+}
+
+export function ScrubbingLabel() {
+  return (
+    <Cell>
+      <Held {...ARGS} at={6} preview="label" />
+    </Cell>
+  )
+}
+
+export function ScrubbingNone() {
+  return (
+    <Cell center>
+      <Held {...ARGS} at={6} preview="none" />
+    </Cell>
+  )
+}
+
+export function HorizontalTicks() {
+  return (
+    <Cell center>
+      <Held {...ARGS} at={7} orientation="horizontal" preview="label" />
+    </Cell>
+  )
+}
+
+export function HorizontalDots() {
+  return (
+    <Cell center>
+      <Held
+        {...ARGS}
+        at={7}
         orientation="horizontal"
+        variant="dot"
         preview="label"
-        side="top"
       />
-    </Frame>
+    </Cell>
   )
 }
 
 export function Dots() {
   return (
-    <Frame>
-      <ChapterScrubber {...args} variant="dot" />
-    </Frame>
+    <Cell>
+      <Held {...ARGS} at={6} variant="dot" preview="label" />
+    </Cell>
   )
 }
 
 export function Centered() {
   return (
-    <Frame>
-      <ChapterScrubber {...args} align="center" preview="label" />
-    </Frame>
+    <Cell>
+      <Held {...ARGS} at={6} align="center" preview="label" />
+    </Cell>
   )
 }
 
@@ -166,7 +184,7 @@ export function Sizes() {
       <div className="flex flex-wrap items-end gap-8 sm:gap-24">
         {(["sm", "default", "lg"] as const).map((size) => (
           <div key={size} className="flex flex-col items-start gap-4">
-            <ChapterScrubber {...args} size={size} preview="none" />
+            <Held {...ARGS} at={6} size={size} preview="none" />
             <span className="font-mono text-xs text-muted-foreground">
               {size}
             </span>
@@ -179,18 +197,18 @@ export function Sizes() {
 
 export function Controlled() {
   const [current, setCurrent] = useState(3)
-  const chapter = talk[current]!
+  const chapter = TALK[current]!
   return (
     <Frame>
       <div className="flex items-center gap-4 sm:gap-10">
         <ChapterScrubber
-          {...args}
+          {...ARGS}
           currentIndex={current}
           onCurrentIndexChange={setCurrent}
         />
         <div className="flex min-w-0 flex-col gap-3 sm:w-64">
           <span className="font-mono text-xs text-muted-foreground tabular-nums">
-            {chapter.meta} · {current + 1} of {talk.length}
+            {chapter.meta} · {current + 1} of {TALK.length}
           </span>
           <span className="text-lg font-semibold tracking-tight text-foreground">
             {chapter.title}
@@ -208,7 +226,7 @@ export function Controlled() {
             <Button
               size="sm"
               variant="outline"
-              disabled={current === talk.length - 1}
+              disabled={current === TALK.length - 1}
               onClick={() => setCurrent(current + 1)}
             >
               Next
@@ -221,14 +239,39 @@ export function Controlled() {
   )
 }
 
+export function OnAPlayer() {
+  const [current, setCurrent] = useState(0)
+  const chapter = TALK[current]!
+  return (
+    <div className="flex w-[392px] max-w-full flex-col gap-2 py-6">
+      <div className="flex aspect-video items-end rounded-lg border border-border bg-muted p-4">
+        <span className="flex items-baseline gap-2 text-sm">
+          <span className="font-mono text-xs text-muted-foreground tabular-nums">
+            {chapter.meta}
+          </span>
+          <span className="font-medium text-foreground">{chapter.title}</span>
+        </span>
+      </div>
+      <ChapterScrubber
+        chapters={TALK}
+        orientation="horizontal"
+        side="top"
+        rowSize={28}
+        currentIndex={current}
+        onCurrentIndexChange={setCurrent}
+        label="Talk chapters"
+      />
+    </div>
+  )
+}
+
 export function InAnArticle() {
   const [current, setCurrent] = useState(0)
   return (
     <div className="flex gap-6 p-2 sm:gap-10 sm:p-10">
       <div className="sticky top-10 self-start">
         <ChapterScrubber
-          {...args}
-          chapters={essay}
+          chapters={ESSAY}
           size="lg"
           preview="label"
           currentIndex={current}
@@ -238,10 +281,10 @@ export function InAnArticle() {
       </div>
       <article className="flex max-w-prose flex-col gap-3">
         <span className="font-mono text-xs text-muted-foreground">
-          {essay[current]!.meta} / 07
+          {ESSAY[current]!.meta} / 07
         </span>
         <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-          {essay[current]!.title}
+          {ESSAY[current]!.title}
         </h2>
         <p className="text-base leading-7 text-muted-foreground">
           A long read sits to the right of a quiet rail. At rest it is a column
@@ -251,5 +294,91 @@ export function InAnArticle() {
         </p>
       </article>
     </div>
+  )
+}
+
+/*
+ * Best practices, drawn with the real rail held mid-scrub: each pair is the
+ * same part used the right way and the wrong way.
+ */
+
+function Rule({ children }: { children: ReactNode }) {
+  return <div className="flex justify-start">{children}</div>
+}
+
+export function DoEnough() {
+  return (
+    <Rule>
+      <Held
+        chapters={numbered(14)}
+        at={7}
+        size="sm"
+        preview="none"
+        defaultCurrentIndex={2}
+      />
+    </Rule>
+  )
+}
+
+export function DontFew() {
+  return (
+    <Rule>
+      <Held
+        chapters={numbered(3)}
+        at={1}
+        size="sm"
+        preview="none"
+        defaultCurrentIndex={0}
+      />
+    </Rule>
+  )
+}
+
+export function DoShortTitles() {
+  return (
+    <Rule>
+      <Held
+        chapters={numbered(12).map((chapter, i) => ({
+          ...chapter,
+          title: ["Intro", "Tokens", "Semantic roles", "Contrast"][i % 4]!,
+        }))}
+        at={6}
+        size="sm"
+        preview="label"
+      />
+    </Rule>
+  )
+}
+
+export function DontLongTitles() {
+  return (
+    <Rule>
+      <Held
+        chapters={numbered(12).map((chapter) => ({
+          ...chapter,
+          title:
+            "In which we finally discuss how semantic roles came to be named",
+        }))}
+        at={6}
+        size="sm"
+        preview="label"
+      />
+    </Rule>
+  )
+}
+
+export function DoCard() {
+  return (
+    <Rule>
+      <Held chapters={TALK} at={6} size="sm" />
+    </Rule>
+  )
+}
+
+export function DontCard() {
+  return (
+    <Rule>
+      <Held chapters={numbered(14)} at={6} size="sm" />
+    </Rule>
   )
 }

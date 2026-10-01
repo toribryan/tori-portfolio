@@ -2,35 +2,30 @@
 title: Token flow
 description: Walks a color token from raw value to primitive to semantic role.
 createdAt: 2026-09-18
-updatedAt: 2026-09-28
+updatedAt: 2026-09-30
 new: true
 ---
 
-Token flow shows a color moving through the token tiers, from raw value to
-primitive to semantic role.
+Token flow shows how a color becomes a design token: the raw value, the
+palette step that names it, and the role people use in code. Switch the site
+theme and the values change underneath while the role's name stays put.
 
-<ComponentPreview name="token-flow" />
+<Exhibit
+  of="token-flow.WithUse"
+  title="Token flow"
+  description="Three of fibo's roles, each with what it is for. Switch the site theme to watch them flip."
+>
+<ExhibitCode label="Install">
 
-Switch the site theme: rows with a dark pair scramble to their dark
-values while the semantic name stays put.
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/token-flow.json
+```
 
-## Features
+It installs the part on its own. No animation library: the pulse and the
+scramble use the Web Animations API and `requestAnimationFrame`.
 
-- One row per role: the raw value, the primitive and the semantic role, joined
-  by wires.
-- A pulse runs along each wire while the plate is on screen.
-- Rows with a `dark` pair scramble to their dark values when the theme changes,
-  while the role's name stays put.
-- `showUse` prints what each role is for under its chip.
-
-## Installation
-
-<Install name="token-flow" exports={["TokenFlow", "type TokenRow"]} />
-
-No animation library: the pulse and the scramble use the Web Animations API and
-`requestAnimationFrame`.
-
-## Usage
+</ExhibitCode>
+<ExhibitCode label="Usage">
 
 ```tsx
 import { TokenFlow } from "@/components/ui/token-flow"
@@ -54,141 +49,53 @@ export function PrimaryToken() {
 Name the role the way people write it in code, and add a `dark` pair when the
 role resolves differently in the dark theme.
 
-## Anatomy
-
-Every part the component renders, with the `data-slot` it carries. You pass
-`rows`; the component builds the rest.
-
-<Anatomy
-  root={{
-    name: "TokenFlow",
-    slot: "token-flow",
-    note: "The plate.",
-    children: [
-      {
-        name: "tier labels",
-        note: "Base, Primitive and Semantic above the columns. Decorative.",
-      },
-      {
-        name: "row",
-        note: "One per entry in rows.",
-        children: [
-          {
-            name: "chip",
-            slot: "token-flow-chip",
-            note: "The value, the primitive and the role, three per row.",
-          },
-          {
-            name: "wire",
-            note: "Between chips, carrying the pulse. Decorative.",
-          },
-        ],
-      },
-    ],
-  }}
-/>
-
-## Guidelines
-
-<UsageGuidelines
-  guidelines={[
-    "Use it in docs, case studies and onboarding, where the point is how a token is built, not what it looks like.",
-    "Keep it to three to five rows, one per role.",
-    <>
-      Pick rows with a <code>dark</code> pair to show why semantic roles exist:
-      the name stays put while the value underneath changes.
-    </>,
-    <>
-      Turn on <code>showUse</code> when the reader doesn't know the role names
-      yet.
-    </>,
-  ]}
-/>
-
-<Tip>
-  By default the plate follows the document's <code>dark</code> class. A host
-  that owns its own theme, such as a preview frame, can pin it with{" "}
-  <code>theme</code>, and scope a <code>dark</code> class to a wrapper so the
-  surfaces follow too.
-</Tip>
-
-## Examples
-
-### Without use
-
-The default: three chips per row, with no `use` line.
-
-<Example of="token-flow.Default" />
-
-### Single row
-
-One role on its own, with `showUse` on.
-
-<Example of="token-flow.SingleRow" />
-
-## Do's and don'ts
-
-<ComponentRules
-  rules={[
-    {
-      positive: {
-        component: (
-          <TokenFlow
-            className="w-full"
-            rows={[
-              {
-                base: "oklch(0.205 0 0)",
-                primitive: "neutral-900",
-                semantic: "bg-primary",
-              },
-            ]}
-          />
-        ),
-        description: "Name the semantic role the way people write it in code.",
-      },
-      negative: {
-        component: (
-          <TokenFlow
-            className="w-full"
-            rows={[
-              {
-                base: "oklch(0.205 0 0)",
-                primitive: "neutral-900",
-                semantic: "dark gray",
-              },
-            ]}
-          />
-        ),
-        description:
-          "Don't describe the color in the last column. That's what the swatch is for.",
-      },
-    },
-  ]}
-/>
-
-## API reference
-
-Each row takes a `base` value, a `primitive` name and a `semantic` role, plus
-an optional `use` and a `dark` pair for roles that resolve differently in the
-dark theme.
+</ExhibitCode>
+<ExhibitCode label="Props">
 
 | Prop      | Type                | Default | Description                                                                                  |
 | --------- | ------------------- | ------- | -------------------------------------------------------------------------------------------- |
-| `rows`    | `TokenRow[]`        | —       | Required. One row per role: `base`, `primitive`, `semantic`, plus optional `use` and `dark`. |
+| `rows`    | `TokenRow[]`        |         | Required. One row per role: `base`, `primitive`, `semantic`, plus optional `use` and `dark`. |
 | `showUse` | `boolean`           | `false` | Print each row's `use` under its semantic chip.                                              |
-| `theme`   | `"light" \| "dark"` | —       | Force a theme instead of following the document's `dark` class.                              |
+| `theme`   | `"light" \| "dark"` |         | Force a theme instead of following the document's `dark` class.                              |
 
-#### TokenRow
+```ts
+type TokenRow = {
+  base: string // the raw value, as written in CSS
+  primitive: string // the palette step it is named as
+  semantic: string // the role that points at the primitive
+  use?: string // what the role is for, shown with showUse
+  dark?: { base: string; primitive: string } // when the dark theme differs
+}
+```
 
-| Field       | Type                                  | Description                                                                          |
-| ----------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
-| `base`      | `string`                              | The raw value, as written in CSS.                                                    |
-| `primitive` | `string`                              | The primitive it is named as, e.g. a palette step.                                   |
-| `semantic`  | `string`                              | The semantic role that points at the primitive.                                      |
-| `use`       | `string`                              | What the role is for, shown under the semantic chip when `showUse` is set.           |
-| `dark`      | `{ base: string; primitive: string }` | The value and primitive the role resolves to under the dark theme, when they differ. |
+</ExhibitCode>
+</Exhibit>
 
-### Data attributes
+## Anatomy
+
+A dotted plate with a label over each tier, and one row per role below.
+
+<Exhibit
+  of="token-flow.AnatomyPlate"
+  title="The plate"
+  description="Two roles, each a row of three chips joined by wires."
+>
+<ExhibitCode label="Structure">
+
+```text
+TokenFlow                token-flow
+├─ tiers                 Base, Primitive, Semantic (decorative)
+└─ row                   one per entry in rows
+   ├─ chip               token-flow-chip   the value
+   ├─ wire               carries the pulse (decorative)
+   ├─ chip               token-flow-chip   the primitive
+   ├─ wire
+   └─ chip               token-flow-chip   the role
+      └─ use             with showUse
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
 
 <DataAttributes
   rows={[
@@ -205,16 +112,199 @@ dark theme.
   ]}
 />
 
+</ExhibitCode>
+</Exhibit>
+
+Each row reads top to bottom on a phone. Every chip carries a swatch of the
+row's color, and the role can carry a short line on what it is for.
+
+<Exhibit
+  of="token-flow.AnatomyRow"
+  title="A row"
+  description="One role, stacked the way it lays out on narrow screens."
+>
+<ExhibitCode>
+
+```tsx
+{
+  base: "oklch(0.205 0 0)",   // Value
+  primitive: "neutral-900",   // Primitive
+  semantic: "bg-primary",     // Role
+  use: "Primary actions, headings", // Use
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+### Use lines
+
+Rows print what each role is for only when asked. Leave them off for readers
+who already know the names.
+
+<Exhibit
+  of="token-flow.Default"
+  title="Without use"
+  description="The default: three chips per row, nothing underneath."
+>
+<ExhibitCode>
+
+```tsx
+<TokenFlow rows={rows} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="token-flow.SingleRow"
+  title="Single role"
+  description="One row on its own, with its use line."
+>
+<ExhibitCode>
+
+```tsx
+<TokenFlow rows={[primary]} showUse />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Theme
+
+The plate follows the site theme. When it changes, rows with a dark pair
+scramble to their new values and the swatches fade across, while the role
+names hold still.
+
+<Exhibit
+  of="token-flow.ThemeChange"
+  title="Theme change"
+  description="Flips between light and dark every few seconds, so the scramble plays."
+>
+<ExhibitCode>
+
+```tsx
+{
+  base: "oklch(0.205 0 0)",
+  primitive: "neutral-900",
+  semantic: "bg-primary",
+  dark: { base: "oklch(0.985 0 0)", primitive: "neutral-50" },
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="token-flow.PinnedDark"
+  title="Pinned to dark"
+  description="Dark values on dark surfaces, whatever the site theme."
+>
+<ExhibitCode>
+
+```tsx
+<div className="dark">
+  <TokenFlow rows={rows} theme="dark" />
+</div>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Motion
+
+A pulse runs along each wire while the plate is on screen, staggered by row.
+It stops off screen, and neither the pulse nor the scramble plays when
+someone has asked for reduced motion.
+
+## Usage
+
+<UsageGuidelines
+  guidelines={[
+    "Use it in docs, case studies and onboarding, where the point is how a token is built, not what it looks like.",
+    "Keep it to three to five rows, one per role.",
+    "Pick roles that change between themes to show why roles exist: the name stays put while the color underneath moves.",
+    "Show the use lines when readers don't know the role names yet.",
+  ]}
+/>
+
+### In a case study
+
+The lead example: a handful of roles with what each is for, next to the
+writing that explains them.
+
+<Exhibit of="token-flow.WithUse" description="Three roles with their use lines.">
+<ExhibitCode>
+
+```tsx
+<TokenFlow rows={rows} showUse />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### In a themed preview
+
+A preview that owns its own theme can pin the plate to it, so the values
+match the components beside them.
+
+<Exhibit
+  of="token-flow.InPreview"
+  description="Switch the preview between light and dark: the buttons and the plate move together."
+>
+<ExhibitCode>
+
+```tsx
+<div className={dark ? "dark" : "light"}>
+  <TokenFlow rows={rows} theme={dark ? "dark" : "light"} />
+  <Button>Save changes</Button>
+  <Button variant="destructive">Delete</Button>
+</div>
+```
+
+The class on the wrapper moves the surfaces, and `theme` moves the values.
+
+</ExhibitCode>
+</Exhibit>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="token-flow.DoRoleName" />,
+        description: "Name the role the way people write it in code.",
+      },
+      negative: {
+        component: <Live of="token-flow.DontColorName" />,
+        description:
+          "Don't describe the color in the last column. That's what the swatch is for.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="token-flow.DoRoles" />,
+        description: "Chart roles, each with its own job.",
+      },
+      negative: {
+        component: <Live of="token-flow.DontRamp" />,
+        description:
+          "Don't chart palette steps as if they were roles. The last column only repeats the middle one.",
+      },
+    },
+  ]}
+/>
+
 ## Accessibility
 
 <UsageGuidelines
   guidelines={[
-    <>
-      Every chip carries its tier in screen-reader text, so it reads as
-      "Primitive neutral-900" rather than a bare value.
-    </>,
-    "The scrambled text is hidden from assistive tech. Only the settled value is announced.",
-    "The pulse only runs while the plate is on screen, and neither the pulse nor the scramble plays under prefers-reduced-motion.",
+    'Every chip says which tier it belongs to, so a screen reader hears "Primitive, neutral-900" rather than a bare value.',
+    "The scramble is hidden from assistive technology. Only the settled value is read out.",
+    "The pulse only runs while the plate is on screen, and neither the pulse nor the scramble plays when someone has asked for reduced motion.",
   ]}
 />
 

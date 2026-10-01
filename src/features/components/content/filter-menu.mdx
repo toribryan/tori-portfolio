@@ -6,36 +6,25 @@ updatedAt: 2026-09-30
 new: true
 ---
 
-A filter button whose menu lists the fields you can filter by, then each
-field's values. A Search filters button, or just typing, slides the same menu
-over to a search across every field and value, like a command menu.
+A Filter button whose menu lists the fields you can filter by, then each
+field's values. Searching, or just typing, turns the same menu into a search
+across every field and value.
 
-<ComponentPreview name="filter-menu" />
+<Exhibit
+  of="filter-menu.AppliedAsChips"
+  title="Filter menu"
+  description="Open the menu and tick values. The app shows each applied field as a chip you can remove."
+>
+<ExhibitCode label="Install">
 
-## Features
-
-- Two levels: pick a field such as Status, then tick any number of its
-  values. Each field shows how many of its values are on.
-- A Search filters button at the top slides the menu over to a search,
-  grouped by field, with the matching letters in bold. Typing a letter on the
-  menu does the same. Inside a field, the search stays within it.
-- Or, with `search="inline"`, a search box sits at the top instead, and
-  typing turns the menu into results in place.
-- Escape steps back: first it clears the search, then it leaves the field,
-  and only then does it close the menu.
-- Views slide forward and back, and the popup's height follows its content.
-  Under reduced motion, views swap in place.
-
-## Installation
-
-<Install
-  name="filter-menu"
-  exports={["FilterMenu", "type FilterField", "type FilterValue"]}
-/>
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/filter-menu.json
+```
 
 It installs the Button component and the `motion` package too.
 
-## Usage
+</ExhibitCode>
+<ExhibitCode label="Usage">
 
 ```tsx
 import { useState } from "react"
@@ -77,194 +66,8 @@ The menu only picks filters. `value` holds the chosen values keyed by field
 id, such as `{ status: ["todo"] }`, and showing the applied filters is up to
 your app.
 
-```ts
-type FilterField = {
-  id: string
-  label: string
-  icon?: React.ReactNode
-  options: { value: string; label: string; icon?: React.ReactNode }[]
-}
-
-type FilterValue = Record<string, string[]>
-```
-
-### Fitting it into your app
-
-The menu works on its own, and each of these props lets you take over one
-part of it:
-
-- `open`, `defaultOpen` and `onOpenChange` put the open state in your hands,
-  for a keyboard shortcut or a menu that opens from elsewhere.
-- `trigger` swaps the default button for your own element. It must forward its
-  ref and props, as fibo's `Button` does.
-- `side` and `align` place the popup, and `container` portals it somewhere
-  other than the body, such as inside a dialog.
-- `popupClassName` styles the popup, which is portalled out of reach of
-  selectors on the trigger.
-- `labels` replaces the wording the menu writes for itself, alongside
-  `triggerLabel`, `placeholder`, `emptyText`, `label` and `searchLabel`.
-
-```tsx
-<FilterMenu
-  fields={fields}
-  trigger={<Button variant="ghost" size="icon" aria-label="Filtern" />}
-  label="Filter"
-  searchLabel="Filter durchsuchen"
-  emptyText="Keine passenden Filter"
-  labels={{
-    backToFields: "Zurück zu den Feldern",
-    backToFilters: "Zurück zu den Filtern",
-    backToField: (field) => `Zurück zu ${field}`,
-    results: (count) => `${count} ${count === 1 ? "Ergebnis" : "Ergebnisse"}`,
-  }}
-/>
-```
-
-## Anatomy
-
-<Anatomy
-  root={{
-    name: "FilterMenu",
-    note: "Renders the trigger, and the popup while it's open.",
-    children: [
-      {
-        name: "trigger",
-        slot: "filter-menu-trigger",
-        note: "The Filter button.",
-      },
-      {
-        name: "popup",
-        slot: "filter-menu",
-        note: "In a portal on the body. Carries data-view.",
-        children: [
-          {
-            name: "search",
-            slot: "filter-menu-search",
-            note: "The header: the search box, or a field's name, with a back button.",
-            children: [
-              {
-                name: "search button",
-                slot: "filter-menu-search-button",
-                note: "On the field menu, unless search is inline.",
-              },
-            ],
-          },
-          {
-            name: "group label",
-            slot: "filter-menu-group-label",
-            note: "A field's name above its results, in a search.",
-          },
-          {
-            name: "field",
-            slot: "filter-menu-field",
-            note: "A field in the menu, with its count.",
-          },
-          {
-            name: "option",
-            slot: "filter-menu-option",
-            note: "A value, with a checkbox.",
-          },
-        ],
-      },
-    ],
-  }}
-/>
-
-## Guidelines
-
-<UsageGuidelines
-  guidelines={[
-    "Use it above a list or table that people narrow down by several fields, like issues, orders or files.",
-    "Keep field names to one or two words, and order fields by how often people use them.",
-    "Order each field's values the way people think of them: a workflow in its order, people by name, sizes from small to large.",
-    "Show the applied filters next to the button, such as chips people can remove, so the list never looks mysteriously short.",
-    "For a single yes-or-no filter, a switch or a checkbox beside the list is quicker.",
-  ]}
-/>
-
-<Tip>
-  Give fields and values icons with the `icon` key. They help people scan a long
-  menu, and they show in search results too.
-</Tip>
-
-## Examples
-
-### Applied as chips
-
-The component only picks filters. Here the app shows each applied field as a
-chip beside the button, with a button to remove it.
-
-<Example of="filter-menu.AppliedAsChips" />
-
-### Default
-
-The menu on its own, keeping its own state. The Search filters button
-slides the whole menu, header and body, over to the search state, which
-lists every value until you type. Back, Escape or Backspace slides it home.
-
-<Example of="filter-menu.Default" />
-
-### Inline search
-
-`search="inline"` keeps a search box at the top of the menu. Typing turns it
-into results in place, and clearing the text brings the menu back.
-
-<Example of="filter-menu.InlineSearch" />
-
-### With selections
-
-`defaultValue` starts with values chosen. The fields that have any show a
-count. The trigger's content is yours, here with a dot to say filters are on.
-
-<Example of="filter-menu.WithSelections" />
-
-### Keyboard only
-
-Opened from the keyboard: arrows move, Right opens a field, Enter ticks a
-value, and Left or Backspace goes back to the field it came from.
-
-<Example of="filter-menu.KeyboardOnly" />
-
-### No matches
-
-A search with no results says so, using `emptyText`.
-
-<Example of="filter-menu.NoMatches" />
-
-## Do's and don'ts
-
-<ComponentRules
-  rules={[
-    {
-      positive: {
-        component: (
-          <div className="flex flex-col gap-1 text-sm">
-            <span className="font-medium">Status</span>
-            <span className="text-muted-foreground">
-              Backlog, Todo, In progress, Done
-            </span>
-          </div>
-        ),
-        description:
-          "Group values under a short field name, in the order people expect.",
-      },
-      negative: {
-        component: (
-          <div className="flex flex-col gap-1 text-sm">
-            <span className="font-medium">Issue status filter options</span>
-            <span className="text-muted-foreground">
-              Done, Backlog, In progress, Todo
-            </span>
-          </div>
-        ),
-        description:
-          "Don't write long field names or shuffle values. The menu is for scanning.",
-      },
-    },
-  ]}
-/>
-
-## API reference
+</ExhibitCode>
+<ExhibitCode label="Props">
 
 | Prop             | Type                                                                       | Default                 | Description                                                                                                                                                                                                                         |
 | ---------------- | -------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -289,7 +92,46 @@ A search with no results says so, using `emptyText`.
 | `className`      | `string`                                                                   |                         | Classes for the trigger button.                                                                                                                                                                                                     |
 | `popupClassName` | `string`                                                                   |                         | Classes for the popup.                                                                                                                                                                                                              |
 
-### Data attributes
+```ts
+type FilterField = {
+  id: string
+  label: string
+  icon?: React.ReactNode
+  options: { value: string; label: string; icon?: React.ReactNode }[]
+}
+
+type FilterValue = Record<string, string[]>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+The trigger opens a popup with a header row and a list. What the header and
+the list hold changes with the view: the fields, one field's values, or a
+search.
+
+<Exhibit
+  of="filter-menu.AnatomyFields"
+  title="The fields"
+  description="What opens first. Fields with values chosen show how many."
+>
+<ExhibitCode label="Structure">
+
+```text
+FilterMenu
+├─ trigger                filter-menu-trigger
+└─ popup                  filter-menu
+   ├─ header              filter-menu-search
+   │  └─ search button    filter-menu-search-button  (on the fields)
+   ├─ group label         filter-menu-group-label    (in a search)
+   ├─ field               filter-menu-field
+   └─ value               filter-menu-option
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
 
 <DataAttributes
   rows={[
@@ -364,27 +206,382 @@ A search with no results says so, using `emptyText`.
   ]}
 />
 
-## Accessibility
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="filter-menu.AnatomyValues"
+  title="A field's values"
+  description="Status open, with two values ticked and the arrow keys on Todo."
+>
+<ExhibitCode>
+
+```text
+popup                     filter-menu            data-view="values"
+├─ header                 filter-menu-search
+│  ├─ back button
+│  └─ field name
+└─ value                  filter-menu-option     data-checked, data-highlighted
+   └─ checkbox
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="filter-menu.AnatomySearch"
+  title="Search results"
+  description="ur typed from the fields: results grouped by field, the match in bold."
+>
+<ExhibitCode>
+
+```text
+popup                     filter-menu            data-view="search"
+├─ header                 filter-menu-search
+│  ├─ back button
+│  └─ search box
+└─ group                  one per field with a match
+   ├─ group label         filter-menu-group-label
+   └─ value               filter-menu-option
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+### Views
+
+The popup moves between three views, and each has a state or two.
+
+<ExhibitGrid>
+<Exhibit
+  of="filter-menu.FieldMenu"
+  title="Fields"
+  description="The first view: every field, with a button to search at the top."
+>
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="filter-menu.FieldMenuSelected"
+  title="Fields with selections"
+  description="A count on each field with values chosen. The dot on the trigger is the app's own."
+>
+<ExhibitCode>
+
+```tsx
+<FilterMenu
+  fields={fields}
+  defaultValue={{ status: ["todo", "done"], label: ["bug"] }}
+  triggerLabel={
+    <>
+      Filter
+      <CircleDotIcon className="size-3 text-info" />
+    </>
+  }
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="filter-menu.Values"
+  title="A field's values"
+  description="Tick any number. A back button returns to the fields."
+>
+<ExhibitCode>
+
+```tsx
+{
+  id: "status",
+  label: "Status",
+  options: [
+    { value: "backlog", label: "Backlog" },
+    { value: "todo", label: "Todo" },
+    // …
+  ],
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="filter-menu.SearchState"
+  title="Search"
+  description="After Search filters: every value, grouped by field, until you type."
+>
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} search="button" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="filter-menu.SearchResults"
+  title="Search results"
+  description="Matches from every field, with the typed letters in bold."
+>
+<ExhibitCode>
+
+```tsx
+// Labels are searched, and a field whose name matches brings all its values.
+{ value: "urgent", label: "Urgent" }
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="filter-menu.NoMatches"
+  title="No matches"
+  description="A search with no results says so."
+>
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} emptyText="No matching filters" />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Inline search
+
+Instead of a Search filters button, the header can be a search box that is
+always there. Typing turns the menu into results in place, and clearing the
+text brings the menu back.
+
+<ExhibitGrid>
+<Exhibit
+  of="filter-menu.InlineResting"
+  title="Inline, resting"
+  description="The search box takes focus as the menu opens."
+>
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} search="inline" placeholder="Filter by…" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="filter-menu.InlineTyping"
+  title="Inline, typing"
+  description="The same results, with no back button to press."
+>
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} search="inline" />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Moving between views
+
+Views slide forward going deeper and back coming out, and the popup's height
+follows its content. A search started inside a field stays within it. With
+reduced motion, views swap in place.
+
+<Exhibit
+  of="filter-menu.Tour"
+  title="Views in motion"
+  description="Into Status, a search within it, back out, then a search across every field."
+>
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} defaultValue={{ status: ["todo"] }} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Usage
 
 <UsageGuidelines
   guidelines={[
-    "When the menu opens, the list takes focus and points at the highlighted row with aria-activedescendant, so screen readers read each row as the arrows move. The Search filters button is one Tab away.",
-    "Entering search moves focus into the search box, a combobox that points at the highlighted row the same way. Leaving the search moves focus back to the list.",
-    "With the inline search, focus goes to the search box when the menu opens, and stays there.",
-    "Values are options in a multi-select listbox, announced as selected or not. Each field is read with how many of its values are chosen and that it opens its values.",
+    "Use it above a list or table that people narrow down by several fields, like issues, orders or files.",
+    "Keep field names to one or two words, and put the fields people use most at the top.",
+    "Order each field's values the way people think of them: a workflow in its order, people by name, sizes from small to large.",
+    "Show the applied filters next to the button, such as chips people can remove, so the list never looks mysteriously short.",
+    "For a single yes-or-no filter, a switch or a checkbox beside the list is quicker.",
+  ]}
+/>
+
+### Applied as chips
+
+The menu only picks filters. Here the app shows each applied field as a chip
+beside the button, with a button to remove it.
+
+<Exhibit of="filter-menu.AppliedAsChips" description="Remove a chip, or change it from the menu.">
+<ExhibitCode>
+
+```tsx
+const [value, setValue] = useState<FilterValue>({
+  status: ["todo", "in-progress"],
+  priority: ["urgent"],
+})
+
+<FilterMenu fields={fields} value={value} onValueChange={setValue} />
+{Object.entries(value).map(([fieldId, values]) => (
+  <Chip key={fieldId} field={fieldId} values={values} onRemove={…} />
+))}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### On its own
+
+The menu keeping its own state. Try it from the keyboard: arrows move, Right
+opens a field, Enter ticks a value, and any letter starts a search.
+
+<Exhibit of="filter-menu.Default" description="The default Filter button with the Search filters button inside.">
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### With an inline search
+
+<Exhibit of="filter-menu.InlineSearch" description="Start typing as soon as it opens.">
+<ExhibitCode>
+
+```tsx
+<FilterMenu fields={fields} search="inline" />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Your own trigger and wording
+
+Any button can open the menu, such as an icon button in a crowded toolbar.
+Every piece of text the menu writes can be replaced, for another language.
+
+<Exhibit of="filter-menu.IconTrigger" description="An icon button that opens the same menu.">
+<ExhibitCode label="Trigger">
+
+```tsx
+<FilterMenu
+  fields={fields}
+  trigger={
+    <Button variant="outline" size="icon-sm" aria-label="Filter">
+      <ListFilterIcon />
+    </Button>
+  }
+/>
+```
+
+The trigger must forward its ref and props, as fibo's `Button` does.
+
+</ExhibitCode>
+<ExhibitCode label="Wording">
+
+```tsx
+<FilterMenu
+  fields={fields}
+  trigger={<Button variant="ghost" size="icon" aria-label="Filtern" />}
+  label="Filter"
+  searchLabel="Filter durchsuchen"
+  emptyText="Keine passenden Filter"
+  labels={{
+    backToFields: "Zurück zu den Feldern",
+    backToFilters: "Zurück zu den Filtern",
+    backToField: (field) => `Zurück zu ${field}`,
+    results: (count) => `${count} ${count === 1 ? "Ergebnis" : "Ergebnisse"}`,
+  }}
+/>
+```
+
+`open`, `defaultOpen` and `onOpenChange` open it from elsewhere, such as a
+keyboard shortcut. `side`, `align` and `container` place the popup.
+
+</ExhibitCode>
+</Exhibit>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="filter-menu.DoFieldNames" />,
+        description:
+          "Group values under a short field name, in the order people expect.",
+      },
+      negative: {
+        component: <Live of="filter-menu.DontFieldNames" />,
+        description:
+          "Don't write long field names or shuffle values. The menu is for scanning.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="filter-menu.DoChips" />,
+        description:
+          "Show what's applied beside the button, so a short list explains itself.",
+      },
+      negative: {
+        component: <Live of="filter-menu.DontChips" />,
+        description:
+          "Don't hide the filters inside the menu. People wonder where the rest went.",
+      },
+    },
+  ]}
+/>
+
+<Tip>
+  Give fields and values icons. They help people scan a long menu, and they show
+  in search results too.
+</Tip>
+
+## Accessibility
+
+Everything works from the keyboard, one level at a time.
+
+| Key                                           | Does                                                              |
+| --------------------------------------------- | ----------------------------------------------------------------- |
+| <KbdGroup><Kbd>↑</Kbd><Kbd>↓</Kbd></KbdGroup> | Moves the highlight                                               |
+| <Kbd>→</Kbd>                                  | Opens the highlighted field                                       |
+| <Kbd>↵</Kbd>                                  | Opens the highlighted field, or ticks the highlighted value       |
+| Any letter                                    | Starts a search with that letter                                  |
+| <KbdGroup><Kbd>←</Kbd><Kbd>⌫</Kbd></KbdGroup> | With no search text, goes back to the fields or leaves the search |
+| <Kbd>Esc</Kbd>                                | Clears the search, then leaves the field, then closes the menu    |
+| <Kbd>Tab</Kbd>                                | Moves between the list and the Search filters button              |
+
+<UsageGuidelines
+  guidelines={[
+    "When the menu opens, the list takes focus, and a screen reader reads each row as the arrows move. The Search filters button is one Tab away.",
+    "Starting a search moves focus into the search box, and leaving it moves focus back to the list. With the inline search, focus stays in the search box from the start.",
+    "Values are read as options you can pick several of, each announced as selected or not. Each field is read with how many of its values are chosen, and that it opens its values.",
     "A search announces how many results it found.",
     "Escape steps back one level at a time, and the last press returns focus to the Filter button.",
-    <>
-      Rename every piece of text for your product's language: the trigger with{" "}
-      <code>triggerLabel</code>, the popup with <code>label</code>, and the
-      search box with <code>searchLabel</code> and <code>placeholder</code>.
-    </>,
+    "Every piece of text the menu writes, including what only screen readers hear, can be renamed for your product's language.",
   ]}
 />
 
 ## Related components
 
-<RelatedComponents names={["Select", "Checkbox", "Chapter scrubber"]} />
+<RelatedComponents
+  names={["Command menu", "Select", "Checkbox", "Chapter scrubber"]}
+/>
 
 ## References
 

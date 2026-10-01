@@ -6,33 +6,25 @@ updatedAt: 2026-09-30
 new: true
 ---
 
-A hub and the tools wired into it. Live routes pulse, idle ones dim, and the
-hub opens a preview on hover.
+A diagram of a hub and the tools wired into it, for the top of a card or a
+feature section. Live routes pulse, idle ones dim, and the hub can open a
+preview on hover.
 
-<ComponentPreview name="integration-visual" />
+<Exhibit
+  of="integration-visual.Default"
+  title="Integration visual"
+  description="Four tools in the corners, pulsing in. Hover or focus the snail for the last sync."
+>
+<ExhibitCode label="Install">
 
-## Features
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/integration-visual.json
+```
 
-- Three layouts: `corners` for up to four tools, `orbit` for up to eight, and
-  `sides` for a pipeline with inputs on one side and outputs on the other.
-- Pulses run inward, outward, or through the hub from left to right along
-  live routes. Idle tools keep their route and dim.
-- A preview opens over the hub on hover or focus. It takes any content, or an
-  image or looping video, and it's a Base UI tooltip: portalled so no card
-  clips it, hoverable, and dismissed with Escape.
-- Respects reduced motion: the pulses, halo and springs stop, the preview
-  fades in, and a preview video waits on its first frame.
+It installs the `motion` package with it, for the pulses and the halo.
 
-## Installation
-
-<Install
-  name="integration-visual"
-  exports={["IntegrationVisual", "type IntegrationItem"]}
-/>
-
-It installs `motion` with it, for the pulses and the halo.
-
-## Usage
+</ExhibitCode>
+<ExhibitCode label="Usage">
 
 ```tsx
 import { DatabaseIcon, MailIcon } from "lucide-react"
@@ -55,175 +47,8 @@ export function ConnectedTools() {
 Items fill the layout's slots in order, and any past its limit are left out.
 Each `title` names its tile for screen readers.
 
-Each item takes:
-
-```ts
-type IntegrationItem = {
-  title: string
-  icon: React.ReactNode
-  status?: "active" | "idle"
-  side?: "in" | "out" // sides layout only
-}
-```
-
-## Anatomy
-
-Every part the component renders, with the `data-slot` it carries. You pass
-`items`, `center` and `preview`; the component builds the rest.
-
-<Anatomy
-  root={{
-    name: "IntegrationVisual",
-    slot: "integration-visual",
-    note: "The root. Carries data-layout.",
-    children: [
-      {
-        name: "plate",
-        note: "The dots or grid, and the routes. Decorative.",
-      },
-      {
-        name: "item",
-        slot: "integration-visual-item",
-        note: "One tile per entry in items. Carries data-status.",
-      },
-      {
-        name: "hub",
-        slot: "integration-visual-hub",
-        note: "A button, named by centerLabel, when there's a preview.",
-        children: [
-          {
-            name: "face",
-            slot: "integration-visual-hub-face",
-            note: "Shows center.",
-          },
-        ],
-      },
-      {
-        name: "preview",
-        slot: "integration-visual-preview",
-        note: "Above the hub, while it's hovered or focused. Portalled to the body.",
-      },
-    ],
-  }}
-/>
-
-## Guidelines
-
-<UsageGuidelines
-  guidelines={[
-    <>
-      Choose the layout by count: <code>corners</code> for four,{" "}
-      <code>orbit</code> for five to eight, <code>sides</code> when data flows
-      in one side and out the other.
-    </>,
-    <>
-      Mark tools that aren't connected yet as <code>idle</code> rather than
-      leaving them out. The diagram then shows what's possible as well as what's
-      live.
-    </>,
-    <>
-      Use <code>pulse="inward"</code> for sources feeding the hub,{" "}
-      <code>"outward"</code> for the hub sending to them, and{" "}
-      <code>"through"</code> for a pipeline that flows from left to right.
-    </>,
-    <>
-      Name the hub with the product, a count, or a mark in <code>center</code>.
-      Keep it to a word or a number.
-    </>,
-    "Put it at the top of a card and let the card's text make the claim.",
-  ]}
-/>
-
-<Tip>
-  The preview is for looking at: keyboard users can't reach anything inside it,
-  so link out from the card around the diagram instead.
-</Tip>
-
-## Examples
-
-### Media preview
-
-Pass `{ src, alt }` to `preview` for an image, an animated image, or a video
-that plays muted on a loop. Media is 16:9 unless you set `aspectRatio`. Hover
-or focus the snail.
-
-<Example of="integration-visual.MediaPreview" />
-
-### Orbit
-
-Up to eight tools, evenly spaced on an ellipse with straight spokes.
-
-<Example of="integration-visual.Orbit" />
-
-### Sides
-
-A pipeline. Set `side` on each item to put it in the input or output column,
-and `pulse="through"` to run the pulses from inputs, through the hub, to
-outputs.
-
-<Example of="integration-visual.Sides" />
-
-### Idle items
-
-Every other tool is `idle`: its route stays, dimmed, and carries no pulse.
-
-<Example of="integration-visual.IdleItems" />
-
-### Plates
-
-The `background` prop sets the plate: `dots`, `grid` or `none`.
-
-<Example of="integration-visual.Plates" />
-
-### In a card
-
-A count in the hub and the claim in the card text below it.
-
-<Example of="integration-visual.InACard" />
-
-## Do's and don'ts
-
-<ComponentRules
-  rules={[
-    {
-      positive: {
-        component: (
-          <div className="w-64 overflow-hidden rounded-lg border border-border">
-            <IntegrationVisual
-              size="sm"
-              items={[
-                { title: "Database", icon: <DatabaseIcon /> },
-                { title: "Repository", icon: <GitBranchIcon /> },
-                { title: "Chat", icon: <MessageSquareIcon />, status: "idle" },
-                { title: "Email", icon: <MailIcon />, status: "idle" },
-              ]}
-            />
-          </div>
-        ),
-        description:
-          "Let only the live routes pulse, so the motion means something.",
-      },
-      negative: {
-        component: (
-          <div className="w-64 overflow-hidden rounded-lg border border-border">
-            <IntegrationVisual
-              size="sm"
-              layout="corners"
-              items={[
-                { title: "Database", icon: <DatabaseIcon /> },
-                { title: "Repository", icon: <GitBranchIcon /> },
-              ]}
-            />
-          </div>
-        ),
-        description:
-          "Don't use corners for two tools; the diagram looks unfinished. Use sides.",
-      },
-    },
-  ]}
-/>
-
-## API reference
+</ExhibitCode>
+<ExhibitCode label="Props">
 
 | Prop          | Type                                           | Default          | Description                                                                                                                                                                                            |
 | ------------- | ---------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -239,14 +64,54 @@ A count in the hub and the claim in the card text below it.
 | `label`       | `string`                                       | `"Integrations"` | Accessible name for the diagram.                                                                                                                                                                       |
 | `centerLabel` | `string`                                       |                  | Accessible name for the hub, which becomes a button when there's a preview. Defaults to `center` when that's text, otherwise to `label`.                                                               |
 
-It also takes the props of a `div`, except `children`. `IntegrationPreviewMedia`
-is `{ src: string; alt?: string; aspectRatio?: number | string }`, with
-`aspectRatio` defaulting to `"16 / 9"`.
+It also takes the props of a `div`, except `children`.
 
-### Data attributes
+```ts
+type IntegrationItem = {
+  title: string
+  icon: React.ReactNode
+  status?: "active" | "idle"
+  side?: "in" | "out" // sides layout only
+}
 
-Style parts by slot or state, for example with
-`[&_[data-slot=integration-visual-item]]:rounded-full`.
+type IntegrationPreviewMedia = {
+  src: string
+  alt?: string
+  aspectRatio?: number | string // defaults to "16 / 9"
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+A plate of dots, a hub in the middle, and a tile for each tool, joined to the
+hub by a route. Pulses travel along live routes, and a halo breathes out from
+the hub.
+
+<Exhibit
+  of="integration-visual.Anatomy"
+  title="The diagram"
+  description="Four tools in the corners, all live."
+>
+<ExhibitCode label="Structure">
+
+```text
+IntegrationVisual        integration-visual
+├─ plate                 dots or grid, decorative
+├─ routes                decorative
+│  ├─ track              one per tool
+│  └─ pulse              one per live tool
+├─ item                  integration-visual-item
+├─ hub                   integration-visual-hub
+│  ├─ face               integration-visual-hub-face
+│  └─ halo               decorative
+└─ preview               integration-visual-preview  (while open)
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
 
 <DataAttributes
   rows={[
@@ -301,22 +166,436 @@ Style parts by slot or state, for example with
   ]}
 />
 
-## Accessibility
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+### Layouts
+
+Pick the layout by how many tools there are and which way data flows.
+
+<ExhibitGrid>
+<Exhibit
+  of="integration-visual.Corners"
+  title="Corners"
+  description="Up to four tools, each route turning once on its way to the hub."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual layout="corners" items={tools.slice(0, 4)} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.Orbit"
+  title="Orbit"
+  description="Up to eight tools, evenly spaced on an ellipse with straight spokes."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual layout="orbit" items={tools.slice(0, 6)} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.Sides"
+  title="Sides"
+  description="A pipeline: inputs on the left, outputs on the right, pulses running through."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual
+  layout="sides"
+  pulse="through"
+  items={[
+    { title: "Webhook", icon: <WebhookIcon />, side: "in" },
+    { title: "Database", icon: <DatabaseIcon />, side: "in" },
+    { title: "Repository", icon: <GitBranchIcon />, side: "in" },
+    { title: "Chat", icon: <MessageSquareIcon />, side: "out" },
+    { title: "Email", icon: <MailIcon />, side: "out" },
+  ]}
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.TwoTools"
+  title="Two tools"
+  description="Sides holds a pair on one line, where corners would look half empty."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual
+  layout="sides"
+  pulse="through"
+  items={[
+    { title: "Database", icon: <DatabaseIcon />, side: "in" },
+    { title: "Email", icon: <MailIcon />, side: "out" },
+  ]}
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Idle tools
+
+A tool that isn't connected yet keeps its tile and route, dimmed, with no
+pulse. The diagram then shows what's possible as well as what's live.
+
+<Exhibit
+  of="integration-visual.IdleItems"
+  title="Idle tools"
+  description="Repository and Calendar are idle."
+>
+<ExhibitCode>
+
+```tsx
+items={[
+  { title: "Database", icon: <DatabaseIcon /> },
+  { title: "Repository", icon: <GitBranchIcon />, status: "idle" },
+  { title: "Chat", icon: <MessageSquareIcon /> },
+  { title: "Calendar", icon: <CalendarIcon />, status: "idle" },
+]}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Motion
+
+Pulses run along live routes, into the hub by default. The halo is a slow
+ring breathing out from the hub. Either can be turned off, and both stop for
+people who ask for reduced motion.
+
+<ExhibitGrid>
+<Exhibit
+  of="integration-visual.Corners"
+  title="Pulse inward"
+  description="Sources feeding the hub. The default."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual pulse="inward" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.PulseOutward"
+  title="Pulse outward"
+  description="The hub sending to each tool."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual pulse="outward" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.PulseOff"
+  title="No pulse"
+  description="Routes stay drawn and the halo keeps breathing."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual pulse="none" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.HaloOff"
+  title="No halo"
+  description="A still hub, for pages that already have a lot moving."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual halo={false} items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Hub
+
+The hub shows the snail unless you give it your own mark or a short piece of
+text, and the face widens to fit text.
+
+<ExhibitGrid>
+<Exhibit
+  of="integration-visual.HubMark"
+  title="Your mark"
+  description="An icon sits in a square face."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual center={<WorkflowIcon />} items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.HubCount"
+  title="A count"
+  description="Text is set bold and the face widens to fit."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual center="12" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+A preview springs up above the hub while it's hovered or focused. It can hold
+anything, such as a short list of what synced last.
+
+<Exhibit
+  of="integration-visual.PreviewOpen"
+  title="Preview open"
+  description="Held open here, as if the pointer were resting on the hub."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual preview={<SyncPreview />} items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+Or it can be an image, an animated image, or a video that plays muted on a
+loop, at 16:9 unless you set another ratio.
+
+<Exhibit
+  of="integration-visual.MediaPreview"
+  title="Media preview"
+  description="Hover or focus the snail."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual
+  preview={{
+    src: "/images/fibo/snail-sync.svg",
+    alt: "A snail inching along a sync track",
+  }}
+  items={items}
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Plate and routes
+
+The plate behind the diagram is dots, a grid or nothing, and it fades out at
+the top and bottom.
+
+<Exhibit
+  of="integration-visual.Plates"
+  title="Plates"
+  description="Dots, grid and none."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual background="dots" items={items} />
+<IntegrationVisual background="grid" items={items} />
+<IntegrationVisual background="none" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+Routes are a solid hairline, or dashed for a lighter touch.
+
+<ExhibitGrid>
+<Exhibit
+  of="integration-visual.Corners"
+  title="Solid routes"
+  description="The default."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual routes="solid" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="integration-visual.DashedRoutes"
+  title="Dashed routes"
+  description="A lighter line, for a diagram of what could be connected."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual routes="dashed" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Sizes
+
+Size scales the tiles and the hub. The plate always fills its container.
+
+<Exhibit
+  of="integration-visual.Sizes"
+  title="Sizes"
+  description="Small, default and large at the same width."
+>
+<ExhibitCode>
+
+```tsx
+<IntegrationVisual size="sm" items={items} />
+<IntegrationVisual size="default" items={items} />
+<IntegrationVisual size="lg" items={items} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Usage
 
 <UsageGuidelines
   guidelines={[
-    <>
-      The diagram is a labeled group, and each tool is a list item named by its
-      title, with ", idle" added for idle ones. Set <code>label</code> to say
-      what the diagram is.
-    </>,
-    "Routes, pulses and the halo are decorative and hidden from assistive tech.",
-    <>
-      When there's a preview the hub is a button, named by{" "}
-      <code>centerLabel</code> (or by <code>center</code> when that's text, or
-      by <code>label</code>). Focusing it shows the preview the same way
-      hovering does, the preview describes it, and Escape closes it.
-    </>,
+    "Choose the layout by count: corners for up to four tools, orbit for five to eight, and sides when data flows in one side and out the other.",
+    "Show tools that aren't connected yet as idle rather than leaving them out.",
+    "Match the pulse to the story: inward for sources feeding the hub, outward for the hub sending to them, through for a pipeline.",
+    "Name the hub with the product's mark, a count or a single word.",
+    "Put it at the top of a card and let the card's text make the claim.",
+  ]}
+/>
+
+### In a card
+
+A count in the hub and the claim in the card text below it.
+
+<Exhibit of="integration-visual.InACard" description="Twelve sources, four of them shown.">
+<ExhibitCode>
+
+```tsx
+<Card>
+  <IntegrationVisual center="12" items={tools.slice(0, 4)} />
+  <CardFooter>
+    <h3>Twelve sources, one feed</h3>
+    <p>Routes pulse while a source is active…</p>
+  </CardFooter>
+</Card>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### A pipeline card
+
+The sides layout, running through the hub, for a feature that turns one kind
+of thing into another.
+
+<Exhibit of="integration-visual.PipelineCard" description="Events in on the left, alerts out on the right.">
+<ExhibitCode>
+
+```tsx
+<Card>
+  <IntegrationVisual
+    layout="sides"
+    pulse="through"
+    center={<WorkflowIcon />}
+    label="Alert pipeline"
+    items={pipeline}
+  />
+  <CardFooter>
+    <h3>Events in, alerts out</h3>
+    <p>Webhooks, commits and new rows become messages…</p>
+  </CardFooter>
+</Card>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="integration-visual.DoIdle" />,
+        description:
+          "Keep tools that aren't connected yet, marked idle, so only the live routes pulse.",
+      },
+      negative: {
+        component: <Live of="integration-visual.DontSparse" />,
+        description:
+          "Don't leave the corners half empty. Two tools read as unfinished; use sides for a pair.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="integration-visual.DoShortHub" />,
+        description: "Name the hub with a mark, a number or one word.",
+      },
+      negative: {
+        component: <Live of="integration-visual.DontLongHub" />,
+        description:
+          "Don't put a phrase in the hub. It stretches over the routes; say it in the card instead.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="integration-visual.DoThrough" />,
+        description:
+          "Run a pipeline's pulses through the hub, so outputs look like outputs.",
+      },
+      negative: {
+        component: <Live of="integration-visual.DontInward" />,
+        description:
+          "Don't pulse every route inward in a pipeline. The outputs start to look like sources.",
+      },
+    },
+  ]}
+/>
+
+<Tip>
+  The preview is for looking at: nobody can reach a link or button inside it
+  from the keyboard, so link out from the card around the diagram instead.
+</Tip>
+
+## Accessibility
+
+It's a picture, so it's named rather than operated. The only stop for the
+keyboard is the hub, and only when it has a preview.
+
+<UsageGuidelines
+  guidelines={[
+    "A screen reader hears one named group, Integrations unless you name it for what it shows, then each tool by its name, with idle added for idle ones.",
+    "The plate, routes, pulses and halo are decoration and are hidden from assistive technology.",
+    "With a preview, the hub is a button named after the text in the hub, or the diagram's name. Focusing it opens the preview the same way hovering does, the preview describes it, and Escape closes it.",
+    "For people who ask for reduced motion, the pulses and halo stop, tiles appear without springing in, the preview fades in place, and a preview video waits on its first frame.",
+    "If the diagram only decorates a card whose text says the same thing, a screen reader still reads the tool names. Give it a name that adds to the card rather than repeats it.",
   ]}
 />
 
