@@ -30,10 +30,9 @@ export function ScrollToTop({
       data-scroll-direction={scrollDirection}
       className={cn(
         "[--bottom:0.5rem] sm:[--bottom:1rem] lg:[--bottom:2rem]",
-        // Left on mobile so it clears NavMobileBar, which occupies the right
-        // corner below `sm`. That bar is gone from `sm` up, where the button
-        // returns to the right.
-        "fixed left-4 sm:right-4 sm:left-auto lg:right-8",
+        // Below `sm` the floating nav holds the bottom of the screen, so the
+        // button only shows from `sm` up.
+        "fixed right-4 max-sm:hidden lg:right-8",
         "bottom-[calc(var(--bottom,0.5rem)+env(safe-area-inset-bottom,0))] z-50",
         "transition-[background-color,opacity] duration-300 data-[scroll-direction=down]:opacity-30 data-[scroll-direction=up]:opacity-100 data-[visible=false]:opacity-0",
         "data-[scroll-direction=down]:hover:opacity-100",

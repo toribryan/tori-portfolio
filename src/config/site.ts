@@ -1,4 +1,11 @@
 import type { Route } from "next"
+import {
+  BoxesIcon,
+  HouseIcon,
+  LayersIcon,
+  PenLineIcon,
+  RabbitIcon,
+} from "lucide-react"
 
 import type { NavItem } from "@/types/nav"
 import { USER } from "@/features/portfolio/data/user"
@@ -31,6 +38,7 @@ export const MOBILE_NAV: NavItem<Route>[] = [
   {
     title: "Home",
     href: "/",
+    icon: HouseIcon,
   },
   {
     title: "Projects",
@@ -38,12 +46,23 @@ export const MOBILE_NAV: NavItem<Route>[] = [
     // /work index, so the cards are only reachable from here. Cast because
     // typed routes describe pathnames, not fragments.
     href: "/#projects" as Route,
+    icon: LayersIcon,
   },
   {
     title: "Components",
-    href: "/#components" as Route,
+    href: "/components",
+    icon: BoxesIcon,
   },
-  ...MAIN_NAV,
+  {
+    title: "Lore",
+    href: "/fibo",
+    icon: RabbitIcon,
+  },
+  {
+    title: "Blog",
+    href: "/latest",
+    icon: PenLineIcon,
+  },
 ]
 
 export const UTM_PARAMS = {
