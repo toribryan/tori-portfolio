@@ -1,0 +1,352 @@
+---
+title: Map marker
+description: A dot, icon or labelled pill for a point on a map, with a preview card that springs open on click or tap.
+createdAt: 2026-10-02
+updatedAt: 2026-10-02
+new: true
+---
+
+Map marker marks a point on a map as a dot, an icon or a labelled pill, and
+opens a preview card when you click or tap it. It brings no map of its own:
+your map library places it and moves it as the map pans and zooms. The map
+here is a stand-in drawn with the site's colours.
+
+<Exhibit
+  of="map-marker.Default"
+  title="Map marker"
+  description="Hover the dot, then click it. The card grows out of the marker."
+>
+<ExhibitCode label="Install">
+
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/map-marker.json
+```
+
+It installs `@base-ui/react` for the popover, plus the status colours and
+their `-subtle` tints a stock theme lacks. Your map library is your own
+dependency.
+
+</ExhibitCode>
+<ExhibitCode label="Usage">
+
+```tsx
+import Map, { Marker } from "react-map-gl/maplibre"
+
+import { MapMarker } from "@/components/ui/map-marker"
+
+export function Places({ places }: { places: Place[] }) {
+  return (
+    <Map initialViewState={{ longitude: -122.42, latitude: 37.77, zoom: 13 }}>
+      {places.map((place) => (
+        <Marker key={place.id} longitude={place.lng} latitude={place.lat}>
+          <MapMarker
+            label={place.name}
+            meta={place.category}
+            title={place.name}
+            description={place.summary}
+          />
+        </Marker>
+      ))}
+    </Map>
+  )
+}
+```
+
+`label` names the marker for screen readers, so give every marker one, even
+when it shows a price.
+
+</ExhibitCode>
+<ExhibitCode label="Props">
+
+| Prop               | Type                                                             | Default     | Description                                                                  |
+| ------------------ | ---------------------------------------------------------------- | ----------- | ---------------------------------------------------------------------------- |
+| `label`            | `string`                                                         |             | The place's name: the accessible name, and a label marker's text by default. |
+| `type`             | `"dot" \| "icon" \| "label"`                                     | `"dot"`     | A small point, a round marker with an icon, or a pill with text.             |
+| `variant`          | `"default" \| "success" \| "warning" \| "info" \| "destructive"` | `"default"` | What the colour says, when it says something.                                |
+| `icon`             | `ReactNode`                                                      | map pin     | The icon of an icon marker, or a leading icon in a label marker.             |
+| `text`             | `ReactNode`                                                      |             | What a label marker shows when it differs from `label`, such as "$120".      |
+| `size`             | `"sm" \| "default"`                                              | `"default"` | `sm` for dense maps.                                                         |
+| `image`            | `{ src: string; alt: string }`                                   |             | A photo at the top of the preview.                                           |
+| `meta`             | `ReactNode`                                                      |             | A small line above the title, such as a category or distance.                |
+| `title`            | `ReactNode`                                                      |             | The preview's heading.                                                       |
+| `description`      | `ReactNode`                                                      |             | A line or two under the title.                                               |
+| `children`         | `ReactNode`                                                      |             | Anything else for the preview, under the other fields.                       |
+| `open`             | `boolean`                                                        |             | Whether the preview is open, when controlled.                                |
+| `defaultOpen`      | `boolean`                                                        |             | Whether it starts open, when uncontrolled.                                   |
+| `onOpenChange`     | `(open: boolean) => void`                                        |             | Called when the preview opens or closes.                                     |
+| `side`             | `"top" \| "right" \| "bottom" \| "left"`                         | `"top"`     | Where the preview opens. It flips when there's no room.                      |
+| `previewClassName` | `string`                                                         |             | Classes for the preview, which is portalled to the body.                     |
+
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+A button on the map, and a card portalled to the body so no map container
+clips it. The card only renders when there's something to preview.
+
+<Exhibit of="map-marker.Anatomy" title="The card" description="Held open over its marker.">
+<ExhibitCode label="Structure">
+
+```text
+MapMarker               map-marker
+└─ preview              map-marker-preview         (while open, portalled)
+   ├─ image             map-marker-image
+   ├─ meta              map-marker-meta
+   ├─ title             map-marker-title
+   ├─ description       map-marker-description
+   └─ content           map-marker-content         (your children)
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
+
+<DataAttributes
+  rows={[
+    {
+      attribute: 'data-slot="map-marker"',
+      element: "The marker",
+      when: "Always.",
+    },
+    {
+      attribute: 'data-slot="map-marker-preview"',
+      element: "The preview card",
+      when: "While open.",
+    },
+    {
+      attribute: "data-type",
+      element: "The marker",
+      when: (
+        <>
+          Always. <code>dot</code>, <code>icon</code> or <code>label</code>.
+        </>
+      ),
+    },
+    {
+      attribute: "data-variant",
+      element: "The marker",
+      when: (
+        <>
+          Always. <code>default</code>, <code>success</code>,{" "}
+          <code>warning</code>, <code>info</code> or <code>destructive</code>.
+        </>
+      ),
+    },
+    {
+      attribute: "data-size",
+      element: "The marker",
+      when: (
+        <>
+          Always. <code>sm</code> or <code>default</code>.
+        </>
+      ),
+    },
+    {
+      attribute: "data-popup-open",
+      element: "The marker",
+      when: "Its preview is open.",
+    },
+  ]}
+/>
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+<Exhibit
+  of="map-marker.LabelMarkers"
+  title="Label markers"
+  description="A short value in a pill. The open one fills in, so it's clear whose card is showing."
+>
+<ExhibitCode>
+
+```tsx
+<MapMarker type="label" label="Blue Bottle Coffee" text="$6" />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="map-marker.IconMarkers"
+  title="Icon markers"
+  description="For maps where the kind of place matters. Without an icon, it shows a map pin."
+>
+<ExhibitCode>
+
+```tsx
+<MapMarker type="icon" icon={<CoffeeIcon />} label="Blue Bottle Coffee" />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="map-marker.Colours"
+  title="Colours"
+  description="Status colours saying whether each place is open. The status is in each label and meta too."
+>
+<ExhibitCode>
+
+```tsx
+<MapMarker
+  type="icon"
+  variant="success"
+  icon={<CoffeeIcon />}
+  label="Blue Bottle Coffee, open now"
+  meta="Open now"
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="map-marker.LabelsWithIcons"
+  title="Labels with icons"
+  description="A label can lead with an icon and colours its text to match the variant."
+>
+<ExhibitCode>
+
+```tsx
+<MapMarker
+  type="label"
+  variant="success"
+  icon={<CoffeeIcon />}
+  label="Blue Bottle Coffee, open now"
+  text="$6"
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<ExhibitGrid>
+<Exhibit
+  of="map-marker.Sizes"
+  title="Sizes"
+  description="sm shrinks all three types. The dot's press area stays 32px either way."
+>
+<ExhibitCode>
+
+```tsx
+<MapMarker label="Blue Bottle Coffee" size="sm" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="map-marker.WithoutPreview"
+  title="Without a preview"
+  description="With nothing to preview, the marker is a plain button."
+>
+<ExhibitCode>
+
+```tsx
+<MapMarker label="Sunflower Park" onClick={filterList} />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+## Usage
+
+<UsageGuidelines
+  guidelines={[
+    "Use dots for places, icons when the kind of place matters, and labels when a value matters at a glance, such as prices or times. Keep labels to a few characters.",
+    "Keep markers default unless colour means something, such as open or closed. Put the meaning in a legend and in each marker's label too.",
+    "Give every marker a label, the place's name. It's what screen readers announce and what the preview is named by.",
+    "Keep the card short: an image, a title, a line of description. Put the full page behind a link in the content.",
+    "Leave side at top for most maps. The card flips on its own when it would leave the screen.",
+  ]}
+/>
+
+### Actions in the card
+
+Children go under the other fields, for actions such as directions or saving
+the place. The card stays open until you close it, so it can hold them.
+
+<Exhibit of="map-marker.CustomContent" description="Click the dot to see the buttons.">
+<ExhibitCode>
+
+```tsx
+<MapMarker label={place.name} title={place.name} description={place.summary}>
+  <Button size="sm">Directions</Button>
+  <Button size="sm" variant="outline">
+    Save
+  </Button>
+</MapMarker>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### With a list beside the map
+
+`open` and `onOpenChange` let a list choose the open marker. Picking a row
+opens its card; opening a marker selects its row.
+
+<Exhibit of="map-marker.Controlled" description="Pick a place, or click a dot.">
+<ExhibitCode>
+
+```tsx
+const [openId, setOpenId] = useState<string | null>(null)
+
+<MapMarker
+  label={place.name}
+  title={place.name}
+  open={openId === place.id}
+  onOpenChange={(open) => setOpenId(open ? place.id : null)}
+/>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="map-marker.DoShortLabels" />,
+        description: "Keep labels to a short value people compare.",
+      },
+      negative: {
+        component: <Live of="map-marker.DontLongLabels" />,
+        description:
+          "Don't spell out whole names on the map. Long pills crowd each other; put names in the preview.",
+      },
+    },
+  ]}
+/>
+
+## Accessibility
+
+| Key                              | Does                                                 |
+| -------------------------------- | ---------------------------------------------------- |
+| <Kbd>Tab</Kbd>                   | Moves between the markers                            |
+| <Kbd>Space</Kbd> or <Kbd>↵</Kbd> | Opens the preview and moves focus into it            |
+| <Kbd>Esc</Kbd>                   | Closes the preview and puts focus back on the marker |
+
+<UsageGuidelines
+  guidelines={[
+    "Each marker is a button named by its label, and says it opens a dialog. A label marker showing a price is still announced by the place's name.",
+    "The preview is a dialog named by the marker's label, so screen readers announce which place they're in.",
+    "A dot is 16px to look at but takes presses across 32px, above the 24px minimum target.",
+    "Colour never stands alone: put the status a colour stands for in the marker's label and in the preview.",
+    "With reduced motion, the marker changes without animating and the card fades in place.",
+  ]}
+/>
+
+## Related components
+
+<RelatedComponents names={["Floating nav", "Integration visual", "Tooltip"]} />
+
+## References
+
+- [Base UI Popover](https://base-ui.com/react/components/popover), for the preview
+- [react-map-gl `Marker`](https://visgl.github.io/react-map-gl/docs/api-reference/maplibre/marker) and [MapLibre GL JS `Marker`](https://maplibre.org/maplibre-gl-js/docs/API/classes/Marker/), for placing it on a map
+- [WAI-ARIA dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/), for the preview's focus behaviour

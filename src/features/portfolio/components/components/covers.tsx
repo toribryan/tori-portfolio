@@ -4,12 +4,16 @@ import { useEffect, useRef, useState, type ReactNode } from "react"
 import type { ComponentType } from "react"
 import {
   BookmarkIcon,
+  BookOpenIcon,
   CalendarIcon,
   CircleDashedIcon,
+  CoffeeIcon,
   CompassIcon,
   DatabaseIcon,
+  FlowerIcon,
   GitBranchIcon,
   HouseIcon,
+  ImageIcon,
   MessageSquareIcon,
   SignalHighIcon,
   TagIcon,
@@ -48,6 +52,7 @@ import {
   IntegrationVisual,
   type IntegrationItem,
 } from "@/components/fibo/integration-visual"
+import { MapMarker } from "@/components/fibo/map-marker"
 import { PixelSnailSprite } from "@/components/fibo/pixel-snail"
 import { Reactions, type Reaction } from "@/components/fibo/reactions"
 import {
@@ -60,6 +65,11 @@ import {
   type TypingPerson,
 } from "@/components/fibo/typing-indicator"
 import { GROUPS } from "@/features/components/examples/command-menu-data"
+import {
+  Pin,
+  PLACES,
+  StandInMap,
+} from "@/features/components/examples/map-marker-data"
 import { useRabbit } from "@/features/components/examples/sticker-avatar-data"
 
 type CoverProps = { active: boolean }
@@ -664,6 +674,41 @@ function TypingIndicatorCover({ active }: CoverProps) {
   )
 }
 
+const MARKER_TYPES = ["dot", "icon", "label"] as const
+
+const MARKER_ICONS: Record<string, ReactNode> = {
+  cafe: <CoffeeIcon />,
+  books: <BookOpenIcon />,
+  park: <FlowerIcon />,
+  studio: <ImageIcon />,
+}
+
+/**
+ * fibo's stand-in city with a marker on each place. While active the markers
+ * step through dots, icons and price labels; at rest they're dots.
+ */
+function MapMarkerCover({ active }: CoverProps) {
+  const step = useCycle(MARKER_TYPES.length, 1400, active)
+  const type = MARKER_TYPES[step]!
+  return (
+    <ScaledStage width={400}>
+      <StandInMap className="aspect-auto size-full max-w-none rounded-none border-0">
+        {PLACES.map((place) => (
+          <Pin key={place.id} place={place}>
+            <MapMarker
+              type={type}
+              icon={MARKER_ICONS[place.id]}
+              label={place.label}
+              text={place.price}
+              tabIndex={-1}
+            />
+          </Pin>
+        ))}
+      </StandInMap>
+    </ScaledStage>
+  )
+}
+
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "data-table": DataTableCover,
   "filter-menu": FilterMenuCover,
@@ -676,6 +721,7 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "floating-nav": FloatingNavCover,
   "sticker-avatar": StickerAvatarCover,
   "typing-indicator": TypingIndicatorCover,
+  "map-marker": MapMarkerCover,
 }
 
 /**
