@@ -2,7 +2,6 @@ import type { ComponentType } from "react"
 
 import { DesignSystemOverhaulCover } from "./design-system-overhaul-cover"
 import { ModernCareHomesCover } from "./modern-care-homes-cover"
-import { RealWeddingSubmissionsCover } from "./real-wedding-submissions-cover"
 import { StorybookKitCover } from "./storybook-kit-cover"
 
 /**
@@ -12,6 +11,5 @@ import { StorybookKitCover } from "./storybook-kit-cover"
 export const DOC_COVERS: Record<string, ComponentType<{ loop?: boolean }>> = {
   "design-system-overhaul": DesignSystemOverhaulCover,
   "modern-care-homes": ModernCareHomesCover,
-  "real-wedding-submissions": RealWeddingSubmissionsCover,
   "storybook-kit": StorybookKitCover,
 }
