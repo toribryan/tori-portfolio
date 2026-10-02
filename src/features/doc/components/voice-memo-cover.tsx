@@ -18,11 +18,7 @@ export function VoiceMemoCover({ loop = false }: { loop?: boolean }) {
 
   return (
     <div ref={frame} className="flex size-full items-center justify-center">
-      <VoiceMemoObject
-        interactive={false}
-        turns={turns}
-        className="[&>div]:aspect-auto [&>div]:h-full [&>div]:[--w:min(44cqw,22rem)]"
-      />
+      <VoiceMemoObject turns={turns} className="[--w:min(44cqw,22rem)]" />
     </div>
   )
 }

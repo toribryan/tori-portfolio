@@ -41,7 +41,7 @@ src/components/fibo`); re-run that to update one, and check its imports still
 point at `@/components/fibo/`; the install also drops a stray `utils.ts`
 and a `cn` package, and writes dark values for fibo's extra roles into
 `globals.css` that this site mixes itself, so revert those, but keep `--warning` and the two `--sticker-*` tokens
-that Sticker avatar needs, which this site declares itself. Four parts carry
+that Sticker avatar needs, which this site declares itself. Five parts carry
 local changes. `filter-menu.tsx`
 has a `container` prop for where its popup renders, and keeps focus and
 scrolling inside the menu so opening it never scrolls the page; the home
@@ -54,7 +54,12 @@ home page cover needs, and then opening an item's page doesn't pull focus
 into it either (focusing scrolls the page to the menu, which dropped the
 command menu doc mid-page on load). Its preview pane also shows by the dialog's own width
 (`@xl/command-menu`) rather than the viewport's, so the pane stays in the
-scaled cover on a phone. Put
+scaled cover on a phone. `voice-memo.tsx` has a `device` prop that puts
+any element inside its record button in place of the flat drawing, and a
+`panelClassName` for placing the transcript; the Voice memo project page
+(`/work/voice-memo`) uses both for its 3D device, in
+`features/doc/components/voice-memo-object.tsx`. It isn't in
+`fibo-niche.ts`, so it has no `/components` doc yet. Put
 these back after reinstalling; fibo's own filter menu has since gained a
 `container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
 lists them, which drives the home page section, `/components` and the

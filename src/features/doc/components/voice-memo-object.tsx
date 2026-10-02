@@ -1,6 +1,13 @@
 "use client"
 
-import { useEffect, useId, useRef, useState } from "react"
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type MouseEvent,
+  type PointerEvent,
+} from "react"
 import { RotateCwIcon } from "lucide-react"
 import {
   animate,
@@ -13,6 +20,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/base/ui/button"
+import { VoiceMemo } from "@/components/fibo/voice-memo"
 
 /*
  * fibo's Voice memo device as an object you can pick up: the same drawn
@@ -20,8 +28,13 @@ import { Button } from "@/components/base/ui/button"
  * from fibo's voice-memo.tsx, where it's a flat button.
  */
 
-// Three-quarters on, tipped back a little, so the edge shows at rest.
-const REST = { x: -14, y: -28 }
+type Pose = { x: number; y: number }
+
+// On the card, three-quarters on and tipped back, so the edge shows.
+const ANGLED: Pose = { x: -14, y: -28 }
+
+// On its page, square to the screen, the way you'd hold it up to read.
+const STRAIGHT: Pose = { x: 0, y: 0 }
 
 // The thickness is a stack of rounded slices, close enough together that
 // they read as a solid edge when the device is turned side-on.
@@ -33,64 +46,28 @@ const FACE = { width: 170, height: 110, radius: 12 }
 const SPRING = { type: "spring", stiffness: 120, damping: 17 } as const
 const QUICK = { duration: 0.25, ease: "easeOut" } as const
 
-// The angle of the face nearest `y`, front or back.
-function nearestFace(y: number) {
-  return Math.round((y - REST.y) / 180) * 180 + REST.y
-}
-
-function isBack(y: number) {
-  return Math.abs(Math.round((y - REST.y) / 180)) % 2 === 1
-}
+// Sizes the device from the width it's given, and its edge from that.
+const SIZE = "[--w:min(62cqw,24rem)] [--t:calc(var(--w)*0.055)]"
 
 /**
- * The device in 3D. Interactive, it turns under a drag, coasts and settles
- * on a face when let go, and flips on a click, Space or Enter. Otherwise it
- * turns to `turns` half-turns from rest, for a cover.
+ * Rotation for the device, with a drag that turns it, coasts when let go and
+ * settles on whichever face is nearest. A drag never also counts as a press,
+ * so the device can be a button underneath.
  */
-export function VoiceMemoObject({
-  interactive = true,
-  turns = 0,
-  float = interactive,
-  className,
-}: {
-  interactive?: boolean
-  /** Half-turns from rest when not interactive: 1 shows the back. */
-  turns?: number
-  /** Bobs gently in place. */
-  float?: boolean
-  className?: string
-}) {
+function useTurn(rest: Pose) {
   const reduceMotion = useReducedMotion()
-  const rx = useMotionValue(REST.x)
-  const ry = useMotionValue(REST.y)
+  const rx = useMotionValue(rest.x)
+  const ry = useMotionValue(rest.y)
   const [back, setBack] = useState(false)
 
-  // The reflection slides across the metal as it turns, and the shadow on
-  // the ground narrows as the device goes edge-on.
-  const sheen = useTransform(ry, (y) => {
-    const turned = ((((y - REST.y) % 360) + 540) % 360) - 180
-    return `${turned * 0.9}px`
-  })
-  const shadowScale = useTransform(
-    ry,
-    (y) => 0.45 + 0.55 * Math.abs(Math.cos((y * Math.PI) / 180))
-  )
-
-  useEffect(() => {
-    if (interactive) return
-    const controls = animate(
-      ry,
-      REST.y + turns * 180,
-      reduceMotion ? QUICK : { ...SPRING, stiffness: 70 }
-    )
-    return () => controls.stop()
-  }, [interactive, turns, ry, reduceMotion])
+  const nearestFace = (y: number) =>
+    Math.round((y - rest.y) / 180) * 180 + rest.y
 
   const settle = (target: number) => {
     const transition = reduceMotion ? QUICK : SPRING
     animate(ry, target, transition)
-    animate(rx, REST.x, transition)
-    setBack(isBack(target))
+    animate(rx, rest.x, transition)
+    setBack(Math.abs(Math.round((target - rest.y) / 180)) % 2 === 1)
   }
 
   const flip = (direction = 1) =>
@@ -107,139 +84,214 @@ export function VoiceMemoObject({
     lastT: number
     velocity: number
   } | null>(null)
+  const dragged = useRef(false)
+
+  const handlers = {
+    onPointerDown: (event: PointerEvent<HTMLElement>) => {
+      if (event.button !== 0) return
+      dragged.current = false
+      rx.stop()
+      ry.stop()
+      drag.current = {
+        id: event.pointerId,
+        x: event.clientX,
+        y: event.clientY,
+        rx: rx.get(),
+        ry: ry.get(),
+        moved: false,
+        lastX: event.clientX,
+        lastT: event.timeStamp,
+        velocity: 0,
+      }
+    },
+    onPointerMove: (event: PointerEvent<HTMLElement>) => {
+      const current = drag.current
+      if (!current || current.id !== event.pointerId) return
+      const dx = event.clientX - current.x
+      const dy = event.clientY - current.y
+      if (!current.moved) {
+        if (Math.hypot(dx, dy) < 6) return
+        current.moved = true
+        // Captured only once it's a drag, so a tap still reaches the button.
+        event.currentTarget.setPointerCapture(event.pointerId)
+      }
+      ry.set(current.ry + dx * 0.55)
+      rx.set(Math.max(-70, Math.min(70, current.rx - dy * 0.35)))
+      // Degrees a millisecond, smoothed, for the coast after letting go.
+      const dt = Math.max(1, event.timeStamp - current.lastT)
+      const instant = ((event.clientX - current.lastX) * 0.55) / dt
+      current.velocity = current.velocity * 0.6 + instant * 0.4
+      current.lastX = event.clientX
+      current.lastT = event.timeStamp
+    },
+    onPointerUp: (event: PointerEvent<HTMLElement>) => {
+      const current = drag.current
+      if (!current || current.id !== event.pointerId) return
+      drag.current = null
+      if (!current.moved) return
+      dragged.current = true
+      // A flick carries on turning; it lands on whichever face it's nearest
+      // once it would have slowed down.
+      const coast = reduceMotion ? 0 : current.velocity * 280
+      settle(nearestFace(ry.get() + coast))
+    },
+    onPointerCancel: () => {
+      drag.current = null
+      settle(nearestFace(ry.get()))
+    },
+    // The click a drag ends on would otherwise press the button.
+    onClickCapture: (event: MouseEvent) => {
+      if (!dragged.current) return
+      dragged.current = false
+      event.preventDefault()
+      event.stopPropagation()
+    },
+  }
+
+  return { rx, ry, back, flip, handlers }
+}
+
+/**
+ * The device on its page: a record button you can also pick up. Press it and
+ * the transcript opens underneath, filling in as you talk; press it again to
+ * stop, then copy the text or save it as Markdown. Drag it to turn it over.
+ */
+export function VoiceMemoHero() {
+  const { rx, ry, back, flip, handlers } = useTurn(STRAIGHT)
+  const [recording, setRecording] = useState(false)
+  const reduceMotion = useReducedMotion()
 
   return (
     <div
       className={cn(
-        "not-prose @container relative flex w-full flex-col items-center",
+        "not-prose @container flex w-full flex-col items-center gap-6 px-4 pt-14 pb-2",
+        SIZE
+      )}
+      onKeyDown={(event) => {
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+          event.preventDefault()
+          flip(event.key === "ArrowRight" ? 1 : -1)
+        }
+      }}
+    >
+      <VoiceMemo
+        title="Voice memo"
+        recording={recording}
+        onRecordingChange={setRecording}
+        side="bottom"
+        className="flex w-full flex-col items-center"
+        panelClassName="relative top-auto left-auto mt-[calc(var(--w)*0.18)] w-80 origin-top before:left-1/2 before:-translate-x-1/2"
+        device={
+          <span
+            className="relative block aspect-[85/55] w-(--w) cursor-grab touch-pan-y [perspective:1400px] active:cursor-grabbing"
+            {...handlers}
+          >
+            <Shadow ry={ry} />
+            <motion.span
+              className="block size-full"
+              animate={!reduceMotion ? { y: [0, -6, 0] } : undefined}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              style={{ transformStyle: "preserve-3d" }}
+            >
+              <Body rx={rx} ry={ry} rest={STRAIGHT} recording={recording} />
+            </motion.span>
+          </span>
+        }
+      />
+
+      <div className="mt-[calc(var(--w)*0.12)] flex items-center gap-3 text-sm text-muted-foreground">
+        <span className="hidden sm:inline">
+          {recording ? "Press again to stop" : "Press to record, drag to turn"}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => flip()}
+          aria-label={back ? "Flip to the front" : "Flip to the back"}
+        >
+          <RotateCwIcon data-icon="inline-start" />
+          Flip
+        </Button>
+        <span role="status" className="sr-only">
+          {back ? "Showing the back" : "Showing the front"}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+/**
+ * The device for a card's cover: three-quarters on, turned `turns`
+ * half-turns from rest, so 1 shows its back.
+ */
+export function VoiceMemoObject({
+  turns = 0,
+  className,
+}: {
+  turns?: number
+  className?: string
+}) {
+  const reduceMotion = useReducedMotion()
+  const rx = useMotionValue(ANGLED.x)
+  const ry = useMotionValue(ANGLED.y)
+
+  useEffect(() => {
+    const controls = animate(
+      ry,
+      ANGLED.y + turns * 180,
+      reduceMotion ? QUICK : { ...SPRING, stiffness: 70 }
+    )
+    return () => controls.stop()
+  }, [turns, ry, reduceMotion])
+
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        "@container relative flex size-full items-center justify-center",
+        SIZE,
         className
       )}
     >
-      <div
-        role={interactive ? "group" : undefined}
-        aria-roledescription={interactive ? "3D model" : undefined}
-        aria-label={
-          interactive
-            ? "fibo voice memo device. Drag to turn it, or press Enter to flip it over."
-            : undefined
-        }
-        tabIndex={interactive ? 0 : undefined}
-        className={cn(
-          "relative flex aspect-[16/10] w-full touch-pan-y items-center justify-center outline-none select-none [perspective:1400px]",
-          "[--t:calc(var(--w)*0.055)] [--w:min(62cqw,24rem)]",
-          interactive &&
-            "cursor-grab rounded-2xl focus-visible:ring-[3px] focus-visible:ring-ring/50 active:cursor-grabbing"
-        )}
-        onKeyDown={(event) => {
-          if (!interactive) return
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault()
-            flip()
-          } else if (event.key === "ArrowRight") {
-            event.preventDefault()
-            flip(1)
-          } else if (event.key === "ArrowLeft") {
-            event.preventDefault()
-            flip(-1)
-          }
-        }}
-        onPointerDown={(event) => {
-          if (!interactive || event.button !== 0) return
-          event.currentTarget.setPointerCapture(event.pointerId)
-          rx.stop()
-          ry.stop()
-          drag.current = {
-            id: event.pointerId,
-            x: event.clientX,
-            y: event.clientY,
-            rx: rx.get(),
-            ry: ry.get(),
-            moved: false,
-            lastX: event.clientX,
-            lastT: event.timeStamp,
-            velocity: 0,
-          }
-        }}
-        onPointerMove={(event) => {
-          const current = drag.current
-          if (!current || current.id !== event.pointerId) return
-          const dx = event.clientX - current.x
-          const dy = event.clientY - current.y
-          if (!current.moved && Math.hypot(dx, dy) < 4) return
-          current.moved = true
-          ry.set(current.ry + dx * 0.55)
-          rx.set(Math.max(-70, Math.min(70, current.rx - dy * 0.35)))
-          // Degrees a millisecond, smoothed, for the coast after letting go.
-          const dt = Math.max(1, event.timeStamp - current.lastT)
-          const instant = ((event.clientX - current.lastX) * 0.55) / dt
-          current.velocity = current.velocity * 0.6 + instant * 0.4
-          current.lastX = event.clientX
-          current.lastT = event.timeStamp
-        }}
-        onPointerUp={(event) => {
-          const current = drag.current
-          if (!current || current.id !== event.pointerId) return
-          drag.current = null
-          if (!current.moved) {
-            flip()
-            return
-          }
-          // A flick carries on turning; it lands on whichever face it's
-          // nearest once it would have slowed down.
-          const coast = reduceMotion ? 0 : current.velocity * 280
-          settle(nearestFace(ry.get() + coast))
-        }}
-        onPointerCancel={() => {
-          drag.current = null
-          settle(nearestFace(ry.get()))
-        }}
-      >
-        <motion.span
-          aria-hidden
-          className="pointer-events-none absolute top-[calc(50%+var(--w)*0.36)] left-1/2 h-[calc(var(--w)*0.1)] w-(--w) -translate-x-1/2 rounded-[50%] bg-black/25 blur-xl dark:bg-black/60"
-          style={{ scaleX: shadowScale }}
-        />
-        <motion.div
-          aria-hidden
-          className="relative"
-          animate={float && !reduceMotion ? { y: [0, -6, 0] } : undefined}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          style={{ transformStyle: "preserve-3d" }}
-        >
-          <Body rx={rx} ry={ry} sheen={sheen} />
-        </motion.div>
-      </div>
-
-      {interactive ? (
-        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <span className="hidden sm:inline">Drag to turn it</span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => flip()}
-            aria-label={back ? "Flip to the front" : "Flip to the back"}
-          >
-            <RotateCwIcon data-icon="inline-start" />
-            Flip
-          </Button>
-          <span role="status" className="sr-only">
-            {back ? "Showing the back" : "Showing the front"}
-          </span>
-        </div>
-      ) : null}
+      <span className="relative block aspect-[85/55] w-(--w) [perspective:1400px]">
+        <Shadow ry={ry} />
+        <Body rx={rx} ry={ry} rest={ANGLED} />
+      </span>
     </div>
+  )
+}
+
+// The shadow on the ground narrows as the device goes edge-on.
+function Shadow({ ry }: { ry: MotionValue<number> }) {
+  const scaleX = useTransform(
+    ry,
+    (y) => 0.45 + 0.55 * Math.abs(Math.cos((y * Math.PI) / 180))
+  )
+  return (
+    <motion.span
+      aria-hidden
+      className="pointer-events-none absolute top-[calc(100%+var(--w)*0.06)] left-1/2 h-[calc(var(--w)*0.1)] w-(--w) -translate-x-1/2 rounded-[50%] bg-black/25 blur-xl dark:bg-black/60"
+      style={{ scaleX }}
+    />
   )
 }
 
 function Body({
   rx,
   ry,
-  sheen,
+  rest,
+  recording = false,
 }: {
   rx: MotionValue<number>
   ry: MotionValue<number>
-  sheen: MotionValue<string>
+  rest: Pose
+  recording?: boolean
 }) {
+  // The reflection slides across the metal as it turns.
+  const sheen = useTransform(ry, (y) => {
+    const turned = ((((y - rest.y) % 360) + 540) % 360) - 180
+    return `${turned * 0.9}px`
+  })
   // Which way the front faces, from the two rotations. backface-visibility
   // alone lets the back's filtered drawing ghost through mid-turn, so the
   // face turned away is hidden outright.
@@ -252,8 +304,9 @@ function Body({
   const back = useTransform(facing, (f) => (f < 0 ? 1 : 0))
 
   return (
-    <motion.div
-      className="relative aspect-[85/55] w-(--w)"
+    <motion.span
+      aria-hidden
+      className="relative block size-full"
       style={
         {
           rotateX: rx,
@@ -286,7 +339,7 @@ function Body({
           opacity: front,
         }}
       >
-        <Face side="front" />
+        <Face side="front" recording={recording} />
       </motion.span>
       <motion.span
         className="absolute inset-0 [backface-visibility:hidden]"
@@ -297,7 +350,7 @@ function Body({
       >
         <Face side="back" />
       </motion.span>
-    </motion.div>
+    </motion.span>
   )
 }
 
@@ -306,7 +359,13 @@ function Body({
  * theme: silver in light, space gray in dark. The front carries the raised
  * wordmark and the microphone pinhole, the back a debossed magnet ring.
  */
-function Face({ side }: { side: "front" | "back" }) {
+function Face({
+  side,
+  recording = false,
+}: {
+  side: "front" | "back"
+  recording?: boolean
+}) {
   const id = useId()
   const ids = {
     pits: `${id}-pits`,
@@ -533,6 +592,23 @@ function Face({ side }: { side: "front" | "back" }) {
           r={1.8}
           className="fill-foreground opacity-50"
         />
+      ) : null}
+      {/* The pinhole glows while it listens. */}
+      {side === "front" && recording ? (
+        <g className="animate-pulse motion-reduce:animate-none">
+          <circle
+            cx={width - 16}
+            cy={16}
+            r={5}
+            className="fill-destructive blur-[3px]"
+          />
+          <circle
+            cx={width - 16}
+            cy={16}
+            r={1.6}
+            className="fill-destructive"
+          />
+        </g>
       ) : null}
     </svg>
   )
