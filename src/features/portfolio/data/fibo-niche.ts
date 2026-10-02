@@ -56,6 +56,13 @@ export const NICHE_PARTS: NichePart[] = [
       "Walks a color token from raw value to primitive to semantic role.",
     home: false,
   },
+  {
+    name: "floating-nav",
+    title: "Floating nav",
+    description:
+      "A pill of destinations that floats above the bottom of a phone screen and steps aside while you scroll.",
+    home: false,
+  },
 ]
 
 export function nicheStorybookUrl(name: string) {
