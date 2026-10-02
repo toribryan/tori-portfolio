@@ -25,6 +25,13 @@ export const NICHE_PARTS: NichePart[] = [
       "A table for lists people work through: selection, bulk actions, locked rows, pinned columns and a phone layout.",
   },
   {
+    name: "chat-composer",
+    title: "Chat composer",
+    shelf: "base",
+    description:
+      "A message box built from parts around one draft, so each chat surface composes its own.",
+  },
+  {
     name: "filter-menu",
     title: "Filter menu",
     shelf: "special",
@@ -73,6 +80,7 @@ export const NICHE_PARTS: NichePart[] = [
     shelf: "special",
     description:
       "A hub and the tools wired into it, with pulses along the routes.",
+    home: false,
   },
   {
     name: "command-menu",

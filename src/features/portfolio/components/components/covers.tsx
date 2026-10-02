@@ -24,6 +24,17 @@ import {
   ChapterScrubber,
   type Chapter,
 } from "@/components/fibo/chapter-scrubber"
+import {
+  ChatComposerAttachments,
+  ChatComposerCommonActions,
+  ChatComposerFooter,
+  ChatComposerFrame,
+  ChatComposerHeader,
+  ChatComposerInput,
+  ChatComposerProvider,
+  ChatComposerSubmit,
+  type ChatComposerActions,
+} from "@/components/fibo/chat-composer"
 import { CommandMenu } from "@/components/fibo/command-menu"
 import {
   DataTable,
@@ -612,8 +623,61 @@ function StickerAvatarCover({ active }: CoverProps) {
   )
 }
 
+const COMPOSER_MESSAGE = "Both files from the review."
+const COMPOSER_FILES = [
+  { id: "a", name: "token-audit.pdf", size: 482_000 },
+  { id: "b", name: "button-states.png", size: 1_830_000 },
+]
+// Typing, a beat, sending, then a beat on the cleared box before it repeats.
+const COMPOSER_STEPS = COMPOSER_MESSAGE.length + 18
+const COMPOSER_IDLE: ChatComposerActions = {
+  setValue() {},
+  addAttachments() {},
+  removeAttachment() {},
+  submit() {},
+}
+
+/**
+ * Types a message under two attachments, sends it and clears, while active.
+ * At rest it's the empty composer with its placeholder.
+ */
+function ChatComposerCover({ active }: CoverProps) {
+  const step = useCycle(COMPOSER_STEPS, 70, active)
+  const typed = COMPOSER_MESSAGE.length
+  const sent = step >= typed + 10
+  return (
+    <ScaledStage width={420}>
+      <div className="flex min-h-56 items-center px-6">
+        <ChatComposerProvider
+          state={{
+            value: sent ? "" : COMPOSER_MESSAGE.slice(0, step),
+            attachments: step > 0 && !sent ? COMPOSER_FILES : [],
+            submitting: step >= typed + 3 && !sent,
+          }}
+          actions={COMPOSER_IDLE}
+        >
+          <ChatComposerFrame>
+            <ChatComposerHeader className="empty:hidden">
+              <ChatComposerAttachments />
+            </ChatComposerHeader>
+            <ChatComposerInput
+              aria-label="Message"
+              placeholder="Message #design"
+            />
+            <ChatComposerFooter>
+              <ChatComposerCommonActions />
+              <ChatComposerSubmit />
+            </ChatComposerFooter>
+          </ChatComposerFrame>
+        </ChatComposerProvider>
+      </div>
+    </ScaledStage>
+  )
+}
+
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "data-table": DataTableCover,
+  "chat-composer": ChatComposerCover,
   "filter-menu": FilterMenuCover,
   "chapter-scrubber": ChapterScrubberCover,
   "integration-visual": IntegrationVisualCover,

@@ -58,7 +58,7 @@ scaled cover on a phone. Put
 these back after reinstalling; fibo's own filter menu has since gained a
 `container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
 lists them, which drives the home page section, `/components` and the
-docs; `home: false` keeps a part off the home page (Token flow, whose slot the Command menu took, Reactions, whose slot Floating nav took, and Pixel snail, whose slot Sticker avatar took). Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
+docs; `home: false` keeps a part off the home page (Token flow, whose slot the Command menu took, Reactions, whose slot Floating nav took, Pixel snail, whose slot Sticker avatar took, and Integration visual, whose slot Chat composer took). Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
 `src/features/components/content/<slug>.mdx` is the body,
 `examples/<slug>.tsx` holds its live examples (named after the fibo stories
 they port), and `data/registry.tsx` wires the lead preview and links. The
