@@ -1,66 +1,67 @@
 ---
 title: "Agentic Design System"
-description: "Internal R&D on whether a model can use a design system. It cannot, without being told how. That finding is what Code Connect exists to fix."
-claim: "I tested whether a model can use our design system. It cannot, unless the components carry their own instructions."
+description: "Where I started with agentic design systems, where I am now, and what the evidence says works best today. A model can read a design, but it cannot infer the system behind it, and prose rules alone don't fix that."
+claim: "I started by telling a model how to use our design system. Now I build systems it can't pass without using correctly."
 image: "/cover-agenticds.webp"
 order: 7
 createdAt: "2026-01-01"
-updatedAt: "2026-08-23"
-company: "Proctorio"
+updatedAt: "2026-10-02"
+company: "Proctorio, then fibo"
 reach: "8 million test takers"
 role: "Staff Designer, research lead"
-team: "Run with the lead front-end engineer"
-type: "Internal R&D"
-period: "Q1 2026"
+team: "Research run with Proctorio's lead front-end engineer; fibo built solo with Claude Code"
+type: "Internal R&D, then open source"
+period: "Q1 to Q3 2026"
 skills:
   - "Design Systems"
   - "Figma MCP"
   - "Code Connect"
   - "Design Tokens"
   - "Claude Code"
+  - "Storybook"
   - "Figma"
-problem: "The design system had been rebuilt for people. Engineering was starting to generate implementations from designs and designers were starting to prototype in code, and both were reaching for the same system without getting it right. Nobody knew why."
-task: "Run the research: test whether a model can take a design and a design system and produce an implementation that actually uses the system, then fix whatever the tests broke."
-process: "Tested the workflow end to end with Figma MCP and controlled prompt pipelines, holding the design and the prompt constant and varying how much structure the system exposed to the model."
-outcome: "A model can read a design but cannot infer a design system from it. Usage instructions have to be attached to the components themselves, which is precisely the job Code Connect does. The system was restructured into three token tiers, JSON component contracts, and one canonical source everything else derives from."
+problem: "Engineering was starting to generate implementations from designs and designers were starting to prototype in code. Both reached for the same design system, and neither got it right. Nobody knew why."
+task: "Find out whether a model can use a design system, fix what the tests broke, and then build a system where the fixes hold without anyone watching."
+process: "Tested the workflow end to end with Figma MCP and controlled prompts at Proctorio, then rebuilt my own system, fibo, so every rule an agent needs is written down for it and checked by something that runs."
+outcome: "The early research was right about the cause: the model fails because the system's knowledge is out of reach. What it was missing was enforcement. In fibo, five checks gate every change, and agent pull requests arrive with their own stories, docs, metadata and passing tests."
 pinned: true
 results:
   - value: "The finding"
     label: "A model reads a design but cannot infer the system behind it"
-  - value: "3"
-    label: "Token tiers it can reason about"
+  - value: "5"
+    label: "Checks every fibo change has to pass, from a person or an agent"
   - value: "1"
-    label: "Canonical source everything else derives from"
+    label: "Metadata file the docs, catalog, registry and llms.txt all read"
 ---
 
 <Pipeline>
   <Stage
-    label="The question"
+    label="Where I started"
     detail="Can a model use a design system"
     mark="search"
   />
   <Stage
-    label="Figma MCP"
-    detail="The model reads the real design"
-    mark="figma"
-  />
-  <Stage
-    label="Controlled prompts"
-    detail="Same design, varied structure"
-    mark="terminal"
-  />
-  <Stage
-    label="Code Connect"
-    detail="Lookup instead of inference"
+    label="The contracts"
+    detail="Tokens, metadata, one source"
     mark="layers"
+  />
+  <Stage
+    label="Where I am now"
+    detail="fibo, built for agents"
+    mark="component"
+  />
+  <Stage
+    label="What works today"
+    detail="Checks the agent can run"
+    mark="shield"
   />
 </Pipeline>
 
-## Where this starts
+## Where I started
 
-The [design system overhaul](/work/design-system-overhaul) rebuilt the system
-for people. This is the question that came next: what happens when the consumer
-is not a person.
+The [design system overhaul](/work/design-system-overhaul) at Proctorio rebuilt
+the system for people. The question that came next was what happens when the
+consumer is not a person.
 
 Two agentic workflows were emerging at the same time, and the design system sat
 between them. Engineering was beginning to generate implementations from
@@ -83,7 +84,7 @@ Three things made it a test rather than a demo:
   amounts of structure exposed to the model.
 
 The question was deliberately narrow. Given a design and a design system, can a
-model produce an implementation that actually uses the system.
+model produce an implementation that actually uses the system?
 
 ## What the first tests told us
 
@@ -113,90 +114,148 @@ out of the model's reach.
   caption="Both outputs came from the same design and the same prompt. The variable is whether the component could be looked up."
 />
 
-That reframed the whole project. A design system communicates through
-convention, apprenticeship and review, and none of those survive contact with a
-machine consumer.
+A design system communicates through convention, apprenticeship and review, and
+none of those survive contact with a machine consumer. That's also what Code
+Connect is for: it lets a design point at its implementation, so the model stops
+inferring and starts looking it up. I only understood that by testing it.
 
-## What Code Connect is for
+## The contracts I wrote
 
-I understood this only by testing it: Code Connect exists to solve exactly
-this problem. It is the link that lets a design point at its implementation, so
-the model stops inferring and starts looking it up.
+The fixes all did the same thing: move what the team knew out of people's heads
+and into something a model can read.
 
-## Fix 1: Tokens the agent can reason about
-
-Raw values are the first thing that breaks. Hand a model `#008b8b` and it will
-cheerfully hardcode that hex in forty places. The moment you rebrand, every one
-of them is wrong, and no amount of prompting reliably stops it.
-
-- Primitives are raw values: `teal-500: #008b8b`, `space-4: 16px`. The agent
-  should never see these. If it does, it hardcodes them.
-- Semantics are intent-named aliases: `color/action/primary`,
-  `color/danger/background`. This is the only layer the agent reads and writes.
-  The name describes the job, not the value, so a rebrand updates one alias and
-  everything downstream follows.
-- Component tokens are optional: `button/background/default →
-color/action/primary`. Skip them until you are doing multi-brand work.
+**Tokens the agent can reason about.** Hand a model `#008b8b` and it will
+hardcode that hex in forty places. So the agent only ever sees semantic tokens
+named for their job (`color/action/primary`), never the primitives behind them
+(`teal-500`). A rebrand updates one alias and everything downstream follows.
 
 ![The three-tier token architecture: primitives, semantics, component tokens](/case-studies/agentic-design-system-tokens.svg)
 
-## Fix 2: Component metadata
-
-Most component documentation is written in prose, for humans. An agent needs a
-contract with explicit keys, explicit values, no ambiguity. The emerging
-consensus (surfaced across talks from Indeed, GitHub, and others at the AI
-Design Systems Conference 2026) is JSON metadata per component, covering four
-things:
-
-- Props: the states and variants that already exist in Figma. Five states in
-  Figma, five states in the metadata. No interpretation.
-- Relationships: what the agent must know before placing the component. Is
-  it a form child? A toolbar item? What can it not sit next to? This is the
-  context a human infers and an agent cannot.
-- Tokens: which semantic tokens the component consumes. In an agentic system
-  these are load-bearing.
-- Usage: what it is for, and the anti-patterns. Not the obvious ones ("don't
-  put two primary buttons side by side"), but the specific ones only your team
-  knows.
-
-An agent can auto-generate the first draft of this metadata, but it comes back
-about 80% right and 20% generic. It will list the obvious anti-patterns and miss
-the ones that bite: "never use a destructive button in onboarding,"
-"loading state shows after 200ms, not immediately." The 20% is the part that
-encodes what your team learned the hard way, and it is the part a person has to
-write.
+**Component metadata.** Prose docs are written for people. An agent needs JSON
+per component covering props, relationships, the tokens it consumes, and usage
+with anti-patterns. An agent can draft this, but it comes back about 80% right
+and 20% generic. It lists the obvious anti-patterns and misses the ones that
+bite, like "never use a destructive button in onboarding." That 20% is what the
+team learned the hard way, and a person has to write it.
 
 ![Semantic token definitions layered on top of the raw primitives](/case-studies/agentic-design-system-semantic-tokens.svg)
 
-## Fix 3: One source of truth
+**One source of truth.** The Figma library, the docs site and the token files
+all resolve to one contract instead of competing, so the agent never has to
+guess which to trust.
 
-The fix is architectural. Pick one canonical source: for us, the design system
-components linked to Figma via Code Connect (or rich component descriptions,
-which do the same job without enterprise tooling).
+Once the system could be read by a machine, the handoff could be rebuilt around
+that. It became the
+[design skills infrastructure](/latest/design-skills-infrastructure), which
+took spec production from days to under 30 minutes.
 
-Everything else derives from it or maps to it:
+## What the research was missing
 
-- The Figma library
-- The docs site
-- The token files
+My own next steps from that project already pointed at the gap: measure it with
+a standing benchmark, and make a component without its usage contract fail
+review the way one without an accessible name would.
 
-Each one is a projection of the one contract.
+Both are about enforcement. Every fix I'd made was a contract the agent was
+given. Nothing stopped an agent from ignoring it, and nothing told it when it
+had. That's the part I got to build next.
 
-## What it changed
+## Where I am now: fibo
 
-No more hardcoded values creeping into forty places the moment a token changes.
-No more agent guessing which source to trust: the Figma library, the docs site,
-and the token files all resolve to one contract instead of competing.
+[fibo](/fibo) is my own design system, rebuilt in August 2026 on shadcn and Base
+UI and published as a registry, so any project installs parts as source. Much
+of it is built by Claude Code, working from the rules below. I set the rules,
+and I review and merge what comes back.
 
-The larger change is what it made possible. Once the system could be read by a
-machine, the handoff itself could be rebuilt around that, which became the
-[design skills infrastructure](/latest/design-skills-infrastructure) and took
-spec production from days to under 30 minutes.
+The rules live in two kinds of places: written down where an agent will read
+them, and enforced by something that runs.
+
+| Rule                                       | Where the agent learns it | What enforces it                                                                                                 |
+| ------------------------------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Five checks define done                    | `AGENTS.md`               | CI runs lint, format, Figma drift, build, typecheck and tests on every pull request                              |
+| Every part installs cleanly                | `AGENTS.md`               | A smoke test installs each part into a fresh shadcn app and fails on classes that compile to nothing             |
+| Accessible by default                      | `AGENTS.md`               | Every story renders in Chromium with axe set to fail on any violation                                            |
+| Figma and code share names                 | `figma-drift` skill       | `pnpm figma:drift` compares the Figma snapshot with the CSS tokens and variants; every intended gap has a reason |
+| Every part has metadata                    | `add-component` skill     | The build fails if a component is missing from `components.meta.json`                                            |
+| Semantic tokens only, no opacity modifiers | `AGENTS.md`               | A read-only `component-reviewer` subagent reports violations with file and line                                  |
+| Retiring a part never strands anyone       | `retire-component` skill  | One `deprecated` entry feeds the docs banner, catalog, registry and `llms.txt`, plus a tested codemod            |
+
+That metadata check is the "fails review" step from my old next-steps list,
+built for real.
+
+One detail shows how the Figma side fits in. Figma silently forces a fill's
+opacity to 100% when its color is bound to a variable, so a class like
+`bg-destructive/10` has no Figma twin. Instead of living with the mismatch, I
+named every one of those as its own token (`-subtle`, `-hover`, `-ring`). Now
+Figma, the CSS and the agent all reach for the same word.
+
+The proof is in the pull requests. An agent-written Voice memo component
+(PR #86, about 1,570 lines) arrived with its stories, docs page, metadata entry
+and changelog line, reported 192 unit tests and 204 story tests passing, and
+took the "new" tag off the oldest part to stay under the limit of three. Nobody
+had to catch what was missing, because the checks wouldn't let anything be
+missing.
+
+## What works best today
+
+Agent support is table stakes now. In Kaelig Deloumeau-Prigent's
+[State of AI in Design Systems](https://state-of-ai-in-design-systems.netlify.app/)
+(21 systems, July 2026), 20 ship an MCP server, 19 ship agent skills and 16 keep
+an AGENTS.md or CLAUDE.md in the repo. The useful question is which delivery
+works. Here's what the evidence says, strongest first:
+
+<Numbered>
+  <Item title="Give agents real components, not descriptions of them.">
+    In a CHI '26 study, serving installable components from a registry reached
+    95.08% design-system compliance, ahead of pasting in full style guides or
+    retrieved guideline sections.
+  </Item>
+  <Item title="Give them checks they can run and fix against.">
+    In RepoComplianceBench (July 2026), agents opened policy files in only 3.5%
+    of runs. With feedback from a check, compliance rose to 90 to 100%. shadcn's
+    own linter reports near-zero violations after one correction round, because
+    its errors say what to use instead.
+  </Item>
+  <Item title="Generate what the agent reads from the source.">
+    Atlassian rebuilt its docs as typed, structured content that generates its
+    MCP server, and reported 34% faster tasks and 16% fewer tokens. In their
+    words, documentation that drifts from the code "is worse than no
+    documentation at all."
+  </Item>
+  <Item title="Keep always-on context small and specific.">
+    A compact docs index in AGENTS.md hit 100% on Vercel's eval, while agents
+    skipped an available skill 56% of the time. Generic repo overviews added
+    about 20% to cost with no gain in an ETH Zurich study.
+  </Item>
+  <Item title="Use one name for each decision on both sides.">
+    The DTCG token spec reached its first stable version in October 2025, and
+    Code Connect maps Figma components to code. Matching names are what make a
+    drift check possible.
+  </Item>
+</Numbered>
+
+The vendor numbers here (Atlassian, Storybook, Vercel) come from their own
+benchmarks, so I read them as direction, not proof.
+
+Here's how my original fixes hold up against that:
+
+| What I did at Proctorio                     | How it holds up                                                                                                |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Lookup over inference, through Code Connect | Confirmed. The registry result is the same idea at full strength                                               |
+| Agents see semantic tokens only             | Holds, and today a lint rule enforces it instead of hoping the agent never sees a primitive                    |
+| JSON metadata per component                 | Holds. Generate the mechanical part from source, and keep people writing the usage rules                       |
+| One canonical source, in Figma              | Partly. Installable code is what agents should consume, with Figma mapped to it and a drift check between them |
+
+## What changed about the job
+
+My job on a system like this is less about making each part and more about
+writing the rules every part gets made by. A repeated comment in review becomes
+a lint rule, a test or a line in `AGENTS.md`. What's left for review is what no
+check can judge: intent, hierarchy, tone, and whether something is right for the
+product.
 
 ## What I'd do next
 
-- Measure it properly. The tests told us what broke and why, but a standing
-  benchmark would tell us whether the system is getting more legible over time
-  or just differently broken.
-- Push the metadata upstream, so a component that ships without its usage
-  contract fails review the way a component without an accessible name would.
+- Measure it properly. This was my first next step at Proctorio and it's still
+  open. fibo shows the mechanics work, but it has one maintainer and no
+  baseline, so a standing benchmark is what would tell me whether the system is
+  getting more legible over time or just differently broken.
