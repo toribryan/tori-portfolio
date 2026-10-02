@@ -4,9 +4,13 @@ import { useState, type ReactNode } from "react"
 import {
   ArrowRightIcon,
   CheckIcon,
-  ChevronDownIcon,
   DiamondIcon,
+  RefreshCwIcon,
   SearchIcon,
+  SquareDashedIcon,
+  ToggleLeftIcon,
+  TypeIcon,
+  type LucideIcon,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -17,29 +21,59 @@ import { Input } from "@/components/fibo/input"
 import { Plate } from "./fibo-blocks"
 
 /*
- * Figma's properties panel for a selected instance, recreated for the
- * Design System Overhaul: the same three components under the old library's
- * names and under the shared vocabulary that replaced them.
+ * Figma's component properties list, recreated for the Design System
+ * Overhaul: the same three components under the old library's properties and
+ * under the shared vocabulary that replaced them. Each list is copied from
+ * the components in Figma, in the order Figma shows them.
  */
 
-type Row =
-  | { kind: "variant"; name: string; value: string; clash?: boolean }
-  | { kind: "boolean"; name: string; on: boolean; clash?: boolean }
-  | { kind: "text"; name: string; value: string; clash?: boolean }
-  | { kind: "swap"; name: string; value: string }
-  | { kind: "slot"; name: string }
+type PropertyType = "variant" | "text" | "boolean" | "swap" | "slot"
 
-type Selection = {
-  /** The component's name in the layers panel. */
+type Property = {
+  type: PropertyType
   name: string
-  rows: Row[]
+  /** A variant's options, or the default of any other property. */
+  value: string
+  /** Means something another component calls by a different name. */
+  clash?: boolean
+}
+
+type Definition = {
+  /** The component's name in Figma. */
+  name: string
+  properties: Property[]
 }
 
 type Part = {
   preview: ReactNode
-  before: Selection
-  after: Selection
+  before: Definition
+  after: Definition
 }
+
+const v = (name: string, value: string, clash?: boolean): Property => ({
+  type: "variant",
+  name,
+  value,
+  clash,
+})
+const t = (name: string, value: string, clash?: boolean): Property => ({
+  type: "text",
+  name,
+  value,
+  clash,
+})
+const b = (name: string, on: boolean, clash?: boolean): Property => ({
+  type: "boolean",
+  name,
+  value: on ? "True" : "False",
+  clash,
+})
+const s = (name: string, value: string): Property => ({
+  type: "swap",
+  name,
+  value,
+})
+const slot = (name: string): Property => ({ type: "slot", name, value: "Slot" })
 
 const PARTS: Part[] = [
   {
@@ -51,31 +85,35 @@ const PARTS: Part[] = [
     ),
     before: {
       name: "btn_primary_LG v2",
-      rows: [
-        { kind: "variant", name: "Type", value: "Primary", clash: true },
-        { kind: "variant", name: "Size", value: "Large", clash: true },
-        { kind: "variant", name: "Edge", value: "Round", clash: true },
-        { kind: "boolean", name: "Disabled", on: false, clash: true },
-        { kind: "boolean", name: "Icon?", on: true, clash: true },
-        { kind: "variant", name: "Icon Position", value: "Left" },
-        { kind: "text", name: "Text", value: "Submit", clash: true },
-        { kind: "boolean", name: "Tooltip", on: false },
-        { kind: "text", name: "Tooltip Text", value: "Submit the form" },
+      properties: [
+        v(
+          "Type",
+          "Primary, Secondary, Outline, Text Link, Danger, Danger Outline, Success, Warning",
+          true
+        ),
+        v("Size", "XXS, Small, Med, Large, XL", true),
+        v("Icon Position", "Left, Right"),
+        v("Edge", "Sharp, Soft, Round", true),
+        t("Text", "Submit", true),
+        b("Icon?", true, true),
+        b("Disabled", false, true),
+        t("Tooltip Text", "Submit the form"),
+        b("Tooltip", false),
       ],
     },
     after: {
       name: "Button",
-      rows: [
-        { kind: "variant", name: "kind", value: "filled" },
-        { kind: "variant", name: "shape", value: "pill" },
-        { kind: "variant", name: "size", value: "md" },
-        { kind: "variant", name: "state", value: "default" },
-        { kind: "variant", name: "status", value: "default" },
-        { kind: "boolean", name: "prefix", on: true },
-        { kind: "swap", name: "prefixIcon", value: "check" },
-        { kind: "boolean", name: "suffix", on: false },
-        { kind: "swap", name: "suffixIcon", value: "arrow-right" },
-        { kind: "text", name: "label", value: "Submit" },
+      properties: [
+        v("kind", "filled, outlined, tonal, text"),
+        v("status", "default, success, warning, danger, info"),
+        v("size", "sm, md, lg"),
+        v("state", "default, hover, disabled"),
+        v("shape", "square, rounded, pill"),
+        t("label", "Submit"),
+        b("prefix", true),
+        s("prefixIcon", "circle-check"),
+        b("suffix", false),
+        s("suffixIcon", "arrow-right"),
       ],
     },
   },
@@ -96,27 +134,28 @@ const PARTS: Part[] = [
     ),
     before: {
       name: "Input Field / Outlined",
-      rows: [
-        { kind: "variant", name: "Style", value: "Outlined", clash: true },
-        { kind: "variant", name: "Sz", value: "M", clash: true },
-        { kind: "variant", name: "Status", value: "Error", clash: true },
-        { kind: "boolean", name: "isDisabled", on: false, clash: true },
-        { kind: "variant", name: "Show Label", value: "Yes" },
-        { kind: "boolean", name: "Leading Icon", on: true, clash: true },
-        { kind: "text", name: "Value", value: "ana@" },
+      properties: [
+        v("Style", "Outlined, Filled", true),
+        v("Sz", "S, M, L", true),
+        v("Status", "Normal, Error, Valid, Warn", true),
+        v("Show Label", "Yes, No"),
+        t("Value", "ana@example.com"),
+        b("Leading Icon", true, true),
+        b("isDisabled", false, true),
       ],
     },
     after: {
       name: "Input",
-      rows: [
-        { kind: "variant", name: "size", value: "md" },
-        { kind: "variant", name: "state", value: "default" },
-        { kind: "variant", name: "status", value: "danger" },
-        { kind: "boolean", name: "prefix", on: true },
-        { kind: "swap", name: "prefixIcon", value: "search" },
-        { kind: "boolean", name: "suffix", on: false },
-        { kind: "swap", name: "suffixIcon", value: "x" },
-        { kind: "text", name: "label", value: "Email" },
+      properties: [
+        v("size", "sm, md, lg"),
+        v("state", "default, focus, disabled"),
+        v("status", "none, success, warning, danger, info"),
+        t("label", "Email"),
+        t("value", "ana@example.com"),
+        b("prefix", true),
+        s("prefixIcon", "search"),
+        b("suffix", false),
+        s("suffixIcon", "x"),
       ],
     },
   },
@@ -136,101 +175,45 @@ const PARTS: Part[] = [
     ),
     before: {
       name: "Card - Report",
-      rows: [
-        { kind: "variant", name: "Kind", value: "Report", clash: true },
-        { kind: "variant", name: "Size", value: "Compact", clash: true },
-        { kind: "variant", name: "Accent", value: "Red", clash: true },
-        { kind: "boolean", name: "hasIcon", on: false, clash: true },
-        { kind: "boolean", name: "hasBadge", on: false },
-        { kind: "boolean", name: "hasFooter", on: false },
-        { kind: "text", name: "Title", value: "Flagged sessions", clash: true },
+      properties: [
+        v("Kind", "Report, Inbox, Admin", true),
+        v("Size", "Compact, Regular", true),
+        v("Accent", "None, Red, Green, Blue", true),
+        t("Title", "Flagged sessions", true),
+        b("hasIcon", false, true),
+        b("hasBadge", false),
+        b("hasFooter", false),
       ],
     },
     after: {
       name: "Card",
-      rows: [
-        { kind: "variant", name: "size", value: "md" },
-        { kind: "variant", name: "status", value: "danger" },
-        { kind: "slot", name: "header" },
-        { kind: "slot", name: "content" },
-        { kind: "slot", name: "footer" },
+      properties: [
+        v("size", "sm, md"),
+        v("status", "none, success, warning, danger, info"),
+        slot("header"),
+        slot("content"),
+        slot("footer"),
       ],
     },
   },
 ]
 
-function Toggle({ on }: { on: boolean }) {
-  return (
-    <span
-      aria-hidden
-      className={cn(
-        "relative h-3.5 w-6 shrink-0 rounded-full border",
-        on ? "border-foreground bg-foreground" : "border-border bg-muted"
-      )}
-    >
-      <span
-        className={cn(
-          "absolute top-1/2 left-0.5 size-2 -translate-y-1/2 rounded-full",
-          on ? "translate-x-2.5 bg-background" : "bg-muted-foreground"
-        )}
-      />
-    </span>
-  )
+// The icons Figma puts beside each kind of property.
+const ICONS: Record<PropertyType, LucideIcon> = {
+  variant: DiamondIcon,
+  text: TypeIcon,
+  boolean: ToggleLeftIcon,
+  swap: RefreshCwIcon,
+  slot: SquareDashedIcon,
 }
 
-function Field({ children }: { children: ReactNode }) {
-  return (
-    <span className="flex h-6 min-w-0 flex-1 items-center gap-1.5 rounded-md border border-line bg-background px-2 text-foreground">
-      {children}
-    </span>
-  )
-}
-
-function Control({ row }: { row: Row }) {
-  switch (row.kind) {
-    case "variant":
-      return (
-        <Field>
-          <span className="truncate">{row.value}</span>
-          <ChevronDownIcon className="ml-auto size-3 shrink-0 text-muted-foreground" />
-        </Field>
-      )
-    case "boolean":
-      return (
-        <span className="flex h-6 flex-1 items-center">
-          <Toggle on={row.on} />
-        </span>
-      )
-    case "text":
-      return (
-        <Field>
-          <span className="truncate">{row.value}</span>
-        </Field>
-      )
-    case "swap":
-      return (
-        <Field>
-          <DiamondIcon className="size-3 shrink-0 text-muted-foreground" />
-          <span className="truncate">{row.value}</span>
-          <ChevronDownIcon className="ml-auto size-3 shrink-0 text-muted-foreground" />
-        </Field>
-      )
-    case "slot":
-      return (
-        <span className="flex h-6 min-w-0 flex-1 items-center rounded-md border border-dashed border-border px-2 text-muted-foreground">
-          Slot
-        </span>
-      )
-  }
-}
-
-/** One selected instance: a scrap of canvas, then its properties. */
-function SelectionCard({
+/** One component's property list, with a scrap of canvas above it. */
+function DefinitionCard({
   preview,
-  selection,
+  definition,
 }: {
   preview: ReactNode
-  selection: Selection
+  definition: Definition
 }) {
   return (
     <div className="flex min-w-0 flex-col overflow-hidden rounded-lg border border-line bg-background">
@@ -241,40 +224,53 @@ function SelectionCard({
       >
         {preview}
       </div>
-      <div className="flex flex-col gap-2 p-3 text-[11px]">
-        <p className="flex items-center gap-1.5 font-mono text-xs font-medium text-foreground">
-          <DiamondIcon aria-hidden className="size-3.5 shrink-0" />
-          <span className="truncate">{selection.name}</span>
+      <div className="flex flex-col gap-2.5 p-3">
+        <p className="truncate text-sm font-medium text-foreground">
+          {definition.name}
         </p>
-        <dl className="m-0 flex flex-col gap-1.5">
-          {selection.rows.map((row) => {
-            const clash = "clash" in row && row.clash
+        <p className="text-[11px] font-medium text-muted-foreground">
+          Properties
+        </p>
+        <ul className="m-0 flex list-none flex-col gap-1 p-0">
+          {definition.properties.map((property) => {
+            const Icon = ICONS[property.type]
             return (
-              <div key={row.name} className="flex items-center gap-2">
-                <dt
+              <li
+                key={property.name}
+                title={`${property.name} · ${property.value}`}
+                className="flex h-7 min-w-0 items-center gap-2 rounded-md bg-muted px-2 text-xs"
+              >
+                <Icon
+                  aria-hidden
+                  className="size-3.5 shrink-0 text-muted-foreground"
+                />
+                <span
                   className={cn(
-                    "w-[42%] shrink-0 truncate",
-                    clash
+                    "shrink-0",
+                    property.clash
                       ? "text-warning underline decoration-dotted underline-offset-2"
-                      : "text-muted-foreground"
+                      : "text-foreground"
                   )}
                 >
-                  {row.name}
-                </dt>
-                <dd className="m-0 flex min-w-0 flex-1">
-                  <Control row={row} />
-                </dd>
-              </div>
+                  {property.name}
+                </span>
+                <span aria-hidden className="text-muted-foreground">
+                  ·
+                </span>
+                <span className="truncate text-muted-foreground">
+                  {property.value}
+                </span>
+              </li>
             )
           })}
-        </dl>
+        </ul>
       </div>
     </div>
   )
 }
 
 /**
- * Button, Input and Card as Figma shows them when selected, before and after
+ * Button, Input and Card as Figma lists their properties, before and after
  * the shared names. The components look the same both ways; only the words
  * people use to set them change.
  */
@@ -329,10 +325,10 @@ export function PropertyPanels() {
     >
       <div className="grid gap-3 sm:grid-cols-3">
         {PARTS.map((part) => (
-          <SelectionCard
+          <DefinitionCard
             key={part.after.name}
             preview={part.preview}
-            selection={after ? part.after : part.before}
+            definition={after ? part.after : part.before}
           />
         ))}
       </div>
