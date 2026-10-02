@@ -44,9 +44,9 @@ import {
   TokenRoles,
   VariantWall,
 } from "./overhaul-diagrams"
-import { PropertyPanels, StatusNames } from "./property-panels"
 import { RepoViewer } from "./repo-viewer"
 import { ResultFigure } from "./result-figure"
+import { StatusNames } from "./status-names"
 import { TokenVisualizer } from "./token-visualizer"
 
 /** Components a doc's MDX can use beyond the shared set. */
@@ -58,7 +58,6 @@ const DOC_COMPONENTS = {
   Plate,
   Principle,
   Principles,
-  PropertyPanels,
   RepoViewer,
   Side,
   Sides,

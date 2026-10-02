@@ -203,7 +203,17 @@ I gave every component the same property names:
 
 A designer who knows Button's properties already knows Input's.
 
-<PropertyPanels />
+<Plate caption="Button's properties in Figma. The old Type held how a button looked and what it meant in one list; the new Button splits them into kind and status, and calls its icons prefix and suffix.">
+  <Compare
+    layout="columns"
+    before="/case-studies/ds-overhaul-button-properties-before.webp"
+    after="/case-studies/ds-overhaul-button-properties-after.webp"
+    beforeAlt="The old Button's Figma properties: Type with Primary, Secondary and more; Size from XXS to XL; Icon Position; Edge with Sharp, Soft and Round; Text; Icon?; Disabled; Tooltip Text; and Tooltip"
+    afterAlt="The new Button's Figma properties: kind with filled, outlined, tonal and text; status; size sm, md and lg; state; shape with square, rounded and pill; label; prefix; prefixIcon; suffix; and suffixIcon"
+    beforeLabel="Before"
+    afterLabel="After"
+  />
+</Plate>
 
 Status colors got the same treatment. Each meaning has one name, and each
 name is backed by status tokens, so a warning looks the same on every
