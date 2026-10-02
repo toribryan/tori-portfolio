@@ -3,6 +3,7 @@ import type { ComponentType } from "react"
 import { EXAMPLES } from "@/features/components/examples"
 import {
   NICHE_PARTS,
+  nicheFigmaUrl,
   nicheStorybookUrl,
 } from "@/features/portfolio/data/fibo-niche"
 
@@ -15,6 +16,8 @@ export type ComponentEntry = {
   links: {
     /** The part's docs in fibo's Storybook. */
     storybook: string
+    /** The part's page in fibo's Figma library, when it has one. */
+    figma?: string
     /** Where else it is published, such as 21st.dev. */
     registry?: { label: string; url: string }
     /** The post announcing it, shown at the top of the doc. */
@@ -72,6 +75,7 @@ export const COMPONENTS: Record<string, ComponentEntry | undefined> =
         source: `${name}.tsx`,
         links: {
           storybook: nicheStorybookUrl(name),
+          figma: nicheFigmaUrl(name),
           ...(ON_21ST.has(name) && {
             registry: {
               label: "Open on 21st.dev",
