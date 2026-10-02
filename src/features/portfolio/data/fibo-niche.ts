@@ -18,6 +18,13 @@ export type NichePart = {
  */
 export const NICHE_PARTS: NichePart[] = [
   {
+    name: "data-table",
+    title: "Data table",
+    shelf: "base",
+    description:
+      "A table for lists people work through: selection, bulk actions, locked rows, pinned columns and a phone layout.",
+  },
+  {
     name: "filter-menu",
     title: "Filter menu",
     shelf: "special",

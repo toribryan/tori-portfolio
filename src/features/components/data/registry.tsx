@@ -24,6 +24,7 @@ export type ComponentEntry = {
 
 // Which example leads each doc: the one fibo's own docs open with.
 const LEAD: Record<string, string> = {
+  "data-table": "Default",
   "filter-menu": "AppliedAsChips",
   "chapter-scrubber": "Default",
   "command-menu": "Default",
