@@ -18,6 +18,10 @@ export const META_THEME_COLORS = {
 
 export const MAIN_NAV: NavItem<Route>[] = [
   {
+    title: "Projects",
+    href: "/projects",
+  },
+  {
     title: "Blog",
     href: "/latest",
   },
@@ -37,13 +41,7 @@ export const MOBILE_NAV: NavItem<Route>[] = [
 /** Every page, in the menu beside the floating nav. */
 export const MOBILE_MENU: NavItem<Route>[] = [
   { title: "Home", href: "/" },
-  {
-    title: "Projects",
-    // A section of the home page rather than a route of its own: there is no
-    // /work index, so the cards are only reachable from here. Cast because
-    // typed routes describe pathnames, not fragments.
-    href: "/#projects" as Route,
-  },
+  { title: "Projects", href: "/projects" },
   { title: "Components", href: "/components" },
   { title: "Lore", href: "/fibo" },
   { title: "Blog", href: "/latest" },

@@ -95,7 +95,7 @@ export default async function Page({ params }: PageProps<"/work/[slug]">) {
 
       <DocEnterSound slug={slug} />
 
-      <DocPage doc={doc} backHref="/#projects" backLabel="Projects" />
+      <DocPage doc={doc} backHref="/projects" backLabel="Projects" />
     </>
   )
 }
