@@ -242,33 +242,43 @@ Put together, an agentic design system has five layers. Decisions live once,
 agents get them as context, checks reject what drifts, and people spend review
 time on what checks can't judge.
 
-<Pipeline>
-  <Stage
-    label="Source of truth"
+<IsoCards>
+  <IsoCard
+    title="Source of truth"
+    index="001"
+    art="stack-source"
     detail="DTCG tokens, components in code, a Figma library with the same names"
-    mark="layers"
+    seed="1"
   />
-  <Stage
-    label="Context"
+  <IsoCard
+    title="Context"
+    index="002"
+    art="stack-context"
     detail="AGENTS.md, skills, llms.txt, metadata, MCP"
-    mark="terminal"
+    seed="2"
   />
-  <Stage
-    label="Agent"
+  <IsoCard
+    title="Agent"
+    index="003"
+    art="stack-agent"
     detail="Builds from the context it's given, and nothing else"
-    mark="claude"
+    seed="3"
   />
-  <Stage
-    label="Guardrails"
+  <IsoCard
+    title="Guardrails"
+    index="004"
+    art="stack-guardrails"
     detail="Lint, types, axe, visual regression, drift, smoke tests"
-    mark="shield"
+    seed="4"
   />
-  <Stage
-    label="Review"
+  <IsoCard
+    title="Review"
+    index="005"
+    art="stack-review"
     detail="Intent, taste and fit, judged by a person"
-    mark="users"
+    seed="5"
   />
-</Pipeline>
+</IsoCards>
 
 Two loops make it get better over time. A failed check goes back to the agent,
 which fixes its own work. A miss that keeps coming up in review goes back into
