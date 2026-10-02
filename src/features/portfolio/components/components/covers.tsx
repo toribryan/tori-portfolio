@@ -646,33 +646,20 @@ const TYPISTS: TypingPerson[] = [
 const TYPING_STEPS = [1, 2, 3, 4]
 
 /**
- * A short thread with the indicator under it. While active, people join one
- * at a time until it gives up naming them; at rest the dots hold still.
+ * The indicator on its own. While active, people join one at a time until it
+ * gives up naming them; at rest the dots hold still.
  */
 function TypingIndicatorCover({ active }: CoverProps) {
   const step = useCycle(TYPING_STEPS.length, 1400, active)
   return (
-    <div className="flex size-full items-center justify-center p-4">
-      <div className="flex w-56 flex-col gap-2 rounded-xl border border-line bg-background p-3 text-left">
-        <div className="flex flex-col text-xs">
-          <span className="font-medium">Ana</span>
-          <span className="text-muted-foreground">
-            Pushed the new tokens to the branch.
-          </span>
-        </div>
-        <div className="flex flex-col text-xs">
-          <span className="font-medium">Ben</span>
-          <span className="text-muted-foreground">
-            Is dark mode in there too?
-          </span>
-        </div>
-        <TypingIndicator
-          people={TYPISTS.slice(0, active ? TYPING_STEPS[step] : 2)}
-          className={cn(
-            !active && "[&_[data-slot=typing-indicator-dots]>span]:animate-none"
-          )}
-        />
-      </div>
+    <div className="flex size-full items-center justify-center p-2 max-sm:[zoom:0.8] sm:[zoom:1.15]">
+      <TypingIndicator
+        people={TYPISTS.slice(0, active ? TYPING_STEPS[step] : 2)}
+        className={cn(
+          "max-w-full",
+          !active && "[&_[data-slot=typing-indicator-dots]>span]:animate-none"
+        )}
+      />
     </div>
   )
 }
