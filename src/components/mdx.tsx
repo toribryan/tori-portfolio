@@ -22,6 +22,8 @@ import { mdxCodeBlockComponents } from "./mdx-code-block"
 import { Compare } from "./mdx-compare"
 import { Embed } from "./mdx-embed"
 import { Figure } from "./mdx-figure"
+import { ImageCycle } from "./mdx-image-cycle"
+import { ImagePan } from "./mdx-image-pan"
 import { InboxRegions } from "./mdx-inbox-regions"
 import { LinkButton } from "./mdx-link-button"
 import { Pipeline, Stage } from "./mdx-pipeline"
@@ -75,6 +77,8 @@ const components: MDXRemoteProps["components"] = {
   Embed,
   Compare,
   Figure,
+  ImageCycle,
+  ImagePan,
   InboxRegions,
   Pipeline,
   PipelineHero,
