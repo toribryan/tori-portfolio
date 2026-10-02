@@ -54,27 +54,36 @@ function Plate({ name }: { name: keyof typeof PLATES }) {
   )
 }
 
+/** Plates side by side, stacked on phones. */
+function Plates({ names }: { names: (keyof typeof PLATES)[] }) {
+  return (
+    <div className="grid gap-6 sm:grid-cols-2">
+      {names.map((name) => (
+        <Plate key={name} name={name} />
+      ))}
+    </div>
+  )
+}
+
 function Chapter({
   title,
-  plate,
   after,
   children,
 }: {
   title: string
-  plate?: keyof typeof PLATES
-  /** Full width, under the copy and plate. */
+  /** Full width, under the copy. */
   after?: ReactNode
   children: ReactNode
 }) {
   return (
     <PanelContent className="screen-line-bottom last:screen-line-bottom-none">
-      {/* Copy and plate split on the golden section, like the brand's cards. */}
+      {/* The copy takes the larger cut of the golden section, like the
+          brand's cards. */}
       <div className="grid items-start gap-6 sm:grid-cols-[1.618fr_1fr]">
         <div className="typeset typeset-description">
           <h3>{title}</h3>
           {children}
         </div>
-        {plate ? <Plate name={plate} /> : null}
       </div>
       {after ? <div className="mt-6">{after}</div> : null}
     </PanelContent>
@@ -136,7 +145,10 @@ export function FiboStory() {
         </p>
       </Chapter>
 
-      <Chapter title="Organic and mechanical" plate="bunny">
+      <Chapter
+        title="Organic and mechanical"
+        after={<Plates names={["bunny", "sunflower"]} />}
+      >
         <p>
           The golden ratio comes from nature. It&apos;s nature&apos;s own
           algorithm, and I&apos;m using it to build something mechanical. While
@@ -146,20 +158,6 @@ export function FiboStory() {
         <p>
           That&apos;s why the rabbit is pixel art. He&apos;s an animal, a part
           of nature, rebuilt out of pixels.
-        </p>
-      </Chapter>
-
-      <Chapter title="The sunflower" plate="sunflower">
-        <p>
-          A sunflower&apos;s seeds spiral out from the center in Fibonacci
-          numbers, so the sunflower is the second face of fibo. Each image
-          blends a photograph with a dithered pixel animation until the two read
-          as one picture: nature on one side, the machine on the other, and me
-          as the point where they meet.
-        </p>
-        <p>
-          I call the look soft cyber eco-core. It grew out of my interest in
-          cyberfeminism and, for fibo, turned softer and closer to nature.
         </p>
       </Chapter>
 
