@@ -47,17 +47,7 @@ export default function Page() {
         <PageHeadingDescription>{description}</PageHeadingDescription>
       </PageHeading>
 
-      <div className="screen-line-bottom">
-        <FiboInstall />
-      </div>
-
-      <h2 className="screen-line-bottom px-4 py-2 font-heading text-xl font-medium">
-        {NICHE_PARTS.length} components
-      </h2>
-
-      <ComponentCardList />
-
-      <div className="screen-line-top flex flex-wrap justify-center gap-2 py-4">
+      <div className="screen-line-bottom flex flex-wrap gap-2 p-4">
         <Button
           size="sm"
           nativeButton={false}
@@ -87,6 +77,16 @@ export default function Page() {
           <ArrowUpRightIcon data-icon="inline-end" />
         </Button>
       </div>
+
+      <div className="screen-line-bottom">
+        <FiboInstall />
+      </div>
+
+      <h2 className="screen-line-bottom px-4 py-2 font-heading text-xl font-medium">
+        {NICHE_PARTS.length} components
+      </h2>
+
+      <ComponentCardList />
 
       <div className="screen-line-top h-4" />
     </>
