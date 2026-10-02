@@ -54,11 +54,12 @@ const PARTS: Part[] = [
       rows: [
         { kind: "variant", name: "Type", value: "Primary", clash: true },
         { kind: "variant", name: "Size", value: "Large", clash: true },
-        { kind: "variant", name: "Color", value: "Green", clash: true },
         { kind: "boolean", name: "Disabled", on: false, clash: true },
         { kind: "boolean", name: "Icon?", on: true, clash: true },
         { kind: "variant", name: "Icon Position", value: "Left" },
         { kind: "text", name: "Text", value: "Submit", clash: true },
+        { kind: "boolean", name: "Tooltip", on: false },
+        { kind: "text", name: "Tooltip Text", value: "Submit the form" },
       ],
     },
     after: {
