@@ -548,41 +548,45 @@ function DataTableCover({ active }: CoverProps) {
   return (
     <ScaledStage width={375}>
       {/* Top-aligned, so the toolbar where the selection shows stays in view
-          and the cards run off the bottom like a phone screen. */}
-      <div className="px-5 pt-5">
-        <DataTable
-          aria-label="Members"
-          rowIds={COVER_MEMBERS.map((member) => member.id)}
-          noun={{ one: "member", other: "members" }}
-          narrowLayout="cards"
-          value={new Set(COVER_SELECTIONS[step])}
-        >
-          <DataTableToolbar>
-            <DataTableBulkActions onDelete={() => {}} />
-          </DataTableToolbar>
-          <DataTableCards>
-            {COVER_MEMBERS.map((member) => (
-              <DataTableCard
-                key={member.id}
-                id={member.id}
-                title={member.name}
-                avatar={{ fallback: member.initials }}
-                status={
-                  <Badge variant={COVER_STATUS[member.status]}>
-                    {member.status}
-                  </Badge>
-                }
-              >
-                <DataTableCardField label="Team">
-                  {member.team}
-                </DataTableCardField>
-                <DataTableCardField label="Role">
-                  {member.role}
-                </DataTableCardField>
-              </DataTableCard>
-            ))}
-          </DataTableCards>
-        </DataTable>
+          and the cards run off the bottom like a phone screen. Light in both
+          themes and on white rather than the site's warm page color; the
+          white sits a level in, where .light no longer sets the background. */}
+      <div className="light px-5 pt-5">
+        <div className="text-foreground [--background:oklch(1_0_0)]">
+          <DataTable
+            aria-label="Members"
+            rowIds={COVER_MEMBERS.map((member) => member.id)}
+            noun={{ one: "member", other: "members" }}
+            narrowLayout="cards"
+            value={new Set(COVER_SELECTIONS[step])}
+          >
+            <DataTableToolbar>
+              <DataTableBulkActions onDelete={() => {}} />
+            </DataTableToolbar>
+            <DataTableCards>
+              {COVER_MEMBERS.map((member) => (
+                <DataTableCard
+                  key={member.id}
+                  id={member.id}
+                  title={member.name}
+                  avatar={{ fallback: member.initials }}
+                  status={
+                    <Badge variant={COVER_STATUS[member.status]}>
+                      {member.status}
+                    </Badge>
+                  }
+                >
+                  <DataTableCardField label="Team">
+                    {member.team}
+                  </DataTableCardField>
+                  <DataTableCardField label="Role">
+                    {member.role}
+                  </DataTableCardField>
+                </DataTableCard>
+              ))}
+            </DataTableCards>
+          </DataTable>
+        </div>
       </div>
     </ScaledStage>
   )
