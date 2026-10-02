@@ -552,13 +552,13 @@ function DataTableCover({ active }: CoverProps) {
   return (
     <ScaledStage width={375}>
       {/* Top-aligned, so the toolbar where the selection shows stays in view
-          and the cards run off the bottom like a phone screen. Light in both
-          themes and on white rather than the site's warm page color; the
-          white sits a level in, where .light no longer sets the background. */}
-      <div className="light px-5 pt-5">
-        {/* Eases the checkbox and card colors, and fades the toolbar's
-            contents in as it swaps between idle and selecting. */}
-        <div className="text-foreground [--background:oklch(1_0_0)] [&_[data-slot=checkbox]]:transition-[background-color,border-color,color] [&_[data-slot=checkbox]]:duration-200 [&_[data-slot=data-table-card]]:transition-colors [&_[data-slot=data-table-card]]:duration-300 [&_[data-slot=data-table-toolbar]>*]:animate-in [&_[data-slot=data-table-toolbar]>*]:duration-300 [&_[data-slot=data-table-toolbar]>*]:fade-in-0">
+          and the cards run off the bottom like a phone screen. */}
+      <div className="px-5 pt-5">
+        {/* White in the light theme rather than the site's warm page color;
+            the dark theme keeps its own background. Also eases the checkbox
+            and card colors, and fades the toolbar's contents in as it swaps
+            between idle and selecting. */}
+        <div className="[--background:oklch(1_0_0)] dark:[--background:inherit] [&_[data-slot=checkbox]]:transition-[background-color,border-color,color] [&_[data-slot=checkbox]]:duration-200 [&_[data-slot=data-table-card]]:transition-colors [&_[data-slot=data-table-card]]:duration-300 [&_[data-slot=data-table-toolbar]>*]:animate-in [&_[data-slot=data-table-toolbar]>*]:duration-300 [&_[data-slot=data-table-toolbar]>*]:fade-in-0">
           <DataTable
             aria-label="Members"
             rowIds={COVER_MEMBERS.map((member) => member.id)}
