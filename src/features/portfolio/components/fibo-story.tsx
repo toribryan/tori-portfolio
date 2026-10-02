@@ -124,26 +124,16 @@ export function FiboStory() {
         </p>
       </Chapter>
 
-      <Chapter title="Why it adds up">
-        <p>
-          Look at any month and the count is the two months before it, added
-          together. That&apos;s no coincidence. Everyone from last month is
-          still here, because nobody dies. And every pair that was around two
-          months ago is grown up by now, so each of them just had a new pair.
-          This month is last month plus the month before: 1, 1, 2, 3, 5, 8, 13,
-          21, and on forever.
-        </p>
-        <p>
-          Now divide each number by the one before it. 2 ÷ 1 is 2. 3 ÷ 2 is 1.5.
-          5 ÷ 3 is 1.667. 8 ÷ 5 is 1.6. It wobbles above and below, closer every
-          month, toward 1.618: the golden ratio, φ. The rabbits never land on it
-          exactly. They just keep getting closer.
-        </p>
-        <p>
-          So a rabbit started it all, and a rabbit got the job of mascot.
-          He&apos;s very aware of his family history. Click him too many times
-          and he&apos;ll warn you there&apos;ll be eight of him by next month.
-        </p>
+      <Chapter title="The sequence">
+        <ul>
+          <li>Start with 1 and 1.</li>
+          <li>Add the last two numbers to get the next one.</li>
+          <li>1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, and on forever.</li>
+          <li>
+            Divide any number by the one before it and you get closer and closer
+            to 1.618, the golden ratio, φ.
+          </li>
+        </ul>
       </Chapter>
 
       <Chapter
