@@ -14,6 +14,7 @@ import {
 } from "@/lib/rehype-code-block"
 import { cn } from "@/lib/utils"
 import { Code } from "@/components/base/ui/typography"
+import { SubmissionJourney } from "@/features/doc/components/submission-journey"
 import { VendorCreditDemo } from "@/features/doc/components/vendor-credit-demo"
 
 import { Callout } from "./callout"
@@ -88,6 +89,7 @@ const components: MDXRemoteProps["components"] = {
   Stage,
   SkillCommandsVisual,
   StepTransition,
+  SubmissionJourney,
   StoryEmbed,
   LinkButton,
   Tech,
