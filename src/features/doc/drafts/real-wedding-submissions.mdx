@@ -1,0 +1,240 @@
+---
+title: "Real Wedding Submissions"
+description: "A submission wizard that replaces a fillable PDF, a shared inbox and a color-coded spreadsheet for Iron Diamond Media's seven bridal publications."
+# QUESTION: the claim should be the one thing you believe this project proves. Draft below is a placeholder built from the code, rewrite in your words.
+claim: "The editors had already written the form. The build just wasn't listening to them yet."
+image: "/cover-real-wedding-submissions.webp"
+# Set order against the other work entries when this moves out of drafts.
+order: 9
+createdAt: "2026-10-02"
+updatedAt: "2026-10-02"
+company: "Iron Diamond Media"
+reach: "Seven sister bridal publications"
+role: "Product design + front-end build"
+team: "An engineer who scoped the data and built the first shell, two digital editors"
+type: "Product Redesign"
+period: "Q3 2026"
+# QUESTION: is the wedding-submission-form flag open in production? Add status: "Shipped" or "Behind a feature flag".
+skills:
+  - "Research"
+  - "FigJam"
+  - "UX Writing"
+  - "React"
+  - "TypeScript"
+  - "Base UI"
+  - "View Transitions"
+  - "Claude Code"
+problem: "Real weddings reached the magazine through a fillable PDF downloaded from SharePoint, emailed to a shared inbox, and tracked in a color-coded Excel sheet. Staff unpacked gallery links by hand and chased submitters for whatever was missing. A national site launching in early 2027 would multiply the volume."
+task: "Turn the engineer's nine-step shell and data requirements into a submission flow that collects what editorial actually needs, in words the editors wrote, on the shared design system."
+process: "Audited the editors' feedback thread against the shipped shell, wrote a copy deck from it, mapped three submitter journeys in FigJam, prototyped the revised flow at low fidelity with AI, then swapped in the design system and built the front end with coding agents."
+# QUESTION: outcome. Live or not? Any submissions, editor reactions, or fewer follow-ups? Leave this out rather than guess.
+outcome: ""
+results:
+  - value: "3"
+    label: "Places where the form rejected the answer the editors told people to give"
+  - value: "9 → 8"
+    label: "Steps, once the publication came from the site you started on"
+  - value: "11"
+    label: "Reviewable PRs the build was split into for merge"
+---
+
+<Pipeline>
+  <Stage
+    label="Editors + competitors"
+    detail="Feedback thread, competitor forms"
+    mark="users"
+  />
+  <Stage
+    label="Redlines"
+    detail="Every ask checked against the build"
+    mark="search"
+  />
+  <Stage
+    label="Journeys"
+    detail="Three submitter paths in FigJam"
+    mark="figma"
+  />
+  <Stage
+    label="Lo-fi prototype"
+    detail="Revised flow, prototyped with AI"
+    mark="claude"
+  />
+  <Stage
+    label="Design system"
+    detail="Built on the shared components"
+    mark="component"
+  />
+</Pipeline>
+
+{/_ SCREENSHOT: hero
+Capture: the "Who is submitting this wedding?" step with "A wedding vendor" chosen and the role follow-up open inside the card
+Specs: 1440px desktop, light mode, crop to the form column and the Cancel corner
+Tip: CleanShot X with padding _/}
+
+## Where this starts
+
+Iron Diamond Media publishes seven bridal magazines, and every real wedding
+they print starts as a submission. Before this, that meant a fillable PDF
+from SharePoint, emailed to a shared inbox. Staff opened gallery links by
+hand, wrote back for whatever was missing, and tracked every submission in a
+color-coded Excel sheet. With a national site launching in early 2027, the
+number of submissions was about to grow past what that process could handle.
+
+{/* QUESTION: who submits most often (photographers, planners, couples) and what made this harder than "build a multi-step form"? One or two sentences in your words. */}
+
+The engineer had already scoped the data editorial needed and built a
+nine-step shell behind a feature flag. It validated every field. Nothing
+was stored behind it yet, and the last step was a "coming soon" stub. My job
+was the rest: research, design, and the front end.
+
+{/* QUESTION: confirm the role line. "I researched and designed the flow and built the front end. The engineer scoped the data model, split my branch into reviewable PRs, and owns the backend." */}
+
+## Reading the editors against the build
+
+The digital editors had already sent feedback on the shell. The editorial
+director wrote structural questions; the digital editor answered with a full
+copy draft. I held every line of both against what the code actually did.
+
+{/* QUESTION: confirm you're comfortable naming Lara and Megan, or keep them as roles. */}
+
+The audit came back with 3 conflicts, 11 missing items, 10 rewordings and 5
+things to leave alone. The conflicts mattered most, because in each one the
+form rejected the exact answer the editors told people to give:
+
+<Numbered>
+
+<Item title="Galleries.">
+  Both editors asked for "Dropbox or other photo gallery" links. The validator
+  only accepted dropbox.com, so a Pixieset or Pic-Time gallery failed with
+  "Enter a valid Dropbox link."
+</Item>
+<Item title="Instagram.">
+  The editors settled on mandatory, with "N/A" as the escape hatch. The handle
+  pattern rejected N/A.
+</Item>
+<Item title="Addresses.">
+  The editors wanted the submitter's address required and the couple's optional,
+  since they collect it during factcheck. The build had it backwards.
+</Item>
+
+</Numbered>
+
+{/_ SCREENSHOT: redlines
+Capture: the top of real-wed-form-redlines.html, the four counts and the first conflict card
+Specs: 1440px, crop to the counts plus one conflict
+Tip: export from the HTML file, not Figma _/}
+
+From the audit I wrote a copy deck covering every screen. Each line is
+tagged by where it came from: the digital editor's draft, already built and
+worth keeping, written by me, or waiting on an editor's decision.
+
+## Competitors
+
+{/* QUESTION: which submission forms did you study (The Knot, Junebug, Style Me Pretty, others)? What did you take, and what did you decide against? This section is cut if you skip it. */}
+
+## Mapping the journeys
+
+{/* QUESTION: what were Journeys A, B and C in FigJam, and what did mapping them show you? */}
+
+{/_ SCREENSHOT: journeys
+Capture: FigJam board with Journeys A–C side by side
+Specs: crop to the three lanes, readable at 1200px wide _/}
+
+## The flow
+
+The flow went from nine steps to eight, and every heading became a question
+the submitter answers: "Who is submitting this wedding?", "How can we reach
+you?", "Who photographed this wedding?", down to "One last look."
+
+The publications step was the one I removed. A submission belongs to the
+publication whose site you started on, so the form reads the brand from the
+host instead of asking for it.
+
+"Someone else" turned into named options. A vendor picks their role inside
+the same card, because the magazine mails copies to the submitter, the
+photographer and the couple, and it needs to know which one you are. A
+photographer gets their own step first. Everyone else gives their details,
+then names the photographer.
+
+{/_ VIDEO: who step
+Capture: choose "A wedding vendor", the role field opens inside the card, pick Florist, press Next
+Specs: <=6s, muted, loop, .mp4
+Tip: Screen Studio _/}
+
+Vendor credits are sorted by category: venue, planner, photographer,
+videographer and florist come pre-filled, and each one has its own search.
+Adding a category opens the picker with focus already in it, and choosing a
+category opens its search. If nothing is listed under that category, the
+form goes straight to the fields for entering a vendor by hand.
+
+{/_ VIDEO: vendor credits
+Capture: Add another category → Caterer → search opens → pick a vendor → credit animates into the list
+Specs: <=6s, muted, loop _/}
+
+The review step the shell never had shows each section on its own row with
+an Edit link, says how many things still need attention, and ends on the
+consent line editorial required: "I confirm everyone named here has agreed
+to publication."
+
+{/* QUESTION: is there a decision here that felt risky at the time? */}
+
+## How it moves
+
+Each step change runs as a React `<ViewTransition>` with forward and back
+types. The step that's leaving fades out fast and the next one fades in more
+slowly, so the old content gets out of the way before the new content
+arrives.
+
+```css
+--motion-exit-duration: 150ms;
+--motion-enter-duration: 210ms;
+--motion-move-duration: 400ms;
+--motion-credit-duration: 480ms;
+--motion-credit-ease: cubic-bezier(0.22, 1, 0.36, 1);
+```
+
+Loading states are shaped like the step they stand in for, and the app-wide
+skeleton changed from a pulse to a sheen. With reduced motion on, every
+transition runs at zero duration, the sheen stops, and scrolling a new
+vendor category into view jumps there instantly.
+
+{/* QUESTION: craft. What are you proudest of, and what took disproportionate effort that nobody will notice? If it's one of the details above, say which and why, and this section gets rebuilt around it. */}
+
+## How I worked
+
+I researched competitors and talked with the digital editors, then used
+what I learned to map the journeys in FigJam. I used AI to prototype a
+low-fidelity version of the revised flow. In a second pass I swapped the
+design system in for everything, and my coding agents helped implement the
+design on it.
+
+{/* QUESTION: name the tools (Claude Code? which prototype tool?), and how you checked the agents' code: tests, Storybook, manual QA? */}
+
+## Handing it to engineering
+
+My branch came to 73 files. The engineer split it into a stack of eleven
+PRs, each under about a thousand lines and reviewable on its own, and merged
+it in order. The engineer refactored it afterward: the step model became
+explicit per-persona orders, the photographer step became a single search
+with inline email and Instagram fields, and the image rail and some
+"(optional)" labels came back.
+
+{/* QUESTION: how do you want to frame the post-handoff changes? A fair trade, a disagreement, or leave it out? This section stays factual until you answer. */}
+
+## What I explored and killed
+
+{/* QUESTION: what from the lo-fi prototype or the journeys didn't survive, and why? Cut if skipped. */}
+
+## Where it stands
+
+{/* QUESTION: outcome. Is the flag open? Submissions received, editor reactions, fewer follow-ups? No capture events exist in the flow, so per-step drop-off can't be measured. Say "too early to measure" only if that's your call. */}
+
+## What I'd do differently
+
+{/* QUESTION: honest trade-offs or shortcuts. Cut if skipped. */}
+
+## What this changed
+
+{/* QUESTION: how did this project change how you work? Cut if skipped. */}
+
+{/* QUESTION: credits. Name the engineer and editors, or keep roles? */}
