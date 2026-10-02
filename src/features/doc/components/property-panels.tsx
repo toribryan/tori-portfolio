@@ -359,11 +359,13 @@ export function StatusNames() {
       background="none"
       caption={`${total} names for four meanings became four roles, each backed by its own status tokens.`}
     >
-      <ul className="m-0 flex list-none flex-col gap-3 p-0">
+      {/* Columns sized to their content and shared by every row, so the
+          arrows line up and the roles sit right beside the names they replace. */}
+      <ul className="m-0 grid list-none grid-cols-[minmax(0,max-content)_auto_auto] items-center justify-center gap-x-4 gap-y-3 p-0">
         {STATUSES.map(({ role, variant, old }) => (
           <li
             key={role}
-            className="grid grid-cols-[minmax(0,1fr)_auto_5.5rem] items-center gap-3"
+            className="col-span-3 grid grid-cols-subgrid items-center"
           >
             <span className="flex flex-wrap gap-1.5">
               {old.map((name) => (
