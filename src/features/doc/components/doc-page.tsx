@@ -26,7 +26,7 @@ import {
 } from "@/features/doc/data/documents"
 import type { Doc } from "@/features/doc/types/document"
 
-import { DOC_COVERS } from "./doc-covers"
+import { DOC_COVERS, DOC_HEROES } from "./doc-covers"
 import {
   Item,
   Numbered,
@@ -106,6 +106,7 @@ export async function DocPage({
   const noun = NEIGHBOUR_NOUN[category] ?? "page"
   const basePath = CATEGORY_BASE_PATH[category]
   const Cover = DOC_COVERS[doc.slug]
+  const Hero = DOC_HEROES[doc.slug]
 
   const facts = [
     ["Company", m.company],
@@ -193,7 +194,13 @@ export async function DocPage({
         {m.title}
       </h1>
 
-      {Cover ? (
+      {Hero ? (
+        <div className="screen-line-bottom p-4">
+          <div className="relative flex flex-col items-center overflow-hidden rounded-xl bg-muted/60 pb-6 inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15">
+            <Hero />
+          </div>
+        </div>
+      ) : Cover ? (
         // The same live cover as the doc's card, larger, switching themes on
         // a loop instead of on hover.
         <div data-cover-host className="screen-line-bottom p-4">
