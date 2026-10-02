@@ -54,7 +54,7 @@ export function VendorCreditDemo({ caption }: { caption?: React.ReactNode }) {
       <div
         ref={frame}
         className={cn(
-          "flex justify-center rounded-xl bg-[#fbebf0] px-4 py-10 inset-ring-1 inset-ring-black/15 sm:px-10 dark:inset-ring-white/15",
+          "flex justify-center rounded-xl bg-[#e9939e] px-4 py-10 inset-ring-1 inset-ring-black/15 sm:px-10 dark:inset-ring-white/15",
           urbanist.className
         )}
         style={{ color: INK }}

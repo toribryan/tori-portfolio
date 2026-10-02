@@ -109,7 +109,7 @@ export function StepTransition({
     <figure className="not-prose my-8">
       <div
         ref={frame}
-        className="flex justify-center rounded-xl bg-[#fbebf0] px-6 py-10 inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
+        className="flex justify-center rounded-xl bg-[#e9939e] px-6 py-10 inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
         role="img"
         aria-label={alt}
       >
