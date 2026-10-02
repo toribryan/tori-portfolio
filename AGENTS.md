@@ -67,8 +67,8 @@ arrays and elements as props; `components/doc-blocks.tsx` and
 `doc-parts.tsx` are everything it can use. Adding one means installing the
 part, a `fibo-niche.ts` entry, an MDX file, an examples module and a home
 page cover in `features/portfolio/components/components/covers.tsx`.
-Each entry has a `shelf`, `special` or `base`, which groups `/components` and
-picks the Storybook URL. Data table is the one base part so far; it brings
+Each entry has a `shelf`, `special` or `base`, which picks the
+Storybook URL. Data table is the one base part so far; it brings
 fibo's Table, Checkbox, Avatar, Tooltip, Button, Menu, Sheet, Input, Select
 and Pagination into `src/components/fibo/`, written from their registry JSON
 rather than the CLI, so they can't land in `components/ui/`. Its badges use
