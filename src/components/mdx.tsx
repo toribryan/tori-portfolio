@@ -14,6 +14,7 @@ import {
 } from "@/lib/rehype-code-block"
 import { cn } from "@/lib/utils"
 import { Code } from "@/components/base/ui/typography"
+import { VendorCreditDemo } from "@/features/doc/components/vendor-credit-demo"
 
 import { Callout } from "./callout"
 import { Heading } from "./heading"
@@ -91,6 +92,7 @@ const components: MDXRemoteProps["components"] = {
   LinkButton,
   Tech,
   ToolLabel,
+  VendorCreditDemo,
   Video,
   WhoStepDemo,
 
