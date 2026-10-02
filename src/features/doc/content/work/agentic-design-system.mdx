@@ -106,13 +106,43 @@ None of that is carelessness. The model was handed a picture and asked to
 infer a contract. The information was in the design system the whole time, just
 out of the model's reach.
 
-<StoryEmbed
-  id="case-study-agentic-design-system--inference-vs-lookup"
-  title="Inference vs lookup: the same design, twice"
-  width="900"
-  height="310"
-  caption="Both outputs came from the same design and the same prompt. The variable is whether the component could be looked up."
-/>
+Same design, same prompt. The only variable is whether the component could be
+looked up.
+
+<Sides>
+<Side label="Without usage instructions" title="Rebuilt from scratch">
+
+{/* prettier-ignore */}
+```tsx
+<div
+  className="rounded-md px-4 py-3
+    bg-[#008b8b] text-white
+    text-sm font-medium"
+>
+  Save changes
+</div>
+```
+
+The hex is hardcoded, the radius is invented, and nothing links back to the
+system. It looks right and is unmaintainable.
+
+</Side>
+<Side label="With Code Connect" title="Resolved to the component">
+
+{/* prettier-ignore */}
+```tsx
+<Button
+  variant="primary"
+  size="sm"
+>
+  Save changes
+</Button>
+```
+
+Variants and tokens arrive with it, so a rebrand reaches this automatically.
+
+</Side>
+</Sides>
 
 A design system communicates through convention, apprenticeship and review, and
 none of those survive contact with a machine consumer. That's also what Code
