@@ -52,7 +52,7 @@ import {
   IntegrationVisual,
   type IntegrationItem,
 } from "@/components/fibo/integration-visual"
-import { MapMarker } from "@/components/fibo/map-marker"
+import { MapPin } from "@/components/fibo/map-pin"
 import { PixelSnailSprite } from "@/components/fibo/pixel-snail"
 import { Reactions, type Reaction } from "@/components/fibo/reactions"
 import {
@@ -69,7 +69,7 @@ import {
   Pin,
   PLACES,
   StandInMap,
-} from "@/features/components/examples/map-marker-data"
+} from "@/features/components/examples/map-pin-data"
 import { useRabbit } from "@/features/components/examples/sticker-avatar-data"
 
 type CoverProps = { active: boolean }
@@ -674,9 +674,9 @@ function TypingIndicatorCover({ active }: CoverProps) {
   )
 }
 
-const MARKER_TYPES = ["dot", "icon", "label"] as const
+const PIN_TYPES = ["dot", "icon", "label"] as const
 
-const MARKER_ICONS: Record<string, ReactNode> = {
+const PIN_ICONS: Record<string, ReactNode> = {
   cafe: <CoffeeIcon />,
   books: <BookOpenIcon />,
   park: <FlowerIcon />,
@@ -684,20 +684,20 @@ const MARKER_ICONS: Record<string, ReactNode> = {
 }
 
 /**
- * fibo's stand-in city with a marker on each place. While active the markers
+ * fibo's stand-in city with a pin on each place. While active the pins
  * step through dots, icons and price labels; at rest they're dots. All three
  * sit stacked on each place and cross-fade, so one grows out of the last
  * rather than snapping to a new shape, a beat apart across the map.
  */
-function MapMarkerCover({ active }: CoverProps) {
-  const step = useCycle(MARKER_TYPES.length, 1600, active)
+function MapPinCover({ active }: CoverProps) {
+  const step = useCycle(PIN_TYPES.length, 1600, active)
   return (
     <ScaledStage width={400}>
       <StandInMap className="aspect-auto size-full max-w-none rounded-none border-0">
         {PLACES.map((place, index) => (
           <Pin key={place.id} place={place}>
             <div className="grid place-items-center">
-              {MARKER_TYPES.map((type, i) => (
+              {PIN_TYPES.map((type, i) => (
                 <div
                   key={type}
                   className={cn(
@@ -706,9 +706,9 @@ function MapMarkerCover({ active }: CoverProps) {
                   )}
                   style={{ transitionDelay: `${index * 70}ms` }}
                 >
-                  <MapMarker
+                  <MapPin
                     type={type}
-                    icon={MARKER_ICONS[place.id]}
+                    icon={PIN_ICONS[place.id]}
                     label={place.label}
                     text={place.price}
                     tabIndex={-1}
@@ -735,7 +735,7 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "floating-nav": FloatingNavCover,
   "sticker-avatar": StickerAvatarCover,
   "typing-indicator": TypingIndicatorCover,
-  "map-marker": MapMarkerCover,
+  "map-pin": MapPinCover,
 }
 
 /**

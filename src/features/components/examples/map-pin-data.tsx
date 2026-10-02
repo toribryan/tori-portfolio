@@ -110,7 +110,7 @@ const BUILDINGS = (() => {
 /**
  * A stand-in for a map library's canvas: a small city of streets, building
  * footprints, a park and a river, drawn with fibo's tokens so it follows
- * light and dark. Markers sit on it at percentages, the way a map library
+ * light and dark. Pins sit on it at percentages, the way a map library
  * places them at coordinates.
  */
 export function StandInMap({
@@ -260,10 +260,10 @@ export function Pin({
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
- * A marker with its card held open for a picture. The card is portalled to
+ * A pin with its card held open for a picture. The card is portalled to
  * the body, takes focus when it opens and closes on any outside click, so it
  * can't stay open inside a doc. Instead the real card is opened once, its
- * settled copy is placed above the marker, and the real one closes. The copy
+ * settled copy is placed above the pin, and the real one closes. The copy
  * is inert: it only shows what the open card looks like.
  */
 export function PreviewHeldOpen({
@@ -271,7 +271,7 @@ export function PreviewHeldOpen({
   children,
 }: {
   onReady?: () => void
-  /** A single MapMarker with something to preview. */
+  /** A single MapPin with something to preview. */
   children: ReactNode
 }) {
   const root = useRef<HTMLDivElement>(null)
@@ -289,38 +289,38 @@ export function PreviewHeldOpen({
     let canceled = false
 
     const snapshot = async () => {
-      const marker = node.querySelector<HTMLElement>("[data-slot=map-marker]")
-      if (!marker || canceled) return
+      const pin = node.querySelector<HTMLElement>("[data-slot=map-pin]")
+      if (!pin || canceled) return
       const previous = document.activeElement
-      marker.click()
+      pin.click()
       let card: HTMLElement | null = null
       for (let i = 0; i < 60 && !card; i++) {
         await wait(16)
-        card = document.querySelector("[data-slot=map-marker-preview]")
+        card = document.querySelector("[data-slot=map-pin-preview]")
       }
       // Let the spring settle before copying it.
       await wait(500)
       if (!card || canceled) {
-        marker.click()
+        pin.click()
         return
       }
       const copy = card.cloneNode(true) as HTMLElement
       copy.removeAttribute("id")
       host.replaceChildren(copy)
       const base = node.getBoundingClientRect()
-      const at = marker.getBoundingClientRect()
+      const at = pin.getBoundingClientRect()
       host.style.left = `${at.left - base.left + at.width / 2 - copy.offsetWidth / 2}px`
       host.style.bottom = `${base.bottom - at.top + 12}px`
 
-      marker.click()
+      pin.click()
       await wait(300)
       if (previous instanceof HTMLElement && previous !== document.body) {
         previous.focus({ preventScroll: true })
       } else if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur()
       }
-      // React set the marker back to closed; show it as it looks while open.
-      marker.setAttribute("data-popup-open", "")
+      // React set the pin back to closed; show it as it looks while open.
+      pin.setAttribute("data-popup-open", "")
       await wait(300)
       if (!canceled) ready.current?.()
     }

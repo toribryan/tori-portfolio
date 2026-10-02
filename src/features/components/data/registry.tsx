@@ -34,7 +34,7 @@ const LEAD: Record<string, string> = {
   "token-flow": "WithUse",
   "floating-nav": "Default",
   "sticker-avatar": "Default",
-  "map-marker": "Default",
+  "map-pin": "Default",
   "typing-indicator": "InAConversation",
 }
 

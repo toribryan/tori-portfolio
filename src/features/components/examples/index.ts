@@ -6,7 +6,7 @@ import * as dataTable from "./data-table"
 import * as filterMenu from "./filter-menu"
 import * as floatingNav from "./floating-nav"
 import * as integrationVisual from "./integration-visual"
-import * as mapMarker from "./map-marker"
+import * as mapPin from "./map-pin"
 import * as pixelSnail from "./pixel-snail"
 import * as reactions from "./reactions"
 import * as stickerAvatar from "./sticker-avatar"
@@ -25,7 +25,7 @@ export const EXAMPLES: Record<string, Record<string, ComponentType>> = {
   "filter-menu": filterMenu,
   "floating-nav": floatingNav,
   "integration-visual": integrationVisual,
-  "map-marker": mapMarker,
+  "map-pin": mapPin,
   "pixel-snail": pixelSnail,
   reactions,
   "sticker-avatar": stickerAvatar,

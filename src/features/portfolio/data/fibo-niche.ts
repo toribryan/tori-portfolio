@@ -54,8 +54,8 @@ export const NICHE_PARTS: NichePart[] = [
     home: false,
   },
   {
-    name: "map-marker",
-    title: "Map marker",
+    name: "map-pin",
+    title: "Map pin",
     shelf: "special",
     description:
       "A dot, icon or labeled pill for a point on a map, with a preview card that springs open on click or tap.",
