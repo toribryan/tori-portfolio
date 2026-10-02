@@ -89,7 +89,7 @@ export function Anatomy() {
   }, [])
   return (
     <AnatomyMap callouts={PARTS} measureKey={settled}>
-      <div className="flex justify-center px-32 py-4">
+      <div className="flex justify-center px-10 py-4">
         <div
           data-anatomy-subject
           className="w-[440px] overflow-hidden rounded-xl border border-border"

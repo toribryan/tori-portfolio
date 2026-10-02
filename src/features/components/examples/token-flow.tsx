@@ -137,7 +137,7 @@ const PLATE_PARTS: Callout[] = [
 export function AnatomyPlate() {
   return (
     <AnatomyMap callouts={PLATE_PARTS}>
-      <div className="flex justify-center py-6 pl-24">
+      <div className="flex justify-center px-10 py-6">
         <TokenFlow
           data-anatomy-subject
           rows={[PRIMARY, BORDER]}
@@ -172,7 +172,7 @@ const ROW_PARTS: Callout[] = [
 export function AnatomyRow() {
   return (
     <AnatomyMap callouts={ROW_PARTS}>
-      <div className="flex justify-center px-36 py-6">
+      <div className="flex justify-center px-10 py-6">
         <TokenFlow
           data-anatomy-subject
           rows={[PRIMARY]}
