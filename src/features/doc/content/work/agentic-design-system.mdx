@@ -129,7 +129,29 @@ hardcode that hex in forty places. So the agent only ever sees semantic tokens
 named for their job (`color/action/primary`), never the primitives behind them
 (`teal-500`). A rebrand updates one alias and everything downstream follows.
 
-![The three-tier token architecture: primitives, semantics, component tokens](/case-studies/agentic-design-system-tokens.svg)
+<IsoCards>
+  <IsoCard
+    title="Primitive"
+    index="001"
+    art="tier-primitive"
+    detail="teal-500: #008b8b. The agent never sees it"
+    seed="11"
+  />
+  <IsoCard
+    title="Semantic"
+    index="002"
+    art="tier-semantic"
+    detail="color/action/primary. The only layer the agent reads and writes"
+    seed="12"
+  />
+  <IsoCard
+    title="Component"
+    index="003"
+    art="tier-component"
+    detail="button/background/default. Optional, for multi-brand work"
+    seed="13"
+  />
+</IsoCards>
 
 **Component metadata.** Prose docs are written for people. An agent needs JSON
 per component covering props, relationships, the tokens it consumes, and usage
@@ -138,7 +160,36 @@ and 20% generic. It lists the obvious anti-patterns and misses the ones that
 bite, like "never use a destructive button in onboarding." That 20% is what the
 team learned the hard way, and a person has to write it.
 
-![Semantic token definitions layered on top of the raw primitives](/case-studies/agentic-design-system-semantic-tokens.svg)
+<IsoCards columns="2">
+  <IsoCard
+    title="Background"
+    index="001"
+    art="badge-background"
+    detail="semantic/background/info"
+    seed="21"
+  />
+  <IsoCard
+    title="Icon"
+    index="002"
+    art="badge-icon"
+    detail="semantic/icon/info"
+    seed="22"
+  />
+  <IsoCard
+    title="Text"
+    index="003"
+    art="badge-text"
+    detail="semantic/text/info"
+    seed="23"
+  />
+  <IsoCard
+    title="Border"
+    index="004"
+    art="badge-border"
+    detail="semantic/border/info"
+    seed="24"
+  />
+</IsoCards>
 
 **One source of truth.** The Figma library, the docs site and the token files
 all resolve to one contract instead of competing, so the agent never has to
