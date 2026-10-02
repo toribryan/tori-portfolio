@@ -68,6 +68,9 @@
   --color-primary-subtle: var(--primary-subtle);
   --color-secondary-hover: var(--secondary-hover);
   --color-destructive-subtle: var(--destructive-subtle);
+  --color-success-subtle: var(--success-subtle);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-info-subtle: var(--info-subtle);
   --color-destructive-subtle-hover: var(--destructive-subtle-hover);
   --color-destructive-ring: var(--destructive-ring);
   --color-input-subtle: var(--input-subtle);
@@ -344,10 +347,11 @@
   /* zinc-400 */
   --ring: oklch(0.705 0.015 286.067);
 
-  --info: oklch(0.67 0.17 244.98);
+  /* blue-700, dark enough for badge text to clear AA on its tint */
+  --info: oklch(0.488 0.243 264.376);
 
-  /* green-500 */
-  --success: oklch(0.723 0.219 149.579);
+  /* green-700, for the same reason */
+  --success: oklch(0.527 0.154 150.069);
 
   /* amber-700 */
   --warning: oklch(0.555 0.163 48.998);
@@ -987,6 +991,9 @@
     transparent
   );
   --destructive-ring: color-mix(in oklch, var(--destructive) 25%, transparent);
+  --success-subtle: color-mix(in oklch, var(--success) 10%, transparent);
+  --warning-subtle: color-mix(in oklch, var(--warning) 10%, transparent);
+  --info-subtle: color-mix(in oklch, var(--info) 10%, transparent);
   --input-subtle: color-mix(in oklch, var(--input) 20%, transparent);
   --input-subtle-hover: color-mix(in oklch, var(--input) 50%, transparent);
   --ring-subtle: color-mix(in oklch, var(--ring) 50%, transparent);
