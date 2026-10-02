@@ -6,7 +6,7 @@ import { FiboStory } from "@/features/portfolio/components/fibo-story"
 
 const title = "fibo"
 const description =
-  "The story behind fibo: a pixel rabbit, the puzzle that started the Fibonacci sequence, and a sunflower dissolving into dither."
+  "The story behind fibo: a pixel rabbit, and the puzzle that started the Fibonacci sequence."
 
 export const metadata: Metadata = {
   title,
