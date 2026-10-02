@@ -1,11 +1,4 @@
 import type { Route } from "next"
-import {
-  BoxesIcon,
-  HouseIcon,
-  LayersIcon,
-  PenLineIcon,
-  RabbitIcon,
-} from "lucide-react"
 
 import type { NavItem } from "@/types/nav"
 import { USER } from "@/features/portfolio/data/user"
@@ -34,35 +27,26 @@ export const MAIN_NAV: NavItem<Route>[] = [
   },
 ]
 
+/** The floating nav's destinations on phones, written out. */
 export const MOBILE_NAV: NavItem<Route>[] = [
-  {
-    title: "Home",
-    href: "/",
-    icon: HouseIcon,
-  },
+  { title: "Home", href: "/" },
+  { title: "Components", href: "/components" },
+  { title: "Blog", href: "/latest" },
+]
+
+/** Every page, in the menu beside the floating nav. */
+export const MOBILE_MENU: NavItem<Route>[] = [
+  { title: "Home", href: "/" },
   {
     title: "Projects",
     // A section of the home page rather than a route of its own: there is no
     // /work index, so the cards are only reachable from here. Cast because
     // typed routes describe pathnames, not fragments.
     href: "/#projects" as Route,
-    icon: LayersIcon,
   },
-  {
-    title: "Components",
-    href: "/components",
-    icon: BoxesIcon,
-  },
-  {
-    title: "Lore",
-    href: "/fibo",
-    icon: RabbitIcon,
-  },
-  {
-    title: "Blog",
-    href: "/latest",
-    icon: PenLineIcon,
-  },
+  { title: "Components", href: "/components" },
+  { title: "Lore", href: "/fibo" },
+  { title: "Blog", href: "/latest" },
 ]
 
 export const UTM_PARAMS = {

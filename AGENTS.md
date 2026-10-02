@@ -86,9 +86,9 @@ home page the hero's buttons go to those two pages instead.
 The phone nav is fibo's Floating nav (`src/components/fibo/floating-nav.tsx`,
 installed and documented like the parts above).
 The site uses its compact `size="sm"`; the file matches the registry as is.
-`nav-mobile-bar.tsx` feeds it `MOBILE_NAV` from `config/site.ts`, whose items
-carry Lucide icons; it reads the config itself because a server layout can't
-pass icon components to a client one. Below `sm` it replaces the header's
+`nav-mobile-bar.tsx` shows `MOBILE_NAV` from `config/site.ts` in it as words
+(items with no icon), with a round menu button beside it (`nav-mobile.tsx`)
+listing every page in `MOBILE_MENU`; the two hide together on scroll. Below `sm` it replaces the header's
 links, so `ScrollToTop` only shows from `sm` up. If `shadcn add` stops on
 pnpm's ignored-build warning before writing the file, copy `files[0].content`
 from the item's JSON into `src/components/fibo/` instead.
