@@ -31,6 +31,7 @@ const LEAD: Record<string, string> = {
   "pixel-snail": "Default",
   "integration-visual": "Default",
   "token-flow": "WithUse",
+  "floating-nav": "Default",
 }
 
 // The parts also published on 21st.dev, under the same names.

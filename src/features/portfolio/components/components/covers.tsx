@@ -3,13 +3,17 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import type { ComponentType } from "react"
 import {
+  BookmarkIcon,
   CalendarIcon,
   CircleDashedIcon,
+  CompassIcon,
   DatabaseIcon,
   GitBranchIcon,
+  HouseIcon,
   MessageSquareIcon,
   SignalHighIcon,
   TagIcon,
+  UserIcon,
 } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -25,6 +29,10 @@ import {
   type FilterField,
   type FilterValue,
 } from "@/components/fibo/filter-menu"
+import {
+  FloatingNav,
+  type FloatingNavItem,
+} from "@/components/fibo/floating-nav"
 import {
   IntegrationVisual,
   type IntegrationItem,
@@ -442,6 +450,42 @@ function CommandMenuCover({ active }: CoverProps) {
   )
 }
 
+const NAV_ITEMS: FloatingNavItem[] = [
+  { value: "home", label: "Home", icon: <HouseIcon /> },
+  { value: "explore", label: "Explore", icon: <CompassIcon /> },
+  { value: "saved", label: "Saved", icon: <BookmarkIcon /> },
+  { value: "profile", label: "Profile", icon: <UserIcon /> },
+]
+
+/**
+ * Steps the current item along the bar while active, so the pill slides.
+ * Scaled down so the bar fits with its widest label, Profile, open.
+ */
+function FloatingNavCover({ active }: CoverProps) {
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    if (!active) return
+    const id = window.setInterval(
+      () => setCurrent((index) => (index + 1) % NAV_ITEMS.length),
+      900
+    )
+    return () => window.clearInterval(id)
+  }, [active])
+
+  return (
+    <div className="flex size-full [zoom:0.85] items-center justify-center p-2 max-sm:[zoom:0.7]">
+      <FloatingNav
+        aria-label="Floating nav"
+        position="static"
+        size="sm"
+        items={NAV_ITEMS}
+        value={NAV_ITEMS[current]!.value}
+      />
+    </div>
+  )
+}
+
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "filter-menu": FilterMenuCover,
   "chapter-scrubber": ChapterScrubberCover,
@@ -450,6 +494,7 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "token-flow": TokenFlowCover,
   "command-menu": CommandMenuCover,
   "pixel-snail": PixelSnailCover,
+  "floating-nav": FloatingNavCover,
 }
 
 /**

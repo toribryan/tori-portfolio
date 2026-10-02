@@ -27,9 +27,16 @@ export const NICHE_PARTS: NichePart[] = [
       "A rail of marks that swell under the pointer like the Dock, previewing the chapter at the crest.",
   },
   {
+    name: "floating-nav",
+    title: "Floating nav",
+    description:
+      "A pill of destinations that floats above the bottom of a phone screen and steps aside while you scroll.",
+  },
+  {
     name: "reactions",
     title: "Reactions",
     description: "Lets people respond to content with an emoji in one tap.",
+    home: false,
   },
   {
     name: "pixel-snail",
