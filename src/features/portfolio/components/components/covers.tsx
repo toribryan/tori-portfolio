@@ -19,11 +19,20 @@ import { useTheme } from "next-themes"
 
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { Badge } from "@/components/fibo/badge"
 import {
   ChapterScrubber,
   type Chapter,
 } from "@/components/fibo/chapter-scrubber"
 import { CommandMenu } from "@/components/fibo/command-menu"
+import {
+  DataTable,
+  DataTableBulkActions,
+  DataTableCard,
+  DataTableCardField,
+  DataTableCards,
+  DataTableToolbar,
+} from "@/components/fibo/data-table"
 import {
   FilterMenu,
   type FilterField,
@@ -491,6 +500,94 @@ function FloatingNavCover({ active }: CoverProps) {
   )
 }
 
+const COVER_MEMBERS = [
+  {
+    id: "maya",
+    name: "Maya Okafor",
+    initials: "MO",
+    team: "Design",
+    role: "Admin",
+    status: "Active",
+  },
+  {
+    id: "priya",
+    name: "Priya Raman",
+    initials: "PR",
+    team: "Engineering",
+    role: "Editor",
+    status: "Away",
+  },
+  {
+    id: "jordan",
+    name: "Jordan Alvarez",
+    initials: "JA",
+    team: "Marketing",
+    role: "Viewer",
+    status: "Active",
+  },
+] as const
+
+const COVER_STATUS = { Active: "success", Away: "warning" } as const
+
+// Nothing, one row, two, the whole page, then nothing again.
+const COVER_SELECTIONS: string[][] = [
+  [],
+  ["maya"],
+  ["maya", "priya"],
+  ["maya", "priya", "jordan"],
+  [],
+]
+
+/**
+ * The table as it looks on a phone: a card per member, with select all in
+ * the toolbar. While active, cards are selected one by one until the page is,
+ * and the toolbar swaps to bulk actions and back.
+ */
+function DataTableCover({ active }: CoverProps) {
+  const step = useCycle(COVER_SELECTIONS.length, 1100, active)
+  return (
+    <ScaledStage width={375}>
+      {/* Top-aligned, so the toolbar where the selection shows stays in view
+          and the cards run off the bottom like a phone screen. */}
+      <div className="px-5 pt-5">
+        <DataTable
+          aria-label="Members"
+          rowIds={COVER_MEMBERS.map((member) => member.id)}
+          noun={{ one: "member", other: "members" }}
+          narrowLayout="cards"
+          value={new Set(COVER_SELECTIONS[step])}
+        >
+          <DataTableToolbar>
+            <DataTableBulkActions onDelete={() => {}} />
+          </DataTableToolbar>
+          <DataTableCards>
+            {COVER_MEMBERS.map((member) => (
+              <DataTableCard
+                key={member.id}
+                id={member.id}
+                title={member.name}
+                avatar={{ fallback: member.initials }}
+                status={
+                  <Badge variant={COVER_STATUS[member.status]}>
+                    {member.status}
+                  </Badge>
+                }
+              >
+                <DataTableCardField label="Team">
+                  {member.team}
+                </DataTableCardField>
+                <DataTableCardField label="Role">
+                  {member.role}
+                </DataTableCardField>
+              </DataTableCard>
+            ))}
+          </DataTableCards>
+        </DataTable>
+      </div>
+    </ScaledStage>
+  )
+}
+
 const STICKER_STATUSES: StickerAvatarStatus[] = ["present", "away", "offline"]
 
 /** fibo as a sticker. While active his status steps through each shape. */
@@ -516,6 +613,7 @@ function StickerAvatarCover({ active }: CoverProps) {
 }
 
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
+  "data-table": DataTableCover,
   "filter-menu": FilterMenuCover,
   "chapter-scrubber": ChapterScrubberCover,
   "integration-visual": IntegrationVisualCover,

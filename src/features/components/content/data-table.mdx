@@ -1,0 +1,380 @@
+---
+title: Data table
+description: A table for lists people work through, with selection, bulk actions, locked rows, pinned columns and a phone layout.
+createdAt: 2026-10-02
+updatedAt: 2026-10-02
+new: true
+---
+
+Data table is one table for every list people work through. Selection is
+always the first column, every action lives in one toolbar above the rows,
+and the same parts hold up from a wide dashboard down to a phone.
+
+<Exhibit
+  of="data-table.Default"
+  title="Data table"
+  description="Select a row. The toolbar swaps in place to the count and bulk actions. Shift-click selects a range, and Escape clears."
+>
+<ExhibitCode label="Install">
+
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/data-table.json
+```
+
+It brings Table, Checkbox, Avatar, Tooltip, Button, Menu and Sheet with it.
+
+</ExhibitCode>
+<ExhibitCode label="Usage">
+
+```tsx
+import { Badge } from "@/components/ui/badge"
+import {
+  DataTable,
+  DataTableBody,
+  DataTableCell,
+  DataTableContent,
+  DataTableHead,
+  DataTableHeader,
+  DataTableRow,
+  useDataTableSelection,
+} from "@/components/ui/data-table"
+
+export function Members({ members }: { members: Member[] }) {
+  const selection = useDataTableSelection()
+  return (
+    <DataTable
+      aria-label="Members"
+      rowIds={members.map((member) => member.id)}
+      noun={{ one: "member", other: "members" }}
+      {...selection}
+    >
+      <DataTableContent>
+        <DataTableHeader>
+          <DataTableHead type="person" pinned="start">
+            Member
+          </DataTableHead>
+          <DataTableHead type="status">Status</DataTableHead>
+        </DataTableHeader>
+        <DataTableBody>
+          {members.map((member) => (
+            <DataTableRow
+              key={member.id}
+              id={member.id}
+              lockedReason={
+                member.isOwner
+                  ? "The workspace owner can't be removed"
+                  : undefined
+              }
+            >
+              <DataTableCell
+                type="person"
+                pinned="start"
+                avatar={{ src: member.photo, fallback: member.initials }}
+              >
+                {member.name}
+              </DataTableCell>
+              <DataTableCell type="status">
+                <Badge variant="success">{member.status}</Badge>
+              </DataTableCell>
+            </DataTableRow>
+          ))}
+        </DataTableBody>
+      </DataTableContent>
+    </DataTable>
+  )
+}
+```
+
+Give each head the same `type` and `pinned` as its column's cells. The first
+column is primary or person, because its text names the row's checkbox. The
+table only ever holds one page: the app sorts, filters and pages its own data.
+
+</ExhibitCode>
+<ExhibitCode label="Props">
+
+| Prop                       | Type                             | Default     | Description                                                             |
+| -------------------------- | -------------------------------- | ----------- | ----------------------------------------------------------------------- |
+| `rowIds`                   | `string[]`                       |             | The ids of the rows on this page, in the order they're shown.           |
+| `value`                    | `Set<string> \| "all"`           |             | The selection. `"all"` means every matching row, on every page.         |
+| `defaultValue`             | `Set<string> \| "all"`           | `new Set()` | The selection to start with when it isn't controlled.                   |
+| `onValueChange`            | `(value) => void`                |             | Called with the new selection.                                          |
+| `totalCount`               | `number`                         | rows shown  | How many rows match across every page, for Select all matching.         |
+| `noun`                     | `{ one: string; other: string }` | rows        | What a row is, for counts and labels.                                   |
+| `narrowLayout`             | `"scroll" \| "cards"`            | `"scroll"`  | Under 32rem, keep the table and scroll it, or show a card per row.      |
+| `showSelectedOnly`         | `boolean`                        | `false`     | Whether the app is showing only the selected rows.                      |
+| `onShowSelectedOnlyChange` | `(show: boolean) => void`        |             | Shows Show selected only while rows are selected. The app filters rows. |
+
+Head and Cell take `type` (primary, text, person, status, numeric, actions)
+and `pinned` (none, start, end). Cell also takes `secondary`, `icon` and
+`avatar`. Row takes `id` and `lockedReason`.
+
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+A native table inside a box that measures its own width. The toolbar sits
+above it, and the cards replace it on a narrow screen.
+
+<Exhibit
+  of="data-table.Pinned"
+  title="Pinned columns"
+  description="Scroll it sideways. The name and the actions stay put, with a shadow where there's more under them."
+>
+<ExhibitCode label="Structure">
+
+```text
+DataTable                 data-table
+├─ DataTableToolbar       data-table-toolbar
+│  ├─ DataTableFilters    data-table-filters      (idle)
+│  ├─ DataTableActions    data-table-actions      (idle)
+│  └─ DataTableBulkActions data-table-bulk-actions (selecting)
+├─ DataTableContent       data-table-content      (a Table)
+│  ├─ DataTableHeader     data-table-header
+│  │  └─ DataTableHead    data-table-head
+│  └─ DataTableBody       data-table-body
+│     └─ DataTableRow     data-table-row
+│        └─ DataTableCell data-table-cell
+├─ DataTableCards         data-table-cards        (narrow, cards)
+│  └─ DataTableCard       data-table-card
+└─ DataTableFooter        data-table-footer
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
+
+<DataAttributes
+  rows={[
+    {
+      attribute: "data-narrow",
+      element: "The root",
+      when: "It's narrower than 32rem.",
+    },
+    {
+      attribute: "data-scroll-start, data-scroll-end",
+      element: "The root",
+      when: "There's more table to scroll to on that side.",
+    },
+    {
+      attribute: "data-selecting",
+      element: "The toolbar",
+      when: "Rows are selected and it shows bulk actions.",
+    },
+    {
+      attribute: "data-selected",
+      element: "A row or card",
+      when: "It's selected.",
+    },
+    {
+      attribute: "data-locked",
+      element: "A row or card",
+      when: "It has a lockedReason.",
+    },
+    {
+      attribute: "data-type, data-pinned",
+      element: "A head or cell",
+      when: "Always for type; for pinned, when the column is pinned.",
+    },
+  ]}
+/>
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+<ExhibitGrid>
+<Exhibit
+  of="data-table.Locked"
+  title="Locked row"
+  description="The workspace owner can't be selected. The lock says why on hover or focus, and select all leaves her out."
+>
+<ExhibitCode>
+
+```tsx
+<DataTableRow id={member.id} lockedReason="The workspace owner can't be removed">
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="data-table.SecondaryText"
+  title="Secondary text"
+  description="A second line under each name. Rows grow from 40 to 52 pixels, and nothing goes taller."
+>
+<ExhibitCode>
+
+```tsx
+<DataTableCell type="person" secondary={member.email}>
+  {member.name}
+</DataTableCell>
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### Bulk actions
+
+Every table's bulk actions read in one order: your actions, then More, then
+Delete behind a divider. An action that works on one row stays in place,
+dimmed, while more are selected.
+
+<Exhibit of="data-table.BulkActionPatterns" title="Bulk action patterns">
+<ExhibitCode>
+
+```tsx
+<DataTableBulkActions
+  onDelete={remove}
+  moreActions={<MenuItem>Resend invite</MenuItem>}
+>
+  <DataTableBulkAction>Change role</DataTableBulkAction>
+  <DataTableBulkAction single icon={<PencilIcon />}>
+    Edit
+  </DataTableBulkAction>
+</DataTableBulkActions>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Across pages
+
+Select the page, and the toolbar offers every matching row. Show selected
+only hands the filtering to the app.
+
+<Exhibit of="data-table.Directory" title="A directory of 248 members">
+<ExhibitCode>
+
+```tsx
+<DataTable
+  rowIds={pageIds}
+  totalCount={248}
+  value={selection}
+  onValueChange={setSelection}
+  showSelectedOnly={showSelectedOnly}
+  onShowSelectedOnlyChange={setShowSelectedOnly}
+>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### On a phone
+
+Under 32rem of its own width, the table scrolls under an icon-only toolbar,
+or each row becomes a card. Sort and filters move into a sheet.
+
+<ExhibitGrid>
+<Exhibit of="data-table.NarrowScroll" title="Scroll">
+<ExhibitCode>
+
+```tsx
+<DataTable narrowLayout="scroll">
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit of="data-table.NarrowCards" title="Cards">
+<ExhibitCode>
+
+```tsx
+<DataTable narrowLayout="cards">
+  {/* toolbar and content */}
+  <DataTableCards>
+    <DataTableCard id={member.id} title={member.name} status={badge}>
+      <DataTableCardField label="Team">{member.team}</DataTableCardField>
+    </DataTableCard>
+  </DataTableCards>
+</DataTable>
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+### In a form
+
+As a picker, the selection is the form's value and the footer counts it.
+
+<Exhibit of="data-table.Picker" title="Picker">
+<ExhibitCode>
+
+```tsx
+<DataTableFooter>
+  <DataTableSelectionCount />
+</DataTableFooter>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Usage
+
+<UsageGuidelines
+  guidelines={[
+    "Selection is always the first column, and row actions are always the last, pinned to the end.",
+    "Put every action in the toolbar. Don't add hover actions or a floating bar; they split actions across places.",
+    "Pin the row's name to the start and at most one must-see column to the end.",
+    "Lock a row that can't be selected, and say why in lockedReason.",
+    "Give actions an icon, so they still fit on a phone.",
+    <>
+      Use <code>narrowLayout="cards"</code> when a row reads better as a
+      summary, such as people with a status. Keep scroll for data people compare
+      across columns.
+    </>,
+  ]}
+/>
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: (
+          <div className="flex w-56 items-center gap-2 rounded-md border border-border px-3 py-2 text-sm">
+            <span className="size-4 rounded-sm border border-input opacity-50" />
+            <span className="font-medium">Elena Marsh</span>
+            <span className="text-xs text-muted-foreground">Locked</span>
+          </div>
+        ),
+        description: "Show why a row can't be selected.",
+      },
+      negative: {
+        component: (
+          <div className="flex w-56 items-center gap-2 rounded-md border border-border px-3 py-2 text-sm">
+            <span className="size-4 rounded-sm border border-input opacity-50" />
+            <span className="font-medium">Elena Marsh</span>
+          </div>
+        ),
+        description:
+          "Don't disable a row without a reason. People can't tell it's on purpose.",
+      },
+    },
+  ]}
+/>
+
+## Accessibility
+
+<UsageGuidelines
+  guidelines={[
+    "It's a native table, not a grid: checkboxes and buttons are ordinary Tab stops.",
+    "Each row checkbox is named from its first name cell, “Select Maya Okafor”, and select all says its scope, “Select all members on this page”.",
+    "A locked row's checkbox is disabled and described by the reason, and the lock is focusable so keyboard users can open its tooltip.",
+    "Selection changes are announced through a status region, and Escape clears the selection.",
+    "When the focused control goes away, such as Clear or a row that swaps to a card, focus moves somewhere sensible instead of the page.",
+    "Only one of the table and the cards is ever in the page, so screen readers don't meet each row twice.",
+  ]}
+/>
+
+## Related components
+
+<RelatedComponents names={["Filter menu", "Command menu"]} />
+
+## References
+
+- [WAI-ARIA APG: Table pattern](https://www.w3.org/WAI/ARIA/apg/patterns/table/)
+- [Shopify Polaris: Index table](https://polaris-react.shopify.com/components/tables/index-table)
+- [React Aria: Table](https://react-aria.adobe.com/Table)
+- [Adrian Roselli: Tables, CSS display properties and ARIA](https://adrianroselli.com/2018/02/tables-css-display-properties-and-aria.html)

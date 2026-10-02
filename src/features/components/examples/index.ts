@@ -2,6 +2,7 @@ import type { ComponentType } from "react"
 
 import * as chapterScrubber from "./chapter-scrubber"
 import * as commandMenu from "./command-menu"
+import * as dataTable from "./data-table"
 import * as filterMenu from "./filter-menu"
 import * as floatingNav from "./floating-nav"
 import * as integrationVisual from "./integration-visual"
@@ -18,6 +19,7 @@ import * as tokenFlow from "./token-flow"
 export const EXAMPLES: Record<string, Record<string, ComponentType>> = {
   "chapter-scrubber": chapterScrubber,
   "command-menu": commandMenu,
+  "data-table": dataTable,
   "filter-menu": filterMenu,
   "floating-nav": floatingNav,
   "integration-visual": integrationVisual,
