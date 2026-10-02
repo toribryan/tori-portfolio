@@ -10,5 +10,5 @@ A folder under `content/` would become its own category and its docs would
 still be reachable through `getDocBySlug`, which the doc routes call directly.
 
 To publish, move the file back into the matching `content/<category>/` folder.
-Check `order` against its new neighbours when you do, since it competes with
+Check `order` against its new neighbors when you do, since it competes with
 them for position.

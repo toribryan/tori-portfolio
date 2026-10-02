@@ -170,12 +170,12 @@ function Frozen({
   useEffect(() => {
     const frame = root.current
     if (!stage || !layer || !frame) return
-    let cancelled = false
+    let canceled = false
     let stop: (() => void) | undefined
     const act = (fn: () => void) => acting(frame, fn)
     const drive = async () => {
       for (let i = 0; i < 60 && !popupOf(stage); i++) await wait(16)
-      if (cancelled || !popupOf(stage)) return
+      if (canceled || !popupOf(stage)) return
       stop = run(stage, frame)
       if (stop) return
       if (field) {
@@ -207,11 +207,11 @@ function Frozen({
       }
       // Let the slide and the height settle before anything measures.
       await wait(350)
-      if (!cancelled) reached(stage)
+      if (!canceled) reached(stage)
     }
     drive()
     return () => {
-      cancelled = true
+      canceled = true
       stop?.()
     }
   }, [stage, layer, field, query, searching, down, search])

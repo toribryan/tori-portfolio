@@ -203,7 +203,7 @@ const PARTS: Callout[] = [
   },
 ]
 
-/** Two people typing, with each part labelled. */
+/** Two people typing, with each part labeled. */
 export function Anatomy() {
   return (
     <AnatomyMap callouts={PARTS}>

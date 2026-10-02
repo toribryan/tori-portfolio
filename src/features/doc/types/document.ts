@@ -8,7 +8,7 @@ export type DocMetadata = {
   image?: string
   /**
    * Cover shown while the card is hovered, cross-fading over `image`. For
-   * covers with no colour, where the usual grayscale-to-colour hover would
+   * covers with no color, where the usual grayscale-to-color hover would
    * change nothing.
    */
   imageHover?: string

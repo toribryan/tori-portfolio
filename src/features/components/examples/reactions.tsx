@@ -151,7 +151,7 @@ const ROW_PARTS: Callout[] = [
   },
 ]
 
-/** The row of pills, with each part labelled. */
+/** The row of pills, with each part labeled. */
 export function AnatomyRow() {
   return (
     <AnatomyMap callouts={ROW_PARTS}>
@@ -185,7 +185,7 @@ const PICKER_PARTS: Callout[] = [
   { label: "Open add button", side: "right", find: slot("reactions-trigger") },
 ]
 
-/** The picker held open over its row, with each part labelled. */
+/** The picker held open over its row, with each part labeled. */
 export function AnatomyPicker() {
   const [ready, setReady] = useState(false)
   return (

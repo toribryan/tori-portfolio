@@ -8,7 +8,7 @@ import { playSound, soundSource } from "@/lib/soundcn/sound-engine"
 import { toggleOnSound } from "@/lib/soundcn/toggle-on"
 
 /**
- * Sounds once as a case study opens, and again on each move to a neighbouring
+ * Sounds once as a case study opens, and again on each move to a neighboring
  * one — `slug` in the dep array is what makes the second one happen.
  *
  * Goes through `playSound` rather than `useSound` because the buffer decodes
@@ -24,12 +24,12 @@ export function DocEnterSound({ slug }: { slug: string }) {
   useEffect(() => {
     if (shouldReduceMotion) return
 
-    let cancelled = false
+    let canceled = false
     let playback: SoundPlayback | null = null
 
     playSound(soundSource(toggleOnSound), { volume: 0.3 })
       .then((next) => {
-        if (cancelled) next.stop()
+        if (canceled) next.stop()
         else playback = next
       })
       .catch(() => {
@@ -38,7 +38,7 @@ export function DocEnterSound({ slug }: { slug: string }) {
       })
 
     return () => {
-      cancelled = true
+      canceled = true
       playback?.stop()
     }
   }, [slug, shouldReduceMotion])

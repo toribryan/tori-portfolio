@@ -99,7 +99,7 @@ export function SiteFooterCad() {
 
             <Field className="col-span-2 md:col-span-4" label="Inspired by">
               {/*
-                Cancelling the cell padding and repeating the parent's column
+                Canceling the cell padding and repeating the parent's column
                 count and gap lands these columns on the same grid lines as the
                 cells above, rather than dividing the padded width.
               */}

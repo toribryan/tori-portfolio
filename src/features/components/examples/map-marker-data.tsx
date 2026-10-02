@@ -160,7 +160,7 @@ export function StandInMap({
         </g>
 
         {/* The park covers the streets inside it, with paths of its own. The
-            tints are translucent, so each sits on a land-coloured base. */}
+            tints are translucent, so each sits on a land-colored base. */}
         <path d={PARK} className="fill-muted dark:fill-card" />
         <path
           d={PARK}
@@ -286,11 +286,11 @@ export function PreviewHeldOpen({
     const node = root.current
     const host = layer.current
     if (!node || !host) return
-    let cancelled = false
+    let canceled = false
 
     const snapshot = async () => {
       const marker = node.querySelector<HTMLElement>("[data-slot=map-marker]")
-      if (!marker || cancelled) return
+      if (!marker || canceled) return
       const previous = document.activeElement
       marker.click()
       let card: HTMLElement | null = null
@@ -300,7 +300,7 @@ export function PreviewHeldOpen({
       }
       // Let the spring settle before copying it.
       await wait(500)
-      if (!card || cancelled) {
+      if (!card || canceled) {
         marker.click()
         return
       }
@@ -322,7 +322,7 @@ export function PreviewHeldOpen({
       // React set the marker back to closed; show it as it looks while open.
       marker.setAttribute("data-popup-open", "")
       await wait(300)
-      if (!cancelled) ready.current?.()
+      if (!canceled) ready.current?.()
     }
 
     // Wait until it's on screen: opening the card moves focus into it, which
@@ -334,7 +334,7 @@ export function PreviewHeldOpen({
     })
     observer.observe(node)
     return () => {
-      cancelled = true
+      canceled = true
       observer.disconnect()
     }
   }, [])

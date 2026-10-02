@@ -113,13 +113,13 @@ export function PickerHeldOpen({
     const node = root.current
     const host = layer.current
     if (!node || !host) return
-    let cancelled = false
+    let canceled = false
 
     const snapshot = async () => {
       const trigger = node.querySelector<HTMLElement>(
         "[data-slot=reactions-trigger]"
       )
-      if (!trigger || cancelled) return
+      if (!trigger || canceled) return
       const previous = document.activeElement
       trigger.click()
       let panel: HTMLElement | null = null
@@ -129,7 +129,7 @@ export function PickerHeldOpen({
       }
       // Let the choices finish unfurling before copying them.
       await wait(700)
-      if (!panel || cancelled) {
+      if (!panel || canceled) {
         trigger.click()
         return
       }
@@ -154,7 +154,7 @@ export function PickerHeldOpen({
       // React set the trigger back to closed; show it as it looks while open.
       trigger.setAttribute("data-state", "open")
       await wait(600)
-      if (!cancelled) ready.current?.()
+      if (!canceled) ready.current?.()
     }
 
     // Wait until it's on screen: opening the picker moves focus into it, which
@@ -166,7 +166,7 @@ export function PickerHeldOpen({
     })
     observer.observe(node)
     return () => {
-      cancelled = true
+      canceled = true
       observer.disconnect()
     }
   }, [])

@@ -3,7 +3,7 @@ import { ArrowUpRightIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * A before/after pair of screenshots, labelled and stacked so each one keeps
+ * A before/after pair of screenshots, labeled and stacked so each one keeps
  * the full reading width. Wide UI shots lose their detail the moment they're
  * put in two columns, so `layout="columns"` is opt-in and meant for narrow,
  * roughly square art like a single card.
@@ -59,7 +59,7 @@ export function Compare({
   )
 }
 
-/** One labelled shot on its plate, linking to the image at full size. */
+/** One labeled shot on its plate, linking to the image at full size. */
 function Shot({
   src,
   alt,
