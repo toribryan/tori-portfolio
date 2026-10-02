@@ -1,13 +1,27 @@
 "use client"
 
-import { Children, isValidElement, useEffect, useRef } from "react"
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  useEffect,
+  useRef,
+  type ReactElement,
+} from "react"
 
 import { cn } from "@/lib/utils"
+import badgeBackground from "@/features/doc/data/iso/badge-background.json"
+import badgeBorder from "@/features/doc/data/iso/badge-border.json"
+import badgeIcon from "@/features/doc/data/iso/badge-icon.json"
+import badgeText from "@/features/doc/data/iso/badge-text.json"
 import stackAgent from "@/features/doc/data/iso/stack-agent.json"
 import stackContext from "@/features/doc/data/iso/stack-context.json"
 import stackGuardrails from "@/features/doc/data/iso/stack-guardrails.json"
 import stackReview from "@/features/doc/data/iso/stack-review.json"
 import stackSource from "@/features/doc/data/iso/stack-source.json"
+import tierComponent from "@/features/doc/data/iso/tier-component.json"
+import tierPrimitive from "@/features/doc/data/iso/tier-primitive.json"
+import tierSemantic from "@/features/doc/data/iso/tier-semantic.json"
 
 type IsoGrid = { width: number; height: number; rows: string[] }
 
@@ -21,13 +35,27 @@ const ART = {
   "stack-agent": stackAgent,
   "stack-guardrails": stackGuardrails,
   "stack-review": stackReview,
+  "tier-primitive": tierPrimitive,
+  "tier-semantic": tierSemantic,
+  "tier-component": tierComponent,
+  "badge-background": badgeBackground,
+  "badge-icon": badgeIcon,
+  "badge-text": badgeText,
+  "badge-border": badgeBorder,
 } satisfies Record<string, IsoGrid>
 
 export type IsoArt = keyof typeof ART
 
-// Every card draws into the same field, so dots keep one pitch across a row.
-const FIELD_W = Math.max(...Object.values(ART).map((g) => g.width)) + 2
-const FIELD_H = Math.max(...Object.values(ART).map((g) => g.height)) + 2
+type Field = { w: number; h: number }
+
+// Every card in a row draws into the same field, so dots keep one pitch.
+function fieldFor(arts: IsoArt[]): Field {
+  const grids: IsoGrid[] = arts.map((a) => ART[a])
+  return {
+    w: Math.max(...grids.map((g) => g.width)) + 2,
+    h: Math.max(...grids.map((g) => g.height)) + 2,
+  }
+}
 
 const BUILD_MS = 1400
 const FLICKER_MS = 120
@@ -42,7 +70,15 @@ function rng(seed: number) {
   }
 }
 
-function IsoCanvas({ art, seed }: { art: IsoArt; seed: number }) {
+function IsoCanvas({
+  art,
+  seed,
+  field,
+}: {
+  art: IsoArt
+  seed: number
+  field: Field
+}) {
   const ref = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -63,8 +99,8 @@ function IsoCanvas({ art, seed }: { art: IsoArt; seed: number }) {
       ;[filled[i], filled[j]] = [filled[j]!, filled[i]!]
     }
 
-    const ox = Math.floor((FIELD_W - grid.width) / 2)
-    const oy = Math.floor((FIELD_H - grid.height) / 2)
+    const ox = Math.floor((field.w - grid.width) / 2)
+    const oy = Math.floor((field.h - grid.height) / 2)
     const level = (i: number) =>
       grid.rows[Math.floor(i / grid.width)]![i % grid.width]
 
@@ -83,15 +119,15 @@ function IsoCanvas({ art, seed }: { art: IsoArt; seed: number }) {
     }
 
     const draw = () => {
-      const pitch = canvas.clientWidth / FIELD_W
+      const pitch = canvas.clientWidth / field.w
       const dpr = window.devicePixelRatio || 1
       canvas.width = Math.round(canvas.clientWidth * dpr)
-      canvas.height = Math.round(pitch * FIELD_H * dpr)
+      canvas.height = Math.round(pitch * field.h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-      const dot = pitch * 0.72
+      const dot = pitch * 0.62
       const visible = new Set(filled.slice(0, shown))
-      for (let fy = 0; fy < FIELD_H; fy++) {
-        for (let fx = 0; fx < FIELD_W; fx++) {
+      for (let fy = 0; fy < field.h; fy++) {
+        for (let fx = 0; fx < field.w; fx++) {
           const x = fx - ox
           const y = fy - oy
           const inside = x >= 0 && y >= 0 && x < grid.width && y < grid.height
@@ -168,7 +204,7 @@ function IsoCanvas({ art, seed }: { art: IsoArt; seed: number }) {
       theme.disconnect()
       resize.disconnect()
     }
-  }, [art, seed])
+  }, [art, seed, field.w, field.h])
 
   return <canvas ref={ref} className="block w-full" aria-hidden />
 }
@@ -198,24 +234,29 @@ export function IsoCard({
   art,
   detail,
   seed = "1",
+  field,
 }: {
   title: string
   index?: string
   art: IsoArt
   detail?: string
   seed?: string
+  /** Set by `IsoCards` so a row shares one dot pitch. */
+  field?: Field
 }) {
   return (
     <figure className="flex flex-col gap-4 border border-border p-5">
       <figcaption className="flex items-start justify-between gap-3">
-        <span className="flex flex-col gap-1">
+        <span className="flex min-w-0 flex-col gap-1">
           <span className="font-medium text-foreground">{title}</span>
           {detail && (
-            <span className="text-xs text-muted-foreground">{detail}</span>
+            <span className="text-xs break-words text-muted-foreground">
+              {detail}
+            </span>
           )}
         </span>
         {index && (
-          <span className="font-mono text-xs text-muted-foreground">
+          <span className="shrink-0 font-mono text-xs text-muted-foreground">
             {index}
           </span>
         )}
@@ -226,22 +267,42 @@ export function IsoCard({
         <Bracket className="top-0 right-0 border-t border-r" />
         <Bracket className="bottom-0 left-0 border-b border-l" />
         <Bracket className="right-0 bottom-0 border-r border-b" />
-        <IsoCanvas art={art} seed={Number(seed)} />
+        <IsoCanvas
+          art={art}
+          seed={Number(seed)}
+          field={field ?? fieldFor([art])}
+        />
       </div>
     </figure>
   )
 }
 
+const COLUMNS = {
+  "2": "grid-cols-2",
+  "3": "grid-cols-2 md:grid-cols-3",
+  "4": "grid-cols-2 md:grid-cols-4",
+}
+
 /**
- * A row of `<IsoCard>` children: two across on a phone, three from `md` up.
+ * A row of `<IsoCard>` children: two across on a phone, then `columns`
+ * across from `md` up.
  */
-export function IsoCards({ children }: { children?: React.ReactNode }) {
-  const cards = Children.toArray(children).filter(isValidElement)
+export function IsoCards({
+  children,
+  columns = "3",
+}: {
+  children?: React.ReactNode
+  columns?: keyof typeof COLUMNS
+}) {
+  const cards = Children.toArray(children).filter(
+    isValidElement
+  ) as ReactElement<{ art: IsoArt; field?: Field }>[]
   if (cards.length === 0) return null
+  const field = fieldFor(cards.map((card) => card.props.art))
 
   return (
-    <div className="not-prose my-8 grid grid-cols-2 gap-3 md:grid-cols-3">
-      {cards}
+    <div className={cn("not-prose my-8 grid gap-3", COLUMNS[columns])}>
+      {cards.map((card) => cloneElement(card, { field }))}
     </div>
   )
 }
