@@ -78,8 +78,7 @@ home page the hero's buttons go to those two pages instead.
 
 The phone nav is fibo's Floating nav (`src/components/fibo/floating-nav.tsx`,
 installed from the registry like the parts above but with no doc page yet).
-It carries one local change: a `size` prop, whose `sm` the site uses for a
-compact pill. Put it back after reinstalling, unless fibo has gained it.
+The site uses its compact `size="sm"`; the file matches the registry as is.
 `nav-mobile-bar.tsx` feeds it `MOBILE_NAV` from `config/site.ts`, whose items
 carry Lucide icons; it reads the config itself because a server layout can't
 pass icon components to a client one. Below `sm` it replaces the header's
