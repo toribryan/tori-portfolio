@@ -457,7 +457,10 @@ const NAV_ITEMS: FloatingNavItem[] = [
   { value: "profile", label: "Profile", icon: <UserIcon /> },
 ]
 
-/** Steps the current item along the bar while active, so the pill slides. */
+/**
+ * Steps the current item along the bar while active, so the pill slides.
+ * Scaled down so the bar fits with its widest label, Profile, open.
+ */
 function FloatingNavCover({ active }: CoverProps) {
   const [current, setCurrent] = useState(0)
 
@@ -471,7 +474,7 @@ function FloatingNavCover({ active }: CoverProps) {
   }, [active])
 
   return (
-    <div className="flex size-full items-center justify-center p-2 max-sm:[zoom:0.7]">
+    <div className="flex size-full [zoom:0.85] items-center justify-center p-2 max-sm:[zoom:0.7]">
       <FloatingNav
         aria-label="Floating nav"
         position="static"
