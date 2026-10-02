@@ -759,7 +759,7 @@ function Pitch({
               size="lg"
               variant="outline"
               nativeButton={false}
-              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
               render={<Link href="/fibo/figma" />}
             >
               <FigmaIcon data-icon="inline-start" />
@@ -769,7 +769,7 @@ function Pitch({
               size="lg"
               variant="outline"
               nativeButton={false}
-              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] max-sm:aspect-square max-sm:w-auto max-sm:px-0!"
               render={<a href={FIBO.github} target="_blank" rel="noreferrer" />}
             >
               <GithubIcon data-icon="inline-start" />
@@ -791,7 +791,7 @@ function Pitch({
               size="lg"
               variant="outline"
               nativeButton={false}
-              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))] bg-background hover:bg-accent"
+              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))]"
               render={<Link href="/fibo" />}
             >
               <RabbitIcon data-icon="inline-start" />

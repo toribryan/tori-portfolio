@@ -879,7 +879,7 @@
   --muted-foreground: #7a7972;
 
   /* dark-geist surface-card — the warm near-black used behind photos. */
-  --card: #1f1a15;
+  --card: #171717;
   --card-foreground: #f5f4f2;
 
   --popover: #1a1a1a;
@@ -897,10 +897,10 @@
   /* Lifted from #7f285c so links clear contrast on #0f0f0f. */
   --link: #d16fa0;
 
-  --surface: #1f1a15;
+  --surface: #171717;
   /* Without this the light :root value leaks through and the metadata
      plates render light-on-light in dark mode. */
-  --surface-warm: #1f1a15;
+  --surface-warm: #171717;
   --surface-foreground: #f5f4f2;
 
   --selection: #f5f4f2;
