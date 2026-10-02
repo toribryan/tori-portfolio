@@ -1,0 +1,308 @@
+---
+title: Typing indicator
+description: Says who's typing in a conversation, naming up to three people.
+createdAt: 2026-10-02
+updatedAt: 2026-10-02
+new: true
+---
+
+A typing indicator says who's writing a reply in a conversation. It names up
+to three people, then says "Several people are typing…". It leaves out the
+person looking at the screen, and keeps its height when nobody is typing, so
+the messages above it don't jump.
+
+<Exhibit
+  of="typing-indicator.InAConversation"
+  title="Typing indicator"
+  description="Press the buttons. The sentence follows, and the thread stays put."
+>
+<ExhibitCode label="Install">
+
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/typing-indicator.json
+```
+
+It adds the `typing-dot` animation for the dots. Nothing else to install.
+
+</ExhibitCode>
+<ExhibitCode label="Usage">
+
+```tsx
+import {
+  TypingIndicator,
+  type TypingPerson,
+} from "@/components/ui/typing-indicator"
+
+export function Channel({
+  typing,
+  me,
+}: {
+  typing: TypingPerson[]
+  me: string
+}) {
+  return (
+    <>
+      <MessageList />
+      <TypingIndicator people={typing} currentUserId={me} />
+      <Composer />
+    </>
+  )
+}
+```
+
+Pass everyone your typing events report, yourself included, and let the
+component leave you out. Drop a person once their typing event expires, which
+is 10 seconds on Discord.
+
+</ExhibitCode>
+<ExhibitCode label="Props">
+
+| Prop            | Type                                   | Default        | Description                                                               |
+| --------------- | -------------------------------------- | -------------- | ------------------------------------------------------------------------- |
+| `people`        | `TypingPerson[]`                       |                | Everyone typing right now. Pass the current person too; they're left out. |
+| `currentUserId` | `string`                               |                | The person looking at the screen, who never sees themselves typing.       |
+| `maxNames`      | `number`                               | `3`            | How many people to name before switching to "Several people".             |
+| `maxNameLength` | `number`                               | `24`           | Characters a name may take on screen before it's cut short. At least 2.   |
+| `format`        | `(sentence: TypingSentence) => string` | `formatTyping` | Builds the sentence. Swap it to translate; the default is English.        |
+| `locale`        | `string`                               | `"en"`         | Locale for joining names, passed to `Intl.ListFormat`.                    |
+| `announceDelay` | `number`                               | `1500`         | Milliseconds the sentence must hold still before screen readers hear it.  |
+
+It also takes every prop of a `div`, except `children`.
+
+```ts
+type TypingPerson = {
+  id: string
+  name: string
+  indicator?: React.ReactNode // replaces the dots while they're the only one typing
+}
+
+type TypingSentence = {
+  count: number // everyone typing, the current person left out
+  names: string[] // empty once count passes maxNames
+  list: string // names joined for the locale, such as "Ana, Ben, and Cy"
+}
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+A row of a fixed height with the dots and the sentence, plus a hidden status
+region that screen readers hear instead.
+
+<Exhibit of="typing-indicator.Anatomy" title="The row" description="Two people typing.">
+<ExhibitCode label="Structure">
+
+```text
+TypingIndicator         typing-indicator
+├─ dots                 typing-indicator-dots      (while someone types)
+├─ text                 typing-indicator-text      (while someone types)
+└─ status               typing-indicator-status    (visually hidden)
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
+
+<DataAttributes
+  rows={[
+    {
+      attribute: 'data-slot="typing-indicator"',
+      element: "The root",
+      when: "Always.",
+    },
+    {
+      attribute: "data-active",
+      element: "The root",
+      when: "Someone other than the current person is typing.",
+    },
+    {
+      attribute: 'data-slot="typing-indicator-dots"',
+      element: "The dots or custom indicator",
+      when: "Someone is typing.",
+    },
+    {
+      attribute: 'data-slot="typing-indicator-text"',
+      element: "The sentence",
+      when: "Someone is typing.",
+    },
+    {
+      attribute: 'data-slot="typing-indicator-status"',
+      element: "The status region",
+      when: "Always.",
+    },
+  ]}
+/>
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+<ExhibitGrid>
+<Exhibit
+  of="typing-indicator.OnePerson"
+  title="One person"
+  description="The verb agrees with the count."
+>
+<ExhibitCode>
+
+```tsx
+<TypingIndicator people={[ana]} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="typing-indicator.Three"
+  title="Three people"
+  description="Up to maxNames people are named, joined for the locale."
+>
+<ExhibitCode>
+
+```tsx
+<TypingIndicator people={[ana, ben, cy]} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="typing-indicator.Several"
+  title="Several people"
+  description="Past maxNames, nobody is named, as Discord does from four people on."
+>
+<ExhibitCode>
+
+```tsx
+<TypingIndicator people={team} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="typing-indicator.LongNames"
+  title="Long names"
+  description="Each name is cut short at maxNameLength. Screen readers still hear it in full."
+>
+<ExhibitCode>
+
+```tsx
+<TypingIndicator people={people} maxNameLength={24} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="typing-indicator.CustomIndicator"
+  title="Custom indicator"
+  description="A person's indicator replaces the dots while they're the only one typing."
+>
+<ExhibitCode>
+
+```tsx
+const ana = { id: "ana", name: "Ana", indicator: <PencilIcon /> }
+
+<TypingIndicator people={[ana]} />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="typing-indicator.Translated"
+  title="Translated"
+  description="A Spanish formatter with locale es. Intl.ListFormat supplies y."
+>
+<ExhibitCode>
+
+```tsx
+<TypingIndicator people={people} format={spanish} locale="es" />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+## Usage
+
+<UsageGuidelines
+  guidelines={[
+    "Put it between the messages and the composer, where people look while they wait for a reply.",
+    "Keep it mounted for the life of the conversation. The status region has to be in the page before it changes, or screen readers miss the first announcement.",
+    "Name at most three people. Past that, a list of names is harder to read than a count.",
+    "In large rooms, consider turning it off. Teams does in chats of more than 20 people.",
+  ]}
+/>
+
+### Translating it
+
+`format` gets `{ count, names, list }` and returns the whole sentence. Never
+build it from fragments like `name + " and " + other`: Russian and Polish have
+four plural forms, Arabic six and Japanese one, and the verb and the word order
+change with them. Write one sentence per case, as an ICU message for instance:
+
+```text
+{count, plural,
+  =0 {}
+  one {{list} is typing…}
+  other {{list} are typing…}
+}
+```
+
+with a separate message for "Several people are typing…" when `names` is
+empty. Pass the same `locale` the messages use, so the names are joined in that
+language.
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="typing-indicator.DoSeveral" />,
+        description: "Switch to “Several people” past three names.",
+      },
+      negative: {
+        component: <Live of="typing-indicator.DontListEveryone" />,
+        description:
+          "Don't list everyone. A long line of names gets cut off, and screen readers read the whole list.",
+      },
+    },
+    {
+      positive: {
+        component: <Live of="typing-indicator.DoLeaveMeOut" />,
+        description: "Pass currentUserId so people never see themselves.",
+      },
+      negative: {
+        component: <Live of="typing-indicator.DontShowMe" />,
+        description: "Don't tell people that they're typing.",
+      },
+    },
+  ]}
+/>
+
+## Accessibility
+
+There's nothing to focus: the indicator only reports, so it never enters the
+tab order.
+
+<UsageGuidelines
+  guidelines={[
+    "The sentence goes to a polite role=\"status\" region that's in the page from the start, outside the message log, so it doesn't mix with new messages.",
+    "Announcements wait for the sentence to hold still for announceDelay milliseconds, 1.5 seconds by default, so a burst of people starting and stopping is heard once.",
+    "When everyone stops typing, the region empties without saying anything.",
+    "The dots and the visible text are hidden from screen readers, which hear the status region instead, with names in full.",
+    "The dots can run for longer than five seconds, so under reduced motion they hold still as a plain ellipsis (WCAG 2.2.2).",
+  ]}
+/>
+
+## Related components
+
+<RelatedComponents names={["Reactions", "Sticker avatar", "Floating nav"]} />
+
+## References
+
+- [Discord: typing start event](https://discord.com/developers/docs/events/gateway-events#typing-start), for the 10-second expiry
+- [WAI-ARIA status role](https://www.w3.org/TR/wai-aria-1.2/#status)
+- [WCAG 2.2.2 Pause, Stop, Hide](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html)
+- [ICU message format](https://unicode-org.github.io/icu/userguide/format_parse/messages/)
+- [Intl.ListFormat](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Intl/ListFormat)

@@ -55,6 +55,10 @@ import {
   type StickerAvatarStatus,
 } from "@/components/fibo/sticker-avatar"
 import { TokenFlow, type TokenRow } from "@/components/fibo/token-flow"
+import {
+  TypingIndicator,
+  type TypingPerson,
+} from "@/components/fibo/typing-indicator"
 import { GROUPS } from "@/features/components/examples/command-menu-data"
 import { useRabbit } from "@/features/components/examples/sticker-avatar-data"
 
@@ -631,6 +635,48 @@ function StickerAvatarCover({ active }: CoverProps) {
   )
 }
 
+const TYPISTS: TypingPerson[] = [
+  { id: "ana", name: "Ana" },
+  { id: "ben", name: "Ben" },
+  { id: "cy", name: "Cy" },
+  { id: "dara", name: "Dara" },
+]
+
+// How many are typing at each step: one, two, three, then too many to name.
+const TYPING_STEPS = [1, 2, 3, 4]
+
+/**
+ * A short thread with the indicator under it. While active, people join one
+ * at a time until it gives up naming them; at rest the dots hold still.
+ */
+function TypingIndicatorCover({ active }: CoverProps) {
+  const step = useCycle(TYPING_STEPS.length, 1400, active)
+  return (
+    <div className="flex size-full items-center justify-center p-4">
+      <div className="flex w-56 flex-col gap-2 rounded-xl border border-line bg-background p-3 text-left">
+        <div className="flex flex-col text-xs">
+          <span className="font-medium">Ana</span>
+          <span className="text-muted-foreground">
+            Pushed the new tokens to the branch.
+          </span>
+        </div>
+        <div className="flex flex-col text-xs">
+          <span className="font-medium">Ben</span>
+          <span className="text-muted-foreground">
+            Is dark mode in there too?
+          </span>
+        </div>
+        <TypingIndicator
+          people={TYPISTS.slice(0, active ? TYPING_STEPS[step] : 2)}
+          className={cn(
+            !active && "[&_[data-slot=typing-indicator-dots]>span]:animate-none"
+          )}
+        />
+      </div>
+    </div>
+  )
+}
+
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "data-table": DataTableCover,
   "filter-menu": FilterMenuCover,
@@ -642,6 +688,7 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "pixel-snail": PixelSnailCover,
   "floating-nav": FloatingNavCover,
   "sticker-avatar": StickerAvatarCover,
+  "typing-indicator": TypingIndicatorCover,
 }
 
 /**

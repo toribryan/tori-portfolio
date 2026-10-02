@@ -46,6 +46,14 @@ export const NICHE_PARTS: NichePart[] = [
       "A pill of destinations that floats above the bottom of a phone screen and steps aside while you scroll.",
   },
   {
+    name: "typing-indicator",
+    title: "Typing indicator",
+    shelf: "base",
+    description:
+      "Says who's typing in a conversation, naming up to three people.",
+    home: false,
+  },
+  {
     name: "reactions",
     title: "Reactions",
     shelf: "special",
