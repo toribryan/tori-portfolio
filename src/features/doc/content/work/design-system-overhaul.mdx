@@ -215,11 +215,16 @@ A designer who knows Button's properties already knows Input's.
   />
 </Plate>
 
-Status colors got the same treatment. Each meaning has one name, and each
-name is backed by status tokens, so a warning looks the same on every
-component and in every product.
+Status colors had it worse. The old palette had five reds and nothing saying
+which one meant an error, so designers and engineers each picked one that
+looked right. A single screen could show four different reds, and a field's
+border and its error message could disagree.
 
-<StatusNames />
+<StatusColors />
+
+Now each meaning has one role, backed by its tokens: an error asks for danger,
+and danger decides the red. Success, warning and info work the same way, so a
+warning looks the same on every component and in every product.
 
 ### Base components and slots
 

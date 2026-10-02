@@ -46,7 +46,7 @@ import {
 } from "./overhaul-diagrams"
 import { RepoViewer } from "./repo-viewer"
 import { ResultFigure } from "./result-figure"
-import { StatusNames } from "./status-names"
+import { StatusColors } from "./status-colors"
 import { TokenVisualizer } from "./token-visualizer"
 
 /** Components a doc's MDX can use beyond the shared set. */
@@ -62,7 +62,7 @@ const DOC_COMPONENTS = {
   Side,
   Sides,
   SlotComposition,
-  StatusNames,
+  StatusColors,
   SwitchSprawl,
   TokenRoles,
   TokenVisualizer,
