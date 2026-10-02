@@ -64,9 +64,10 @@ const PARTS: Part[] = [
     after: {
       name: "Button",
       rows: [
-        { kind: "variant", name: "variant", value: "primary" },
+        { kind: "variant", name: "kind", value: "filled" },
         { kind: "variant", name: "size", value: "md" },
         { kind: "variant", name: "state", value: "default" },
+        { kind: "variant", name: "status", value: "none" },
         { kind: "boolean", name: "iconStart", on: true },
         { kind: "swap", name: "iconStartSwap", value: "check" },
         { kind: "text", name: "label", value: "Submit" },
@@ -306,7 +307,7 @@ export function PropertyPanels() {
       }
       caption={
         after ? (
-          "After: one vocabulary. variant, size, state and status mean the same thing on every component, so learning one teaches the next."
+          "After: one vocabulary. size, state and status mean the same thing on every component, and Button's kind says how it's drawn, apart from what it means."
         ) : (
           <>
             Before: each component named by whoever built it. The{" "}
