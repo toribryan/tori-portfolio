@@ -28,6 +28,7 @@ import { ImageCycle } from "./mdx-image-cycle"
 import { ImagePan } from "./mdx-image-pan"
 import { InboxRegions } from "./mdx-inbox-regions"
 import { LinkButton } from "./mdx-link-button"
+import { PageGallery } from "./mdx-page-gallery"
 import { Pipeline, Stage } from "./mdx-pipeline"
 import { PipelineHero } from "./mdx-pipeline-hero"
 import {
@@ -84,6 +85,7 @@ const components: MDXRemoteProps["components"] = {
   ImageCycle,
   ImagePan,
   InboxRegions,
+  PageGallery,
   Pipeline,
   PipelineHero,
   Stage,
