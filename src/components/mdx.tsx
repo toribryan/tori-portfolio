@@ -14,6 +14,7 @@ import {
 } from "@/lib/rehype-code-block"
 import { cn } from "@/lib/utils"
 import { Code } from "@/components/base/ui/typography"
+import { EngineeringThread } from "@/features/doc/components/engineering-thread"
 import { SubmissionJourney } from "@/features/doc/components/submission-journey"
 import { VendorCreditDemo } from "@/features/doc/components/vendor-credit-demo"
 
@@ -80,6 +81,7 @@ const components: MDXRemoteProps["components"] = {
   BrandLink,
   Callout,
   Embed,
+  EngineeringThread,
   Compare,
   Figure,
   ImageCycle,
