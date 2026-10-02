@@ -72,7 +72,14 @@ const PARTS: Callout[] = [
     find: (root) => root.querySelector("[data-current]"),
   },
   { label: "Crest", side: "left", find: (root) => markAt(root, ANATOMY_CREST) },
-  { label: "Preview card", side: "right", find: previewOf, outline: true },
+  {
+    label: "Preview card",
+    side: "right",
+    find: previewOf,
+    outline: true,
+    // Its top corner, clear of the meta and description markers below.
+    point: (r) => ({ x: r.right + 4, y: r.top + 10 }),
+  },
   {
     label: "Meta",
     side: "right",

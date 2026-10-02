@@ -155,7 +155,7 @@ const ROW_PARTS: Callout[] = [
 export function AnatomyRow() {
   return (
     <AnatomyMap callouts={ROW_PARTS}>
-      <div className="flex justify-center px-40 py-16">
+      <div className="flex justify-center px-10 py-16">
         <div data-anatomy-subject>
           <Reactions defaultReactions={SEEDED} particles={0} />
         </div>
@@ -190,7 +190,7 @@ export function AnatomyPicker() {
   const [ready, setReady] = useState(false)
   return (
     <AnatomyMap callouts={PICKER_PARTS} measureKey={ready}>
-      <div className="flex justify-center px-40 py-10">
+      <div className="flex justify-center px-10 py-10">
         <PickerHeldOpen onReady={() => setReady(true)} />
       </div>
     </AnatomyMap>
