@@ -10,10 +10,19 @@ import {
 } from "react"
 
 import { cn } from "@/lib/utils"
+import arcContracts from "@/features/doc/data/iso/arc-contracts.json"
+import arcNow from "@/features/doc/data/iso/arc-now.json"
+import arcStart from "@/features/doc/data/iso/arc-start.json"
+import arcToday from "@/features/doc/data/iso/arc-today.json"
 import badgeBackground from "@/features/doc/data/iso/badge-background.json"
 import badgeBorder from "@/features/doc/data/iso/badge-border.json"
 import badgeIcon from "@/features/doc/data/iso/badge-icon.json"
 import badgeText from "@/features/doc/data/iso/badge-text.json"
+import expMcp from "@/features/doc/data/iso/exp-mcp.json"
+import expPrompt from "@/features/doc/data/iso/exp-prompt.json"
+import expVariable from "@/features/doc/data/iso/exp-variable.json"
+import fiboEnforced from "@/features/doc/data/iso/fibo-enforced.json"
+import fiboWritten from "@/features/doc/data/iso/fibo-written.json"
 import stackAgent from "@/features/doc/data/iso/stack-agent.json"
 import stackContext from "@/features/doc/data/iso/stack-context.json"
 import stackGuardrails from "@/features/doc/data/iso/stack-guardrails.json"
@@ -30,18 +39,27 @@ type IsoGrid = { width: number; height: number; rows: string[] }
  * 2 a dark dot. Regenerate them there rather than editing the JSON.
  */
 const ART = {
-  "stack-source": stackSource,
-  "stack-context": stackContext,
-  "stack-agent": stackAgent,
-  "stack-guardrails": stackGuardrails,
-  "stack-review": stackReview,
-  "tier-primitive": tierPrimitive,
-  "tier-semantic": tierSemantic,
-  "tier-component": tierComponent,
+  "arc-contracts": arcContracts,
+  "arc-now": arcNow,
+  "arc-start": arcStart,
+  "arc-today": arcToday,
   "badge-background": badgeBackground,
+  "badge-border": badgeBorder,
   "badge-icon": badgeIcon,
   "badge-text": badgeText,
-  "badge-border": badgeBorder,
+  "exp-mcp": expMcp,
+  "exp-prompt": expPrompt,
+  "exp-variable": expVariable,
+  "fibo-enforced": fiboEnforced,
+  "fibo-written": fiboWritten,
+  "stack-agent": stackAgent,
+  "stack-context": stackContext,
+  "stack-guardrails": stackGuardrails,
+  "stack-review": stackReview,
+  "stack-source": stackSource,
+  "tier-component": tierComponent,
+  "tier-primitive": tierPrimitive,
+  "tier-semantic": tierSemantic,
 } satisfies Record<string, IsoGrid>
 
 export type IsoArt = keyof typeof ART

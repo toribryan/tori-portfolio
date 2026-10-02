@@ -34,28 +34,36 @@ results:
     label: "Metadata file the docs, catalog, registry and llms.txt all read"
 ---
 
-<Pipeline>
-  <Stage
-    label="Where I started"
-    detail="Can a model use a design system"
-    mark="search"
+<IsoCards columns="2">
+  <IsoCard
+    title="Where I started"
+    index="001"
+    art="arc-start"
+    detail="Can a model use a design system?"
+    seed="31"
   />
-  <Stage
-    label="The contracts"
+  <IsoCard
+    title="The contracts"
+    index="002"
+    art="arc-contracts"
     detail="Tokens, metadata, one source"
-    mark="layers"
+    seed="32"
   />
-  <Stage
-    label="Where I am now"
-    detail="fibo, built for agents"
-    mark="component"
+  <IsoCard
+    title="Where I am now"
+    index="003"
+    art="arc-now"
+    detail="fibo, a kit of parts built for agents"
+    seed="33"
   />
-  <Stage
-    label="What works today"
-    detail="Checks the agent can run"
-    mark="shield"
+  <IsoCard
+    title="What works today"
+    index="004"
+    art="arc-today"
+    detail="Checks the agent can run and fix against"
+    seed="34"
   />
-</Pipeline>
+</IsoCards>
 
 ## Where I started
 
@@ -82,6 +90,30 @@ Three things made it a test rather than a demo:
   could be traced to a difference in the input instead of to the weather.
 - The design system as the variable. Same design, same prompt, different
   amounts of structure exposed to the model.
+
+<IsoCards columns="3">
+  <IsoCard
+    title="Figma MCP"
+    index="001"
+    art="exp-mcp"
+    detail="The model reads the real design file"
+    seed="41"
+  />
+  <IsoCard
+    title="Controlled prompts"
+    index="002"
+    art="exp-prompt"
+    detail="Same design, same prompt, every run"
+    seed="42"
+  />
+  <IsoCard
+    title="The variable"
+    index="003"
+    art="exp-variable"
+    detail="How much structure the system exposes"
+    seed="43"
+  />
+</IsoCards>
 
 The question was deliberately narrow. Given a design and a design system, can a
 model produce an implementation that actually uses the system?
@@ -249,6 +281,23 @@ and I review and merge what comes back.
 
 The rules live in two kinds of places: written down where an agent will read
 them, and enforced by something that runs.
+
+<IsoCards columns="2">
+  <IsoCard
+    title="Written down"
+    index="001"
+    art="fibo-written"
+    detail="AGENTS.md, skills and metadata an agent reads first"
+    seed="51"
+  />
+  <IsoCard
+    title="Enforced"
+    index="002"
+    art="fibo-enforced"
+    detail="Five checks on every pull request, agent or not"
+    seed="52"
+  />
+</IsoCards>
 
 | Rule                                       | Where the agent learns it | What enforces it                                                                                                 |
 | ------------------------------------------ | ------------------------- | ---------------------------------------------------------------------------------------------------------------- |
