@@ -60,6 +60,7 @@ function fieldFor(arts: IsoArt[]): Field {
 const BUILD_MS = 1400
 const FLICKER_MS = 120
 const FLICKER_CELLS = 6
+const LIGHT_ALPHA = 0.5
 
 function rng(seed: number) {
   return () => {
@@ -136,6 +137,8 @@ function IsoCanvas({
           if (v !== "0" && flipped.has(i)) v = v === "1" ? "2" : "1"
           ctx.fillStyle =
             v === "2" ? colors.dark : v === "1" ? colors.light : colors.faint
+          // Light dots sit back so solid features read in either theme.
+          ctx.globalAlpha = v === "1" ? LIGHT_ALPHA : 1
           const size = v === "0" ? dot * 0.35 : dot
           const offset = (pitch - size) / 2
           ctx.fillRect(fx * pitch + offset, fy * pitch + offset, size, size)
