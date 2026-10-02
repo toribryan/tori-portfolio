@@ -57,7 +57,7 @@ const EXTRA_LINKS: Record<string, Partial<ComponentEntry["links"]>> = {
 /**
  * What a doc's MDX under `content/` cannot say about its component: the
  * preview it leads with, the installed source, and where else it lives. The
- * words live in the MDX; the parts are fibo's special components.
+ * words live in the MDX; the parts are fibo's, listed in fibo-niche.ts.
  */
 export const COMPONENTS: Record<string, ComponentEntry | undefined> =
   Object.fromEntries(

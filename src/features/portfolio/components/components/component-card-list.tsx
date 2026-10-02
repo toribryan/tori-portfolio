@@ -18,19 +18,21 @@ import { COVERS } from "./covers"
 const PLAYS_ON_HOVER = new Set(["reactions"])
 
 /**
- * fibo's special components as cover cards, two across on phones and three
- * from md up, with the live
- * part standing in for the cover image.
+ * fibo's parts as cover cards, two across on phones and three from md up,
+ * with the live part standing in for the cover image.
  */
 export function ComponentCardList({
   home = false,
+  shelf,
 }: {
   /** Only the parts the home page features, rather than every part. */
   home?: boolean
+  /** Only the parts on one of fibo's shelves. */
+  shelf?: NichePart["shelf"]
 }) {
-  const parts = home
-    ? NICHE_PARTS.filter((part) => part.home !== false)
-    : NICHE_PARTS
+  const parts = NICHE_PARTS.filter(
+    (part) => (!home || part.home !== false) && (!shelf || part.shelf === shelf)
+  )
   return (
     <ul className="grid grid-cols-2 gap-px bg-line md:grid-cols-3">
       {parts.map((part) => (

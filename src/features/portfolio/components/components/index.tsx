@@ -11,7 +11,7 @@ import { ComponentCardList } from "./component-card-list"
 const ID = "components"
 
 /**
- * fibo's special components, branching off the fibo hero above. It sits
+ * fibo's parts, branching off the fibo hero above. It sits
  * flush under the hero and shares the hero's bottom line.
  */
 export function Components() {
