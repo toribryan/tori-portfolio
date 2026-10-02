@@ -39,8 +39,13 @@ import {
 } from "@/components/fibo/integration-visual"
 import { PixelSnailSprite } from "@/components/fibo/pixel-snail"
 import { Reactions, type Reaction } from "@/components/fibo/reactions"
+import {
+  StickerAvatar,
+  type StickerAvatarStatus,
+} from "@/components/fibo/sticker-avatar"
 import { TokenFlow, type TokenRow } from "@/components/fibo/token-flow"
 import { GROUPS } from "@/features/components/examples/command-menu-data"
+import { useRabbit } from "@/features/components/examples/sticker-avatar-data"
 
 type CoverProps = { active: boolean }
 
@@ -486,6 +491,30 @@ function FloatingNavCover({ active }: CoverProps) {
   )
 }
 
+const STICKER_STATUSES: StickerAvatarStatus[] = ["present", "away", "offline"]
+
+/** fibo as a sticker. While active his status steps through each shape. */
+function StickerAvatarCover({ active }: CoverProps) {
+  const rabbit = useRabbit()
+  const step = useCycle(STICKER_STATUSES.length, 1100, active)
+
+  return (
+    <div className="flex size-full items-center justify-center">
+      {/* He's drawn on a canvas in the browser; until then the cover stays
+          empty rather than flashing his initials. */}
+      {rabbit ? (
+        <StickerAvatar
+          name="fibo"
+          src={rabbit}
+          pixelated
+          size={96}
+          status={STICKER_STATUSES[step]}
+        />
+      ) : null}
+    </div>
+  )
+}
+
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "filter-menu": FilterMenuCover,
   "chapter-scrubber": ChapterScrubberCover,
@@ -495,6 +524,7 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "command-menu": CommandMenuCover,
   "pixel-snail": PixelSnailCover,
   "floating-nav": FloatingNavCover,
+  "sticker-avatar": StickerAvatarCover,
 }
 
 /**

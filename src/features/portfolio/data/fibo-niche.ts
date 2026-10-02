@@ -39,10 +39,17 @@ export const NICHE_PARTS: NichePart[] = [
     home: false,
   },
   {
+    name: "sticker-avatar",
+    title: "Sticker avatar",
+    description:
+      "An avatar cut out like a die-cut sticker, with a paper edge that follows its shape and a status told by shape.",
+  },
+  {
     name: "pixel-snail",
     title: "Pixel snail",
     description:
       "A one-color pixel snail that crawls on a loop while something loads.",
+    home: false,
   },
   {
     name: "integration-visual",

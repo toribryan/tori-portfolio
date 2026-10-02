@@ -47,9 +47,12 @@
   --color-ring: var(--ring);
   --color-info: var(--info);
   --color-success: var(--success);
+  --color-warning: var(--warning);
   --color-destructive: var(--destructive);
   --color-link: var(--link);
   --color-surface: var(--surface);
+  --color-sticker-edge: var(--sticker-edge);
+  --color-sticker-ink: var(--sticker-ink);
   --color-surface-warm: var(--surface-warm);
   --color-surface-foreground: var(--surface-foreground);
   --color-code: var(--code);
@@ -346,6 +349,9 @@
   /* green-500 */
   --success: oklch(0.723 0.219 149.579);
 
+  /* amber-700 */
+  --warning: oklch(0.555 0.163 48.998);
+
   /* red-600 */
   --destructive: oklch(0.577 0.245 27.325);
 
@@ -488,6 +494,9 @@
 
   /* green-500 */
   --success: oklch(0.723 0.219 149.579);
+
+  /* amber-400 */
+  --warning: oklch(0.828 0.189 84.429);
 
   /* red-700 */
   --destructive: oklch(0.505 0.213 27.518);
@@ -982,6 +991,10 @@
   --input-subtle-hover: color-mix(in oklch, var(--input) 50%, transparent);
   --ring-subtle: color-mix(in oklch, var(--ring) 50%, transparent);
   --backdrop: color-mix(in oklch, var(--color-zinc-950) 20%, transparent);
+  /* A sticker's paper and ink keep their values in dark mode: paper is white
+     on any page. */
+  --sticker-edge: var(--color-white);
+  --sticker-ink: var(--color-neutral-900);
 }
 
 /* The scrim behind fibo's dialogs darkens further in dark mode, where a light
