@@ -35,8 +35,8 @@ export function IntroItemLink({
 }
 
 /**
- * The shared icon tile, restyled to match the outline icon buttons of the
- * social links right above the overview.
+ * The shared icon tile, restyled like the outline icon buttons of the social
+ * links right above the overview, a size smaller.
  */
 export function IntroItemIcon({
   className,
@@ -45,9 +45,9 @@ export function IntroItemIcon({
   return (
     <IconTile
       className={cn(
-        "size-8 rounded-[min(var(--radius-lg),10px)] border-border bg-popover text-foreground/80 ring-0 ring-offset-0",
+        "size-7 rounded-[min(var(--radius-lg),8px)] border-border bg-popover text-foreground/80 ring-0 ring-offset-0",
         "dark:border-input dark:bg-input/30 dark:ring-0",
-        "[&_svg:not([class*='size-'])]:size-4.5",
+        "[&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
