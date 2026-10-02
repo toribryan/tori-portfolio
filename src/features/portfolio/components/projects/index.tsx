@@ -1,3 +1,7 @@
+import Link from "next/link"
+
+import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
+import { Button } from "@/components/base/ui/button"
 import { DocCardList } from "@/features/doc/components/doc-card-list"
 import { getWorkDocs } from "@/features/doc/data/documents"
 import {
@@ -8,12 +12,10 @@ import {
 } from "@/features/portfolio/components/panel"
 import { PanelTitleCopy } from "@/features/portfolio/components/panel-title-copy"
 
-import { LoadMore } from "./load-more"
-
 const ID = "projects"
 
-/** Cards per page of "Load more": two rows of the two-column grid. */
-const PAGE = 4
+/** Cards on the home page: two rows of the two-column grid. The rest are on /projects. */
+const SHOWN = 4
 
 export function Projects() {
   // fibo has its own hero and niche shelf above.
@@ -30,26 +32,24 @@ export function Projects() {
       </PanelHeader>
 
       <div className="px-2 pb-4">
-        {projects.length === 0 ? (
-          <DocCardList
-            docs={[]}
-            basePath="/work"
-            emptyMessage="No projects published yet."
-          />
-        ) : (
-          <LoadMore
-            pages={Array.from(
-              { length: Math.ceil(projects.length / PAGE) },
-              (_, i) => (
-                <DocCardList
-                  key={i}
-                  docs={projects.slice(i * PAGE, (i + 1) * PAGE)}
-                  basePath="/work"
-                />
-              )
-            )}
-          />
-        )}
+        <DocCardList
+          docs={projects.slice(0, SHOWN)}
+          basePath="/work"
+          emptyMessage="No projects published yet."
+        />
+      </div>
+
+      <div className="screen-line-top flex justify-center py-4">
+        <Button
+          className="gap-2 pr-2.5 pl-3"
+          variant="outline"
+          size="sm"
+          nativeButton={false}
+          render={<Link href="/projects" />}
+        >
+          View all
+          <ArrowRightIcon />
+        </Button>
       </div>
     </Panel>
   )

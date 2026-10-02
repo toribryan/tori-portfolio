@@ -126,6 +126,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/work",
+        destination: "/projects",
+        permanent: true,
+      },
+      {
         source: "/components/map-marker/:path*",
         destination: "/components/map-pin/:path*",
         permanent: true,
