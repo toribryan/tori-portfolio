@@ -46,6 +46,7 @@ import { StoryEmbed } from "./mdx-story-embed"
 import { Tech } from "./mdx-tech"
 import { ToolLabel } from "./mdx-tool-label"
 import { Video } from "./mdx-video"
+import { WhoStepDemo } from "./mdx-who-step-demo"
 
 const components: MDXRemoteProps["components"] = {
   h1: (props: React.ComponentProps<"h1">) => <Heading as="h1" {...props} />,
@@ -89,6 +90,7 @@ const components: MDXRemoteProps["components"] = {
   Tech,
   ToolLabel,
   Video,
+  WhoStepDemo,
 
   AtomicDesign,
   BriefedJourneys,
