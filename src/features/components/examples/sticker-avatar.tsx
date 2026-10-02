@@ -11,7 +11,20 @@ import {
 import { BONZO, STATUS_NAMES, useRabbit } from "./sticker-avatar-data"
 
 export function Default() {
-  return <StickerAvatar name="Bonzo" src={BONZO} size={96} status="present" />
+  const rabbit = useRabbit()
+  // He's drawn on a canvas in the browser; until then the preview holds his
+  // space rather than flashing his initials.
+  return rabbit ? (
+    <StickerAvatar
+      name="fibo"
+      src={rabbit}
+      pixelated
+      size={96}
+      status="present"
+    />
+  ) : (
+    <span aria-hidden="true" className="block size-24" />
+  )
 }
 
 export function Sizes() {
