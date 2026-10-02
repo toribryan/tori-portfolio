@@ -124,6 +124,18 @@ export function FiboStory() {
         </p>
       </Chapter>
 
+      <Chapter title="The sequence">
+        <ul>
+          <li>Start with 1 and 1.</li>
+          <li>Add the last two numbers to get the next one.</li>
+          <li>1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, and on forever.</li>
+          <li>
+            Divide any number by the one before it and you get closer and closer
+            to 1.618, the golden ratio, φ.
+          </li>
+        </ul>
+      </Chapter>
+
       <Chapter
         title="Organic and mechanical"
         after={<Plates names={["bunny", "sunflower"]} />}
