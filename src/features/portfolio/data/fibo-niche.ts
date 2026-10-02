@@ -68,18 +68,19 @@ export const NICHE_PARTS: NichePart[] = [
     home: false,
   },
   {
-    name: "integration-visual",
-    title: "Integration visual",
-    shelf: "special",
-    description:
-      "A hub and the tools wired into it, with pulses along the routes.",
-  },
-  {
     name: "command-menu",
     title: "Command menu",
     shelf: "special",
     description:
       "A Cmd+K palette with nested pages, recent commands, ranked search and a preview pane.",
+  },
+  {
+    name: "integration-visual",
+    title: "Integration visual",
+    shelf: "special",
+    description:
+      "A hub and the tools wired into it, with pulses along the routes.",
+    home: false,
   },
   {
     name: "token-flow",
