@@ -7,6 +7,8 @@ export type NichePart = {
   shelf: "special" | "base"
   /** `false` keeps the part off the home page; it still has a card on /components. */
   home?: boolean
+  /** The part's page in fibo's Figma library, as a node id. Left out until it has one. */
+  figma?: string
 }
 
 /**
@@ -19,6 +21,7 @@ export type NichePart = {
 export const NICHE_PARTS: NichePart[] = [
   {
     name: "data-table",
+    figma: "230-2",
     title: "Data table",
     shelf: "base",
     description:
@@ -33,6 +36,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "chapter-scrubber",
+    figma: "371-4",
     title: "Chapter scrubber",
     shelf: "special",
     description:
@@ -40,6 +44,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "floating-nav",
+    figma: "601-74",
     title: "Floating nav",
     shelf: "special",
     description:
@@ -47,6 +52,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "typing-indicator",
+    figma: "567-9878",
     title: "Typing indicator",
     shelf: "base",
     description:
@@ -55,6 +61,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "map-pin",
+    figma: "601-75",
     title: "Map pin",
     shelf: "special",
     description:
@@ -63,6 +70,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "reactions",
+    figma: "169-18",
     title: "Reactions",
     shelf: "special",
     description: "Lets people respond to content with an emoji in one tap.",
@@ -85,6 +93,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "command-menu",
+    figma: "526-6",
     title: "Command menu",
     shelf: "special",
     description:
@@ -92,6 +101,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "integration-visual",
+    figma: "371-5",
     title: "Integration visual",
     shelf: "special",
     description:
@@ -100,6 +110,7 @@ export const NICHE_PARTS: NichePart[] = [
   },
   {
     name: "token-flow",
+    figma: "371-6",
     title: "Token flow",
     shelf: "special",
     description:
@@ -107,6 +118,14 @@ export const NICHE_PARTS: NichePart[] = [
     home: false,
   },
 ]
+
+const FIGMA_LIBRARY =
+  "https://www.figma.com/design/LJZ5Tt4Ba7NPPi8Xnq8i0e/Fibo-DS"
+
+export function nicheFigmaUrl(name: string) {
+  const node = NICHE_PARTS.find((part) => part.name === name)?.figma
+  return node ? `${FIGMA_LIBRARY}?node-id=${node}` : undefined
+}
 
 export function nicheStorybookUrl(name: string) {
   const shelf = NICHE_PARTS.find((part) => part.name === name)?.shelf

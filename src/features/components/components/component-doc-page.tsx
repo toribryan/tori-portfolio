@@ -116,6 +116,24 @@ export async function ComponentDocPage({
               </a>
             }
           />
+          {entry.links.figma && (
+            <Button
+              className="gap-1.5"
+              variant="outline"
+              size="sm"
+              nativeButton={false}
+              render={
+                <a
+                  href={entry.links.figma}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open in Figma
+                  <ArrowUpRightIcon />
+                </a>
+              }
+            />
+          )}
           {entry.links.registry && (
             <Button
               className="gap-1.5"
