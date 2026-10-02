@@ -49,6 +49,10 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-destructive: var(--destructive);
+  --color-info-foreground: var(--info-foreground);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-link: var(--link);
   --color-surface: var(--surface);
   --color-sticker-edge: var(--sticker-edge);
@@ -1010,6 +1014,13 @@
   --success-subtle: color-mix(in oklch, var(--success) 10%, transparent);
   --warning-subtle: color-mix(in oklch, var(--warning) 10%, transparent);
   --info-subtle: color-mix(in oklch, var(--info) 10%, transparent);
+  /* Text on a status fill. Success and warning are dark in light mode and
+     light in dark mode, so the page background reads on them; info and
+     destructive stay dark in both and take white. */
+  --info-foreground: oklch(0.985 0 0);
+  --success-foreground: var(--background);
+  --warning-foreground: var(--background);
+  --destructive-foreground: oklch(0.985 0 0);
   --input-subtle: color-mix(in oklch, var(--input) 20%, transparent);
   --input-subtle-hover: color-mix(in oklch, var(--input) 50%, transparent);
   --ring-subtle: color-mix(in oklch, var(--ring) 50%, transparent);
