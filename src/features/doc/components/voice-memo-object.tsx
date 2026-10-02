@@ -151,10 +151,15 @@ function useTurn(rest: Pose) {
   return { rx, ry, back, flip, handlers }
 }
 
+// Small on its page, so the transcript has room beside it.
+const SMALL = "[--w:min(44cqw,13rem)]"
+
 /**
  * The device on its page: a record button you can also pick up. Press it and
- * the transcript opens underneath, filling in as you talk; press it again to
- * stop, then copy the text or save it as Markdown. Drag it to turn it over.
+ * it slides to the right as the transcript opens on its left, filling in as
+ * you talk; press it again to stop, then copy the text or save it as
+ * Markdown. Drag it to turn it over. In a narrow column the transcript opens
+ * underneath instead.
  */
 export function VoiceMemoHero() {
   const { rx, ry, back, flip, handlers } = useTurn(STRAIGHT)
@@ -165,7 +170,8 @@ export function VoiceMemoHero() {
     <div
       className={cn(
         "not-prose @container flex w-full flex-col items-center gap-6 px-4 pt-14 pb-2",
-        SIZE
+        SIZE,
+        SMALL
       )}
       onKeyDown={(event) => {
         if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
@@ -179,10 +185,20 @@ export function VoiceMemoHero() {
         recording={recording}
         onRecordingChange={setRecording}
         side="bottom"
-        className="flex w-full flex-col items-center"
-        panelClassName="relative top-auto left-auto mt-[calc(var(--w)*0.18)] w-80 origin-top before:left-1/2 before:-translate-x-1/2"
+        // Device first, then the transcript: a column when narrow, and from
+        // @xl a row run right to left, so the transcript opens on the left.
+        className="flex w-full flex-col items-center gap-[calc(var(--w)*0.22)] @xl:flex-row-reverse @xl:justify-center @xl:gap-12"
+        panelClassName={cn(
+          "relative top-auto left-auto w-80 max-w-full origin-top before:left-1/2 before:-translate-x-1/2",
+          // Beside the device, its notch points right, back at it.
+          "@xl:origin-right @xl:before:top-1/2 @xl:before:right-[-7px] @xl:before:left-auto @xl:before:translate-x-0 @xl:before:-translate-y-1/2 @xl:before:border-t @xl:before:border-r @xl:before:border-b-0 @xl:before:border-l-0 @xl:starting:translate-x-2 @xl:starting:translate-y-0"
+        )}
         device={
-          <span
+          // `layout` glides the device to wherever the row puts it, so it
+          // slides right as the transcript opens and back when it closes.
+          <motion.span
+            layout={!reduceMotion}
+            transition={{ type: "spring", stiffness: 160, damping: 22 }}
             className="relative block aspect-[85/55] w-(--w) cursor-grab touch-pan-y [perspective:1400px] active:cursor-grabbing"
             {...handlers}
           >
@@ -195,11 +211,11 @@ export function VoiceMemoHero() {
             >
               <Body rx={rx} ry={ry} rest={STRAIGHT} recording={recording} />
             </motion.span>
-          </span>
+          </motion.span>
         }
       />
 
-      <div className="mt-[calc(var(--w)*0.12)] flex items-center gap-3 text-sm text-muted-foreground">
+      <div className="mt-[calc(var(--w)*0.16)] flex items-center gap-3 text-sm text-muted-foreground">
         <span className="hidden sm:inline">
           {recording ? "Press again to stop" : "Press to record, drag to turn"}
         </span>
@@ -373,6 +389,7 @@ function Face({
     shade: `${id}-shade`,
     sheen: `${id}-sheen`,
     clip: `${id}-clip`,
+    edges: `${id}-edges`,
   }
   const { width, height, radius } = FACE
   const wordmark = "fibo"
@@ -446,6 +463,56 @@ function Face({
             style={{ stopColor: "var(--background)", stopOpacity: 0 }}
           />
         </linearGradient>
+        {/* The rim of raised lettering lit from the top left: a bright line
+            along the edges facing the light, where the shape shifted away
+            from it leaves them uncovered, a hard shadow along the far edges
+            and a soft one cast beyond them. */}
+        <filter
+          id={ids.edges}
+          x="-5%"
+          y="-20%"
+          width="110%"
+          height="140%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feOffset in="SourceAlpha" dx="0.7" dy="0.8" result="down" />
+          <feComposite
+            in="SourceAlpha"
+            in2="down"
+            operator="out"
+            result="top"
+          />
+          <feComposite
+            in="down"
+            in2="SourceAlpha"
+            operator="out"
+            result="under"
+          />
+          <feFlood
+            style={{ floodColor: "var(--background)", floodOpacity: 0.85 }}
+          />
+          <feComposite in2="top" operator="in" result="lit" />
+          <feFlood
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.3 }}
+          />
+          <feComposite in2="under" operator="in" result="shade" />
+          <feGaussianBlur in="down" stdDeviation="0.9" result="soft" />
+          <feComposite
+            in="soft"
+            in2="SourceAlpha"
+            operator="out"
+            result="cast"
+          />
+          <feFlood
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.12 }}
+          />
+          <feComposite in2="cast" operator="in" result="glow" />
+          <feMerge>
+            <feMergeNode in="glow" />
+            <feMergeNode in="shade" />
+            <feMergeNode in="lit" />
+          </feMerge>
+        </filter>
         <clipPath id={ids.clip}>
           <rect width={width} height={height} rx={radius} />
         </clipPath>
@@ -458,25 +525,6 @@ function Face({
         rx={radius}
         fill={`url(#${ids.shade})`}
       />
-
-      {side === "front" ? (
-        <g fontSize={50} className="font-serif">
-          {[
-            { dy: -0.9, className: "fill-background opacity-90" },
-            { dy: 0.9, className: "fill-foreground opacity-25" },
-            { dy: 0, className: "fill-muted" },
-          ].map((layer) => (
-            <text
-              key={layer.dy}
-              x={14}
-              y={height - 16 + layer.dy}
-              className={layer.className}
-            >
-              {wordmark}
-            </text>
-          ))}
-        </g>
-      ) : null}
 
       {/* Anodized aluminium is a mid gray; the muted role alone is near
           white in the light theme. */}
@@ -503,23 +551,18 @@ function Face({
 
       {side === "front" ? (
         // The lettering's edges again, over the grain, which would otherwise
-        // break up the only thing that says the letters are raised.
-        <g fontSize={50} fill="none" strokeWidth={0.7} className="font-serif">
-          <text
-            x={14}
-            y={height - 16.5}
-            className="stroke-background opacity-80"
-          >
-            {wordmark}
-          </text>
-          <text
-            x={14}
-            y={height - 15.5}
-            className="stroke-foreground opacity-25"
-          >
-            {wordmark}
-          </text>
-        </g>
+        // break up the only thing that says the letters are raised. Drawn by
+        // a filter from the word's merged shape, so where letters overlap,
+        // as the f and i do, no edge shows inside the join.
+        <text
+          x={14}
+          y={height - 16}
+          fontSize={50}
+          filter={`url(#${ids.edges})`}
+          className="font-serif"
+        >
+          {wordmark}
+        </text>
       ) : (
         // A magnet ring pressed into the back, lit from above: dark on its
         // upper wall, bright on its lower one. Then a line of small print.
