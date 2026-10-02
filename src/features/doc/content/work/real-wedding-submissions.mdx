@@ -66,7 +66,11 @@ results:
   />
 </Pipeline>
 
-{/* SCREENSHOT: hero / Capture: the "Who is submitting this wedding?" step with "A wedding vendor" chosen and the role follow-up open inside the card / Specs: 1440px desktop, light mode, crop to the form column and the Cancel corner / Tip: CleanShot X with padding */}
+<Figure
+  src="/case-studies/real-wedding-hero.webp"
+  alt="The first step of the submission wizard on desktop and mobile: Who is submitting this wedding?, with The vendor chosen and the role question open inside its card, answered Flowers"
+  caption="The first step as it shipped, with the vendor's role question open inside the card."
+/>
 
 ## Where this starts
 
@@ -116,6 +120,12 @@ form rejected the exact answer the editors told people to give:
 
 </Numbered>
 
+<ImageCycle
+  srcs="/case-studies/real-wedding-photos-default.webp, /case-studies/real-wedding-photos-rejected.webp"
+  alt="The Photos step, empty and then with an Instagram link rejected: an inline error under the gallery field and a red notice listing the galleries that work"
+  caption="The Photos step as it shipped. Any downloadable gallery passes; a social link gets an inline error and a notice naming the galleries that work."
+/>
+
 {/* SCREENSHOT: redlines / Capture: the top of real-wed-form-redlines.html, the four counts and the first conflict card / Specs: 1440px, crop to the counts plus one conflict / Tip: export from the HTML file, not Figma */}
 
 From the audit I wrote a copy deck covering every screen. Each line is
@@ -138,6 +148,12 @@ The flow went from nine steps to eight, and every heading became a question
 the submitter answers: "Who is submitting this wedding?", "How can we reach
 you?", "Who photographed this wedding?", down to "One last look."
 
+<ImagePan
+  src="/case-studies/real-wedding-flow.webp"
+  alt="Every step of the wizard on mobile in a vendor's order: who is submitting, your info, the couple, the event, photographer, photos, the story, vendor credits and review"
+  caption="Every step on mobile, in the order a vendor sees them."
+/>
+
 The publications step was the one I removed. A submission belongs to the
 publication whose site you started on, so the form reads the brand from the
 host instead of asking for it.
@@ -148,7 +164,13 @@ photographer and the couple, and it needs to know which one you are. A
 photographer gets their own step first. Everyone else gives their details,
 then names the photographer.
 
-{/* VIDEO: who step / Capture: choose "A wedding vendor", the role field opens inside the card, pick Florist, press Next / Specs: <=6s, muted, loop, .mp4 / Tip: Screen Studio */}
+<WhoStepDemo caption="Choosing The vendor opens the role question inside the same card." />
+
+<Figure
+  src="/case-studies/real-wedding-widths.webp"
+  alt="The first step at 390, 768 and 1512 pixels wide. From 768 up, a photo panel fills the left 40 percent and the step count moves into the footer"
+  caption="One step at 390, 768 and 1512. From 768 up, the photo panel and the footer's step count appear."
+/>
 
 Vendor credits are sorted by category: venue, planner, photographer,
 videographer and florist come pre-filled, and each one has its own search.
@@ -156,12 +178,22 @@ Adding a category opens the picker with focus already in it, and choosing a
 category opens its search. If nothing is listed under that category, the
 form goes straight to the fields for entering a vendor by hand.
 
-{/* VIDEO: vendor credits / Capture: Add another category → Caterer → search opens → pick a vendor → credit animates into the list / Specs: <=6s, muted, loop */}
+<Figure
+  src="/case-studies/real-wedding-credits.webp"
+  alt="The vendor credits step on mobile and desktop: a listed venue, a planner added by name and handle, a photographer credit, empty searches for videographer and florist, and the category picker open"
+  caption="Credits filed by category, with a listed vendor, one added by hand, and the category picker open."
+/>
 
 The review step the shell never had shows each section on its own row with
 an Edit link, says how many things still need attention, and ends on the
 consent line editorial required: "I confirm everyone named here has agreed
 to publication."
+
+<ImageCycle
+  srcs="/case-studies/real-wedding-review-attention.webp, /case-studies/real-wedding-review-complete.webp"
+  alt="The review step, first with two sections flagged and consent missing, then complete"
+  caption="Review with two sections still to finish and consent missing, then complete."
+/>
 
 {/* QUESTION: is there a decision here that felt risky at the time? */}
 
@@ -205,6 +237,12 @@ it in order. The engineer refactored it afterward: the step model became
 explicit per-persona orders, the photographer step became a single search
 with inline email and Instagram fields, and the image rail and some
 "(optional)" labels came back.
+
+<Figure
+  src="/case-studies/real-wedding-before-after.webp"
+  alt="Two versions of the first step side by side: on the left the Design Update round in Figma with square checkboxes, on the right the shipped step with bordered choice cards and radios"
+  caption="Left, the step in the Design Update round in Figma. Right, the step as it shipped."
+/>
 
 {/* QUESTION: how do you want to frame the post-handoff changes? A fair trade, a disagreement, or leave it out? This section stays factual until you answer. */}
 
