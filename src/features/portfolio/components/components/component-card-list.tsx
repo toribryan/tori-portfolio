@@ -5,6 +5,7 @@ import type { Route } from "next"
 import Link from "next/link"
 import { useInView, useReducedMotion } from "motion/react"
 
+import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import {
   NICHE_PARTS,
@@ -33,12 +34,28 @@ export function ComponentCardList({
   const parts = NICHE_PARTS.filter(
     (part) => (!home || part.home !== false) && (!shelf || part.shelf === shelf)
   )
+  // Blank cells finish the last row, so the grid's line color doesn't show
+  // through as a block where cards run out: two across, three from md up.
+  const fillers = (columns: number) =>
+    (columns - (parts.length % columns)) % columns
+  const blanks = Math.max(fillers(2), fillers(3))
   return (
     <ul className="grid grid-cols-2 gap-px bg-line md:grid-cols-3">
       {parts.map((part) => (
         <li key={part.name} className="bg-background">
           <ComponentCard part={part} />
         </li>
+      ))}
+      {Array.from({ length: blanks }, (_, index) => (
+        <li
+          key={`blank-${index}`}
+          aria-hidden
+          className={cn(
+            "bg-background",
+            index >= fillers(2) && "max-md:hidden",
+            index >= fillers(3) && "md:hidden"
+          )}
+        />
       ))}
     </ul>
   )
