@@ -14,9 +14,9 @@ import { useCoverSteps } from "./use-cover-steps"
  * ink, warm grays and blush in both of the site's themes.
  */
 const INK = "#191717"
-const MUTED = "#66665f"
+const MUTED = "#6b6b6b"
 const PRIMARY = "#2c2c2c"
-const INPUT = "#d9d9d6"
+const INPUT = "#d9d9d9"
 const PLATE = "#e9939e"
 const DOTS = "#fbebf0"
 
@@ -113,11 +113,9 @@ export function RealWeddingSubmissionsCover({
       <ScaledStage width={560} zoom>
         {/* The step runs off the bottom of the cover, under a fixed header. */}
         <div className="absolute top-3 -bottom-10 left-1/2 flex w-[300px] -translate-x-1/2 flex-col overflow-hidden rounded-xl bg-white shadow-[0_12px_32px_rgb(0_0_0/0.18)]">
-          <div className="relative z-20 flex shrink-0 items-center justify-between border-b border-black/10 bg-white px-4 py-2">
-            <span
-              className={cn("text-[9px] tracking-tight", playfair.className)}
-            >
-              California Wedding Day
+          <div className="relative z-20 flex shrink-0 items-center justify-between bg-white px-4 py-2">
+            <span className="text-[11px] font-bold tracking-tight">
+              Arizona Bride
             </span>
             <span className="text-[7px]" style={{ color: MUTED }}>
               Cancel
@@ -146,19 +144,22 @@ export function RealWeddingSubmissionsCover({
                 return (
                   <div
                     key={option.title}
-                    className="relative rounded-lg border transition-colors duration-150"
-                    style={{ borderColor: checked ? PRIMARY : INPUT }}
+                    className="relative border transition-colors duration-150"
+                    style={{
+                      borderColor: checked ? PRIMARY : INPUT,
+                      background: checked ? "rgb(44 44 44 / 0.05)" : "white",
+                    }}
                   >
-                    <div className="flex gap-2 px-2.5 py-2">
-                      <Radio checked={checked} />
-                      <span className="flex flex-col gap-0.5 leading-snug">
-                        <span className="text-[8px] font-semibold">
+                    <div className="flex items-center gap-2 px-2.5 py-2">
+                      <span className="flex flex-1 flex-col gap-0.5 leading-snug">
+                        <span className="text-[8px] font-medium">
                           {option.title}
                         </span>
                         <span className="text-[6.5px]" style={{ color: MUTED }}>
                           {option.description}
                         </span>
                       </span>
+                      <Radio checked={checked} />
                     </div>
 
                     {index === 1 && (
@@ -175,7 +176,7 @@ export function RealWeddingSubmissionsCover({
                               What was your role on this wedding? *
                             </span>
                             <span
-                              className="flex h-[18px] items-center justify-between rounded-md border px-2 text-[7px] transition-colors duration-150"
+                              className="flex h-[18px] items-center justify-between border bg-white px-2 text-[7px] transition-colors duration-150"
                               style={{
                                 borderColor: listOpen ? PRIMARY : INPUT,
                               }}
@@ -204,7 +205,7 @@ export function RealWeddingSubmissionsCover({
                     {index === 1 && (
                       <div
                         className={cn(
-                          "absolute inset-x-2.5 top-[calc(100%-8px)] z-10 origin-top rounded-md border bg-white p-0.5 shadow-[0_8px_20px_rgb(0_0_0/0.14)] transition-[opacity,scale] duration-150",
+                          "absolute inset-x-2.5 top-[calc(100%-8px)] z-10 origin-top border bg-white p-0.5 shadow-[0_8px_20px_rgb(0_0_0/0.14)] transition-[opacity,scale] duration-150",
                           EASE,
                           listOpen
                             ? "scale-100 opacity-100"
@@ -215,7 +216,7 @@ export function RealWeddingSubmissionsCover({
                         {items.map((name) => (
                           <span
                             key={name}
-                            className="flex h-[13px] items-center rounded-[4px] px-1.5 text-[7px]"
+                            className="flex h-[13px] items-center px-1.5 text-[7px]"
                             style={{
                               background:
                                 filtered && name === "Flowers"
