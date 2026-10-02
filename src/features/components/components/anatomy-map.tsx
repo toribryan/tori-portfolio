@@ -1,47 +1,56 @@
 "use client"
 
 import { useEffect, useRef, useState, type ReactNode } from "react"
+import { createPortal } from "react-dom"
 
 import { cn } from "@/lib/utils"
 
 export type Callout = {
-  /** The part's name, shown in the marker. */
+  /** The part's name, shown in the key under the example. */
   label: string
-  /** Which side of the subject the marker sits on. */
+  /** Which side of the part its marker sits on. */
   side: "left" | "right"
   /** Finds the part inside the map once the example has rendered. */
   find: (root: HTMLElement) => Element | null | undefined
   /** Outlines the part, for a region rather than a single element. */
   outline?: boolean
   /**
-   * Where the leader line ends, in viewport coordinates. Defaults to just
+   * Where the marker points, in viewport coordinates. Defaults to just
    * outside the part's near edge, level with its middle.
    */
   point?: (part: DOMRect, subject: DOMRect) => { x: number; y: number }
 }
 
 type Placed = {
-  callout: Callout
+  number: number
+  side: Callout["side"]
+  /** The point on the part, relative to the map. */
   x: number
   y: number
-  labelY: number
+  /** The marker's centre, nudged down where markers would overlap. */
+  markerY: number
   box?: { x: number; y: number; w: number; h: number }
 }
 
-// Space between one marker's bottom and the next one's top on the same side.
-const GAP = 8
+const MARKER = 20
+// How far a marker's centre sits from the point it marks.
+const OFFSET = 14
+const GAP = 4
+// Room kept free inside the map's edges, so a part at the edge still has
+// space for its marker beside it.
+const GUTTER = 24
 
 /** Finds a part by its `data-slot`. */
 export const slot = (name: string) => (root: HTMLElement) =>
   root.querySelector(`[data-slot=${name}]`)
 
 /**
- * Anatomy as an annotated map: a live example with a marker beside each
- * part, a leader line to it, and a dashed outline around regions, so a
- * designer reads the parts straight off the picture. Markers sit in the
- * space beside the subject, the element marked `data-anatomy-subject` (or
- * the one `subject` finds), keep level with their part, and push apart by
- * their measured heights where parts crowd.
+ * Anatomy as numbered markers: a live example with a small numbered dot
+ * beside each part and a dashed outline around regions, keyed by a list of
+ * the parts' names underneath. It needs no room beside the example, so it
+ * fits a phone. Positions are measured every frame while the map is on
+ * screen, so markers stay with parts that move on their own, such as a
+ * preview portalled to the body.
  */
 export function AnatomyMap({
   callouts,
@@ -51,7 +60,7 @@ export function AnatomyMap({
   children,
 }: {
   callouts: Callout[]
-  /** The element the markers are laid out around. */
+  /** The element the parts' default points are measured around. */
   subject?: (root: HTMLElement) => Element | null | undefined
   /** Measures again when it changes, such as once an example reaches its state. */
   measureKey?: unknown
@@ -59,142 +68,242 @@ export function AnatomyMap({
   children: ReactNode
 }) {
   const frame = useRef<HTMLDivElement>(null)
-  const markers = useRef(new Map<string, HTMLDivElement>())
+  const stage = useRef<HTMLDivElement>(null)
   const [placed, setPlaced] = useState<Placed[]>([])
-  const [bounds, setBounds] = useState({ width: 0, left: 0, right: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [width, setWidth] = useState(Infinity)
+  // The map's top-left corner in document coordinates, for the markers.
+  const [origin, setOrigin] = useState({ x: 0, y: 0 })
+
+  // An example wider than the space it has is zoomed down to fit rather than
+  // scrolled, so on a phone every part, and its marker, stays on screen.
+  useEffect(() => {
+    const root = frame.current
+    const inner = stage.current
+    if (!root || !inner) return
+    let measured = -1
+    const fit = () => {
+      if (root.clientWidth === measured) return
+      measured = root.clientWidth
+      // Measured unzoomed, so the fit never feeds on its own result.
+      const current = inner.style.zoom
+      inner.style.zoom = "1"
+      const natural = inner.scrollWidth
+      inner.style.zoom = current
+      setZoom(natural > 0 ? Math.min(1, (measured - 2 * GUTTER) / natural) : 1)
+    }
+    fit()
+    const observer = new ResizeObserver(fit)
+    observer.observe(root)
+    return () => observer.disconnect()
+  }, [measureKey])
 
   useEffect(() => {
     const root = frame.current
     if (!root) return
+    let last = ""
+    let raf = 0
+    let visible = false
+
     const measure = () => {
       const base = root.getBoundingClientRect()
       const target =
         subject?.(root) ??
         root.querySelector("[data-anatomy-subject]") ??
-        root.firstElementChild
+        stage.current?.firstElementChild
       if (!target) return
       const around = target.getBoundingClientRect()
       const rows: Placed[] = []
-      for (const callout of callouts) {
+      callouts.forEach((callout, index) => {
         const el = callout.find(root)
-        if (!el) continue
+        if (!el) return
         const r = el.getBoundingClientRect()
-        const point = callout.point?.(r, around) ?? {
-          x: callout.side === "left" ? r.left - 4 : r.right + 4,
+        let side = callout.side
+        let point = callout.point?.(r, around) ?? {
+          x: side === "left" ? r.left - 4 : r.right + 4,
           y: r.top + r.height / 2,
         }
-        const y = point.y - base.top
+        // Kept inside the map, a marker can end up on its own part, as when
+        // a phone squeezes a part past the map's edge. Mark the part's other
+        // edge instead.
+        const local = point.x - base.left
+        const clamped = Math.min(
+          Math.max(
+            side === "left" ? local - OFFSET : local + OFFSET,
+            MARKER / 2 + 2
+          ),
+          base.width - MARKER / 2 - 2
+        )
+        const onPart =
+          side === "right"
+            ? clamped - MARKER / 2 < r.right - base.left
+            : clamped + MARKER / 2 > r.left - base.left
+        if (onPart) {
+          side = side === "right" ? "left" : "right"
+          point = {
+            x: side === "left" ? r.left - 4 : r.right + 4,
+            y: point.y,
+          }
+        }
+        const y = Math.round(point.y - base.top)
         rows.push({
-          callout,
-          x: point.x - base.left,
+          number: index + 1,
+          side,
+          x: Math.round(point.x - base.left),
           y,
-          labelY: y,
+          markerY: y,
           box: callout.outline
             ? {
-                x: r.left - base.left,
-                y: r.top - base.top,
-                w: r.width,
-                h: r.height,
+                x: Math.round(r.left - base.left),
+                y: Math.round(r.top - base.top),
+                w: Math.round(r.width),
+                h: Math.round(r.height),
               }
             : undefined,
         })
-      }
-      for (const side of ["left", "right"] as const) {
-        let bottom = -Infinity
-        for (const row of rows
-          .filter((r) => r.callout.side === side)
-          .sort((a, b) => a.y - b.y)) {
-          const half =
-            (markers.current.get(row.callout.label)?.offsetHeight ?? 28) / 2
-          row.labelY = Math.max(row.y, bottom + GAP + half)
-          bottom = row.labelY + half
-        }
-      }
-      setPlaced(rows)
-      setBounds({
-        width: base.width,
-        left: around.left - base.left,
-        right: around.right - base.left,
       })
+      // Push a marker down only past the markers it would actually overlap:
+      // same side and close enough across to touch.
+      const sorted = [...rows].sort((a, b) => a.y - b.y)
+      sorted.forEach((row, i) => {
+        const x = row.side === "left" ? row.x - OFFSET : row.x + OFFSET
+        let bottom = -Infinity
+        for (const above of sorted.slice(0, i)) {
+          const ax = above.side === "left" ? above.x - OFFSET : above.x + OFFSET
+          if (Math.abs(ax - x) < MARKER + GAP) {
+            bottom = Math.max(bottom, above.markerY + MARKER / 2)
+          }
+        }
+        row.markerY = Math.max(row.y, bottom + GAP + MARKER / 2)
+      })
+      // Re-render only when something moved.
+      const at = {
+        x: Math.round(base.left + window.scrollX),
+        y: Math.round(base.top + window.scrollY),
+      }
+      const next = JSON.stringify([rows, base.width, at])
+      if (next !== last) {
+        last = next
+        setPlaced(rows)
+        setWidth(base.width)
+        setOrigin(at)
+      }
     }
-    measure()
-    // Once more after the markers exist, so their real heights space them.
-    const frameId = requestAnimationFrame(measure)
-    const observer = new ResizeObserver(measure)
+
+    const loop = () => {
+      measure()
+      if (visible) raf = requestAnimationFrame(loop)
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = !!entry?.isIntersecting
+      cancelAnimationFrame(raf)
+      if (visible) raf = requestAnimationFrame(loop)
+    })
     observer.observe(root)
+    measure()
     return () => {
-      cancelAnimationFrame(frameId)
       observer.disconnect()
+      cancelAnimationFrame(raf)
     }
   }, [callouts, subject, measureKey])
 
-  const edge = (side: Callout["side"]) =>
-    side === "left" ? bounds.left - 20 : bounds.right + 24
+  // Beside its point, but never past the map's edge, where the frame around
+  // the example would clip it; a part that pokes out, such as a preview
+  // portalled to the body, gets its marker at the edge instead.
+  const markerX = (side: Callout["side"], x: number) =>
+    Math.min(
+      Math.max(side === "left" ? x - OFFSET : x + OFFSET, MARKER / 2 + 2),
+      width - MARKER / 2 - 2
+    )
 
   return (
-    <div ref={frame} className={cn("relative w-full min-w-[680px]", className)}>
-      {children}
-      <ul className="sr-only">
-        {callouts.map((callout) => (
-          <li key={callout.label}>{callout.label}</li>
-        ))}
-      </ul>
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-60 size-full overflow-visible text-foreground"
+    <div className={cn("flex w-full flex-col items-center gap-6", className)}>
+      <div
+        ref={frame}
+        className="relative w-full"
+        style={{ padding: `0 ${GUTTER}px` }}
       >
-        {placed.map(({ callout, x, y, labelY, box }) => (
-          <g key={callout.label}>
-            {box ? (
-              <rect
-                x={box.x - 3}
-                y={box.y - 3}
-                width={box.w + 6}
-                height={box.h + 6}
-                rx={8}
-                fill="none"
-                stroke="currentColor"
-                strokeOpacity={0.5}
-                strokeDasharray="4 3"
-              />
-            ) : null}
-            <line
-              x1={edge(callout.side)}
-              y1={labelY}
-              x2={x}
-              y2={y}
-              stroke="currentColor"
-              strokeOpacity={0.7}
-            />
-            <circle
-              cx={x}
-              cy={y}
-              r={3.5}
-              fill="currentColor"
-              stroke="var(--background)"
-              strokeWidth={1.5}
-            />
-          </g>
-        ))}
-      </svg>
-      {placed.map(({ callout, labelY }) => (
         <div
-          key={callout.label}
-          ref={(node) => {
-            if (node) markers.current.set(callout.label, node)
-            else markers.current.delete(callout.label)
-          }}
-          aria-hidden="true"
-          style={
-            callout.side === "left"
-              ? { top: labelY, right: bounds.width - edge("left") }
-              : { top: labelY, left: edge("right") }
-          }
-          className="pointer-events-none absolute z-60 w-max -translate-y-1/2 rounded-md bg-background px-2.5 py-1.5 text-sm leading-none font-medium whitespace-nowrap shadow-xs ring-1 ring-border"
+          ref={stage}
+          className="flex w-max min-w-full justify-center"
+          style={{ zoom }}
         >
-          {callout.label}
+          {children}
         </div>
-      ))}
+        <svg
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-60 size-full overflow-visible text-foreground"
+        >
+          {placed.map(({ number, side, x, y, markerY, box }) => {
+            const cx = markerX(side, x)
+            return (
+              <g key={number}>
+                {box ? (
+                  <rect
+                    x={box.x - 3}
+                    y={box.y - 3}
+                    width={box.w + 6}
+                    height={box.h + 6}
+                    rx={8}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeOpacity={0.5}
+                    strokeDasharray="4 3"
+                  />
+                ) : null}
+                {markerY !== y ? (
+                  <line
+                    x1={cx}
+                    y1={markerY}
+                    x2={x}
+                    y2={y}
+                    stroke="currentColor"
+                    strokeOpacity={0.6}
+                  />
+                ) : null}
+              </g>
+            )
+          })}
+        </svg>
+      </div>
+
+      {/* On the body, like the parts some examples portal there, so no
+          stacking context in the page can cover them. In document
+          coordinates, so they scroll with the page instead of trailing it. */}
+      {placed.length > 0
+        ? createPortal(
+            placed.map(({ number, side, x, markerY }) => (
+              <span
+                key={number}
+                aria-hidden="true"
+                style={{
+                  left: origin.x + markerX(side, x),
+                  top: origin.y + markerY,
+                  width: MARKER,
+                  height: MARKER,
+                }}
+                className="pointer-events-none absolute z-60 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-foreground font-mono text-[11px] leading-none font-medium text-background ring-2 ring-background"
+              >
+                {number}
+              </span>
+            )),
+            document.body
+          )
+        : null}
+
+      <ol className="m-0 flex list-none flex-wrap justify-center gap-x-5 gap-y-2 p-0 text-sm">
+        {callouts.map((callout, index) => (
+          <li key={callout.label} className="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="flex size-5 shrink-0 items-center justify-center rounded-full bg-foreground font-mono text-[11px] leading-none font-medium text-background"
+            >
+              {index + 1}
+            </span>
+            {callout.label}
+          </li>
+        ))}
+      </ol>
     </div>
   )
 }
