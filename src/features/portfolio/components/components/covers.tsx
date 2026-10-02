@@ -55,6 +55,10 @@ import {
   type StickerAvatarStatus,
 } from "@/components/fibo/sticker-avatar"
 import { TokenFlow, type TokenRow } from "@/components/fibo/token-flow"
+import {
+  TypingIndicator,
+  type TypingPerson,
+} from "@/components/fibo/typing-indicator"
 import { GROUPS } from "@/features/components/examples/command-menu-data"
 import { useRabbit } from "@/features/components/examples/sticker-avatar-data"
 
@@ -631,6 +635,35 @@ function StickerAvatarCover({ active }: CoverProps) {
   )
 }
 
+const TYPISTS: TypingPerson[] = [
+  { id: "ana", name: "Ana" },
+  { id: "ben", name: "Ben" },
+  { id: "cy", name: "Cy" },
+  { id: "dara", name: "Dara" },
+]
+
+// How many are typing at each step: one, two, three, then too many to name.
+const TYPING_STEPS = [1, 2, 3, 4]
+
+/**
+ * The indicator on its own. While active, people join one at a time until it
+ * gives up naming them; at rest the dots hold still.
+ */
+function TypingIndicatorCover({ active }: CoverProps) {
+  const step = useCycle(TYPING_STEPS.length, 1400, active)
+  return (
+    <div className="flex size-full items-center justify-center p-2 max-sm:[zoom:0.8] sm:[zoom:1.15]">
+      <TypingIndicator
+        people={TYPISTS.slice(0, active ? TYPING_STEPS[step] : 2)}
+        className={cn(
+          "max-w-full",
+          !active && "[&_[data-slot=typing-indicator-dots]>span]:animate-none"
+        )}
+      />
+    </div>
+  )
+}
+
 export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "data-table": DataTableCover,
   "filter-menu": FilterMenuCover,
@@ -642,6 +675,7 @@ export const COVERS: Record<string, ComponentType<CoverProps>> = {
   "pixel-snail": PixelSnailCover,
   "floating-nav": FloatingNavCover,
   "sticker-avatar": StickerAvatarCover,
+  "typing-indicator": TypingIndicatorCover,
 }
 
 /**

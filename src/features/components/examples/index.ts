@@ -10,6 +10,7 @@ import * as pixelSnail from "./pixel-snail"
 import * as reactions from "./reactions"
 import * as stickerAvatar from "./sticker-avatar"
 import * as tokenFlow from "./token-flow"
+import * as typingIndicator from "./typing-indicator"
 
 /**
  * Each doc's live examples, ported from its fibo stories and keyed by the
@@ -27,4 +28,5 @@ export const EXAMPLES: Record<string, Record<string, ComponentType>> = {
   reactions,
   "sticker-avatar": stickerAvatar,
   "token-flow": tokenFlow,
+  "typing-indicator": typingIndicator,
 }
