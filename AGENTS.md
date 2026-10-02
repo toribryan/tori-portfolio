@@ -76,6 +76,15 @@ redirects there. `/fibo` is the lore: `FiboHero` with `variant="page"` (an
 Fibonacci's puzzle and the dither plates in `public/images/fibo/`. On the
 home page the hero's buttons go to those two pages instead.
 
+The phone nav is fibo's Floating nav (`src/components/fibo/floating-nav.tsx`,
+installed from the registry like the parts above but with no doc page yet).
+`nav-mobile-bar.tsx` feeds it `MOBILE_NAV` from `config/site.ts`, whose items
+carry Lucide icons; it reads the config itself because a server layout can't
+pass icon components to a client one. Below `sm` it replaces the header's
+links, so `ScrollToTop` only shows from `sm` up. If `shadcn add` stops on
+pnpm's ignored-build warning before writing the file, copy `files[0].content`
+from the item's JSON into `src/components/fibo/` instead.
+
 `src/components/ui/token-flow.tsx`, the site's own copy, still backs the
 archived review deck; `.21st/token-flow.tsx` is generated from it by `npm run
 sync:token-flow` for 21st.dev.
