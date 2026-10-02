@@ -10,16 +10,10 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/fibo/button"
-import { MapMarker } from "@/components/fibo/map-marker"
+import { MapPin } from "@/components/fibo/map-pin"
 
 import { AnatomyMap, slot, type Callout } from "../components/anatomy-map"
-import {
-  PHOTO,
-  Pin,
-  PLACES,
-  PreviewHeldOpen,
-  StandInMap,
-} from "./map-marker-data"
+import { PHOTO, Pin, PLACES, PreviewHeldOpen, StandInMap } from "./map-pin-data"
 
 const cafe = PLACES[0]!
 
@@ -27,7 +21,7 @@ export function Default() {
   return (
     <StandInMap>
       <Pin place={cafe}>
-        <MapMarker
+        <MapPin
           label={cafe.label}
           image={{ src: PHOTO, alt: "The café's front, with a striped awning" }}
           meta={cafe.meta}
@@ -39,12 +33,12 @@ export function Default() {
   )
 }
 
-export function LabelMarkers() {
+export function LabelPins() {
   return (
     <StandInMap>
       {PLACES.map((place) => (
         <Pin key={place.id} place={place}>
-          <MapMarker
+          <MapPin
             type="label"
             label={place.label}
             text={place.price}
@@ -63,14 +57,14 @@ export function Sizes() {
     <div className="flex flex-col gap-6">
       {(["sm", "default"] as const).map((size) => (
         <div key={size} className="flex items-center gap-5">
-          <MapMarker label={`Dot, ${size}`} size={size} />
-          <MapMarker
+          <MapPin label={`Dot, ${size}`} size={size} />
+          <MapPin
             label={`Icon, ${size}`}
             type="icon"
             icon={<CoffeeIcon />}
             size={size}
           />
-          <MapMarker
+          <MapPin
             label={`Label, ${size}`}
             type="label"
             text="$120"
@@ -89,12 +83,12 @@ const ICONS: Record<string, ReactNode> = {
   studio: <ImageIcon />,
 }
 
-export function IconMarkers() {
+export function IconPins() {
   return (
     <StandInMap>
       {PLACES.map((place) => (
         <Pin key={place.id} place={place}>
-          <MapMarker
+          <MapPin
             type="icon"
             icon={ICONS[place.id]}
             label={place.label}
@@ -127,7 +121,7 @@ export function Colors() {
     <StandInMap>
       {PLACES.map((place) => (
         <Pin key={place.id} place={place}>
-          <MapMarker
+          <MapPin
             type="icon"
             variant={STATUS[place.id]!.variant}
             icon={place.id === "park" ? <MusicIcon /> : ICONS[place.id]}
@@ -147,7 +141,7 @@ export function LabelsWithIcons() {
     <StandInMap>
       {PLACES.map((place) => (
         <Pin key={place.id} place={place}>
-          <MapMarker
+          <MapPin
             type="label"
             variant={STATUS[place.id]!.variant}
             icon={ICONS[place.id]}
@@ -168,7 +162,7 @@ export function CustomContent() {
   return (
     <StandInMap>
       <Pin place={books}>
-        <MapMarker
+        <MapPin
           label={books.label}
           meta={books.meta}
           title={books.label}
@@ -180,7 +174,7 @@ export function CustomContent() {
               Save
             </Button>
           </div>
-        </MapMarker>
+        </MapPin>
       </Pin>
     </StandInMap>
   )
@@ -207,7 +201,7 @@ export function Controlled() {
       <StandInMap>
         {PLACES.map((place) => (
           <Pin key={place.id} place={place}>
-            <MapMarker
+            <MapPin
               label={place.label}
               meta={place.meta}
               title={place.label}
@@ -231,7 +225,7 @@ export function WithoutPreview() {
     <StandInMap>
       {PLACES.map((place) => (
         <Pin key={place.id} place={place}>
-          <MapMarker label={place.label} />
+          <MapPin label={place.label} />
         </Pin>
       ))}
     </StandInMap>
@@ -241,8 +235,8 @@ export function WithoutPreview() {
 export function DoShortLabels() {
   return (
     <div className="flex items-center gap-3">
-      <MapMarker type="label" label="Blue Bottle Coffee" text="$6" />
-      <MapMarker type="label" label="Golden Ratio Books" text="$18" />
+      <MapPin type="label" label="Blue Bottle Coffee" text="$6" />
+      <MapPin type="label" label="Golden Ratio Books" text="$18" />
     </div>
   )
 }
@@ -250,33 +244,33 @@ export function DoShortLabels() {
 export function DontLongLabels() {
   return (
     <div className="flex items-center gap-3">
-      <MapMarker type="label" label="Blue Bottle Coffee" />
-      <MapMarker type="label" label="Golden Ratio Books" />
+      <MapPin type="label" label="Blue Bottle Coffee" />
+      <MapPin type="label" label="Golden Ratio Books" />
     </div>
   )
 }
 
 const PARTS: Callout[] = [
-  { label: "Marker", side: "left", find: slot("map-marker") },
-  { label: "Image", side: "right", find: slot("map-marker-image") },
-  { label: "Meta", side: "left", find: slot("map-marker-meta") },
-  { label: "Title", side: "right", find: slot("map-marker-title") },
-  { label: "Description", side: "left", find: slot("map-marker-description") },
-  { label: "Content", side: "right", find: slot("map-marker-content") },
+  { label: "Pin", side: "left", find: slot("map-pin") },
+  { label: "Image", side: "right", find: slot("map-pin-image") },
+  { label: "Meta", side: "left", find: slot("map-pin-meta") },
+  { label: "Title", side: "right", find: slot("map-pin-title") },
+  { label: "Description", side: "left", find: slot("map-pin-description") },
+  { label: "Content", side: "right", find: slot("map-pin-content") },
 ]
 
-/** A marker with its card held open, with each part of the card labeled. */
+/** A pin with its card held open, with each part of the card labeled. */
 export function Anatomy() {
   const [ready, setReady] = useState(false)
   return (
     <AnatomyMap
       callouts={PARTS}
-      subject={slot("map-marker-preview")}
+      subject={slot("map-pin-preview")}
       measureKey={ready}
     >
       <div className="flex justify-center px-6 py-6">
         <PreviewHeldOpen onReady={() => setReady(true)}>
-          <MapMarker
+          <MapPin
             label={cafe.label}
             image={{
               src: PHOTO,
@@ -287,7 +281,7 @@ export function Anatomy() {
             description={cafe.description}
           >
             <Button size="sm">Directions</Button>
-          </MapMarker>
+          </MapPin>
         </PreviewHeldOpen>
       </div>
     </AnatomyMap>

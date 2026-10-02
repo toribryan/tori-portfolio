@@ -126,6 +126,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/components/map-marker/:path*",
+        destination: "/components/map-pin/:path*",
+        permanent: true,
+      },
+      {
         source: "/:section(blog|components)/writing-effect-inspired-by-apple",
         destination: "/:section/apple-hello-effect",
         permanent: true,
