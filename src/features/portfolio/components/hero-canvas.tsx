@@ -37,8 +37,8 @@ const COLORS = [
 ]
 
 // World coordinates for each pin, in RECOMMENDATIONS order, clustered around
-// the centre so most are in view before any panning. On narrow canvases
-// `--squeeze` pulls them in toward the centre so more of them fit. Pins sit in two bands
+// the center so most are in view before any panning. On narrow canvases
+// `--squeeze` pulls them in toward the center so more of them fit. Pins sit in two bands
 // of the open strip: near the top they open down, near the bottom they open
 // up, so every comment has room to open inside it.
 const PINS = [
@@ -51,7 +51,7 @@ const PINS = [
 ]
 
 // A FigJam-style sticky in the open space between the pins, in world
-// coordinates for its centre. It sits under the pins, so on a narrow canvas,
+// coordinates for its center. It sits under the pins, so on a narrow canvas,
 // where the squeeze brings them close, an open comment covers it.
 const STICKY = { x: 600, y: 20 }
 

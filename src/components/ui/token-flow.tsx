@@ -145,7 +145,7 @@ function ScrambleText({
 }
 
 /**
- * A hairline with a pulse travelling along it. Fills whatever cell it is
+ * A hairline with a pulse traveling along it. Fills whatever cell it is
  * in; `vertical` runs it top to bottom for the stacked layout. The pulse
  * only runs while the plate is on screen and stays still under reduced
  * motion.
@@ -214,7 +214,7 @@ function Swatch({ color }: { color: string }) {
 /**
  * How a color travels through the token tiers: a raw value, the primitive
  * that names it, and the semantic role that uses it. One row per color,
- * wired left to right across a dotted plate, with a pulse travelling along
+ * wired left to right across a dotted plate, with a pulse traveling along
  * each wire. Rows that carry a `dark` value swap to it when the theme
  * changes, scrambling for a moment on the way. The theme follows the
  * document's `dark` class unless `theme` pins it.

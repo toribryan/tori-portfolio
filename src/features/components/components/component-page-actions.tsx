@@ -40,7 +40,7 @@ function openInPrompt(markdownUrl: string) {
 /**
  * The header row of a component page: the way back on the left, and on the
  * right a Copy page button with a menu of other ways to read the doc, a
- * share button, and arrows to the neighbouring components when there are any.
+ * share button, and arrows to the neighboring components when there are any.
  */
 export function ComponentPageActions({
   slug,
@@ -194,7 +194,7 @@ export function ComponentPageActions({
         </Tooltip>
 
         {previous && (
-          <NeighbourLink
+          <NeighborLink
             slug={previous.slug}
             title={previous.title}
             label="Previous component"
@@ -202,7 +202,7 @@ export function ComponentPageActions({
           />
         )}
         {next && (
-          <NeighbourLink
+          <NeighborLink
             slug={next.slug}
             title={next.title}
             label="Next component"
@@ -214,7 +214,7 @@ export function ComponentPageActions({
   )
 }
 
-function NeighbourLink({
+function NeighborLink({
   slug,
   title,
   label,

@@ -5,7 +5,7 @@ import { STAGE_MARKS, type StageMark } from "@/components/mdx-pipeline"
 
 /*
  * Case-study blocks drawn in fibo's language: hairlines instead of shadows,
- * zero-padded mono numbering, and colour only where it carries meaning. They
+ * zero-padded mono numbering, and color only where it carries meaning. They
  * take children rather than arrays because expression attributes don't
  * survive the doc MDX pipeline (see `mdx-story-embed.tsx`).
  */

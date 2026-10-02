@@ -108,7 +108,7 @@ export function getWorkDocs() {
   return getDocsByCategory(WORK_CATEGORY)
 }
 
-export function findNeighbour(docs: Doc[], slug: string) {
+export function findNeighbor(docs: Doc[], slug: string) {
   const len = docs.length
 
   for (let i = 0; i < len; ++i) {

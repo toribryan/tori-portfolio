@@ -819,7 +819,7 @@
 
    Two mappings are worth calling out because they are not one-to-one:
 
-   1. `--accent` here is shadcn's *subtle hover surface*, not a brand colour.
+   1. `--accent` here is shadcn's *subtle hover surface*, not a brand color.
       The Astro `--color-accent` (#fa7e25) is a brand accent, so it maps to
       `--brand` and `--link`, never to `--accent`. Mapping it onto `--accent`
       would turn every hover state orange.

@@ -233,7 +233,7 @@ export function TokenRoles() {
   )
 }
 
-/** One slot of a card, outlined and labelled so the structure shows. */
+/** One slot of a card, outlined and labeled so the structure shows. */
 function Slot({ name, children }: { name: string; children: ReactNode }) {
   return (
     <div className="relative rounded-lg border border-dashed border-border px-3 pt-3 pb-2.5">

@@ -59,7 +59,7 @@ export type ChipProps = React.HTMLAttributes<HTMLSpanElement> & {
 }
 
 /**
- * A small labelled pill. `dot` puts a colour marker before the label;
+ * A small labeled pill. `dot` puts a color marker before the label;
  * `startContent` replaces it with anything, such as a swatch.
  */
 export function Chip({

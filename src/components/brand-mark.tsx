@@ -6,7 +6,7 @@
  *
  * The source file painted every path a fixed `#3D3D3A`, which all but
  * disappears against the dark theme. Fills are `currentColor` here instead, so
- * the mark takes its colour from context — `text-foreground` in the header,
+ * the mark takes its color from context — `text-foreground` in the header,
  * `text-background` over the hero photo.
  *
  * Drawn on a 128-unit grid. Rendered sizes that are clean fractions of that

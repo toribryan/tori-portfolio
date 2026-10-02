@@ -17,8 +17,8 @@ import { cn } from "@/lib/utils"
 import { Badge } from "@/components/fibo/badge"
 
 /*
- * fibo's colour-scale visualizer, ported from its Storybook Colors page, with
- * a before state added: the same card as the legacy system coloured it,
+ * fibo's color-scale visualizer, ported from its Storybook Colors page, with
+ * a before state added: the same card as the legacy system colored it,
  * through tokens named for their values.
  */
 
@@ -33,8 +33,8 @@ type Step = {
 }
 
 /*
- * Each system's grey ramp, light to dark, with white in front. The legacy
- * system used Tailwind's neutral greys, but gave every shade a name of its
+ * Each system's gray ramp, light to dark, with white in front. The legacy
+ * system used Tailwind's neutral grays, but gave every shade a name of its
  * own, so the scale had no order a new shade could slot into. The rebuild
  * adopted a slate with numbered steps, a little less blue than Tailwind's.
  */
@@ -79,10 +79,10 @@ const RAMPS: Record<System, Step[]> = {
 
 const STEPS = 12
 
-// Every colour the exhibit draws, written out because this site's build only
-// emits the colour variables its own classes reference. Neutral is
+// Every color the exhibit draws, written out because this site's build only
+// emits the color variables its own classes reference. Neutral is
 // Tailwind 4's. Slate keeps Tailwind's lightness and hue at each step with
-// its chroma cut to 55%, so it reads as a cool grey rather than a blue.
+// its chroma cut to 55%, so it reads as a cool gray rather than a blue.
 const COLOR: Record<string, string> = {
   white: "oklch(1 0 0)",
   "neutral-50": "oklch(0.985 0 0)",
@@ -159,7 +159,7 @@ const LEGACY: Record<string, string> = {
   success: "green/apple",
 }
 
-// The primitive behind each legacy name: one name, one colour.
+// The primitive behind each legacy name: one name, one color.
 const LEGACY_PRIMITIVE: Record<string, string> = {
   white: "white",
   "grey/cloud": "neutral-100",
@@ -423,8 +423,8 @@ function Segmented<T extends string>({
 
 /**
  * fibo's neutrals as a twelve-step scale above a card whose parts are
- * labelled with the tokens that colour them. After shows the semantic roles
- * and both modes; before shows the legacy names, where one name coloured
+ * labeled with the tokens that color them. After shows the semantic roles
+ * and both modes; before shows the legacy names, where one name colored
  * unrelated parts and there was no dark mode to switch to.
  */
 export function TokenVisualizer() {
@@ -493,7 +493,7 @@ export function TokenVisualizer() {
   })
 
   // A run of steps under their headers. A header that spans the run's edge is
-  // cut to it, so a band split across two rows is labelled in both.
+  // cut to it, so a band split across two rows is labeled in both.
   const scale = (first: number, last: number) => {
     const count = last - first + 1
     return (
@@ -597,7 +597,7 @@ export function TokenVisualizer() {
 
   return (
     // The exhibit takes the chosen mode's tokens, whatever the page is in,
-    // and every colour in it eases across when the mode changes.
+    // and every color in it eases across when the mode changes.
     <figure
       style={modeVars(primitives)}
       className="not-prose my-8 flex flex-col gap-8 rounded-xl border border-border bg-card p-4 text-foreground transition-colors duration-500 motion-reduce:transition-none sm:p-6 [&_*]:transition-[color,background-color,border-color,outline-color,fill,stroke,opacity,box-shadow] [&_*]:duration-500 motion-reduce:[&_*]:transition-none"
@@ -611,7 +611,7 @@ export function TokenVisualizer() {
           </Badge>
           <span className="text-sm text-muted-foreground">
             {system === "before"
-              ? "Every shade had its own name, and nothing said which to use where. Point at grey/graphite: it colours the headline and the button, and there is no dark mode."
+              ? "Every shade had its own name, and nothing said which to use where. Point at grey/graphite: it colors the headline and the button, and there is no dark mode."
               : "Named for their jobs. Pick a token or a step to trace it, and switch modes to watch the ramp turn over."}
           </span>
         </figcaption>
@@ -720,7 +720,7 @@ type PartProps = (token: string) => {
 const PICKED =
   "data-picked:outline-2 data-picked:outline-offset-2 data-picked:outline-foreground data-picked:outline-dashed"
 
-// A small settings card on its own page, drawn with the tokens it's labelled
+// A small settings card on its own page, drawn with the tokens it's labeled
 // with.
 function Specimen({ part }: { part: PartProps }) {
   return (
@@ -797,7 +797,7 @@ function Specimen({ part }: { part: PartProps }) {
           >
             <span
               {...part("primary-foreground")}
-              // Outlined in its own colour, the one that shows against the
+              // Outlined in its own color, the one that shows against the
               // button's fill.
               className={cn(
                 "text-primary-foreground",

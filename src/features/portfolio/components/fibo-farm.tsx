@@ -52,7 +52,7 @@ function buildMonths() {
 
 const MONTHS = buildMonths()
 
-// Where each pair stands in its month's row, centred left of the counts.
+// Where each pair stands in its month's row, centered left of the counts.
 const LAYOUT = MONTHS.map((row, m) => {
   const top = m * ROW
   let x = PAD + (WIDTH - PAD - GUTTER - row.length * SLOT) / 2

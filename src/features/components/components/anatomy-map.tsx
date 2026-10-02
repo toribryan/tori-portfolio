@@ -27,13 +27,13 @@ type Placed = {
   /** The point on the part, relative to the map. */
   x: number
   y: number
-  /** The marker's centre, nudged down where markers would overlap. */
+  /** The marker's center, nudged down where markers would overlap. */
   markerY: number
   box?: { x: number; y: number; w: number; h: number }
 }
 
 const MARKER = 20
-// How far a marker's centre sits from the point it marks.
+// How far a marker's center sits from the point it marks.
 const OFFSET = 14
 const GAP = 4
 // Room kept free inside the map's edges, so a part at the edge still has

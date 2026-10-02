@@ -21,9 +21,9 @@ precision mediump float;
 #endif
 
 uniform vec3 u_colors[8];
-// Seven packed vectors + eight colour vectors = 15 fragment uniform vectors,
+// Seven packed vectors + eight color vectors = 15 fragment uniform vectors,
 // one below WebGL1's guaranteed minimum. Macros preserve the public u_* API.
-uniform vec4 u_scene;      // resolution.xy, time, colour count
+uniform vec4 u_scene;      // resolution.xy, time, color count
 uniform vec4 u_shape;      // scale, intensity, paramA, warp
 uniform vec4 u_surface;    // detail, contrast, brightness, saturation
 uniform vec4 u_finish;     // hue, vignette, blur, grain
@@ -109,7 +109,7 @@ float fbm(vec2 p) {
   return v;
 }
 
-// --- OKLab colour mixing (perceptual), gated by u_oklab -----------------------
+// --- OKLab color mixing (perceptual), gated by u_oklab -----------------------
 vec3 srgbToLinear(vec3 c) {
   return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)),
     step(0.04045, c));
@@ -143,7 +143,7 @@ vec3 oklabToLin(vec3 c) {
     -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
     -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s);
 }
-vec3 mixColour(vec3 a, vec3 b, float t) {
+vec3 mixColor(vec3 a, vec3 b, float t) {
   if (u_oklab > 0.5) {
     vec3 la = linToOklab(srgbToLinear(a));
     vec3 lb = linToOklab(srgbToLinear(b));
@@ -152,7 +152,7 @@ vec3 mixColour(vec3 a, vec3 b, float t) {
   return mix(a, b, t);
 }
 
-// Mix through the recipe colours; x is clamped to 0..1. WebGL1 forbids
+// Mix through the recipe colors; x is clamped to 0..1. WebGL1 forbids
 // dynamic uniform indexing in fragment shaders, hence the constant loop.
 vec3 palette(float x) {
   float n = max(u_colorCount - 1.0, 1.0);
@@ -160,7 +160,7 @@ vec3 palette(float x) {
   vec3 col = u_colors[0];
   for (int i = 0; i < 7; i++) {
     if (float(i) < n)
-      col = mixColour(col, u_colors[i + 1],
+      col = mixColor(col, u_colors[i + 1],
         smoothstep(0.0, 1.0, clamp(f - float(i), 0.0, 1.0)));
   }
   return col;

@@ -68,7 +68,7 @@ export default function Page() {
           <Image
             className="object-cover object-center"
             src="/images/blog/banner.webp"
-            alt="A painted Victorian parlour: a vase of red, white and yellow flowers on a round table before a curtained window, a green armchair to one side and two pale statues flanking the room."
+            alt="A painted Victorian parlor: a vase of red, white and yellow flowers on a round table before a curtained window, a green armchair to one side and two pale statues flanking the room."
             fill
             sizes="(min-width: 768px) 48rem, 100vw"
             priority

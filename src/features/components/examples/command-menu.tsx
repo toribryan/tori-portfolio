@@ -116,14 +116,14 @@ function Frozen({
 
   useEffect(() => {
     if (!stage || !layer) return
-    let cancelled = false
+    let canceled = false
     const drive = async () => {
       let input: HTMLInputElement | null = null
       for (let i = 0; i < 60 && !input; i++) {
         await wait(16)
         input = stage.querySelector("[data-slot=command-menu] input")
       }
-      if (!input || cancelled) return
+      if (!input || canceled) return
       if (page) {
         const item = [
           ...stage.querySelectorAll<HTMLElement>(
@@ -154,11 +154,11 @@ function Frozen({
       }
       // Let a page's slide settle before anything measures the menu.
       await wait(300)
-      if (!cancelled) reached(stage)
+      if (!canceled) reached(stage)
     }
     drive()
     return () => {
-      cancelled = true
+      canceled = true
     }
   }, [stage, layer, page, query, down])
 
@@ -464,7 +464,7 @@ const DIALOG_PARTS: Callout[] = [
   },
 ]
 
-/** The whole dialog, mid-search, with every region labelled. */
+/** The whole dialog, mid-search, with every region labeled. */
 export function AnatomyDialog() {
   return (
     <MenuMap
@@ -519,7 +519,7 @@ const ROW_PARTS: Callout[] = [
   },
 ]
 
-/** One of each kind of row, labelled. */
+/** One of each kind of row, labeled. */
 export function AnatomyRow() {
   return (
     <MenuMap

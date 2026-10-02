@@ -108,7 +108,7 @@ export function IconMarkers() {
   )
 }
 
-// Colour only carries meaning: here, whether each place is open right now.
+// Color only carries meaning: here, whether each place is open right now.
 const STATUS: Record<
   string,
   {
@@ -122,7 +122,7 @@ const STATUS: Record<
   studio: { variant: "destructive", status: "Closed today" },
 }
 
-export function Colours() {
+export function Colors() {
   return (
     <StandInMap>
       {PLACES.map((place) => (
@@ -265,7 +265,7 @@ const PARTS: Callout[] = [
   { label: "Content", side: "right", find: slot("map-marker-content") },
 ]
 
-/** A marker with its card held open, with each part of the card labelled. */
+/** A marker with its card held open, with each part of the card labeled. */
 export function Anatomy() {
   const [ready, setReady] = useState(false)
   return (

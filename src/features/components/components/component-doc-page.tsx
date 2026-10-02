@@ -91,8 +91,8 @@ export async function ComponentDocPage({
         markdown={toMarkdown(doc)}
         markdownUrl={absoluteUrl(`/components/${doc.slug}.md`)}
         pageUrl={absoluteUrl(`/components/${doc.slug}`)}
-        previous={neighbour(siblings, index - 1)}
-        next={neighbour(siblings, index + 1)}
+        previous={neighbor(siblings, index - 1)}
+        next={neighbor(siblings, index + 1)}
       />
 
       <h1 className="screen-line-bottom overflow-x-clip px-4 py-6 font-heading text-4xl font-medium tracking-normal text-balance">
@@ -170,7 +170,7 @@ export async function ComponentDocPage({
   )
 }
 
-function neighbour(docs: RegistryDoc[], index: number) {
+function neighbor(docs: RegistryDoc[], index: number) {
   const doc = docs[index]
   return doc ? { slug: doc.slug, title: doc.metadata.title } : undefined
 }

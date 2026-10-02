@@ -31,7 +31,9 @@ function themeTokens(theme: "light" | "dark") {
   const tokens = {
     paper: style.getPropertyValue("--background").trim(),
     ink:
-      theme === "light" ? "#000" : style.getPropertyValue("--foreground").trim(),
+      theme === "light"
+        ? "#000"
+        : style.getPropertyValue("--foreground").trim(),
     invert: theme === "dark",
   }
   probe.remove()
@@ -52,18 +54,18 @@ export function HeroDither({
   const { resolvedTheme } = useTheme()
 
   useEffect(() => {
-    let cancelled = false
+    let canceled = false
     const img = new Image()
     img.src = PHOTO
     photo.current = img
     fetch(FIELD)
       .then((res) => res.json())
       .then((data) => {
-        if (!cancelled) setField(data as Record<string, unknown>)
+        if (!canceled) setField(data as Record<string, unknown>)
       })
       .catch(() => {})
     return () => {
-      cancelled = true
+      canceled = true
     }
   }, [])
 

@@ -19,7 +19,7 @@ import { MDX } from "@/components/mdx"
 import { LinkButton } from "@/components/mdx-link-button"
 import { TOCInline } from "@/components/toc-inline"
 import {
-  findNeighbour,
+  findNeighbor,
   getDocsByCategory,
   LATEST_CATEGORY,
   WORK_CATEGORY,
@@ -67,13 +67,13 @@ const DOC_COMPONENTS = {
   VariantWall,
 }
 
-/** What the neighbour tooltips call the thing you're moving between. */
+/** What the neighbor tooltips call the thing you're moving between. */
 const NEIGHBOUR_NOUN: Record<string, string> = {
   [LATEST_CATEGORY]: "post",
   [WORK_CATEGORY]: "project",
 }
 
-/** Route each category's docs live under, for the neighbour links. */
+/** Route each category's docs live under, for the neighbor links. */
 const CATEGORY_BASE_PATH: Record<string, string> = {
   [LATEST_CATEGORY]: "/latest",
   [WORK_CATEGORY]: "/work",
@@ -102,7 +102,7 @@ export async function DocPage({
   const siblings = getDocsByCategory(category).filter(
     (sibling) => !sibling.metadata.href && !sibling.metadata.comingSoon
   )
-  const { previous, next } = findNeighbour(siblings, doc.slug)
+  const { previous, next } = findNeighbor(siblings, doc.slug)
   const noun = NEIGHBOUR_NOUN[category] ?? "page"
   const basePath = CATEGORY_BASE_PATH[category]
   const Cover = DOC_COVERS[doc.slug]
@@ -134,7 +134,7 @@ export async function DocPage({
   // One size for the whole strip. Short values are figures and get display
   // size; a phrase would wrap badly set that large, so any phrase in the strip
   // brings every value down a step rather than sitting small beside its
-  // neighbours.
+  // neighbors.
   const resultsAreFigures = results.every(({ value }) => value.length <= 10)
 
   return (
@@ -170,7 +170,7 @@ export async function DocPage({
           )}
 
           {basePath && previous && (
-            <NeighbourLink
+            <NeighborLink
               doc={previous}
               basePath={basePath}
               label={`Previous ${noun}`}
@@ -179,7 +179,7 @@ export async function DocPage({
           )}
 
           {basePath && next && (
-            <NeighbourLink
+            <NeighborLink
               doc={next}
               basePath={basePath}
               label={`Next ${noun}`}
@@ -365,7 +365,7 @@ export async function DocPage({
  * title in the tooltip. Icon-only keeps the header row from wrapping on a
  * phone; the label rides along for screen readers.
  */
-function NeighbourLink({
+function NeighborLink({
   doc,
   basePath,
   label,
