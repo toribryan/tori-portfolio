@@ -1,0 +1,293 @@
+---
+title: Sticker avatar
+description: An avatar cut out like a die-cut sticker, with a paper edge that follows its shape and a status told by shape.
+createdAt: 2026-10-01
+updatedAt: 2026-10-01
+new: true
+---
+
+Sticker avatar is an avatar cut out like a die-cut sticker. A white paper edge
+follows the shape of a transparent image, each sticker sits at its own slight
+angle, and status is a small sticker of its own on the corner.
+
+<Exhibit
+  of="sticker-avatar.Default"
+  title="Sticker avatar"
+  description="Hover it. The sticker lifts off the page, and the dot on its corner says Bonzo is here."
+>
+<ExhibitCode label="Install">
+
+```bash
+npx shadcn@latest add https://fibo.toribryan.com/r/sticker-avatar.json
+```
+
+It adds `--sticker-edge` and `--sticker-ink` to your theme, and uses the
+`success` and `warning` tokens for status.
+
+</ExhibitCode>
+<ExhibitCode label="Usage">
+
+```tsx
+import { StickerAvatar } from "@/components/ui/sticker-avatar"
+
+export function Member({ user }: { user: User }) {
+  return (
+    <StickerAvatar
+      name={user.name}
+      src={user.cutoutUrl}
+      status={user.status}
+      size={40}
+    />
+  )
+}
+```
+
+Pass an image with its background already removed. Cutting a subject out in
+the browser takes a 40 to 170 MB model, so do it once on upload, on a server,
+or let people bring their own. Images on another host need CORS headers for
+the edge to be cut; without them the sticker falls back to round.
+
+</ExhibitCode>
+<ExhibitCode label="Props">
+
+| Prop          | Type                               | Default  | Description                                                                           |
+| ------------- | ---------------------------------- | -------- | ------------------------------------------------------------------------------------- |
+| `name`        | `string`                           |          | Their accessible name, the seed for the tilt, and the initials when there's no image. |
+| `src`         | `string`                           |          | A transparent cut-out gets a die-cut edge; a photo with a background becomes round.   |
+| `size`        | `number`                           | `40`     | Width and height in pixels. The edge and tilt are drawn outside this box.             |
+| `edge`        | `number`                           |          | Paper edge in pixels. Defaults to one sixteenth of the size, never under 2px.         |
+| `status`      | `"present" \| "away" \| "offline"` |          | Shows a status sticker on the corner, told apart by shape.                            |
+| `statusLabel` | `string`                           |          | Overrides the status's spoken label, for translation.                                 |
+| `statusColor` | `boolean`                          | `true`   | Colors the status with the status tokens. Off, it's drawn in the foreground color.    |
+| `tilt`        | `boolean \| number`                | `true`   | A stable angle from the name, a number of degrees, or straight.                       |
+| `lift`        | `boolean`                          | `true`   | Lifts on hover, and when hovering an ancestor with `group/sticker`.                   |
+| `cutout`      | `"auto" \| "shape" \| "round"`     | `"auto"` | Follows the image's own shape when its border is clear, or forces one.                |
+| `pixelated`   | `boolean`                          | `false`  | Keeps hard pixel edges when scaling pixel art.                                        |
+
+</ExhibitCode>
+</Exhibit>
+
+## Anatomy
+
+A square layout box named as an image. The cut is drawn once on a canvas when
+the image loads, then shown as a plain image past the box's edges.
+
+<Exhibit
+  of="sticker-avatar.Shapes"
+  title="Three cuts"
+  description="A transparent cut-out follows its shape. A photo with a background becomes round. With no image, the letters themselves are cut out."
+>
+<ExhibitCode label="Structure">
+
+```text
+StickerAvatar          sticker-avatar            (role="img")
+├─ image               sticker-avatar-image      (the baked die-cut)
+├─ fallback            sticker-avatar-fallback   (initials, with no image)
+└─ status              sticker-avatar-status     (only with status)
+```
+
+</ExhibitCode>
+<ExhibitCode label="Data attributes">
+
+<DataAttributes
+  rows={[
+    {
+      attribute: 'data-slot="sticker-avatar"',
+      element: "The root",
+      when: "Always.",
+    },
+    {
+      attribute: "data-shape",
+      element: "The root",
+      when: (
+        <>
+          Always. <code>cutout</code>, <code>round</code>, <code>initials</code>
+          , or <code>loading</code> while the edge is drawn.
+        </>
+      ),
+    },
+    {
+      attribute: "data-status",
+      element: "The root and the status sticker",
+      when: (
+        <>
+          With <code>status</code>. <code>present</code>, <code>away</code> or{" "}
+          <code>offline</code>.
+        </>
+      ),
+    },
+    {
+      attribute: "--sticker-edge",
+      element: "Any ancestor, or the root",
+      when: "Overrides the paper color. Read when the edge is drawn.",
+    },
+  ]}
+/>
+
+</ExhibitCode>
+</Exhibit>
+
+## Variants and states
+
+<ExhibitGrid>
+<Exhibit
+  of="sticker-avatar.Statuses"
+  title="Status by shape"
+  description="A solid dot, a crescent and a ring, so each reads without color."
+>
+<ExhibitCode>
+
+```tsx
+<StickerAvatar name="Bonzo" src={bonzo} size={64} status="away" />
+```
+
+</ExhibitCode>
+</Exhibit>
+<Exhibit
+  of="sticker-avatar.Straight"
+  title="Without tilt or lift"
+  description="For grids people scan, where a hand-placed angle gets in the way."
+>
+<ExhibitCode>
+
+```tsx
+<StickerAvatar name="Bonzo" src={bonzo} tilt={false} lift={false} />
+```
+
+</ExhibitCode>
+</Exhibit>
+</ExhibitGrid>
+
+<Exhibit
+  of="sticker-avatar.Sizes"
+  title="Sizes"
+  description="The edge grows with the sticker: 2px up to 40, 4px at 64, 6px at 96."
+>
+<ExhibitCode>
+
+```tsx
+<StickerAvatar name="fibo" src={rabbit} pixelated size={64} />
+```
+
+</ExhibitCode>
+</Exhibit>
+
+<Exhibit
+  of="sticker-avatar.Group"
+  title="Stack"
+  description="StickerAvatarGroup overlaps stickers, and StickerAvatarCount counts the rest."
+>
+<ExhibitCode>
+
+```tsx
+<StickerAvatarGroup aria-label="In this party: fibo, Bonzo and 3 others">
+  <StickerAvatar aria-hidden="true" name="fibo" src={rabbit} size={56} />
+  <StickerAvatar aria-hidden="true" name="Bonzo" src={bonzo} size={56} />
+  <StickerAvatarCount aria-hidden="true" count={3} size={56} />
+</StickerAvatarGroup>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+## Usage
+
+<UsageGuidelines
+  guidelines={[
+    "Use it where people and personality are the point: profiles, parties, member lists, a small group in a chat header.",
+    "Keep the layout box tight. The edge and tilt are drawn outside it, so leave a few pixels of room around stickers in a dense list.",
+    <>
+      Turn off <code>tilt</code> where stickers line up in a grid people scan,
+      such as a table of members. Keep it in stacks and profiles, where it reads
+      as hand-placed.
+    </>,
+    <>
+      Use <code>pixelated</code> for pixel art, so it scales with hard edges
+      instead of blurring.
+    </>,
+  ]}
+/>
+
+### In a list
+
+At 32px the edge and tilt are small enough for a dense list. Each row carries
+`group/sticker`, so hovering anywhere on it lifts the sticker.
+
+<Exhibit of="sticker-avatar.DirectMessages" description="Hover a row. Its sticker lifts.">
+<ExhibitCode>
+
+```tsx
+<button className="group/sticker flex items-center gap-3.5">
+  <StickerAvatar
+    aria-hidden="true"
+    name={person.name}
+    size={32}
+    status="away"
+  />
+  <span>{person.name}</span>
+</button>
+```
+
+</ExhibitCode>
+</Exhibit>
+
+### Tokens
+
+`--sticker-edge` is white and `--sticker-ink` is near-black in both themes.
+That's deliberate: a sticker is paper, and paper doesn't change color when the
+room gets dark. A hairline and a shadow keep the white edge visible on a light
+page.
+
+The status sticker is the exception. Its disc is the page color, because it's
+colored with the status tokens: `success` for present, `warning` for away and
+`muted-foreground` for offline. Set `statusColor={false}` to draw the marks
+in the foreground color instead.
+
+## Best practices
+
+<ComponentRules
+  rules={[
+    {
+      positive: {
+        component: <Live of="sticker-avatar.DoDefaultEdge" />,
+        description:
+          "Let the edge follow the size. The default stays in proportion.",
+      },
+      negative: {
+        component: <Live of="sticker-avatar.DontThickEdge" />,
+        description:
+          "Don't thicken the edge past the default. The paper swamps the subject.",
+      },
+    },
+  ]}
+/>
+
+## Accessibility
+
+<UsageGuidelines
+  guidelines={[
+    <>
+      The root is <code>role="img"</code>, named by <code>name</code> and the
+      status: “Ana Ruiz, Away”. Pass <code>statusLabel</code> to translate the
+      status.
+    </>,
+    <>
+      Inside a row or button that already says the name, set{" "}
+      <code>aria-hidden</code> on the sticker so the name isn't read twice.
+    </>,
+    "Status never relies on color alone. Each state has its own shape, and its label is in the accessible name.",
+    "The hit area and layout are the square box, not the cut, so an odd shape is no harder to click.",
+    "With reduced motion the sticker keeps its tilt and shadow but doesn't lift.",
+  ]}
+/>
+
+## Related components
+
+<RelatedComponents names={["Reactions", "Pixel snail"]} />
+
+## References
+
+- [Telegram sticker guidelines](https://core.telegram.org/stickers), which recommend a white stroke and a shadow
+- [WhatsApp sticker requirements](https://github.com/WhatsApp/stickers), which ask for an 8px white stroke on 512px
+- [WWDC23: Lift subjects from images in your app](https://developer.apple.com/videos/play/wwdc2023/10176/), for how Live Stickers cut the subject out
+- [WCAG 1.4.11 Non-text contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html) and [1.4.1 Use of color](https://www.w3.org/WAI/WCAG22/Understanding/use-of-color.html)
