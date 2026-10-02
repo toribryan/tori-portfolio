@@ -31,6 +31,7 @@ import {
   DataTableCard,
   DataTableCardField,
   DataTableCards,
+  DataTableFilters,
   DataTableToolbar,
 } from "@/components/fibo/data-table"
 import {
@@ -42,6 +43,7 @@ import {
   FloatingNav,
   type FloatingNavItem,
 } from "@/components/fibo/floating-nav"
+import { Input } from "@/components/fibo/input"
 import {
   IntegrationVisual,
   type IntegrationItem,
@@ -531,9 +533,9 @@ const COVER_MEMBERS = [
 
 const COVER_STATUS = { Active: "success", Away: "warning" } as const
 
-// Nothing, one row, two, the whole page, then nothing again.
+// One row, two, the whole page, then nothing. At rest it shows the first,
+// so the cover always opens on the selection toolbar.
 const COVER_SELECTIONS: string[][] = [
-  [],
   ["maya"],
   ["maya", "priya"],
   ["maya", "priya", "jordan"],
@@ -546,7 +548,7 @@ const COVER_SELECTIONS: string[][] = [
  * and the toolbar swaps to bulk actions and back.
  */
 function DataTableCover({ active }: CoverProps) {
-  const step = useCycle(COVER_SELECTIONS.length, 1100, active)
+  const step = useCycle(COVER_SELECTIONS.length, 1600, active)
   return (
     <ScaledStage width={375}>
       {/* Top-aligned, so the toolbar where the selection shows stays in view
@@ -554,7 +556,9 @@ function DataTableCover({ active }: CoverProps) {
           themes and on white rather than the site's warm page color; the
           white sits a level in, where .light no longer sets the background. */}
       <div className="light px-5 pt-5">
-        <div className="text-foreground [--background:oklch(1_0_0)]">
+        {/* Eases the checkbox and card colors, and fades the toolbar's
+            contents in as it swaps between idle and selecting. */}
+        <div className="text-foreground [--background:oklch(1_0_0)] [&_[data-slot=checkbox]]:transition-[background-color,border-color,color] [&_[data-slot=checkbox]]:duration-200 [&_[data-slot=data-table-card]]:transition-colors [&_[data-slot=data-table-card]]:duration-300 [&_[data-slot=data-table-toolbar]>*]:animate-in [&_[data-slot=data-table-toolbar]>*]:duration-300 [&_[data-slot=data-table-toolbar]>*]:fade-in-0">
           <DataTable
             aria-label="Members"
             rowIds={COVER_MEMBERS.map((member) => member.id)}
@@ -563,6 +567,15 @@ function DataTableCover({ active }: CoverProps) {
             value={new Set(COVER_SELECTIONS[step])}
           >
             <DataTableToolbar>
+              <DataTableFilters
+                search={
+                  <Input
+                    size="sm"
+                    placeholder="Search members"
+                    aria-label="Search members"
+                  />
+                }
+              />
               <DataTableBulkActions onDelete={() => {}} />
             </DataTableToolbar>
             <DataTableCards>
