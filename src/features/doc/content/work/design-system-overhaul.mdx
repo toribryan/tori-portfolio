@@ -5,7 +5,7 @@ claim: "587 card variants down to 32, with a token layer underneath so they stay
 image: "/cover-dsoverhaul.svg"
 order: 1
 createdAt: "2025-11-01"
-updatedAt: "2026-09-28"
+updatedAt: "2026-10-02"
 company: "Proctorio"
 role: "Staff Designer, system owner"
 team: "Two engineers building, across three product suites"
@@ -180,6 +180,32 @@ three rules and held every component to them.
     keeps turning up in a product, it joins the system.
   </Principle>
 </Principles>
+
+### One vocabulary
+
+The old library had no naming rules, so each component used whatever its
+builder chose. Button's sizes were Small to Large, Input's were S, M and L, and
+Card's was Compact. Disabled was an on/off option on one component and a state
+on another. Status colors were named by hue on some components and by meaning
+on others, so Red, Error and Danger all meant the same thing.
+
+I gave every component the same property names:
+
+- `variant` for how it looks, `size` on one scale, and `state` for hover,
+  focus and disabled.
+- `status` for meaning, with the same four values everywhere.
+- Icons and text use the same names everywhere: `iconStart`, `iconStartSwap`
+  and `label`.
+
+A designer who knows Button's properties already knows Input's.
+
+<PropertyPanels />
+
+Status colors got the same treatment. Each meaning has one name, and each
+name is backed by status tokens, so a warning looks the same on every
+component and in every product.
+
+<StatusNames />
 
 ### Base components and slots
 
