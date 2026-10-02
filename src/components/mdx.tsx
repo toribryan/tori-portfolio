@@ -23,6 +23,7 @@ import { Compare } from "./mdx-compare"
 import { Embed } from "./mdx-embed"
 import { Figure } from "./mdx-figure"
 import { InboxRegions } from "./mdx-inbox-regions"
+import { IsoCard, IsoCards } from "./mdx-iso-cards"
 import { LinkButton } from "./mdx-link-button"
 import { Pipeline, Stage } from "./mdx-pipeline"
 import { PipelineHero } from "./mdx-pipeline-hero"
@@ -76,6 +77,8 @@ const components: MDXRemoteProps["components"] = {
   Compare,
   Figure,
   InboxRegions,
+  IsoCard,
+  IsoCards,
   Pipeline,
   PipelineHero,
   Stage,
