@@ -42,6 +42,7 @@ import {
   TwoJobs,
 } from "./mdx-review-artifacts"
 import { SkillCommandsVisual } from "./mdx-skill-commands"
+import { StepTransition } from "./mdx-step-transition"
 import { StoryEmbed } from "./mdx-story-embed"
 import { Tech } from "./mdx-tech"
 import { ToolLabel } from "./mdx-tool-label"
@@ -85,6 +86,7 @@ const components: MDXRemoteProps["components"] = {
   PipelineHero,
   Stage,
   SkillCommandsVisual,
+  StepTransition,
   StoryEmbed,
   LinkButton,
   Tech,
