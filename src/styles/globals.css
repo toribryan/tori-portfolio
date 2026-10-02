@@ -522,8 +522,11 @@
   /* amber-400 */
   --warning: oklch(0.828 0.189 84.429);
 
-  /* red-700 */
-  --destructive: oklch(0.505 0.213 27.518);
+  /* red-400, light enough to read on the dark page */
+  --destructive: oklch(0.704 0.191 22.216);
+
+  /* blue-400 */
+  --info: oklch(0.707 0.165 254.624);
 
   /* blue-500 */
   --link: oklch(0.623 0.214 259.815);
@@ -1014,13 +1017,12 @@
   --success-subtle: color-mix(in oklch, var(--success) 10%, transparent);
   --warning-subtle: color-mix(in oklch, var(--warning) 10%, transparent);
   --info-subtle: color-mix(in oklch, var(--info) 10%, transparent);
-  /* Text on a status fill. Success and warning are dark in light mode and
-     light in dark mode, so the page background reads on them; info and
-     destructive stay dark in both and take white. */
-  --info-foreground: oklch(0.985 0 0);
+  /* Text on a status fill. The status colors are dark in light mode and
+     light in dark mode, so the page background reads on all of them. */
+  --info-foreground: var(--background);
   --success-foreground: var(--background);
   --warning-foreground: var(--background);
-  --destructive-foreground: oklch(0.985 0 0);
+  --destructive-foreground: var(--background);
   --input-subtle: color-mix(in oklch, var(--input) 20%, transparent);
   --input-subtle-hover: color-mix(in oklch, var(--input) 50%, transparent);
   --ring-subtle: color-mix(in oklch, var(--ring) 50%, transparent);
