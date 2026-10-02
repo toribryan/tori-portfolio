@@ -1,7 +1,5 @@
 import { cn } from "@/lib/utils"
-
-// Kept under the IntroItem* slot naming; the tile itself is shared site-wide.
-export { IconTile as IntroItemIcon } from "@/components/ui/icon-tile"
+import { IconTile } from "@/components/ui/icon-tile"
 
 export function IntroItem({
   className,
@@ -31,6 +29,27 @@ export function IntroItemLink({
       className={cn("link", className)}
       target="_blank"
       rel="noopener"
+      {...props}
+    />
+  )
+}
+
+/**
+ * The shared icon tile, restyled to match the outline icon buttons of the
+ * social links right above the overview.
+ */
+export function IntroItemIcon({
+  className,
+  ...props
+}: React.ComponentProps<typeof IconTile>) {
+  return (
+    <IconTile
+      className={cn(
+        "size-8 rounded-[min(var(--radius-lg),10px)] border-border bg-popover text-foreground/80 ring-0 ring-offset-0",
+        "dark:border-input dark:bg-input/30 dark:ring-0",
+        "[&_svg:not([class*='size-'])]:size-4.5",
+        className
+      )}
       {...props}
     />
   )
