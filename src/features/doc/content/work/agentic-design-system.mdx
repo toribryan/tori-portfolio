@@ -236,7 +236,127 @@ works. Here's what the evidence says, strongest first:
 The vendor numbers here (Atlassian, Storybook, Vercel) come from their own
 benchmarks, so I read them as direction, not proof.
 
-Here's how my original fixes hold up against that:
+### The stack
+
+Put together, an agentic design system has five layers. Decisions live once,
+agents get them as context, checks reject what drifts, and people spend review
+time on what checks can't judge.
+
+<Pipeline>
+  <Stage
+    label="Source of truth"
+    detail="DTCG tokens, components in code, a Figma library with the same names"
+    mark="layers"
+  />
+  <Stage
+    label="Context"
+    detail="AGENTS.md, skills, llms.txt, metadata, MCP"
+    mark="terminal"
+  />
+  <Stage
+    label="Agent"
+    detail="Builds from the context it's given, and nothing else"
+    mark="claude"
+  />
+  <Stage
+    label="Guardrails"
+    detail="Lint, types, axe, visual regression, drift, smoke tests"
+    mark="shield"
+  />
+  <Stage
+    label="Review"
+    detail="Intent, taste and fit, judged by a person"
+    mark="users"
+  />
+</Pipeline>
+
+Two loops make it get better over time. A failed check goes back to the agent,
+which fixes its own work. A miss that keeps coming up in review goes back into
+the rules as a new check.
+
+### The context layer
+
+Context comes in two weights: a small file the agent always loads, and larger
+material it pulls when a task needs it. Getting that split right matters more
+than which format you pick.
+
+| Channel                                                                                   | What it carries                                                          | Status in October 2026                                                         | Watch out for                                                                                    |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------ |
+| [AGENTS.md](https://agents.md/)                                                           | Commands, conventions, definition of done, a "do not" list               | Stewarded by the Linux Foundation's Agentic AI Foundation since December 2025  | Write it by hand and keep it short. LLM-written files lowered success by about 3% in one study   |
+| Agent skills                                                                              | Step-by-step recipes: add a component, retire one, check drift           | 19 of 21 surveyed systems ship them, and shadcn ships its own                  | Agents skipped an available skill 56% of the time in Vercel's eval. Point to each from AGENTS.md |
+| llms.txt                                                                                  | A plain index of docs pages for agents to fetch                          | A convention, not a standard. 15 of 21 surveyed systems ship one               | Generate it from metadata so it never lists a retired part                                       |
+| [Storybook MCP](https://storybook.js.org/docs/ai/mcp/overview)                            | Props, types, defaults, story snippets, previews, test runs              | Shipped in Storybook 10.3 for React, still in preview                          | It reads the generated manifest, not your MDX. Guidance that only lives in MDX never reaches it  |
+| [Figma MCP](https://developers.figma.com/docs/figma-mcp-server/tools-and-prompts/)        | Design context, variables, screenshots, Code Connect maps, canvas writes | Remote server since September 2025, Figma Agent in open beta since Config 2026 | Fetch metadata first, then target frames. Large frames blow the context budget                   |
+| [shadcn registry](https://ui.shadcn.com/docs/changelog)                                   | Installable source for every part, or a whole system in one payload      | Mature, with registry validation added in May 2026                             | Agents and v0 are trained on stock shadcn. Heavy customization needs explicit context            |
+| [Figma Make kits](https://www.figma.com/blog/introducing-make-kits-and-make-attachments/) | An npm package, library variables and written guidelines together        | Shipped April 2026                                                             | React 18 and Vite only                                                                           |
+| DESIGN.md                                                                                 | A whole system flattened into one portable file                          | Google's open format from Stitch                                               | Atlassian measured about 92% more tokens than its MCP. Fine for prototypes, not production       |
+
+The rule that ties these together is the one fibo follows: author content once,
+in a structured source, and generate every channel from it.
+
+### Tokens and naming
+
+An agent moving between Figma and code needs one name for each decision on both
+sides. When Figma says `Primary/Hover` and code says `bg-primary/90`, the agent
+has to guess the mapping, and it guesses differently each time.
+
+- **Use the stable spec.** The [DTCG format 2025.10](https://www.designtokens.org/tr/2025.10/)
+  is the first stable version, backed by Adobe, Figma, Google, Microsoft,
+  Shopify, Salesforce and others. Style Dictionary v5 and Tokens Studio both
+  default to it now.
+- **Expect gaps in Figma's native import and export.** Descriptions and
+  composite tokens like typography and shadow still trail, so most teams keep a
+  plugin or script in the loop.
+- **Name what tools can't express.** That's the opacity lesson from fibo: if
+  one side can't represent it, turn it into a named token both sides share.
+- **Semantic in components, primitives in the token file.** An agent that can
+  see `neutral-500` will use it. Keep primitives out of component code and lint
+  for them.
+- **Make props and Figma properties match.** Same name, same options, same size
+  scale. Then Code Connect maps cleanly and a drift check can compare them.
+
+### Guardrails
+
+A rule that's only written down is a suggestion. A rule that fails the build is
+part of the system.
+
+| Check             | Catches                                                    | Tools in use today                                                                               |
+| ----------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Token lint        | Raw hex, arbitrary values, restyled components, primitives | [shadcn-ui/lint](https://github.com/shadcn-ui/lint), ESLint token plugins, Primer MCP's CSS lint |
+| Types             | Invented props and wrong option values                     | TypeScript on every prop, typed variant objects                                                  |
+| Accessibility     | Missing names, contrast, keyboard traps                    | axe in Storybook story tests, which Storybook MCP also exposes to agents                         |
+| Visual regression | Unintended visual change                                   | Chromatic snapshots, approved by a person                                                        |
+| Figma drift       | Tokens or variants that diverge between design and code    | Code Connect, or a snapshot-and-diff script with a list of intended gaps                         |
+| Install smoke     | Parts that break outside your repo                         | Install every registry item into a fresh app and build it                                        |
+
+Error messages are part of the design. shadcn's linter tells the agent what went
+wrong, what to use instead and where it lives, which is why one correction round
+is usually enough. Check output gets read literally, so write it that way.
+
+### What doesn't work yet
+
+Most failures come back to one cause: the agent was asked to read and remember
+instead of being given something to run.
+
+- **Generic context files.** LLM-written AGENTS.md files cut success by about 3%
+  and raised cost about 20%. Hand-written ones helped about 4% at the same cost.
+  Repository overviews didn't help at all.
+- **Skills the agent never calls.** A skill needs a pointer from always-loaded
+  context, or a hook that triggers it.
+- **One giant context file.** Cutting a system down to fit in one file means
+  cutting the usage guidance, which is the part that matters.
+- **Oversized MCP responses.** Users report Figma's MCP returning Code Connect
+  output on one call and raw React on the next for the same node.
+- **Heavily customized primitives.** v0's own docs say it "may struggle with any
+  customizations." The further a system strays from stock, the more explicit
+  context it needs.
+- **Compounding drift.** Off-system screens become examples. The next agent
+  reads them as precedent, so a small miss rate grows unless checks stop it at
+  the door.
+- **MCP-only delivery.** Not every agent has an MCP client set up. Atlassian
+  built a CLI for that reason, and its use passed MCP by 60%.
+
+### How my original fixes hold up
 
 | What I did at Proctorio                     | How it holds up                                                                                                |
 | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
@@ -244,14 +364,54 @@ Here's how my original fixes hold up against that:
 | Agents see semantic tokens only             | Holds, and today a lint rule enforces it instead of hoping the agent never sees a primitive                    |
 | JSON metadata per component                 | Holds. Generate the mechanical part from source, and keep people writing the usage rules                       |
 | One canonical source, in Figma              | Partly. Installable code is what agents should consume, with Figma mapped to it and a drift check between them |
+| A standing benchmark, failing review        | Failing review is now the core practice. The benchmark is still open                                           |
 
 ## What changed about the job
 
 My job on a system like this is less about making each part and more about
-writing the rules every part gets made by. A repeated comment in review becomes
-a lint rule, a test or a line in `AGENTS.md`. What's left for review is what no
-check can judge: intent, hierarchy, tone, and whether something is right for the
-product.
+writing the rules every part gets made by.
+
+| Before agents                        | With agents                                                                      |
+| ------------------------------------ | -------------------------------------------------------------------------------- |
+| Draw every state of a component      | Specify the state matrix and props, then review what the agent builds against it |
+| Write guidelines pages for people    | Write short, structured rules an agent can act on, and generate the pages        |
+| Catch inconsistency in design review | Turn each repeated catch into a lint rule, a test or a drift check               |
+| Keep Figma and code in sync by hand  | Own the naming contract, and let a drift check report the gaps                   |
+| Judge every screen                   | Judge what checks can't: intent, hierarchy, tone, fit with the product           |
+
+Three things stay human:
+
+- **Deciding what good means.** A rubric is a design decision. Someone has to
+  write the criteria, both the mechanical checks and the judgment calls.
+- **Choosing the constraints.** Brad Frost draws the line well: an agent limited
+  to the system's high-quality parts is design system work, and an
+  unconstrained one is vibe coding.
+- **Taste at review.** Agents produce plausible work fast. Spotting that a
+  plausible layout is wrong for this product is now the bottleneck.
+
+## If you're starting today
+
+In this order. Each step pays off without the next one.
+
+1. Write an AGENTS.md by hand, under 200 lines: commands, definition of done,
+   token rules and a "do not" list. No repo overview.
+2. Put semantic tokens in DTCG format, and name every opacity or state variant
+   as its own token.
+3. Match prop names and options to Figma component properties, with one size
+   scale everywhere.
+4. Add a token lint that rejects raw colors, arbitrary values and primitives in
+   components.
+5. Run axe in story tests and fail on any violation.
+6. Keep one metadata file per component, and generate docs, catalog and
+   llms.txt from it.
+7. Publish components to a registry so agents install real parts instead of
+   rebuilding them.
+8. Write skills for the jobs you repeat, and point to each from AGENTS.md.
+9. Turn on Storybook MCP and Figma MCP with Code Connect, and serve the same
+   content through a CLI for agents without MCP.
+10. Add a Figma drift check with a reasoned list of intended differences.
+11. Review agent pull requests for intent and taste, and turn every repeated
+    comment into a rule or a check.
 
 ## What I'd do next
 
@@ -259,3 +419,30 @@ product.
   open. fibo shows the mechanics work, but it has one maintainer and no
   baseline, so a standing benchmark is what would tell me whether the system is
   getting more legible over time or just differently broken.
+
+## Sources
+
+- [State of AI in Design Systems](https://state-of-ai-in-design-systems.netlify.app/),
+  Kaelig Deloumeau-Prigent, July 2026
+- [Design System-Compliant UI Generation with LLM Agents](https://doi.org/10.1145/3772363.3798616),
+  Cha et al., CHI EA '26
+- [RepoComplianceBench](https://arxiv.org/html/2607.26819v1), July 2026
+- [Context files for coding agents](https://arxiv.org/abs/2602.11988), ETH
+  Zurich and LogicStar, September 2026
+- [AGENTS.md outperforms skills in our agent evals](https://vercel.com/blog/agents-md-outperforms-skills-in-our-agent-evals),
+  Vercel, January 2026
+- [Teaching AI to speak our design language](https://www.atlassian.com/blog/ai-at-work/teaching-ai-to-speak-our-design-language),
+  Atlassian, June 2026
+- [Testing DESIGN.md in practice](https://www.atlassian.com/blog/how-we-build/atlassians-design-md-is-here-what-we-learned-testing-portable-design-context-in-practice),
+  Atlassian, June 2026
+- [Design system context from the terminal](https://www.atlassian.com/blog/ai-at-work/giving-ai-agents-design-system-context-from-the-terminal-what-we-learned-building-a-cli),
+  Atlassian, September 2026
+- [Storybook MCP for React](https://storybook.js.org/blog/storybook-mcp-for-react/),
+  Storybook, March 2026
+- [Design context everywhere you build](https://www.figma.com/blog/design-context-everywhere-you-build/),
+  Figma, September 2025
+- [shadcn-ui/lint](https://github.com/shadcn-ui/lint)
+- [Design tokens specification reaches first stable version](https://www.w3.org/community/design-tokens/2025/10/28/design-tokens-specification-reaches-first-stable-version/),
+  W3C, October 2025
+- [Agentic design systems in 2026](https://bradfrost.com/blog/post/agentic-design-systems-in-2026/),
+  Brad Frost, December 2025
