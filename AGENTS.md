@@ -57,8 +57,7 @@ scaled cover on a phone. Put
 these back after reinstalling; fibo's own filter menu has since gained a
 `container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
 lists them, which drives the home page section, `/components` and the
-docs; `home: false` keeps a part off the home page (Token flow, whose slot
-the Command menu took). Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
+docs; `home: false` keeps a part off the home page (Token flow, whose slot the Command menu took, and Reactions, whose slot Floating nav took). Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
 `src/features/components/content/<slug>.mdx` is the body,
 `examples/<slug>.tsx` holds its live examples (named after the fibo stories
 they port), and `data/registry.tsx` wires the lead preview and links. The
@@ -77,7 +76,7 @@ Fibonacci's puzzle and the dither plates in `public/images/fibo/`. On the
 home page the hero's buttons go to those two pages instead.
 
 The phone nav is fibo's Floating nav (`src/components/fibo/floating-nav.tsx`,
-installed and documented like the parts above, but kept off the home page).
+installed and documented like the parts above).
 The site uses its compact `size="sm"`; the file matches the registry as is.
 `nav-mobile-bar.tsx` feeds it `MOBILE_NAV` from `config/site.ts`, whose items
 carry Lucide icons; it reads the config itself because a server layout can't
