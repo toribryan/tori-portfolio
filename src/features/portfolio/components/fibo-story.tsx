@@ -118,8 +118,9 @@ export function FiboStory() {
         </ol>
         <p>
           How many pairs are there after a year? Below, each row is a month and
-          each rabbit is a pair: small for babies, big once grown. Watch the
-          first eight months play out.
+          each rabbit is a pair. A brace joins a pair to the baby pair it just
+          had, and a single line follows a pair still too young. Watch the first
+          six months play out.
         </p>
       </Chapter>
 
