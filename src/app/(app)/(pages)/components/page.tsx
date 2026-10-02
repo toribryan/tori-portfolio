@@ -18,24 +18,10 @@ import {
 } from "@/features/portfolio/components/fibo-hero/brand-icons"
 import { FIBO } from "@/features/portfolio/components/fibo-hero/links"
 import { FiboInstall } from "@/features/portfolio/components/fibo-install"
-import { NICHE_PARTS } from "@/features/portfolio/data/fibo-niche"
 
 const title = "Components"
 const description =
   "Parts from fibo, built for real product work, and a few just for fun. Each installs as source with one shadcn command."
-
-const SHELVES = [
-  {
-    shelf: "base",
-    title: "Base components",
-    description: "Standard parts most products need, built to fibo's rules.",
-  },
-  {
-    shelf: "special",
-    title: "Special components",
-    description: "Playful, specific parts, each for one kind of moment.",
-  },
-] as const
 
 export const metadata: Metadata = {
   title,
@@ -95,26 +81,7 @@ export default function Page() {
         <FiboInstall />
       </div>
 
-      {SHELVES.map(({ shelf, title, description }) => {
-        const count = NICHE_PARTS.filter((part) => part.shelf === shelf).length
-        return (
-          <section key={shelf} aria-labelledby={`shelf-${shelf}`}>
-            <div className="screen-line-bottom flex flex-col gap-0.5 px-4 py-2">
-              <h2
-                id={`shelf-${shelf}`}
-                className="font-heading text-xl font-medium"
-              >
-                {title}{" "}
-                <span className="text-muted-foreground tabular-nums">
-                  ({count})
-                </span>
-              </h2>
-              <p className="text-sm text-muted-foreground">{description}</p>
-            </div>
-            <ComponentCardList shelf={shelf} />
-          </section>
-        )
-      })}
+      <ComponentCardList />
 
       <div className="screen-line-top h-4" />
     </>

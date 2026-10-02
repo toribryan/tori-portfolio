@@ -24,16 +24,11 @@ const PLAYS_ON_HOVER = new Set(["reactions"])
  */
 export function ComponentCardList({
   home = false,
-  shelf,
 }: {
   /** Only the parts the home page features, rather than every part. */
   home?: boolean
-  /** Only the parts on one of fibo's shelves. */
-  shelf?: NichePart["shelf"]
 }) {
-  const parts = NICHE_PARTS.filter(
-    (part) => (!home || part.home !== false) && (!shelf || part.shelf === shelf)
-  )
+  const parts = NICHE_PARTS.filter((part) => !home || part.home !== false)
   // Blank cells finish the last row, so the grid's line color doesn't show
   // through as a block where cards run out: two across, three from md up.
   const fillers = (columns: number) =>
