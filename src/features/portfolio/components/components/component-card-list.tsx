@@ -66,7 +66,7 @@ function ComponentCard({ part }: { part: NichePart }) {
       onPointerLeave={() => setHovered(false)}
     >
       <div
-        className="relative aspect-4/3 overflow-hidden rounded-xl bg-muted/60 select-none"
+        className="relative aspect-4/3 overflow-hidden rounded-xl bg-muted/60 select-none dark:bg-black"
         aria-hidden
         inert
       >
