@@ -35,8 +35,9 @@ import tierSemantic from "@/features/doc/data/iso/tier-semantic.json"
 type IsoGrid = { width: number; height: number; rows: string[] }
 
 /*
- * Dot grids exported by pixel-studio's `iso` command: 0 empty, 1 a light dot,
- * 2 a dark dot. Regenerate them there rather than editing the JSON.
+ * Dot grids exported by pixel-studio's `iso` command: 0 empty, then 1 to 4
+ * from the palest face to ink outlines. Regenerate them there rather than
+ * editing the JSON.
  */
 const ART = {
   "arc-contracts": arcContracts,
@@ -78,7 +79,9 @@ function fieldFor(arts: IsoArt[]): Field {
 const BUILD_MS = 1400
 const FLICKER_MS = 120
 const FLICKER_CELLS = 6
-const LIGHT_ALPHA = 0.5
+// Each strength is the foreground at this opacity, so faces stay flat planes
+// and the art follows the theme. Index 0 is the empty field.
+const STRENGTH = [1, 0.16, 0.34, 0.58, 1]
 
 function rng(seed: number) {
   return () => {
@@ -126,13 +129,12 @@ function IsoCanvas({
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
     let shown = reduced.matches ? filled.length : 0
     let flipped = new Set<number>()
-    let colors = { dark: "", light: "", faint: "" }
+    let colors = { ink: "", faint: "" }
 
     const readColors = () => {
       const style = getComputedStyle(canvas)
       colors = {
-        dark: style.getPropertyValue("--foreground"),
-        light: style.getPropertyValue("--muted-foreground"),
+        ink: style.getPropertyValue("--foreground"),
         faint: style.getPropertyValue("--border"),
       }
     }
@@ -151,13 +153,12 @@ function IsoCanvas({
           const y = fy - oy
           const inside = x >= 0 && y >= 0 && x < grid.width && y < grid.height
           const i = y * grid.width + x
-          let v = inside && visible.has(i) ? level(i) : "0"
-          if (v !== "0" && flipped.has(i)) v = v === "1" ? "2" : "1"
-          ctx.fillStyle =
-            v === "2" ? colors.dark : v === "1" ? colors.light : colors.faint
-          // Light dots sit back so solid features read in either theme.
-          ctx.globalAlpha = v === "1" ? LIGHT_ALPHA : 1
-          const size = v === "0" ? dot * 0.35 : dot
+          const v = inside && visible.has(i) ? level(i) : "0"
+          let n = Number(v)
+          if (n > 0 && n < 4 && flipped.has(i)) n += 1
+          ctx.fillStyle = n === 0 ? colors.faint : colors.ink
+          ctx.globalAlpha = STRENGTH[n]!
+          const size = n === 0 ? dot * 0.35 : dot
           const offset = (pitch - size) / 2
           ctx.fillRect(fx * pitch + offset, fy * pitch + offset, size, size)
         }
