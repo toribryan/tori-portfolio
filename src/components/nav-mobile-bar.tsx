@@ -37,6 +37,7 @@ export function NavMobileBar() {
     <FloatingNav
       aria-label="Site"
       className="sm:hidden"
+      size="sm"
       hideOnScroll
       items={items.map(({ title, href, icon: Icon }) => ({
         value: href,
