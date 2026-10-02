@@ -480,9 +480,11 @@ function FloatingNavCover({ active }: CoverProps) {
 
   useEffect(() => {
     if (!active) return
+    // Long enough for the spring and the label's reveal to settle before
+    // the next item, so it reads as a glide rather than a jitter.
     const id = window.setInterval(
       () => setCurrent((index) => (index + 1) % NAV_ITEMS.length),
-      900
+      1800
     )
     return () => window.clearInterval(id)
   }, [active])
