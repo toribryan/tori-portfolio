@@ -685,23 +685,37 @@ const MARKER_ICONS: Record<string, ReactNode> = {
 
 /**
  * fibo's stand-in city with a marker on each place. While active the markers
- * step through dots, icons and price labels; at rest they're dots.
+ * step through dots, icons and price labels; at rest they're dots. All three
+ * sit stacked on each place and cross-fade, so one grows out of the last
+ * rather than snapping to a new shape, a beat apart across the map.
  */
 function MapMarkerCover({ active }: CoverProps) {
-  const step = useCycle(MARKER_TYPES.length, 1400, active)
-  const type = MARKER_TYPES[step]!
+  const step = useCycle(MARKER_TYPES.length, 1600, active)
   return (
     <ScaledStage width={400}>
       <StandInMap className="aspect-auto size-full max-w-none rounded-none border-0">
-        {PLACES.map((place) => (
+        {PLACES.map((place, index) => (
           <Pin key={place.id} place={place}>
-            <MapMarker
-              type={type}
-              icon={MARKER_ICONS[place.id]}
-              label={place.label}
-              text={place.price}
-              tabIndex={-1}
-            />
+            <div className="grid place-items-center">
+              {MARKER_TYPES.map((type, i) => (
+                <div
+                  key={type}
+                  className={cn(
+                    "col-start-1 row-start-1 transition-[opacity,scale] duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]",
+                    i === step ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                  )}
+                  style={{ transitionDelay: `${index * 70}ms` }}
+                >
+                  <MapMarker
+                    type={type}
+                    icon={MARKER_ICONS[place.id]}
+                    label={place.label}
+                    text={place.price}
+                    tabIndex={-1}
+                  />
+                </div>
+              ))}
+            </div>
           </Pin>
         ))}
       </StandInMap>
