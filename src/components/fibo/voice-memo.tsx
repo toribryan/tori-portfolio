@@ -69,6 +69,8 @@ type VoiceMemoProps = Omit<
   onCopy?: (transcript: string) => void
   /** Called as the transcript's close button is pressed, before it leaves. */
   onDismiss?: () => void
+  /** Called once the transcript has gone, in the same render that removes it. */
+  onDismissed?: () => void
 }
 
 const voiceMemoVariants = cva(
@@ -217,6 +219,7 @@ function VoiceMemo({
   panelClassName,
   onCopy,
   onDismiss,
+  onDismissed,
   className,
   ...props
 }: VoiceMemoProps) {
@@ -241,6 +244,7 @@ function VoiceMemo({
       deviceRef.current?.focus()
     setClosing(false)
     setDismissed(true)
+    onDismissed?.()
   }
   React.useEffect(() => {
     if (!closing) return

@@ -204,6 +204,7 @@ export function VoiceMemoHero({ className }: { className?: string }) {
     onSpin: () => play(maximizeSound),
   })
   const [recording, setRecording] = useState(false)
+  const [, setDismissals] = useState(0)
 
   // Decoded ahead, so the first press sounds at once.
   useEffect(() => {
@@ -241,6 +242,10 @@ export function VoiceMemoHero({ className }: { className?: string }) {
         }}
         onCopy={() => toast.success("Transcript copied")}
         onDismiss={() => play(cardSlideSound)}
+        // The device only glides when it re-renders, and closing the
+        // transcript re-renders nothing here; this does, in the same render
+        // that removes it.
+        onDismissed={() => setDismissals((count) => count + 1)}
         side="bottom"
         // Device first, then the transcript: a column when narrow, and from
         // @xl a row run right to left, so the transcript opens on the left.
@@ -258,7 +263,8 @@ export function VoiceMemoHero({ className }: { className?: string }) {
           // slides right as the transcript opens and back when it closes.
           <motion.span
             layout={!reduceMotion}
-            transition={{ type: "spring", stiffness: 160, damping: 22 }}
+            // Eases out of rest and into place, so it never lurches.
+            transition={{ duration: 0.6, ease: [0.65, 0, 0.35, 1] }}
             className="relative block aspect-[85/55] w-(--w) cursor-grab touch-pan-y [perspective:1400px] active:cursor-grabbing"
             {...handlers}
           >
