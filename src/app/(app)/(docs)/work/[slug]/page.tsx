@@ -8,7 +8,7 @@ import { jsonLdBreadcrumbList, JsonLdScript } from "@/lib/json-ld"
 import { absoluteUrl } from "@/lib/utils"
 import { DocEnterSound } from "@/features/doc/components/doc-enter-sound"
 import { DocPage } from "@/features/doc/components/doc-page"
-import { getDocBySlug, getWorkDocs } from "@/features/doc/data/documents"
+import { getAllWorkDocs, getDocBySlug } from "@/features/doc/data/documents"
 import type { Doc } from "@/features/doc/types/document"
 
 export const revalidate = false
@@ -16,7 +16,7 @@ export const dynamic = "force-static"
 export const dynamicParams = false
 
 export async function generateStaticParams() {
-  return getWorkDocs().map((doc) => ({ slug: doc.slug }))
+  return getAllWorkDocs().map((doc) => ({ slug: doc.slug }))
 }
 
 function findWorkDoc(slug: string) {

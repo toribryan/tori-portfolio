@@ -26,7 +26,7 @@ import {
 } from "@/features/doc/data/documents"
 import type { Doc } from "@/features/doc/types/document"
 
-import { DOC_COVERS } from "./doc-covers"
+import { DOC_COVERS, DOC_HEROES } from "./doc-covers"
 import {
   Item,
   Numbered,
@@ -46,6 +46,7 @@ import {
 } from "./overhaul-diagrams"
 import { RepoViewer } from "./repo-viewer"
 import { ResultFigure } from "./result-figure"
+import { StatusColors } from "./status-colors"
 import { TokenVisualizer } from "./token-visualizer"
 
 /** Components a doc's MDX can use beyond the shared set. */
@@ -61,6 +62,7 @@ const DOC_COMPONENTS = {
   Side,
   Sides,
   SlotComposition,
+  StatusColors,
   SwitchSprawl,
   TokenRoles,
   TokenVisualizer,
@@ -100,12 +102,16 @@ export async function DocPage({
   // should never land a reader on a redirect or a placeholder.
   const category = m.category ?? ""
   const siblings = getDocsByCategory(category).filter(
-    (sibling) => !sibling.metadata.href && !sibling.metadata.comingSoon
+    (sibling) =>
+      !sibling.metadata.href &&
+      !sibling.metadata.comingSoon &&
+      !sibling.metadata.archived
   )
   const { previous, next } = findNeighbor(siblings, doc.slug)
   const noun = NEIGHBOUR_NOUN[category] ?? "page"
   const basePath = CATEGORY_BASE_PATH[category]
   const Cover = DOC_COVERS[doc.slug]
+  const Hero = DOC_HEROES[doc.slug]
 
   const facts = [
     ["Company", m.company],
@@ -193,7 +199,13 @@ export async function DocPage({
         {m.title}
       </h1>
 
-      {Cover ? (
+      {Hero ? (
+        <div className="screen-line-bottom p-4">
+          <div className="relative flex flex-col items-center overflow-hidden rounded-xl bg-muted/60 pb-6 inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15">
+            <Hero />
+          </div>
+        </div>
+      ) : Cover ? (
         // The same live cover as the doc's card, larger, switching themes on
         // a loop instead of on hover.
         <div data-cover-host className="screen-line-bottom p-4">

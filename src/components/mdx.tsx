@@ -27,6 +27,7 @@ import { Figure } from "./mdx-figure"
 import { ImageCycle } from "./mdx-image-cycle"
 import { ImagePan } from "./mdx-image-pan"
 import { InboxRegions } from "./mdx-inbox-regions"
+import { IsoCard, IsoCards } from "./mdx-iso-cards"
 import { LinkButton } from "./mdx-link-button"
 import { PageGrid } from "./mdx-page-grid"
 import { Pipeline, Stage } from "./mdx-pipeline"
@@ -85,6 +86,8 @@ const components: MDXRemoteProps["components"] = {
   ImageCycle,
   ImagePan,
   InboxRegions,
+  IsoCard,
+  IsoCards,
   PageGrid,
   Pipeline,
   PipelineHero,
