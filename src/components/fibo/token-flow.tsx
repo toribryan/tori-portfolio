@@ -236,7 +236,10 @@ type TokenFlowProps = Omit<React.ComponentProps<"div">, "children"> & {
   showUse?: boolean
   /** Force a theme instead of following the document's `dark` class. */
   theme?: "light" | "dark"
-  /** Stack the tiers top to bottom at every width, not only on narrow screens. */
+  /**
+   * `horizontal` wires the tiers left to right, stacking them only on narrow
+   * screens; `vertical` stacks them top to bottom at every width.
+   */
   orientation?: "horizontal" | "vertical"
 }
 
