@@ -321,7 +321,7 @@ export function StorybookKitCover({ loop = false }: { loop?: boolean }) {
   return (
     <div
       ref={frame}
-      className="absolute inset-0 bg-[color-mix(in_oklab,var(--muted)_60%,var(--background))] text-foreground"
+      className="absolute inset-0 bg-cover-plate text-foreground"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-20"

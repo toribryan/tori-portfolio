@@ -211,7 +211,7 @@ export async function DocPage({
         // a loop instead of on hover.
         <div data-cover-host className="screen-line-bottom p-4">
           <div
-            className="relative aspect-1200/630 overflow-hidden rounded-xl bg-muted/60 inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
+            className="relative aspect-1200/630 overflow-hidden rounded-xl bg-cover-plate inset-ring-1 inset-ring-black/15 dark:inset-ring-white/15"
             aria-hidden
             inert
           >

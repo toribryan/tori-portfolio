@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, type CSSProperties } from "react"
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 import {
@@ -48,6 +48,8 @@ export function FiboCover({ loop = false }: { loop?: boolean }) {
         className="absolute inset-0 size-full"
         viewBox={`0 0 ${ART.width} ${ART.height}`}
         preserveAspectRatio="xMidYMid slice"
+        // He fills his body with the page's color; here the plate's.
+        style={{ "--background": "var(--cover-plate)" } as CSSProperties}
         aria-hidden
       >
         {/* The sprite turns him to face right; the art has him facing left. */}

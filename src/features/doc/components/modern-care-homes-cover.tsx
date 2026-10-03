@@ -33,7 +33,7 @@ const PHONES = [
  */
 export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
   return (
-    <div className="absolute inset-0 bg-[color-mix(in_oklab,var(--muted)_60%,var(--background))]">
+    <div className="absolute inset-0 bg-cover-plate">
       <ScaledStage width={440} zoom>
         <div className="relative h-full">
           {PHONES.map(({ poster, src, start, className }) => (

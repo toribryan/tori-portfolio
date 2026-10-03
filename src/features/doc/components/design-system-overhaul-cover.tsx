@@ -252,7 +252,7 @@ export function DesignSystemOverhaulCover({
   return (
     <div
       ref={frame}
-      className="absolute inset-0 bg-[color-mix(in_oklab,var(--muted)_60%,var(--background))] text-foreground"
+      className="absolute inset-0 bg-cover-plate text-foreground"
     >
       <ScaledStage width={480} zoom>
         <div className="flex h-full items-center gap-7 pr-7 pl-9">
