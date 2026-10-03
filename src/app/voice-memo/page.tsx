@@ -6,9 +6,9 @@ import { VoiceMemoHero } from "@/features/doc/components/voice-memo-object"
 
 /*
  * The voice memo device on its own, with none of the site around it, for
- * screen recordings. Not linked from anywhere and kept out of search; the
- * project page at /work/voice-memo is the one people find. One quiet link
- * in the corner leads back to the site, small enough to crop out.
+ * screen recordings and a closer look. Reached from the Full view button on
+ * the project page at /work/voice-memo, which is the one search finds. One
+ * quiet link in the corner leads back to the site, small enough to crop out.
  */
 export const metadata: Metadata = {
   title: "Voice memo",

@@ -4,7 +4,7 @@ import { DesignSystemOverhaulCover } from "./design-system-overhaul-cover"
 import { ModernCareHomesCover } from "./modern-care-homes-cover"
 import { StorybookKitCover } from "./storybook-kit-cover"
 import { VoiceMemoCover } from "./voice-memo-cover"
-import { VoiceMemoHero } from "./voice-memo-object"
+import { VoiceMemoProjectHero } from "./voice-memo-object"
 
 /**
  * Live covers that stand in for a doc's cover image on its card, keyed by
@@ -23,5 +23,5 @@ export const DOC_COVERS: Record<string, ComponentType<{ loop?: boolean }>> = {
  * about it. The live cover still shows on the doc's card.
  */
 export const DOC_HEROES: Record<string, ComponentType> = {
-  "voice-memo": VoiceMemoHero,
+  "voice-memo": VoiceMemoProjectHero,
 }
