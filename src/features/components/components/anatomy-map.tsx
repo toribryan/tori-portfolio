@@ -39,6 +39,9 @@ const GAP = 4
 // Room kept free inside the map's edges, so a part at the edge still has
 // space for its marker beside it.
 const GUTTER = 24
+// How long markers follow every frame after the example changes, about as
+// long as the parts' entrances take.
+const SETTLE_MS = 1000
 
 /** Finds a part by its `data-slot`. */
 export const slot = (name: string) => (root: HTMLElement) =>
@@ -48,9 +51,10 @@ export const slot = (name: string) => (root: HTMLElement) =>
  * Anatomy as numbered markers: a live example with a small numbered dot
  * beside each part and a dashed outline around regions, keyed by a list of
  * the parts' names underneath. It needs no room beside the example, so it
- * fits a phone. Positions are measured every frame while the map is on
- * screen, so markers stay with parts that move on their own, such as a
- * preview portalled to the body.
+ * fits a phone. Positions are measured again whenever the parts resize,
+ * the page scrolls or a transition ends while the map is on screen, so
+ * markers stay with parts that move, such as a preview portalled to the
+ * body.
  */
 export function AnatomyMap({
   callouts,
@@ -104,6 +108,10 @@ export function AnatomyMap({
     let last = ""
     let raf = 0
     let visible = false
+    // Parts are found on each measure, since some only appear later; observing
+    // one again is a no-op.
+    const resize = new ResizeObserver(() => schedule())
+    resize.observe(root)
 
     const measure = () => {
       const base = root.getBoundingClientRect()
@@ -112,11 +120,13 @@ export function AnatomyMap({
         root.querySelector("[data-anatomy-subject]") ??
         stage.current?.firstElementChild
       if (!target) return
+      resize.observe(target)
       const around = target.getBoundingClientRect()
       const rows: Placed[] = []
       callouts.forEach((callout, index) => {
         const el = callout.find(root)
         if (!el) return
+        resize.observe(el)
         const r = el.getBoundingClientRect()
         let side = callout.side
         let point = callout.point?.(r, around) ?? {
@@ -190,20 +200,55 @@ export function AnatomyMap({
       }
     }
 
-    const loop = () => {
+    // Measuring reads layout, so it waits for the next frame and runs once
+    // however many changes land before it. After mount, a new `measureKey`
+    // or a press in the example, it follows every frame for a moment, so
+    // markers keep up with a part still animating into place.
+    let until = 0
+    const tick = () => {
+      raf = 0
       measure()
-      if (visible) raf = requestAnimationFrame(loop)
+      if (visible && performance.now() < until)
+        raf = requestAnimationFrame(tick)
     }
-    const observer = new IntersectionObserver(([entry]) => {
+    const schedule = () => {
+      if (visible && !raf) raf = requestAnimationFrame(tick)
+    }
+    const follow = () => {
+      until = performance.now() + SETTLE_MS
+      schedule()
+    }
+
+    const intersection = new IntersectionObserver(([entry]) => {
       visible = !!entry?.isIntersecting
-      cancelAnimationFrame(raf)
-      if (visible) raf = requestAnimationFrame(loop)
+      if (visible) follow()
     })
-    observer.observe(root)
+    intersection.observe(root)
+    window.addEventListener("scroll", schedule, {
+      capture: true,
+      passive: true,
+    })
+    window.addEventListener("resize", schedule, { passive: true })
+    root.addEventListener("pointerup", follow)
+    root.addEventListener("keyup", follow)
+    // Portalled parts end their entrances outside the map.
+    document.addEventListener("transitionend", schedule, true)
+    document.addEventListener("animationend", schedule, true)
+    document.fonts?.ready.then(schedule)
+    document.fonts?.addEventListener("loadingdone", schedule)
     measure()
     return () => {
-      observer.disconnect()
+      intersection.disconnect()
+      resize.disconnect()
+      window.removeEventListener("scroll", schedule, { capture: true })
+      window.removeEventListener("resize", schedule)
+      root.removeEventListener("pointerup", follow)
+      root.removeEventListener("keyup", follow)
+      document.removeEventListener("transitionend", schedule, true)
+      document.removeEventListener("animationend", schedule, true)
+      document.fonts?.removeEventListener("loadingdone", schedule)
       cancelAnimationFrame(raf)
+      visible = false
     }
   }, [callouts, subject, measureKey])
 
