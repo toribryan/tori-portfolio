@@ -18,6 +18,7 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react"
+import { flushSync } from "react-dom"
 import { toast } from "sonner"
 
 import {
@@ -70,30 +71,64 @@ const SPIN_SPEED = 1
 const SPIN_TURNS = 900
 const SPIN = { duration: 0.8, ease: [0.16, 1, 0.3, 1] } as const
 
+type Axis = "x" | "y"
+
 /**
  * Rotation for the device, with a drag that turns it, coasts when let go and
- * settles on whichever face is nearest. A hard flick spins it instead, and
- * calls `onSpin`. A drag never also counts as a press, so the device can be
- * a button underneath.
+ * settles on whichever face is nearest. Drag sideways to turn it about its
+ * upright axis, or pull the top down or push it up to tip it over towards
+ * you or away. A hard flick spins it instead, and calls `onSpin`. A drag
+ * never also counts as a press, so the device can be a button underneath.
+ *
+ * `axis` is the axis the back is mounted on. Turned over sideways, the back
+ * has to sit turned about the upright axis to land the right way up; tipped
+ * over top first, about the level one. Each drag starts by moving it to the
+ * drag's axis while the device rests, which looks the same on screen, as
+ * either mounting shows the back upright once it's over.
  */
 function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
   const reduceMotion = useReducedMotion()
   const rx = useMotionValue(rest.x)
   const ry = useMotionValue(rest.y)
   const [back, setBack] = useState(false)
+  const [axis, setAxis] = useState<Axis>("y")
+  const rotation = { x: rx, y: ry }
+  const other = (a: Axis): Axis => (a === "x" ? "y" : "x")
 
-  const nearestFace = (y: number) =>
-    Math.round((y - rest.y) / 180) * 180 + rest.y
+  const nearest = (a: Axis, value: number) =>
+    Math.round((value - rest[a]) / 180) * 180 + rest[a]
+  const turnedOver = (a: Axis, value: number) =>
+    Math.abs(Math.round((value - rest[a]) / 180)) % 2 === 1
 
-  const settle = (target: number, spin = false) => {
+  // Lands the turning axis on its nearest face and levels the other.
+  const settle = (a: Axis, target: number, spin = false) => {
     const transition = reduceMotion ? QUICK : SPRING
-    animate(ry, target, spin ? SPIN : transition)
-    animate(rx, rest.x, transition)
-    setBack(Math.abs(Math.round((target - rest.y) / 180)) % 2 === 1)
+    animate(rotation[a], target, spin ? SPIN : transition)
+    animate(rotation[other(a)], rest[other(a)], transition)
+    setBack(turnedOver(a, target))
   }
 
-  const flip = (direction = 1) =>
-    settle(nearestFace(ry.get()) + 180 * direction)
+  // Puts the turn on axis `a`, keeping the same face showing. Only from
+  // rest, where the swap can't be seen.
+  const mount = (a: Axis) => {
+    if (a === axis) return true
+    const current = rotation[axis].get()
+    const resting =
+      Math.abs(current - nearest(axis, current)) < 1 &&
+      Math.abs(rotation[other(axis)].get() - rest[other(axis)]) < 1
+    if (!resting) return false
+    // The new mounting has to be on screen before the angles that need it,
+    // or the back shows upside down for a frame.
+    flushSync(() => setAxis(a))
+    rotation[axis].set(rest[axis])
+    rotation[a].set(rest[a] + (back ? 180 : 0))
+    return true
+  }
+
+  const flip = (direction = 1) => {
+    if (!mount("y")) return
+    settle("y", nearest("y", ry.get()) + 180 * direction)
+  }
 
   const drag = useRef<{
     id: number
@@ -101,8 +136,8 @@ function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
     y: number
     rx: number
     ry: number
-    moved: boolean
-    lastX: number
+    axis: Axis | null
+    last: number
     lastT: number
     velocity: number
   } | null>(null)
@@ -120,8 +155,8 @@ function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
         y: event.clientY,
         rx: rx.get(),
         ry: ry.get(),
-        moved: false,
-        lastX: event.clientX,
+        axis: null,
+        last: 0,
         lastT: event.timeStamp,
         velocity: 0,
       }
@@ -131,43 +166,59 @@ function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
       if (!current || current.id !== event.pointerId) return
       const dx = event.clientX - current.x
       const dy = event.clientY - current.y
-      if (!current.moved) {
+      if (!current.axis) {
         if (Math.hypot(dx, dy) < 6) return
-        current.moved = true
+        // Sideways turns it about the upright axis, up or down about the
+        // level one. A turn already underway keeps its axis.
+        const wanted: Axis = Math.abs(dy) > Math.abs(dx) ? "x" : "y"
+        current.axis = mount(wanted) ? wanted : axis
+        current.rx = rx.get()
+        current.ry = ry.get()
+        current.x = event.clientX
+        current.y = event.clientY
         // Captured only once it's a drag, so a tap still reaches the button.
         event.currentTarget.setPointerCapture(event.pointerId)
+        return
       }
-      ry.set(current.ry + dx * 0.55)
-      rx.set(Math.max(-70, Math.min(70, current.rx - dy * 0.35)))
+      // Pulling the top down tips it towards you.
+      const along = current.axis === "y" ? dx : -dy
+      const across = current.axis === "y" ? -dy : dx
+      const turn = current[`r${current.axis}`] + along * 0.55
+      const tilt = Math.max(-25, Math.min(25, across * 0.2))
+      rotation[current.axis].set(turn)
+      rotation[other(current.axis)].set(rest[other(current.axis)] + tilt)
       // Degrees a millisecond, smoothed, for the coast after letting go.
       const dt = Math.max(1, event.timeStamp - current.lastT)
-      const instant = ((event.clientX - current.lastX) * 0.55) / dt
+      const instant = ((along - current.last) * 0.55) / dt
       current.velocity = current.velocity * 0.6 + instant * 0.4
-      current.lastX = event.clientX
+      current.last = along
       current.lastT = event.timeStamp
     },
     onPointerUp: (event: PointerEvent<HTMLElement>) => {
       const current = drag.current
       if (!current || current.id !== event.pointerId) return
       drag.current = null
-      if (!current.moved) return
+      if (!current.axis) return
       dragged.current = true
+      const a = current.axis
+      const value = rotation[a].get()
       // A flick carries on turning; it lands on whichever face it's nearest
       // once it would have slowed down.
       if (!reduceMotion && Math.abs(current.velocity) > SPIN_SPEED) {
         settle(
-          nearestFace(ry.get() + Math.sign(current.velocity) * SPIN_TURNS),
+          a,
+          nearest(a, value + Math.sign(current.velocity) * SPIN_TURNS),
           true
         )
         onSpin?.()
         return
       }
       const coast = reduceMotion ? 0 : current.velocity * 280
-      settle(nearestFace(ry.get() + coast))
+      settle(a, nearest(a, value + coast))
     },
     onPointerCancel: () => {
       drag.current = null
-      settle(nearestFace(ry.get()))
+      settle(axis, nearest(axis, rotation[axis].get()))
     },
     // The click a drag ends on would otherwise press the button.
     onClickCapture: (event: MouseEvent) => {
@@ -178,7 +229,7 @@ function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
     },
   }
 
-  return { rx, ry, back, flip, handlers }
+  return { rx, ry, axis, back, flip, handlers }
 }
 
 // Small on its page, so the transcript has room beside it.
@@ -201,7 +252,7 @@ export function VoiceMemoHero({ className }: { className?: string }) {
       // worth reporting for a decorative sound.
     })
   }
-  const { rx, ry, back, flip, handlers } = useTurn(STRAIGHT, {
+  const { rx, ry, axis, back, flip, handlers } = useTurn(STRAIGHT, {
     onSpin: () => play(maximizeSound),
   })
   const [recording, setRecording] = useState(false)
@@ -214,11 +265,11 @@ export function VoiceMemoHero({ className }: { className?: string }) {
   const nudge = (starting: boolean) => {
     if (reduceMotion) return
     const knock = { type: "spring", stiffness: 380, damping: 11 } as const
+    const nearest = (value: number) => Math.round(value / 180) * 180
     if (starting) {
-      animate(rx, STRAIGHT.x, { ...knock, velocity: -140 })
+      animate(rx, nearest(rx.get()), { ...knock, velocity: -140 })
     } else {
-      const face = Math.round((ry.get() - STRAIGHT.y) / 180) * 180 + STRAIGHT.y
-      animate(ry, face, { ...knock, velocity: 160 })
+      animate(ry, nearest(ry.get()), { ...knock, velocity: 160 })
     }
   }
 
@@ -282,7 +333,7 @@ export function VoiceMemoHero({ className }: { className?: string }) {
             layout={!reduceMotion}
             // Eases out of rest and into place, so it never lurches.
             transition={{ duration: 0.6, ease: [0.65, 0, 0.35, 1] }}
-            className="relative block aspect-[85/55] w-(--w) cursor-grab touch-pan-y [perspective:1400px] active:cursor-grabbing"
+            className="relative block aspect-[85/55] w-(--w) cursor-grab touch-none [perspective:1400px] active:cursor-grabbing"
             {...handlers}
           >
             <Shadow ry={ry} />
@@ -292,7 +343,13 @@ export function VoiceMemoHero({ className }: { className?: string }) {
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <Body rx={rx} ry={ry} rest={STRAIGHT} recording={recording} />
+              <Body
+                rx={rx}
+                ry={ry}
+                rest={STRAIGHT}
+                axis={axis}
+                recording={recording}
+              />
             </motion.span>
           </motion.span>
         }
@@ -396,11 +453,14 @@ function useSheen(
   rx: MotionValue<number>,
   ry: MotionValue<number>,
   rest: Pose,
-  offset: number
+  side: "front" | "back",
+  axis: Axis
 ) {
+  // The back faces the other way about the axis it's mounted on.
+  const turn = (a: Axis) => (side === "back" && a === axis ? 180 : 0)
   const angles = (x: number, y: number) => ({
-    across: Math.sin(((y - rest.y - offset) * Math.PI) / 180),
-    down: Math.sin(((x - rest.x) * Math.PI) / 180),
+    across: Math.sin(((y - rest.y - turn("y")) * Math.PI) / 180),
+    down: Math.sin(((x - rest.x - turn("x")) * Math.PI) / 180),
   })
   const x = useTransform([rx, ry], ([rotX, rotY]: number[]) => {
     const { across } = angles(rotX, rotY)
@@ -424,15 +484,18 @@ function Body({
   rx,
   ry,
   rest,
+  axis = "y",
   recording = false,
 }: {
   rx: MotionValue<number>
   ry: MotionValue<number>
   rest: Pose
+  /** The axis the back is mounted on; see `useTurn`. */
+  axis?: Axis
   recording?: boolean
 }) {
-  const frontSheen = useSheen(rx, ry, rest, 0)
-  const backSheen = useSheen(rx, ry, rest, 180)
+  const frontSheen = useSheen(rx, ry, rest, "front", axis)
+  const backSheen = useSheen(rx, ry, rest, "back", axis)
   // Which way the front faces, from the two rotations. backface-visibility
   // alone lets the back's filtered drawing ghost through mid-turn, so the
   // face turned away is hidden outright.
@@ -493,7 +556,7 @@ function Body({
       <motion.span
         className="absolute inset-0 [backface-visibility:hidden]"
         style={{
-          transform: "rotateY(180deg) translateZ(calc(var(--t) * 0.5 + 1px))",
+          transform: `rotate${axis.toUpperCase()}(180deg) translateZ(calc(var(--t) * 0.5 + 1px))`,
           opacity: back,
           ...backSheen,
         }}
