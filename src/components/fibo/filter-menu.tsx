@@ -315,20 +315,22 @@ function FilterMenu({
 
   // Scrolls only the list, where scrollIntoView would also scroll the page
   // to reach a menu that is partly off screen.
+  const activeId = active ? rowId(active) : ""
   React.useEffect(() => {
     const list = listRef.current
-    if (!active || !list) return
-    const row = list.querySelector(`[id="${CSS.escape(rowId(active))}"]`)
+    if (!activeId || !list) return
+    const row = list.querySelector(`[id="${CSS.escape(activeId)}"]`)
     if (!row) return
     const bounds = list.getBoundingClientRect()
     const target = row.getBoundingClientRect()
+    // A menu drawn inside a scaled element measures scaled on screen.
     const scale = bounds.height / list.offsetHeight || 1
     if (target.top < bounds.top) {
       list.scrollTop -= (bounds.top - target.top) / scale
     } else if (target.bottom > bounds.bottom) {
       list.scrollTop += (target.bottom - bounds.bottom) / scale
     }
-  })
+  }, [activeId])
 
   const reset = () => {
     setQuery("")
