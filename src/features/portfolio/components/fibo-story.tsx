@@ -70,7 +70,7 @@ function Chapter({
   after,
   children,
 }: {
-  title: string
+  title?: string
   /** Full width, under the copy. */
   after?: ReactNode
   children: ReactNode
@@ -81,7 +81,7 @@ function Chapter({
           brand's cards. */}
       <div className="grid items-start gap-6 sm:grid-cols-[1.618fr_1fr]">
         <div className="typeset typeset-description">
-          <h3>{title}</h3>
+          {title ? <h3>{title}</h3> : null}
           {children}
         </div>
       </div>
@@ -100,6 +100,19 @@ export function FiboStory() {
           <PanelTitleCopy id={ID} />
         </PanelTitle>
       </PanelHeader>
+
+      <Chapter>
+        <p>
+          For the past year I&apos;ve been studying the history of the golden
+          ratio, and whether it still holds up today as a blueprint for
+          proportional design. I wanted fibo&apos;s branding to tie in with my
+          personal brand, so I made what I&apos;ve learned its anchor.
+        </p>
+        <p>
+          That&apos;s where fibo, my pixel bunny mascot, comes in. Learn more
+          about his lore below.
+        </p>
+      </Chapter>
 
       <Chapter title="Where he comes from" after={<FiboFarm />}>
         <p>
