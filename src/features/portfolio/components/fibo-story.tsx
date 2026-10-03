@@ -107,7 +107,7 @@ export function FiboStory() {
         </p>
       </Chapter>
 
-      <Chapter title="Where he comes from" after={<FiboFarm />}>
+      <Chapter title="Where he comes from" aside={<FiboFarm />}>
         <p>
           fibo is named after Leonardo of Pisa, the Italian mathematician better
           known as Fibonacci. The nickname came centuries after him, short for{" "}
@@ -131,9 +131,9 @@ export function FiboStory() {
           named after Fibonacci in the 1870s.
         </p>
         <p>
-          Below, each row is a month and each rabbit is a pair. A brace joins a
-          pair to the baby pair it just had, and a single line follows a pair
-          still too young. Watch the first six months play out.
+          In the diagram, each row is a month and each rabbit is a pair. A brace
+          joins a pair to the baby pair it just had, and a single line follows a
+          pair still too young. Watch the first six months play out.
         </p>
       </Chapter>
 
