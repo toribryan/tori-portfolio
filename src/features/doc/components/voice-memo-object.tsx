@@ -464,7 +464,7 @@ function Face({
     sheen: `${id}-sheen`,
     clip: `${id}-clip`,
     edges: `${id}-edges`,
-    engrave: `${id}-engrave`,
+    raised: `${id}-raised`,
   }
   const { width, height, radius } = FACE
   const wordmark = "fibo"
@@ -538,45 +538,50 @@ function Face({
             style={{ stopColor: "var(--background)", stopOpacity: 0 }}
           />
         </linearGradient>
-        {/* Lettering cut into the face, lit from the top left: its floor
-            a shade darker, a shadow under the wall facing the light and a
-            bright ledge along the far one. */}
+        {/* The same raised rim for the small print on the back, at a scale
+            its thin strokes can carry. */}
         <filter
-          id={ids.engrave}
+          id={ids.raised}
           x="-10%"
           y="-30%"
           width="120%"
           height="160%"
           colorInterpolationFilters="sRGB"
         >
-          <feOffset in="SourceAlpha" dx="0.55" dy="0.65" result="down" />
-          <feOffset in="SourceAlpha" dx="-0.4" dy="-0.45" result="up" />
+          <feOffset in="SourceAlpha" dx="0.35" dy="0.4" result="down" />
           <feComposite
             in="SourceAlpha"
             in2="down"
             operator="out"
-            result="wall"
+            result="top"
           />
           <feComposite
-            in="SourceAlpha"
-            in2="up"
+            in="down"
+            in2="SourceAlpha"
             operator="out"
-            result="ledge"
+            result="under"
           />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.26 }}
-          />
-          <feComposite in2="SourceAlpha" operator="in" result="floor" />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.6 }}
-          />
-          <feComposite in2="wall" operator="in" result="shade" />
           <feFlood
             style={{ floodColor: "var(--background)", floodOpacity: 0.9 }}
           />
-          <feComposite in2="ledge" operator="in" result="lit" />
+          <feComposite in2="top" operator="in" result="lit" />
+          <feFlood
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.35 }}
+          />
+          <feComposite in2="under" operator="in" result="shade" />
+          <feGaussianBlur in="down" stdDeviation="0.5" result="soft" />
+          <feComposite
+            in="soft"
+            in2="SourceAlpha"
+            operator="out"
+            result="cast"
+          />
+          <feFlood
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.14 }}
+          />
+          <feComposite in2="cast" operator="in" result="glow" />
           <feMerge>
-            <feMergeNode in="floor" />
+            <feMergeNode in="glow" />
             <feMergeNode in="shade" />
             <feMergeNode in="lit" />
           </feMerge>
@@ -683,7 +688,7 @@ function Face({
         </text>
       ) : (
         // A magnet ring pressed into the back, lit from above: dark on its
-        // upper wall, bright on its lower one. Then the owner's name, engraved.
+        // upper wall, bright on its lower one. Then the owner's name, raised.
         <g fill="none" strokeWidth={1.4}>
           <circle
             cx={width / 2}
@@ -707,7 +712,7 @@ function Face({
             textAnchor="middle"
             stroke="none"
             fill="black"
-            filter={`url(#${ids.engrave})`}
+            filter={`url(#${ids.raised})`}
             className="font-sans font-semibold"
           >
             TORI BRYAN
