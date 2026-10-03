@@ -18,6 +18,17 @@ import {
   type MotionValue,
 } from "motion/react"
 
+import {
+  decodeAudioData,
+  playSound,
+  soundSource,
+} from "@/lib/soundcn/sound-engine"
+import type { SoundAsset } from "@/lib/soundcn/sound-types"
+import {
+  click8bitSound,
+  dropSound,
+  maximizeSound,
+} from "@/lib/soundcn/voice-memo"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/base/ui/button"
 import { VoiceMemo } from "@/components/fibo/voice-memo"
@@ -49,12 +60,20 @@ const QUICK = { duration: 0.25, ease: "easeOut" } as const
 // Sizes the device from the width it's given, and its edge from that.
 const SIZE = "[--w:min(62cqw,24rem)] [--t:calc(var(--w)*0.055)]"
 
+// Degrees a millisecond at release, about 1,800 pixels a second, past which
+// a flick spins the device through a few fast turns.
+const SPIN_SPEED = 1
+// Two and a half turns lands it on its other face.
+const SPIN_TURNS = 900
+const SPIN = { duration: 0.8, ease: [0.16, 1, 0.3, 1] } as const
+
 /**
  * Rotation for the device, with a drag that turns it, coasts when let go and
- * settles on whichever face is nearest. A drag never also counts as a press,
- * so the device can be a button underneath.
+ * settles on whichever face is nearest. A hard flick spins it instead, and
+ * calls `onSpin`. A drag never also counts as a press, so the device can be
+ * a button underneath.
  */
-function useTurn(rest: Pose) {
+function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
   const reduceMotion = useReducedMotion()
   const rx = useMotionValue(rest.x)
   const ry = useMotionValue(rest.y)
@@ -63,9 +82,9 @@ function useTurn(rest: Pose) {
   const nearestFace = (y: number) =>
     Math.round((y - rest.y) / 180) * 180 + rest.y
 
-  const settle = (target: number) => {
+  const settle = (target: number, spin = false) => {
     const transition = reduceMotion ? QUICK : SPRING
-    animate(ry, target, transition)
+    animate(ry, target, spin ? SPIN : transition)
     animate(rx, rest.x, transition)
     setBack(Math.abs(Math.round((target - rest.y) / 180)) % 2 === 1)
   }
@@ -132,6 +151,14 @@ function useTurn(rest: Pose) {
       dragged.current = true
       // A flick carries on turning; it lands on whichever face it's nearest
       // once it would have slowed down.
+      if (!reduceMotion && Math.abs(current.velocity) > SPIN_SPEED) {
+        settle(
+          nearestFace(ry.get() + Math.sign(current.velocity) * SPIN_TURNS),
+          true
+        )
+        onSpin?.()
+        return
+      }
       const coast = reduceMotion ? 0 : current.velocity * 280
       settle(nearestFace(ry.get() + coast))
     },
@@ -151,37 +178,6 @@ function useTurn(rest: Pose) {
   return { rx, ry, back, flip, handlers }
 }
 
-/*
- * Two soft notes as recording starts, rising, and the same two falling as it
- * stops, synthesized so there is nothing to load. They play from the press
- * itself, which is what lets a browser make sound at all.
- */
-let audio: AudioContext | null = null
-
-function chime(notes: number[]) {
-  audio ??= new AudioContext()
-  void audio.resume()
-  notes.forEach((frequency, index) => {
-    if (!audio) return
-    const start = audio.currentTime + index * 0.11
-    const osc = audio.createOscillator()
-    const gain = audio.createGain()
-    osc.type = "sine"
-    osc.frequency.setValueAtTime(frequency, start)
-    // A slow swell, so the note arrives rather than pings, then a long ring.
-    gain.gain.setValueAtTime(0.0001, start)
-    gain.gain.exponentialRampToValueAtTime(0.03, start + 0.03)
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.34)
-    osc.connect(gain).connect(audio.destination)
-    osc.start(start)
-    osc.stop(start + 0.36)
-  })
-}
-
-// A fifth apart and low enough to stay soft, A4 and E5.
-const START_NOTES = [440, 659.25]
-const STOP_NOTES = [659.25, 440]
-
 // Small on its page, so the transcript has room beside it.
 const SMALL = "[--w:min(44cqw,13rem)]"
 
@@ -193,9 +189,26 @@ const SMALL = "[--w:min(44cqw,13rem)]"
  * underneath instead.
  */
 export function VoiceMemoHero({ className }: { className?: string }) {
-  const { rx, ry, back, flip, handlers } = useTurn(STRAIGHT)
-  const [recording, setRecording] = useState(false)
   const reduceMotion = useReducedMotion()
+  // Quiet under reduced motion, like the site's other sounds.
+  const play = (sound: SoundAsset) => {
+    if (reduceMotion) return
+    playSound(soundSource(sound), { volume: 0.5 }).catch(() => {
+      // No audio output, or the browser hasn't allowed sound yet. Neither is
+      // worth reporting for a decorative sound.
+    })
+  }
+  const { rx, ry, back, flip, handlers } = useTurn(STRAIGHT, {
+    onSpin: () => play(maximizeSound),
+  })
+  const [recording, setRecording] = useState(false)
+
+  // Decoded ahead, so the first press sounds at once.
+  useEffect(() => {
+    for (const sound of [dropSound, click8bitSound, maximizeSound]) {
+      decodeAudioData(soundSource(sound)).catch(() => {})
+    }
+  }, [])
 
   return (
     <div
@@ -217,8 +230,7 @@ export function VoiceMemoHero({ className }: { className?: string }) {
         recording={recording}
         onRecordingChange={(next) => {
           setRecording(next)
-          // Quiet under reduced motion, like the site's other sounds.
-          if (!reduceMotion) chime(next ? START_NOTES : STOP_NOTES)
+          play(next ? dropSound : click8bitSound)
         }}
         side="bottom"
         // Device first, then the transcript: a column when narrow, and from
