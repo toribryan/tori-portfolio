@@ -14,6 +14,8 @@ import {
 } from "@/lib/rehype-code-block"
 import { cn } from "@/lib/utils"
 import { Code } from "@/components/base/ui/typography"
+import { SubmissionJourney } from "@/features/doc/components/submission-journey"
+import { VendorCreditDemo } from "@/features/doc/components/vendor-credit-demo"
 
 import { Callout } from "./callout"
 import { Heading } from "./heading"
@@ -22,9 +24,12 @@ import { mdxCodeBlockComponents } from "./mdx-code-block"
 import { Compare } from "./mdx-compare"
 import { Embed } from "./mdx-embed"
 import { Figure } from "./mdx-figure"
+import { ImageCycle } from "./mdx-image-cycle"
+import { ImagePan } from "./mdx-image-pan"
 import { InboxRegions } from "./mdx-inbox-regions"
 import { IsoCard, IsoCards } from "./mdx-iso-cards"
 import { LinkButton } from "./mdx-link-button"
+import { PageGrid } from "./mdx-page-grid"
 import { Pipeline, Stage } from "./mdx-pipeline"
 import { PipelineHero } from "./mdx-pipeline-hero"
 import {
@@ -41,10 +46,12 @@ import {
   TwoJobs,
 } from "./mdx-review-artifacts"
 import { SkillCommandsVisual } from "./mdx-skill-commands"
+import { StepTransition } from "./mdx-step-transition"
 import { StoryEmbed } from "./mdx-story-embed"
 import { Tech } from "./mdx-tech"
 import { ToolLabel } from "./mdx-tool-label"
 import { Video } from "./mdx-video"
+import { WhoStepDemo } from "./mdx-who-step-demo"
 
 const components: MDXRemoteProps["components"] = {
   h1: (props: React.ComponentProps<"h1">) => <Heading as="h1" {...props} />,
@@ -76,18 +83,25 @@ const components: MDXRemoteProps["components"] = {
   Embed,
   Compare,
   Figure,
+  ImageCycle,
+  ImagePan,
   InboxRegions,
   IsoCard,
   IsoCards,
+  PageGrid,
   Pipeline,
   PipelineHero,
   Stage,
   SkillCommandsVisual,
+  StepTransition,
+  SubmissionJourney,
   StoryEmbed,
   LinkButton,
   Tech,
   ToolLabel,
+  VendorCreditDemo,
   Video,
+  WhoStepDemo,
 
   AtomicDesign,
   BriefedJourneys,

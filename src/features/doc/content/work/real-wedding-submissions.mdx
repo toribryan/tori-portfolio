@@ -1,0 +1,262 @@
+---
+title: "Real Wedding Submissions"
+description: "A submission wizard that replaces a fillable PDF, a shared inbox and a color-coded spreadsheet for Iron Diamond Media's seven bridal publications."
+# QUESTION: the claim should be the one thing you believe this project proves. Draft below is a placeholder built from the code, rewrite in your words.
+claim: "The editors had already written the form. The build just wasn't listening to them yet."
+image: "/cover-real-wedding-submissions.webp"
+# Set order against the other work entries when this moves out of drafts.
+order: 7
+createdAt: "2026-10-02"
+updatedAt: "2026-10-02"
+company: "Iron Diamond Media"
+reach: "Seven sister bridal publications"
+role: "Product design + front-end build"
+type: "Product Redesign"
+period: "Q3 2026"
+# QUESTION: is the wedding-submission-form flag open in production? Add status: "Shipped" or "Behind a feature flag".
+skills:
+  - "Research"
+  - "FigJam"
+  - "UX Writing"
+  - "React"
+  - "TypeScript"
+  - "Base UI"
+  - "View Transitions"
+  - "Claude Code"
+problem: "Real weddings reached the magazine through a fillable PDF downloaded from SharePoint, emailed to a shared inbox, and tracked in a color-coded Excel sheet. Staff unpacked gallery links by hand and chased submitters for whatever was missing. A national site launching in early 2027 would multiply the volume."
+task: "Turn the engineer's nine-step shell and data requirements into a submission flow that collects what editorial actually needs, in words the editors wrote, on the shared design system."
+process: "Audited the editors' feedback thread against the shipped shell, wrote a copy deck from it, mapped three submitter journeys in FigJam, prototyped the revised flow at low fidelity with AI, then swapped in the design system and built the front end with coding agents."
+# QUESTION: outcome. Live or not? Any submissions, editor reactions, or fewer follow-ups? Leave this out rather than guess.
+outcome: ""
+---
+
+<Pipeline>
+  <Stage
+    label="Editors + competitors"
+    detail="Feedback thread, competitor forms"
+    mark="users"
+  />
+  <Stage
+    label="Redlines"
+    detail="Every ask checked against the build"
+    mark="search"
+  />
+  <Stage
+    label="Journeys"
+    detail="Three submitter paths in FigJam"
+    mark="figma"
+  />
+  <Stage
+    label="Lo-fi prototype"
+    detail="Revised flow, prototyped with AI"
+    mark="claude"
+  />
+  <Stage
+    label="Design system"
+    detail="Built on the shared components"
+    mark="component"
+  />
+</Pipeline>
+
+<Figure
+  src="/case-studies/real-wedding-hero.webp"
+  alt="The event step, titled Amara & Diego’s Celebration: celebration type Wedding, date, number of guests, venue The Saguaro Room, and city and state filled in from the venue"
+  caption="The event step titles itself with the couple's names once the form knows them, and a listed venue fills in its own city."
+/>
+
+## Where this starts
+
+Iron Diamond Media publishes seven bridal magazines, and every real wedding
+they print starts as a submission. Before this, that meant a fillable PDF
+from SharePoint, emailed to a shared inbox. Staff opened gallery links by
+hand, wrote back for whatever was missing, and tracked every submission in a
+color-coded Excel sheet. With a national site launching in early 2027, the
+number of submissions was about to grow past what that process could handle.
+
+{/* QUESTION: who submits most often (photographers, planners, couples) and what made this harder than "build a multi-step form"? One or two sentences in your words. */}
+
+{/* QUESTION: confirm the role line. "I researched and designed the flow and built the front end. The engineer scoped the data model, split my branch into reviewable PRs, and owns the backend." */}
+
+## Reading the editors against the build
+
+{/* QUESTION: confirm you're comfortable naming Lara and Megan, or keep them as roles. */}
+
+<Numbered>
+
+<Item title="Galleries.">
+  Both editors asked for "Dropbox or other photo gallery" links. The validator
+  only accepted dropbox.com, so a Pixieset or Pic-Time gallery failed with
+  "Enter a valid Dropbox link."
+</Item>
+<Item title="Instagram.">
+  The editors settled on mandatory, with "N/A" as the escape hatch. The handle
+  pattern rejected N/A.
+</Item>
+<Item title="Addresses.">
+  The editors wanted the submitter's address required and the couple's optional,
+  since they collect it during factcheck. The build had it backwards.
+</Item>
+
+</Numbered>
+
+<ImageCycle
+  srcs="/case-studies/real-wedding-photos-default.webp, /case-studies/real-wedding-photos-rejected.webp"
+  alt="The Photos step, empty and then with an Instagram link rejected: an inline error under the gallery field and a red notice listing the galleries that work"
+  caption="The Photos step as it shipped. Any downloadable gallery passes; a social link gets an inline error and a notice naming the galleries that work."
+/>
+
+{/* SCREENSHOT: redlines / Capture: the top of real-wed-form-redlines.html, the four counts and the first conflict card / Specs: 1440px, crop to the counts plus one conflict / Tip: export from the HTML file, not Figma */}
+
+{/* Section: Competitors (hidden until written) */}
+
+{/* QUESTION: which submission forms did you study (The Knot, Junebug, Style Me Pretty, others)? What did you take, and what did you decide against? This section is cut if you skip it. */}
+
+{/* Section: Mapping the journeys (hidden until written) */}
+
+{/* QUESTION: what were Journeys A, B and C in FigJam, and what did mapping them show you? */}
+
+{/* SCREENSHOT: journeys / Capture: FigJam board with Journeys A–C side by side / Specs: crop to the three lanes, readable at 1200px wide */}
+
+## The flow
+
+<SubmissionJourney caption="Each answer to the first question gets its own step order, and all four meet at review. Pink marks the step that differs from the vendor's order." />
+
+<ImagePan
+  src="/case-studies/real-wedding-flow.webp"
+  ratio="6/5"
+  duration="36"
+  alt="Every step of the wizard on mobile in a vendor's order: who is submitting, your info, the couple, the event, photographer, photos, the story, vendor credits and review"
+  caption="Every step on mobile, in the order a vendor sees them."
+/>
+
+The publications step was the one I removed. A submission belongs to the
+publication whose site you started on, so the form reads the brand from the
+host instead of asking for it.
+
+"The photographer" option became "The vendor". A vendor picks their role
+inside the same card, because the magazine mails copies to the submitter, the
+photographer and the couple, and it needs to know which one you are. A
+photographer gets their own step first. Everyone else gives their details,
+then names the photographer.
+
+<WhoStepDemo caption="Choosing The vendor opens the role question inside the same card." />
+
+<Figure
+  src="/case-studies/real-wedding-widths.webp"
+  alt="The your-info step at 390 pixels, with every field stacked, next to the same step from 768 up, where first and last name, and city and state, sit side by side"
+  caption="Paired fields stack on a phone and sit side by side once there's room."
+/>
+
+Vendor credits are sorted by category: venue, planner, photographer,
+videographer and florist come pre-filled, and each one has its own search.
+Adding a category opens the picker with focus already in it, and choosing a
+category opens its search. If nothing is listed under that category, the
+form goes straight to the fields for entering a vendor by hand.
+
+<VendorCreditDemo caption="A listed venue picked from the venue search, landing on the wizard's 480ms credit tempo." />
+
+The review step the shell never had shows each section on its own row with
+an Edit link, says how many things still need attention, and ends on the
+consent line editorial required: "I confirm everyone named here has agreed
+to publication."
+
+<ImageCycle
+  srcs="/case-studies/real-wedding-review-attention.webp, /case-studies/real-wedding-review-complete.webp"
+  alt="The review step, first with two sections flagged and consent missing, then complete"
+  caption="Review with two sections still to finish and consent missing, then complete."
+/>
+
+{/* QUESTION: is there a decision here that felt risky at the time? */}
+
+## Every page
+
+Each step as it shipped, at desktop width with the header and footer in
+place, in the order a vendor sees them. Open any page to flip through them all.
+
+<PageGrid
+  labels="Who, You, Couple, Event, Photographer, Photos, Story, Vendors, Review"
+  srcs="/case-studies/real-wedding-page-who.webp, /case-studies/real-wedding-page-you.webp, /case-studies/real-wedding-page-couple.webp, /case-studies/real-wedding-page-event.webp, /case-studies/real-wedding-page-photographer.webp, /case-studies/real-wedding-page-photos.webp, /case-studies/real-wedding-page-story.webp, /case-studies/real-wedding-page-vendors.webp, /case-studies/real-wedding-page-review.webp"
+  fulls="/case-studies/real-wedding-page-who-2x.webp, /case-studies/real-wedding-page-you-2x.webp, /case-studies/real-wedding-page-couple-2x.webp, /case-studies/real-wedding-page-event-2x.webp, /case-studies/real-wedding-page-photographer-2x.webp, /case-studies/real-wedding-page-photos-2x.webp, /case-studies/real-wedding-page-story-2x.webp, /case-studies/real-wedding-page-vendors-2x.webp, /case-studies/real-wedding-page-review-2x.webp"
+  alt="The real wedding submission wizard at desktop width"
+/>
+
+## How it moves
+
+Each step change runs as a React `<ViewTransition>` with forward and back
+types. The step that's leaving fades out fast and the next one fades in more
+slowly, so the old content gets out of the way before the new content
+arrives.
+
+<StepTransition
+  srcs="/case-studies/real-wedding-seq-1.webp, /case-studies/real-wedding-seq-2.webp, /case-studies/real-wedding-seq-3.webp"
+  footers="/case-studies/real-wedding-seq-1-footer.webp, /case-studies/real-wedding-seq-2-footer.webp, /case-studies/real-wedding-seq-3-footer.webp"
+  alt="Three mobile steps, who is submitting, your info and the couple, changing with the wizard's step motion while the footer stays put"
+  caption="The step change on the shipped tokens: 150ms out, 210ms in, a 60px slide. Back runs it in reverse."
+/>
+
+```css
+--motion-exit-duration: 150ms;
+--motion-enter-duration: 210ms;
+--motion-move-duration: 400ms;
+--motion-credit-duration: 480ms;
+--motion-credit-ease: cubic-bezier(0.22, 1, 0.36, 1);
+```
+
+Loading states are shaped like the step they stand in for, and the app-wide
+skeleton changed from a pulse to a sheen. With reduced motion on, every
+transition runs at zero duration, the sheen stops, and scrolling a new
+vendor category into view jumps there instantly.
+
+{/* QUESTION: craft. What are you proudest of, and what took disproportionate effort that nobody will notice? If it's one of the details above, say which and why, and this section gets rebuilt around it. */}
+
+## How I worked
+
+I researched competitors and talked with the digital editors, then used
+what I learned to map the journeys in FigJam. I used AI to prototype a
+low-fidelity version of the revised flow. In a second pass I swapped the
+design system in for everything, and my coding agents helped implement the
+design on it.
+
+{/* QUESTION: name the tools (Claude Code? which prototype tool?), and how you checked the agents' code: tests, Storybook, manual QA? */}
+
+## Handing it to engineering
+
+<Figure
+  src="/case-studies/real-wedding-comments.webp"
+  full="/case-studies/real-wedding-comments-2x.webp"
+  alt="The Design Update canvas in Figma with Spencer's comments pinned on it: #8 on the vendor credits screen, asking to show the default vendor categories, and #9 on the confirmation screen, asking Back Home?"
+  caption="Spencer's comments on the Design Update canvas in Figma."
+/>
+
+My branch came to 73 files. The engineer split it into a stack of eleven
+PRs, each under about a thousand lines and reviewable on its own, and merged
+it in order. The engineer refactored it afterward: the step model became
+explicit per-persona orders, the photographer step became a single search
+with inline email and Instagram fields, and the image rail and some
+"(optional)" labels came back.
+
+<Figure
+  src="/case-studies/real-wedding-before-after.webp"
+  alt="Two versions of the first step side by side: on the left the Design Update round in Figma with square checkboxes, on the right the shipped step with bordered choice cards and radios"
+  caption="The same step in the Design Update round and as it shipped."
+/>
+
+{/* QUESTION: how do you want to frame the post-handoff changes? A fair trade, a disagreement, or leave it out? This section stays factual until you answer. */}
+
+{/* Section: What I explored and killed (hidden until written) */}
+
+{/* QUESTION: what from the lo-fi prototype or the journeys didn't survive, and why? Cut if skipped. */}
+
+{/* Section: Where it stands (hidden until written) */}
+
+{/* QUESTION: outcome. Is the flag open? Submissions received, editor reactions, fewer follow-ups? No capture events exist in the flow, so per-step drop-off can't be measured. Say "too early to measure" only if that's your call. */}
+
+{/* Section: What I'd do differently (hidden until written) */}
+
+{/* QUESTION: honest trade-offs or shortcuts. Cut if skipped. */}
+
+{/* Section: What this changed (hidden until written) */}
+
+{/* QUESTION: how did this project change how you work? Cut if skipped. */}
+
+{/* QUESTION: credits. Name the engineer and editors, or keep roles? */}
