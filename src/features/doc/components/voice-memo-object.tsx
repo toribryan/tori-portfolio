@@ -233,8 +233,9 @@ function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
   return { rx, ry, axis, back, flip, handlers }
 }
 
-// Small on its page, so the transcript has room beside it.
-const SMALL = "[--w:min(44cqw,13rem)]"
+// Small on its page, so the transcript has room beside it. On a phone the
+// transcript opens underneath, so the device takes most of the width.
+const SMALL = "[--w:min(64vw,17rem)] sm:[--w:min(44cqw,13rem)]"
 
 /**
  * The device on its page: a record button you can also pick up. Press it and
