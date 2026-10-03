@@ -715,13 +715,13 @@ function Pitch({
           className="fibo-tile m-0 mb-[max(1.5rem,2.4cqw)] max-w-[36ch] text-[clamp(1rem,1.9cqw,1.25rem)] leading-normal text-pretty text-muted-foreground"
           style={{ animationDelay: "0.2s" }}
         >
-          A library of parts for{" "}
+          A library of{" "}
           <strong className="font-normal text-foreground">
-            experimental projects
+            special components
           </strong>{" "}
           and{" "}
           <strong className="font-normal text-foreground">
-            special components
+            experimental projects
           </strong>{" "}
           that anyone can use.
         </p>
