@@ -67,7 +67,8 @@ and `onDismissed` once it's gone, and it tidies each settled phrase
 with a custom device the button draws no focus ring, so the device draws
 its own. The Voice memo project page (`/work/voice-memo`) and its bare
 `/voice-memo` page use all three for the 3D device, in
-`features/doc/components/voice-memo-object.tsx`. It isn't in
+`features/doc/components/voice-memo-hero.tsx` (the device itself, which the
+card cover also draws, is in `voice-memo-device.tsx`). It isn't in
 `fibo-niche.ts`, so it has no `/components` doc yet. Put
 these back after reinstalling; fibo's own filter menu has since gained a
 `container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
