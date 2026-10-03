@@ -50,8 +50,8 @@ screen readers hear.
 
 | Prop                | Type                                                           | Default             | Description                                                                            |
 | ------------------- | -------------------------------------------------------------- | ------------------- | -------------------------------------------------------------------------------------- |
-| `variant`           | `"inline" \| "floating"`                                       | `"inline"`          | Pills under the content, or a bar pinned to a viewport corner.                         |
-| `position`          | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left"` | `"bottom-right"`    | Viewport corner. Applies to the floating variant only.                                 |
+| `type`              | `"inline" \| "floating"`                                       | `"inline"`          | Pills under the content, or a bar pinned to a viewport corner.                         |
+| `position`          | `"bottom-right" \| "bottom-left" \| "top-right" \| "top-left"` | `"bottom-right"`    | Viewport corner. Applies to the floating type only.                                    |
 | `reactions`         | `Reaction[]`                                                   |                     | The reactions on the item. Pass it to control the state yourself.                      |
 | `defaultReactions`  | `Reaction[]`                                                   | `[]`                | The starting reactions when uncontrolled.                                              |
 | `choices`           | `Reaction[]`                                                   |                     | What the picker offers. Defaults to six common reactions plus any already on the item. |
@@ -111,7 +111,7 @@ particles               reactions-particles     (on the body, after a burst)
       when: "Always.",
     },
     {
-      attribute: "data-variant",
+      attribute: "data-type",
       element: "The root",
       when: (
         <>
@@ -256,7 +256,7 @@ the burst rises from the bar.
 
 ```tsx
 <Reactions
-  variant="floating"
+  type="floating"
   position="bottom-right"
   defaultReactions={reactions}
 />

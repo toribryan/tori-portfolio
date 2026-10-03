@@ -17,7 +17,7 @@ import {
 } from "./reactions-data"
 
 const base = {
-  variant: "inline",
+  type: "inline",
   defaultReactions: SEEDED,
   showCounts: true,
   particles: 7,
@@ -58,7 +58,7 @@ export function Floating() {
             scrolls, ready whenever the reader is.
           </p>
         </article>
-        <Reactions {...base} variant="floating" />
+        <Reactions {...base} type="floating" />
       </div>
     </div>
   )

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeftIcon } from "lucide-react"
 
-import { VoiceMemoHero } from "@/features/doc/components/voice-memo-object"
+import { VoiceMemoHero } from "@/features/doc/components/voice-memo-hero"
 
 /*
  * The voice memo device on its own, with none of the site around it, for

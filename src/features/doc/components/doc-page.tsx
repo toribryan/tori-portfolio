@@ -26,7 +26,8 @@ import {
 } from "@/features/doc/data/documents"
 import type { Doc } from "@/features/doc/types/document"
 
-import { DOC_COVERS, DOC_HEROES } from "./doc-covers"
+import { DOC_COVERS } from "./doc-covers"
+import { DOC_HEROES } from "./doc-heroes"
 import {
   Item,
   Numbered,

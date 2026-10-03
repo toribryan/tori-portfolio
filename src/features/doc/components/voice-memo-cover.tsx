@@ -3,7 +3,7 @@
 import { useRef } from "react"
 
 import { useCoverSteps } from "./use-cover-steps"
-import { VoiceMemoObject } from "./voice-memo-object"
+import { VoiceMemoObject } from "./voice-memo-device"
 
 /** At rest, then turned over to its back. */
 const STEP_AT = [0, 250]

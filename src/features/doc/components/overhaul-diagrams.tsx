@@ -33,7 +33,7 @@ function Wall({
       <header className="flex items-baseline justify-between gap-4">
         <h3 className="text-sm font-medium text-foreground">{label}</h3>
         <p className="font-mono text-xs text-muted-foreground tabular-nums">
-          {total.toLocaleString()} → {kept}
+          {total.toLocaleString("en-US")} → {kept}
         </p>
       </header>
       <div
@@ -181,7 +181,7 @@ export function SwitchSprawl() {
             2<sup>{on}</sup>
           </p>
           <p className="font-heading text-5xl leading-none font-medium text-foreground tabular-nums">
-            {(2 ** on).toLocaleString()}
+            {(2 ** on).toLocaleString("en-US")}
           </p>
           <p className="mt-1 text-sm text-muted-foreground">possible cards</p>
         </div>

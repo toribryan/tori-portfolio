@@ -48,7 +48,9 @@ scrolling inside the menu so opening it never scrolls the page; the home
 page cover needs both. `token-flow.tsx` carries an `orientation` prop so the
 Design System Overhaul card cover can stack its tiers at any width. `chapter-scrubber.tsx` fits its preview to the screen: on a
 narrow one it opens on the side with more room and narrows to fit, and it
-closes once the rail scrolls out of view. `command-menu.tsx` has a `modal` prop:
+closes once the rail scrolls out of view. It also keeps `preview="none"`,
+which fibo dropped, for a rail with no preview at all; the home page cover
+and its doc use it. `command-menu.tsx` has a `modal` prop:
 `false` opens it without locking the page's scroll or moving focus, which the
 home page cover needs, and then opening an item's page doesn't pull focus
 into it either (focusing scrolls the page to the menu, which dropped the
@@ -65,7 +67,8 @@ and `onDismissed` once it's gone, and it tidies each settled phrase
 with a custom device the button draws no focus ring, so the device draws
 its own. The Voice memo project page (`/work/voice-memo`) and its bare
 `/voice-memo` page use all three for the 3D device, in
-`features/doc/components/voice-memo-object.tsx`. It isn't in
+`features/doc/components/voice-memo-hero.tsx` (the device itself, which the
+card cover also draws, is in `voice-memo-device.tsx`). It isn't in
 `fibo-niche.ts`, so it has no `/components` doc yet. Put
 these back after reinstalling; fibo's own filter menu has since gained a
 `container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
