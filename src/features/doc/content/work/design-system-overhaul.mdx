@@ -236,6 +236,17 @@ engineers get the same freedom in code.
 
 <SlotComposition />
 
+Slots also kept the parts consistent. Each slot lists its preferred parts, the
+components it accepts, and anything else gets flagged. A modal's body takes
+text, media or an input; its footer takes a set of actions or a single button.
+The old modal did the same job with 22 on/off options, each named by whoever
+added it.
+
+<Video
+  src="/case-studies/ds-overhaul-slots-vs-booleans.mp4"
+  caption="The same modal built both ways in Figma. Before, every part is an option to switch on; after, each slot offers only its preferred parts."
+/>
+
 ## Rollout, one product at a time
 
 Product surfaces moved to the new system one at a time, and product work went
