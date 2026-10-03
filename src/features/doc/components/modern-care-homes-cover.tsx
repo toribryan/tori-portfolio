@@ -7,8 +7,6 @@ import { ScaledStage } from "@/features/portfolio/components/components/covers"
 
 import { CoverVideo } from "./cover-video"
 
-const PLATE = "#0f172a"
-
 /** The recordings are 440 by 960, drawn here at a phone's width on the stage. */
 const SCREEN_WIDTH = 124
 const SCREEN_HEIGHT = (SCREEN_WIDTH * 960) / 440
@@ -35,7 +33,7 @@ const PHONES = [
  */
 export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
   return (
-    <div className="absolute inset-0" style={{ background: PLATE }}>
+    <div className="absolute inset-0 bg-[color-mix(in_oklab,var(--muted)_60%,var(--background))]">
       <ScaledStage width={440} zoom>
         <div className="relative h-full">
           {PHONES.map(({ poster, src, start, className }) => (
