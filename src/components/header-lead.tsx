@@ -28,7 +28,7 @@ export function HeaderLead({ children }: { children: React.ReactNode }) {
 
   return (
     <span
-      className="pl-3 font-mono text-xs text-muted-foreground select-none"
+      className="font-mono text-xs text-muted-foreground select-none"
       aria-hidden
     >
       Fig. 1.
