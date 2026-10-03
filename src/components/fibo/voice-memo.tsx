@@ -41,7 +41,7 @@ type VoiceMemoProps = Omit<
   recording?: boolean
   /** Whether an uncontrolled device starts listening. */
   defaultRecording?: boolean
-  /** Called when the device is pressed to start or stop. */
+  /** Called when the device is pressed to start or stop, and with false when transcription fails. */
   onRecordingChange?: (recording: boolean) => void
   /** The finished text so far, when you transcribe with your own service. The browser's recogniser stays off. */
   transcript?: string
@@ -270,7 +270,7 @@ function VoiceMemo({
   const finishClosing = () => {
     // Focus was on the close button, which is going; the device keeps it.
     if (panelRef.current?.contains(document.activeElement))
-      deviceRef.current?.focus()
+      deviceRef.current?.focus({ preventScroll: true })
     setClosing(false)
     setDismissed(true)
     onDismissed?.()
@@ -300,12 +300,6 @@ function VoiceMemo({
     recording ||
     (!dismissed && (memo !== null || transcript !== "" || error !== ""))
 
-  // The latest text, for handlers that outlive the render they were made in.
-  const latest = React.useRef({ transcript, interim })
-  React.useEffect(() => {
-    latest.current = { transcript, interim }
-  })
-
   const settle = React.useEffectEvent((text: string) => {
     setHeard(text)
     onTranscriptChange?.(text)
@@ -318,54 +312,84 @@ function VoiceMemo({
     () => performance.now() - started.current.at,
     []
   )
+  // Set when the recogniser gives up, so that stop hands back no memo.
+  const failed = React.useRef(false)
+
+  const begin = React.useEffectEvent(() => {
+    segments.current = []
+    started.current = { at: performance.now(), date: new Date() }
+    failed.current = false
+    setMemo(null)
+    setHeard("")
+    setGuess("")
+    setFailure("")
+    setDismissed(false)
+    setClosing(false)
+    setAnnouncement("Listening")
+  })
+
+  const finish = React.useEffectEvent(() => {
+    setGuess("")
+    if (failed.current) return
+    // Whatever was still being worked out is the best guess there is.
+    const final = join(transcript, interim)
+    if (!external && interim) settle(final)
+    setAnnouncement(
+      final
+        ? `Transcript ready, ${countWords(final)} words`
+        : "Stopped, nothing heard"
+    )
+    // Text the phrases don't cover, from your own service or a last guess,
+    // goes in as one more phrase.
+    const covered = join(...segments.current.map((s) => s.text))
+    const rest = final.startsWith(covered)
+      ? final.slice(covered.length).trim()
+      : final
+    const all = final.startsWith(covered) ? [...segments.current] : []
+    if (rest) all.push({ at: external ? undefined : elapsed(), text: rest })
+    const base = {
+      title,
+      transcript: final,
+      segments: all,
+      startedAt: started.current.date,
+      duration: elapsed(),
+    }
+    const result: VoiceMemoResult = {
+      ...base,
+      markdown: transcriptToMarkdown(base, lang),
+      filename: memoFilename(title, base.startedAt),
+    }
+    setMemo(result)
+    onComplete?.(final, result)
+  })
+
+  // Starts and stops a session on each change of the resolved value, so a
+  // device switched on by `defaultRecording` or by its parent gets the same
+  // session as one that's pressed. A layout effect, so the session has begun
+  // before the recogniser's effect starts listening.
+  const previous = React.useRef(false)
+  React.useLayoutEffect(() => {
+    if (recording === previous.current) return
+    previous.current = recording
+    // The change is the event here: a session's state resets, or its memo
+    // is made and handed to onComplete, as one step.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (recording) begin()
+    else finish()
+  }, [recording])
 
   const setRecording = (next: boolean) => {
     if (recordingProp === undefined) setUncontrolled(next)
     onRecordingChange?.(next)
-    if (next) {
-      segments.current = []
-      started.current = { at: performance.now(), date: new Date() }
-      setMemo(null)
-      setHeard("")
-      setGuess("")
-      setFailure("")
-      setDismissed(false)
-      setClosing(false)
-      setAnnouncement("Listening")
-    } else {
-      // Whatever was still being worked out is the best guess there is.
-      const final = join(latest.current.transcript, latest.current.interim)
-      if (!external && latest.current.interim) settle(final)
-      setGuess("")
-      setAnnouncement(
-        final
-          ? `Transcript ready, ${countWords(final)} words`
-          : "Stopped, nothing heard"
-      )
-      // Text the phrases don't cover, from your own service or a last guess,
-      // goes in as one more phrase.
-      const covered = join(...segments.current.map((s) => s.text))
-      const rest = final.startsWith(covered)
-        ? final.slice(covered.length).trim()
-        : final
-      const all = final.startsWith(covered) ? [...segments.current] : []
-      if (rest) all.push({ at: external ? undefined : elapsed(), text: rest })
-      const base = {
-        title,
-        transcript: final,
-        segments: all,
-        startedAt: started.current.date,
-        duration: elapsed(),
-      }
-      const result: VoiceMemoResult = {
-        ...base,
-        markdown: transcriptToMarkdown(base, lang),
-        filename: memoFilename(title, base.startedAt),
-      }
-      setMemo(result)
-      onComplete?.(final, result)
-    }
   }
+
+  // A recogniser that can't go on switches the device off, and its message
+  // stays in place of a memo.
+  const halt = React.useEffectEvent((message: string) => {
+    failed.current = true
+    setFailure(message)
+    setRecording(false)
+  })
 
   // The browser's recogniser, unless the text comes from elsewhere.
   React.useEffect(() => {
@@ -393,7 +417,7 @@ function VoiceMemo({
     recogniser.onerror = (event) => {
       if (event.error === "no-speech" || event.error === "aborted") return
       stopped = true
-      setFailure(
+      halt(
         event.error === "not-allowed" || event.error === "service-not-allowed"
           ? "Allow the microphone to transcribe."
           : event.error === "audio-capture"
@@ -406,7 +430,13 @@ function VoiceMemo({
     // Recognisers end on their own after a silence; a device that's still
     // switched on keeps listening.
     recogniser.onend = () => {
-      if (!stopped) recogniser.start()
+      if (stopped) return
+      try {
+        recogniser.start()
+      } catch {
+        stopped = true
+        halt("Transcription stopped. Press the device to try again.")
+      }
     }
     recogniser.start()
     // Aborted rather than stopped: a stop sends one last result after
