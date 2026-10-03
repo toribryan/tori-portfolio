@@ -163,24 +163,24 @@ function chime(notes: number[]) {
   void audio.resume()
   notes.forEach((frequency, index) => {
     if (!audio) return
-    const start = audio.currentTime + index * 0.09
+    const start = audio.currentTime + index * 0.11
     const osc = audio.createOscillator()
     const gain = audio.createGain()
     osc.type = "sine"
     osc.frequency.setValueAtTime(frequency, start)
-    // A quick swell, so the note starts without a click, then a ring out.
+    // A slow swell, so the note arrives rather than pings, then a long ring.
     gain.gain.setValueAtTime(0.0001, start)
-    gain.gain.exponentialRampToValueAtTime(0.08, start + 0.012)
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22)
+    gain.gain.exponentialRampToValueAtTime(0.03, start + 0.03)
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.34)
     osc.connect(gain).connect(audio.destination)
     osc.start(start)
-    osc.stop(start + 0.24)
+    osc.stop(start + 0.36)
   })
 }
 
-// A fifth apart, E5 and B5.
-const START_NOTES = [659.25, 987.77]
-const STOP_NOTES = [987.77, 659.25]
+// A fifth apart and low enough to stay soft, A4 and E5.
+const START_NOTES = [440, 659.25]
+const STOP_NOTES = [659.25, 440]
 
 // Small on its page, so the transcript has room beside it.
 const SMALL = "[--w:min(44cqw,13rem)]"
