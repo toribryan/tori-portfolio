@@ -17,6 +17,7 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react"
+import { toast } from "sonner"
 
 import {
   decodeAudioData,
@@ -232,6 +233,7 @@ export function VoiceMemoHero({ className }: { className?: string }) {
           setRecording(next)
           play(next ? dropSound : click8bitSound)
         }}
+        onCopy={() => toast.success("Transcript copied")}
         side="bottom"
         // Device first, then the transcript: a column when narrow, and from
         // @xl a row run right to left, so the transcript opens on the left.
@@ -396,6 +398,14 @@ function Body({
           />
         )
       })}
+      {/* The record button's focus ring, drawn on the device rather than
+          the button around it, so it floats, turns and flips with the metal
+          instead of staying behind as a box. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[7%/11%] outline-2 outline-offset-4 outline-transparent transition-[outline-color] duration-150 group-focus-visible/device:outline-ring"
+        style={{ transform: "translateZ(calc(var(--t) * 0.5 + 2px))" }}
+      />
       <motion.span
         className="absolute inset-0 [backface-visibility:hidden]"
         style={{

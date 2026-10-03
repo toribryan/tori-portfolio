@@ -65,6 +65,8 @@ type VoiceMemoProps = Omit<
   device?: React.ReactNode
   /** Classes for the transcript, to place it when `device` changes the layout. */
   panelClassName?: string
+  /** Called once the transcript is on the clipboard, such as to show a toast. */
+  onCopy?: (transcript: string) => void
 }
 
 const voiceMemoVariants = cva(
@@ -211,6 +213,7 @@ function VoiceMemo({
   size = "default",
   device,
   panelClassName,
+  onCopy,
   className,
   ...props
 }: VoiceMemoProps) {
@@ -440,7 +443,7 @@ function VoiceMemo({
         className={
           device === undefined
             ? voiceMemoVariants({ size })
-            : "group/device relative block rounded-2xl outline-none select-none focus-visible:ring-[3px] focus-visible:ring-ring-subtle"
+            : "group/device relative block outline-none select-none"
         }
       >
         {device ?? <Device wordmark={wordmark} recording={recording} />}
@@ -499,7 +502,10 @@ function VoiceMemo({
                     onClick={() => {
                       void navigator.clipboard
                         ?.writeText(transcript)
-                        .then(() => setCopied(true))
+                        .then(() => {
+                          setCopied(true)
+                          onCopy?.(transcript)
+                        })
                     }}
                   >
                     {copied ? <CheckIcon /> : <CopyIcon />}

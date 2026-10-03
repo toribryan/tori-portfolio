@@ -56,8 +56,10 @@ command menu doc mid-page on load). Its preview pane also shows by the dialog's 
 (`@xl/command-menu`) rather than the viewport's, so the pane stays in the
 scaled cover on a phone. `voice-memo.tsx` has a `device` prop that puts
 any element inside its record button in place of the flat drawing, and a
-`panelClassName` for placing the transcript; the Voice memo project page
-(`/work/voice-memo`) uses both for its 3D device, in
+`panelClassName` for placing the transcript, and an `onCopy` callback;
+with a custom device the button draws no focus ring, so the device draws
+its own. The Voice memo project page (`/work/voice-memo`) and its bare
+`/voice-memo` page use all three for the 3D device, in
 `features/doc/components/voice-memo-object.tsx`. It isn't in
 `fibo-niche.ts`, so it has no `/components` doc yet. Put
 these back after reinstalling; fibo's own filter menu has since gained a
