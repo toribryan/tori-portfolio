@@ -54,23 +54,15 @@ function Plate({ name }: { name: keyof typeof PLATES }) {
   )
 }
 
-/** Plates side by side, stacked on phones. */
-function Plates({ names }: { names: (keyof typeof PLATES)[] }) {
-  return (
-    <div className="grid gap-6 sm:grid-cols-2">
-      {names.map((name) => (
-        <Plate key={name} name={name} />
-      ))}
-    </div>
-  )
-}
-
 function Chapter({
   title,
+  aside,
   after,
   children,
 }: {
-  title: string
+  title?: string
+  /** Beside the copy, in the smaller cut. */
+  aside?: ReactNode
   /** Full width, under the copy. */
   after?: ReactNode
   children: ReactNode
@@ -81,9 +73,10 @@ function Chapter({
           brand's cards. */}
       <div className="grid items-start gap-6 sm:grid-cols-[1.618fr_1fr]">
         <div className="typeset typeset-description">
-          <h3>{title}</h3>
+          {title ? <h3>{title}</h3> : null}
           {children}
         </div>
+        {aside}
       </div>
       {after ? <div className="mt-6">{after}</div> : null}
     </PanelContent>
@@ -101,26 +94,46 @@ export function FiboStory() {
         </PanelTitle>
       </PanelHeader>
 
-      <Chapter title="Where he comes from" after={<FiboFarm />}>
+      <Chapter aside={<Plate name="bunny" />}>
         <p>
-          fibo is short for Fibonacci, the Italian mathematician. In 1202 he
-          wrote a book called <em>Liber Abaci</em>, and tucked inside it is a
-          puzzle about rabbits.
+          For the past year I&apos;ve been studying the history of the golden
+          ratio, and whether it still holds up today as a blueprint for
+          proportional design. I wanted fibo&apos;s branding to tie in with my
+          personal brand, so I made what I&apos;ve learned its anchor.
         </p>
-        <p>The puzzle has four rules:</p>
-        <ol>
-          <li>Start with one pair of baby rabbits.</li>
-          <li>A pair takes a month to grow up.</li>
-          <li>
-            From the month after that, it has one new baby pair every month.
-          </li>
-          <li>Nobody ever dies. (It&apos;s a math puzzle, not a farm.)</li>
-        </ol>
         <p>
-          How many pairs are there after a year? Below, each row is a month and
-          each rabbit is a pair. A brace joins a pair to the baby pair it just
-          had, and a single line follows a pair still too young. Watch the first
-          six months play out.
+          That&apos;s where fibo, my pixel bunny mascot, comes in. Learn more
+          about his lore below.
+        </p>
+      </Chapter>
+
+      <Chapter title="Where he comes from" aside={<FiboFarm />}>
+        <p>
+          fibo is named after Leonardo of Pisa, the Italian mathematician better
+          known as Fibonacci. The nickname came centuries after him, short for{" "}
+          <em>filius Bonacci</em>, &ldquo;son of Bonacci.&rdquo; He grew up
+          partly in North Africa, where his father worked as a merchant
+          official, and there he learned the Hindu-Arabic numerals that traders
+          were already using.
+        </p>
+        <p>
+          In 1202 he published <em>Liber Abaci</em>, the &ldquo;Book of
+          Calculation,&rdquo; which made the case to Europe for those numerals
+          over Roman ones. Among its worked problems is a thought experiment
+          about rabbits. Start with one newborn pair. Each pair takes a month to
+          grow up, then has a new pair every month after that, and none of them
+          ever die. How many pairs are there after a year?
+        </p>
+        <p>
+          The answer grows into a famous sequence of numbers. Mathematicians in
+          India had described the same numbers centuries earlier, in the study
+          of poetic meter, but the rabbits are how Europe met them. They were
+          named after Fibonacci in the 1870s.
+        </p>
+        <p>
+          In the diagram, each row is a month and each rabbit is a pair. A brace
+          joins a pair to the baby pair it just had, and a single line follows a
+          pair still too young. Watch the first six months play out.
         </p>
       </Chapter>
 
@@ -138,7 +151,7 @@ export function FiboStory() {
 
       <Chapter
         title="Organic and mechanical"
-        after={<Plates names={["bunny", "sunflower"]} />}
+        aside={<Plate name="sunflower" />}
       >
         <p>
           The golden ratio comes from nature. It&apos;s nature&apos;s own
