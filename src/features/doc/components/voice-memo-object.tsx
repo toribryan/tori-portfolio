@@ -369,6 +369,42 @@ function Shadow({ ry }: { ry: MotionValue<number> }) {
   )
 }
 
+/*
+ * Where the reflection sits on a face, and how bright it is. At rest the
+ * face looks straight back at the light and shows none; tipping it any way
+ * brings a soft band in, which slides across and off the far edge as the
+ * face turns further. Worked from the sine of the face's own angle, so it
+ * moves smoothly through a whole spin, with no jump where the angle wraps,
+ * and the back, mirrored on screen, sends it the same way as the front.
+ */
+function useSheen(
+  rx: MotionValue<number>,
+  ry: MotionValue<number>,
+  rest: Pose,
+  offset: number
+) {
+  const angles = (x: number, y: number) => ({
+    across: Math.sin(((y - rest.y - offset) * Math.PI) / 180),
+    down: Math.sin(((x - rest.x) * Math.PI) / 180),
+  })
+  const x = useTransform([rx, ry], ([rotX, rotY]: number[]) => {
+    const { across } = angles(rotX, rotY)
+    return `${-across * FACE.width * 1.6}px`
+  })
+  const y = useTransform([rx, ry], ([rotX, rotY]: number[]) => {
+    const { down } = angles(rotX, rotY)
+    return `${down * FACE.height * 1.6}px`
+  })
+  const o = useTransform([rx, ry], ([rotX, rotY]: number[]) => {
+    const { across, down } = angles(rotX, rotY)
+    return Math.min(1, Math.hypot(across, down) * 4)
+  })
+  return { "--sheen-x": x, "--sheen-y": y, "--sheen-o": o } as Record<
+    `--${string}`,
+    MotionValue<string | number>
+  >
+}
+
 function Body({
   rx,
   ry,
@@ -380,11 +416,8 @@ function Body({
   rest: Pose
   recording?: boolean
 }) {
-  // The reflection slides across the metal as it turns.
-  const sheen = useTransform(ry, (y) => {
-    const turned = ((((y - rest.y) % 360) + 540) % 360) - 180
-    return `${turned * 0.9}px`
-  })
+  const frontSheen = useSheen(rx, ry, rest, 0)
+  const backSheen = useSheen(rx, ry, rest, 180)
   // Which way the front faces, from the two rotations. backface-visibility
   // alone lets the back's filtered drawing ghost through mid-turn, so the
   // face turned away is hidden outright.
@@ -405,7 +438,6 @@ function Body({
           rotateX: rx,
           rotateY: ry,
           transformStyle: "preserve-3d",
-          "--sheen": sheen,
         } as never
       }
     >
@@ -438,6 +470,7 @@ function Body({
         style={{
           transform: "translateZ(calc(var(--t) * 0.5 + 1px))",
           opacity: front,
+          ...frontSheen,
         }}
       >
         <Face side="front" recording={recording} />
@@ -447,6 +480,7 @@ function Body({
         style={{
           transform: "rotateY(180deg) translateZ(calc(var(--t) * 0.5 + 1px))",
           opacity: back,
+          ...backSheen,
         }}
       >
         <Face side="back" />
@@ -651,7 +685,9 @@ function Face({
         </linearGradient>
         <linearGradient id={ids.sheen} x1="0" y1="0" x2="1" y2="0">
           <stop offset="0" stopColor="white" stopOpacity={0} />
-          <stop offset="0.5" stopColor="white" stopOpacity={0.4} />
+          <stop offset="0.3" stopColor="white" stopOpacity={0.12} />
+          <stop offset="0.5" stopColor="white" stopOpacity={0.32} />
+          <stop offset="0.7" stopColor="white" stopOpacity={0.12} />
           <stop offset="1" stopColor="white" stopOpacity={0} />
         </linearGradient>
         <radialGradient id={ids.glow}>
@@ -731,20 +767,24 @@ function Face({
         </g>
       ) : null}
 
-      {/* The reflection, moved along by --sheen as the device turns. */}
+      {/* The reflection, placed by useSheen as the device turns. */}
       <g clipPath={`url(#${ids.clip})`}>
-        <g
-          className="opacity-100 dark:opacity-40"
-          style={{ transform: "translateX(var(--sheen, 0px))" }}
-        >
-          <rect
-            x={-20}
-            y={-height}
-            width={36}
-            height={height * 3}
-            fill={`url(#${ids.sheen})`}
-            transform={`rotate(24 ${width / 2} ${height / 2})`}
-          />
+        <g className="opacity-100 dark:opacity-40">
+          <g
+            style={{
+              opacity: "var(--sheen-o, 0)",
+              transform: "translate(var(--sheen-x, 0px), var(--sheen-y, 0px))",
+            }}
+          >
+            <rect
+              x={width / 2 - 35}
+              y={-height}
+              width={70}
+              height={height * 3}
+              fill={`url(#${ids.sheen})`}
+              transform={`rotate(24 ${width / 2} ${height / 2})`}
+            />
+          </g>
         </g>
       </g>
 
