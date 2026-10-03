@@ -7,6 +7,7 @@ import {
   useState,
   type MouseEvent,
   type PointerEvent,
+  type SVGProps,
 } from "react"
 import { RotateCwIcon } from "lucide-react"
 import {
@@ -17,7 +18,21 @@ import {
   useTransform,
   type MotionValue,
 } from "motion/react"
+import { flushSync } from "react-dom"
+import { toast } from "sonner"
 
+import {
+  decodeAudioData,
+  playSound,
+  soundSource,
+} from "@/lib/soundcn/sound-engine"
+import type { SoundAsset } from "@/lib/soundcn/sound-types"
+import {
+  cardSlideSound,
+  click8bitSound,
+  dropSound,
+  maximizeSound,
+} from "@/lib/soundcn/voice-memo"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/base/ui/button"
 import { VoiceMemo } from "@/components/fibo/voice-memo"
@@ -49,29 +64,71 @@ const QUICK = { duration: 0.25, ease: "easeOut" } as const
 // Sizes the device from the width it's given, and its edge from that.
 const SIZE = "[--w:min(62cqw,24rem)] [--t:calc(var(--w)*0.055)]"
 
+// Degrees a millisecond at release, about 1,800 pixels a second, past which
+// a flick spins the device through a few fast turns.
+const SPIN_SPEED = 1
+// Two and a half turns lands it on its other face.
+const SPIN_TURNS = 900
+const SPIN = { duration: 0.8, ease: [0.16, 1, 0.3, 1] } as const
+
+type Axis = "x" | "y"
+
 /**
  * Rotation for the device, with a drag that turns it, coasts when let go and
- * settles on whichever face is nearest. A drag never also counts as a press,
- * so the device can be a button underneath.
+ * settles on whichever face is nearest. Drag sideways to turn it about its
+ * upright axis, or pull the top down or push it up to tip it over towards
+ * you or away. A hard flick spins it instead, and calls `onSpin`. A drag
+ * never also counts as a press, so the device can be a button underneath.
+ *
+ * `axis` is the axis the back is mounted on. Turned over sideways, the back
+ * has to sit turned about the upright axis to land the right way up; tipped
+ * over top first, about the level one. Each drag starts by moving it to the
+ * drag's axis while the device rests, which looks the same on screen, as
+ * either mounting shows the back upright once it's over.
  */
-function useTurn(rest: Pose) {
+function useTurn(rest: Pose, { onSpin }: { onSpin?: () => void } = {}) {
   const reduceMotion = useReducedMotion()
   const rx = useMotionValue(rest.x)
   const ry = useMotionValue(rest.y)
   const [back, setBack] = useState(false)
+  const [axis, setAxis] = useState<Axis>("y")
+  const rotation = { x: rx, y: ry }
+  const other = (a: Axis): Axis => (a === "x" ? "y" : "x")
 
-  const nearestFace = (y: number) =>
-    Math.round((y - rest.y) / 180) * 180 + rest.y
+  const nearest = (a: Axis, value: number) =>
+    Math.round((value - rest[a]) / 180) * 180 + rest[a]
+  const turnedOver = (a: Axis, value: number) =>
+    Math.abs(Math.round((value - rest[a]) / 180)) % 2 === 1
 
-  const settle = (target: number) => {
+  // Lands the turning axis on its nearest face and levels the other.
+  const settle = (a: Axis, target: number, spin = false) => {
     const transition = reduceMotion ? QUICK : SPRING
-    animate(ry, target, transition)
-    animate(rx, rest.x, transition)
-    setBack(Math.abs(Math.round((target - rest.y) / 180)) % 2 === 1)
+    animate(rotation[a], target, spin ? SPIN : transition)
+    animate(rotation[other(a)], rest[other(a)], transition)
+    setBack(turnedOver(a, target))
   }
 
-  const flip = (direction = 1) =>
-    settle(nearestFace(ry.get()) + 180 * direction)
+  // Puts the turn on axis `a`, keeping the same face showing. Only from
+  // rest, where the swap can't be seen.
+  const mount = (a: Axis) => {
+    if (a === axis) return true
+    const current = rotation[axis].get()
+    const resting =
+      Math.abs(current - nearest(axis, current)) < 1 &&
+      Math.abs(rotation[other(axis)].get() - rest[other(axis)]) < 1
+    if (!resting) return false
+    // The new mounting has to be on screen before the angles that need it,
+    // or the back shows upside down for a frame.
+    flushSync(() => setAxis(a))
+    rotation[axis].set(rest[axis])
+    rotation[a].set(rest[a] + (back ? 180 : 0))
+    return true
+  }
+
+  const flip = (direction = 1) => {
+    if (!mount("y")) return
+    settle("y", nearest("y", ry.get()) + 180 * direction)
+  }
 
   const drag = useRef<{
     id: number
@@ -79,8 +136,8 @@ function useTurn(rest: Pose) {
     y: number
     rx: number
     ry: number
-    moved: boolean
-    lastX: number
+    axis: Axis | null
+    last: number
     lastT: number
     velocity: number
   } | null>(null)
@@ -98,8 +155,8 @@ function useTurn(rest: Pose) {
         y: event.clientY,
         rx: rx.get(),
         ry: ry.get(),
-        moved: false,
-        lastX: event.clientX,
+        axis: null,
+        last: 0,
         lastT: event.timeStamp,
         velocity: 0,
       }
@@ -109,35 +166,59 @@ function useTurn(rest: Pose) {
       if (!current || current.id !== event.pointerId) return
       const dx = event.clientX - current.x
       const dy = event.clientY - current.y
-      if (!current.moved) {
+      if (!current.axis) {
         if (Math.hypot(dx, dy) < 6) return
-        current.moved = true
+        // Sideways turns it about the upright axis, up or down about the
+        // level one. A turn already underway keeps its axis.
+        const wanted: Axis = Math.abs(dy) > Math.abs(dx) ? "x" : "y"
+        current.axis = mount(wanted) ? wanted : axis
+        current.rx = rx.get()
+        current.ry = ry.get()
+        current.x = event.clientX
+        current.y = event.clientY
         // Captured only once it's a drag, so a tap still reaches the button.
         event.currentTarget.setPointerCapture(event.pointerId)
+        return
       }
-      ry.set(current.ry + dx * 0.55)
-      rx.set(Math.max(-70, Math.min(70, current.rx - dy * 0.35)))
+      // Pulling the top down tips it towards you.
+      const along = current.axis === "y" ? dx : -dy
+      const across = current.axis === "y" ? -dy : dx
+      const turn = current[`r${current.axis}`] + along * 0.55
+      const tilt = Math.max(-25, Math.min(25, across * 0.2))
+      rotation[current.axis].set(turn)
+      rotation[other(current.axis)].set(rest[other(current.axis)] + tilt)
       // Degrees a millisecond, smoothed, for the coast after letting go.
       const dt = Math.max(1, event.timeStamp - current.lastT)
-      const instant = ((event.clientX - current.lastX) * 0.55) / dt
+      const instant = ((along - current.last) * 0.55) / dt
       current.velocity = current.velocity * 0.6 + instant * 0.4
-      current.lastX = event.clientX
+      current.last = along
       current.lastT = event.timeStamp
     },
     onPointerUp: (event: PointerEvent<HTMLElement>) => {
       const current = drag.current
       if (!current || current.id !== event.pointerId) return
       drag.current = null
-      if (!current.moved) return
+      if (!current.axis) return
       dragged.current = true
+      const a = current.axis
+      const value = rotation[a].get()
       // A flick carries on turning; it lands on whichever face it's nearest
       // once it would have slowed down.
+      if (!reduceMotion && Math.abs(current.velocity) > SPIN_SPEED) {
+        settle(
+          a,
+          nearest(a, value + Math.sign(current.velocity) * SPIN_TURNS),
+          true
+        )
+        onSpin?.()
+        return
+      }
       const coast = reduceMotion ? 0 : current.velocity * 280
-      settle(nearestFace(ry.get() + coast))
+      settle(a, nearest(a, value + coast))
     },
     onPointerCancel: () => {
       drag.current = null
-      settle(nearestFace(ry.get()))
+      settle(axis, nearest(axis, rotation[axis].get()))
     },
     // The click a drag ends on would otherwise press the button.
     onClickCapture: (event: MouseEvent) => {
@@ -148,7 +229,7 @@ function useTurn(rest: Pose) {
     },
   }
 
-  return { rx, ry, back, flip, handlers }
+  return { rx, ry, axis, back, flip, handlers }
 }
 
 // Small on its page, so the transcript has room beside it.
@@ -161,17 +242,56 @@ const SMALL = "[--w:min(44cqw,13rem)]"
  * Markdown. Drag it to turn it over. In a narrow column the transcript opens
  * underneath instead.
  */
-export function VoiceMemoHero() {
-  const { rx, ry, back, flip, handlers } = useTurn(STRAIGHT)
-  const [recording, setRecording] = useState(false)
+export function VoiceMemoHero({ className }: { className?: string }) {
   const reduceMotion = useReducedMotion()
+  // Quiet under reduced motion, like the site's other sounds.
+  const play = (sound: SoundAsset) => {
+    if (reduceMotion) return
+    playSound(soundSource(sound), { volume: 0.5 }).catch(() => {
+      // No audio output, or the browser hasn't allowed sound yet. Neither is
+      // worth reporting for a decorative sound.
+    })
+  }
+  const { rx, ry, axis, back, flip, handlers } = useTurn(STRAIGHT, {
+    onSpin: () => play(maximizeSound),
+  })
+  const [recording, setRecording] = useState(false)
+  const [, setDismissals] = useState(0)
+
+  // A press knocks the device and it rocks back to rest: starting tips its
+  // top away, like a button pushed in, and stopping gives it a little twist.
+  // Thrown from where it rests, with the knock as the spring's speed, so it
+  // settles on the face it shows even if it was still turning.
+  const nudge = (starting: boolean) => {
+    if (reduceMotion) return
+    const knock = { type: "spring", stiffness: 380, damping: 11 } as const
+    const nearest = (value: number) => Math.round(value / 180) * 180
+    if (starting) {
+      animate(rx, nearest(rx.get()), { ...knock, velocity: -140 })
+    } else {
+      animate(ry, nearest(ry.get()), { ...knock, velocity: 160 })
+    }
+  }
+
+  // Decoded ahead, so the first press sounds at once.
+  useEffect(() => {
+    for (const sound of [
+      dropSound,
+      click8bitSound,
+      maximizeSound,
+      cardSlideSound,
+    ]) {
+      decodeAudioData(soundSource(sound)).catch(() => {})
+    }
+  }, [])
 
   return (
     <div
       className={cn(
         "not-prose @container flex w-full flex-col items-center gap-6 px-4 pt-14 pb-2",
         SIZE,
-        SMALL
+        SMALL,
+        className
       )}
       onKeyDown={(event) => {
         if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
@@ -183,7 +303,17 @@ export function VoiceMemoHero() {
       <VoiceMemo
         title="Voice memo"
         recording={recording}
-        onRecordingChange={setRecording}
+        onRecordingChange={(next) => {
+          setRecording(next)
+          play(next ? dropSound : click8bitSound)
+          nudge(next)
+        }}
+        onCopy={() => toast.success("Transcript copied")}
+        onDismiss={() => play(cardSlideSound)}
+        // The device only glides when it re-renders, and closing the
+        // transcript re-renders nothing here; this does, in the same render
+        // that removes it.
+        onDismissed={() => setDismissals((count) => count + 1)}
         side="bottom"
         // Device first, then the transcript: a column when narrow, and from
         // @xl a row run right to left, so the transcript opens on the left.
@@ -191,15 +321,19 @@ export function VoiceMemoHero() {
         panelClassName={cn(
           "relative top-auto left-auto w-80 max-w-full origin-top before:left-1/2 before:-translate-x-1/2",
           // Beside the device, its notch points right, back at it.
-          "@xl:origin-right @xl:before:top-1/2 @xl:before:right-[-7px] @xl:before:left-auto @xl:before:translate-x-0 @xl:before:-translate-y-1/2 @xl:before:border-t @xl:before:border-r @xl:before:border-b-0 @xl:before:border-l-0 @xl:starting:translate-x-2 @xl:starting:translate-y-0"
+          "@xl:origin-right @xl:before:top-1/2 @xl:before:right-[-7px] @xl:before:left-auto @xl:before:translate-x-0 @xl:before:-translate-y-1/2 @xl:before:border-t @xl:before:border-r @xl:before:border-b-0 @xl:before:border-l-0 @xl:starting:translate-x-2 @xl:starting:translate-y-0",
+          // Leaving, it slips back toward the device: up when it sits below,
+          // right when it sits beside.
+          "data-closing:-translate-y-2 motion-reduce:data-closing:translate-0 @xl:data-closing:translate-x-2 @xl:data-closing:translate-y-0"
         )}
         device={
           // `layout` glides the device to wherever the row puts it, so it
           // slides right as the transcript opens and back when it closes.
           <motion.span
             layout={!reduceMotion}
-            transition={{ type: "spring", stiffness: 160, damping: 22 }}
-            className="relative block aspect-[85/55] w-(--w) cursor-grab touch-pan-y [perspective:1400px] active:cursor-grabbing"
+            // Eases out of rest and into place, so it never lurches.
+            transition={{ duration: 0.6, ease: [0.65, 0, 0.35, 1] }}
+            className="relative block aspect-[85/55] w-(--w) cursor-grab touch-none [perspective:1400px] active:cursor-grabbing"
             {...handlers}
           >
             <Shadow ry={ry} />
@@ -209,7 +343,13 @@ export function VoiceMemoHero() {
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               style={{ transformStyle: "preserve-3d" }}
             >
-              <Body rx={rx} ry={ry} rest={STRAIGHT} recording={recording} />
+              <Body
+                rx={rx}
+                ry={ry}
+                rest={STRAIGHT}
+                axis={axis}
+                recording={recording}
+              />
             </motion.span>
           </motion.span>
         }
@@ -277,37 +417,85 @@ export function VoiceMemoObject({
   )
 }
 
-// The shadow on the ground narrows as the device goes edge-on.
+// The shadow on the ground narrows as the device goes edge-on. With the
+// light at the top left it falls a little to the right: a soft, wide one,
+// and a tighter, darker one right under the device.
 function Shadow({ ry }: { ry: MotionValue<number> }) {
   const scaleX = useTransform(
     ry,
     (y) => 0.45 + 0.55 * Math.abs(Math.cos((y * Math.PI) / 180))
   )
   return (
-    <motion.span
-      aria-hidden
-      className="pointer-events-none absolute top-[calc(100%+var(--w)*0.06)] left-1/2 h-[calc(var(--w)*0.1)] w-(--w) -translate-x-1/2 rounded-[50%] bg-black/25 blur-xl dark:bg-black/60"
-      style={{ scaleX }}
-    />
+    <>
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute top-[calc(100%+var(--w)*0.06)] left-[53%] h-[calc(var(--w)*0.12)] w-(--w) -translate-x-1/2 rounded-[50%] bg-black/20 blur-xl dark:bg-black/60"
+        style={{ scaleX }}
+      />
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute top-[calc(100%+var(--w)*0.075)] left-[52%] h-[calc(var(--w)*0.04)] w-[calc(var(--w)*0.8)] -translate-x-1/2 rounded-[50%] bg-black/25 blur-md dark:bg-black/70"
+        style={{ scaleX }}
+      />
+    </>
   )
+}
+
+/*
+ * Where the reflection sits on a face, and how bright it is. At rest the
+ * face looks straight back at the light and shows none; tipping it any way
+ * brings a soft band in, which slides across and off the far edge as the
+ * face turns further. Worked from the sine of the face's own angle, so it
+ * moves smoothly through a whole spin, with no jump where the angle wraps,
+ * and the back, mirrored on screen, sends it the same way as the front.
+ */
+function useSheen(
+  rx: MotionValue<number>,
+  ry: MotionValue<number>,
+  rest: Pose,
+  side: "front" | "back",
+  axis: Axis
+) {
+  // The back faces the other way about the axis it's mounted on.
+  const turn = (a: Axis) => (side === "back" && a === axis ? 180 : 0)
+  const angles = (x: number, y: number) => ({
+    across: Math.sin(((y - rest.y - turn("y")) * Math.PI) / 180),
+    down: Math.sin(((x - rest.x - turn("x")) * Math.PI) / 180),
+  })
+  const x = useTransform([rx, ry], ([rotX, rotY]: number[]) => {
+    const { across } = angles(rotX, rotY)
+    return `${-across * FACE.width * 1.6}px`
+  })
+  const y = useTransform([rx, ry], ([rotX, rotY]: number[]) => {
+    const { down } = angles(rotX, rotY)
+    return `${down * FACE.height * 1.6}px`
+  })
+  const o = useTransform([rx, ry], ([rotX, rotY]: number[]) => {
+    const { across, down } = angles(rotX, rotY)
+    return Math.min(1, Math.hypot(across, down) * 4)
+  })
+  return { "--sheen-x": x, "--sheen-y": y, "--sheen-o": o } as Record<
+    `--${string}`,
+    MotionValue<string | number>
+  >
 }
 
 function Body({
   rx,
   ry,
   rest,
+  axis = "y",
   recording = false,
 }: {
   rx: MotionValue<number>
   ry: MotionValue<number>
   rest: Pose
+  /** The axis the back is mounted on; see `useTurn`. */
+  axis?: Axis
   recording?: boolean
 }) {
-  // The reflection slides across the metal as it turns.
-  const sheen = useTransform(ry, (y) => {
-    const turned = ((((y - rest.y) % 360) + 540) % 360) - 180
-    return `${turned * 0.9}px`
-  })
+  const frontSheen = useSheen(rx, ry, rest, "front", axis)
+  const backSheen = useSheen(rx, ry, rest, "back", axis)
   // Which way the front faces, from the two rotations. backface-visibility
   // alone lets the back's filtered drawing ghost through mid-turn, so the
   // face turned away is hidden outright.
@@ -328,7 +516,6 @@ function Body({
           rotateX: rx,
           rotateY: ry,
           transformStyle: "preserve-3d",
-          "--sheen": sheen,
         } as never
       }
     >
@@ -348,11 +535,20 @@ function Body({
           />
         )
       })}
+      {/* The record button's focus ring, drawn on the device rather than
+          the button around it, so it floats, turns and flips with the metal
+          instead of staying behind as a box. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[7%/11%] outline-2 outline-offset-4 outline-transparent transition-[outline-color] duration-150 group-focus-visible/device:outline-ring"
+        style={{ transform: "translateZ(calc(var(--t) * 0.5 + 2px))" }}
+      />
       <motion.span
         className="absolute inset-0 [backface-visibility:hidden]"
         style={{
           transform: "translateZ(calc(var(--t) * 0.5 + 1px))",
           opacity: front,
+          ...frontSheen,
         }}
       >
         <Face side="front" recording={recording} />
@@ -360,8 +556,9 @@ function Body({
       <motion.span
         className="absolute inset-0 [backface-visibility:hidden]"
         style={{
-          transform: "rotateY(180deg) translateZ(calc(var(--t) * 0.5 + 1px))",
+          transform: `rotate${axis.toUpperCase()}(180deg) translateZ(calc(var(--t) * 0.5 + 1px))`,
           opacity: back,
+          ...backSheen,
         }}
       >
         <Face side="back" />
@@ -369,6 +566,62 @@ function Body({
     </motion.span>
   )
 }
+
+/*
+ * Lettering raised off the metal, lit from the top left: a bright rim on
+ * the edges facing the light, a shadow along the far ones and a softer one
+ * cast beyond. Drawn only as filled copies of the word, the light nudged up
+ * and left, the shade down and right, then the word itself in the same
+ * layers as the bare metal, so its face matches the face around it.
+ *
+ * An SVG filter draws this too, but Chrome rasterises filtered content
+ * apart from the rest, so it slid against the face as the device turned.
+ * Clipping the metal back onto a word drawn in light fared no better: in a
+ * fast spin Chrome skipped the clip on some tiles and showed the light.
+ * Plain fills have neither to go wrong. Built from the word's own outline,
+ * letters that overlap, as the f and i do, show no edge inside the join.
+ */
+function Raised({
+  depth: [dx, dy],
+  metal,
+  children,
+  ...text
+}: SVGProps<SVGTextElement> & {
+  /** How far the shadow falls, in face units, across and down. */
+  depth: [number, number]
+  /** The layers of the bare metal, painted on the letters' faces. */
+  metal: MetalLayer[]
+}) {
+  const shifted = (by: number) => `translate(${dx * by} ${dy * by})`
+  const copy = (key: string, className: string, extra = {}) => (
+    <text
+      key={key}
+      {...text}
+      {...extra}
+      className={cn(text.className, className)}
+    >
+      {children}
+    </text>
+  )
+  return (
+    <g stroke="none">
+      {copy("cast", "fill-black opacity-[0.06] dark:opacity-25", {
+        transform: shifted(2),
+      })}
+      {copy("shade", "fill-black opacity-20 dark:opacity-50", {
+        transform: shifted(1),
+      })}
+      {copy("light", "fill-white opacity-90 dark:opacity-30", {
+        transform: shifted(-0.6),
+      })}
+      {metal.map((layer, index) =>
+        copy(`metal-${index}`, layer.className, { fill: layer.fill })
+      )}
+    </g>
+  )
+}
+
+type MetalLayer = { className: string; fill?: string }
 
 /*
  * One face of the aluminium, drawn rather than photographed so it takes the
@@ -386,13 +639,29 @@ function Face({
   const ids = {
     pits: `${id}-pits`,
     glints: `${id}-glints`,
-    shade: `${id}-shade`,
+    light: `${id}-light`,
+    dark: `${id}-dark`,
+    rim: `${id}-rim`,
+    glow: `${id}-glow`,
     sheen: `${id}-sheen`,
     clip: `${id}-clip`,
-    edges: `${id}-edges`,
   }
   const { width, height, radius } = FACE
   const wordmark = "fibo"
+  // The bare metal, lit from the top left. Anodized aluminium is a mid
+  // gray, and the muted role alone is near white in the light theme and
+  // near black in the dark one, so each is pulled toward the middle. The
+  // light and the shade are white and black in both themes, only stronger
+  // or weaker, so the light falls the same way on silver and space gray.
+  const metal: MetalLayer[] = [
+    { className: "fill-muted" },
+    {
+      className:
+        "fill-black opacity-[0.13] dark:fill-white dark:opacity-[0.07]",
+    },
+    { fill: `url(#${ids.light})`, className: "opacity-100 dark:opacity-25" },
+    { fill: `url(#${ids.dark})`, className: "opacity-50 dark:opacity-70" },
+  ]
 
   return (
     <svg
@@ -428,184 +697,153 @@ function Face({
             <feComposite in="SourceGraphic" operator="in" />
           </filter>
         ))}
+        {/* A broad wash of light from the top left, falling away by the
+            middle, and the shade gathering toward the bottom right. */}
+        <radialGradient
+          id={ids.light}
+          gradientUnits="userSpaceOnUse"
+          cx={width * 0.05}
+          cy={-height * 0.15}
+          r={width * 0.95}
+        >
+          <stop offset="0" stopColor="white" stopOpacity={0.55} />
+          <stop offset="0.55" stopColor="white" stopOpacity={0.12} />
+          <stop offset="1" stopColor="white" stopOpacity={0} />
+        </radialGradient>
         <linearGradient
-          id={ids.shade}
+          id={ids.dark}
+          gradientUnits="userSpaceOnUse"
+          x1={width * 0.35}
+          y1={height * 0.3}
+          x2={width}
+          y2={height}
+        >
+          <stop offset="0" stopColor="black" stopOpacity={0} />
+          <stop offset="1" stopColor="black" stopOpacity={0.32} />
+        </linearGradient>
+        {/* The chamfer round the face catches the light on its top and left
+            and turns dark on its bottom and right. */}
+        <linearGradient
+          id={ids.rim}
           gradientUnits="userSpaceOnUse"
           x1="0"
           y1="0"
-          x2={width * 0.6}
+          x2={width}
           y2={height}
         >
-          <stop
-            offset="0"
-            style={{ stopColor: "var(--background)", stopOpacity: 0.6 }}
-          />
-          <stop
-            offset="0.45"
-            style={{ stopColor: "var(--background)", stopOpacity: 0 }}
-          />
-          <stop
-            offset="1"
-            style={{ stopColor: "var(--foreground)", stopOpacity: 0.13 }}
-          />
+          <stop offset="0" stopColor="white" stopOpacity={1} />
+          <stop offset="0.5" stopColor="white" stopOpacity={0.35} />
+          <stop offset="1" stopColor="white" stopOpacity={0} />
         </linearGradient>
         <linearGradient id={ids.sheen} x1="0" y1="0" x2="1" y2="0">
-          <stop
-            offset="0"
-            style={{ stopColor: "var(--background)", stopOpacity: 0 }}
-          />
-          <stop
-            offset="0.5"
-            style={{ stopColor: "var(--background)", stopOpacity: 0.5 }}
-          />
+          <stop offset="0" stopColor="white" stopOpacity={0} />
+          <stop offset="0.3" stopColor="white" stopOpacity={0.12} />
+          <stop offset="0.5" stopColor="white" stopOpacity={0.32} />
+          <stop offset="0.7" stopColor="white" stopOpacity={0.12} />
+          <stop offset="1" stopColor="white" stopOpacity={0} />
+        </linearGradient>
+        <radialGradient id={ids.glow}>
+          <stop offset="0" style={{ stopColor: "var(--destructive)" }} />
           <stop
             offset="1"
-            style={{ stopColor: "var(--background)", stopOpacity: 0 }}
+            style={{ stopColor: "var(--destructive)", stopOpacity: 0 }}
           />
-        </linearGradient>
-        {/* The rim of raised lettering lit from the top left: a bright line
-            along the edges facing the light, where the shape shifted away
-            from it leaves them uncovered, a hard shadow along the far edges
-            and a soft one cast beyond them. */}
-        <filter
-          id={ids.edges}
-          x="-5%"
-          y="-20%"
-          width="110%"
-          height="140%"
-          colorInterpolationFilters="sRGB"
-        >
-          <feOffset in="SourceAlpha" dx="0.7" dy="0.8" result="down" />
-          <feComposite
-            in="SourceAlpha"
-            in2="down"
-            operator="out"
-            result="top"
-          />
-          <feComposite
-            in="down"
-            in2="SourceAlpha"
-            operator="out"
-            result="under"
-          />
-          <feFlood
-            style={{ floodColor: "var(--background)", floodOpacity: 0.85 }}
-          />
-          <feComposite in2="top" operator="in" result="lit" />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.3 }}
-          />
-          <feComposite in2="under" operator="in" result="shade" />
-          <feGaussianBlur in="down" stdDeviation="0.9" result="soft" />
-          <feComposite
-            in="soft"
-            in2="SourceAlpha"
-            operator="out"
-            result="cast"
-          />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.12 }}
-          />
-          <feComposite in2="cast" operator="in" result="glow" />
-          <feMerge>
-            <feMergeNode in="glow" />
-            <feMergeNode in="shade" />
-            <feMergeNode in="lit" />
-          </feMerge>
-        </filter>
+        </radialGradient>
         <clipPath id={ids.clip}>
           <rect width={width} height={height} rx={radius} />
         </clipPath>
       </defs>
 
-      <rect width={width} height={height} rx={radius} className="fill-muted" />
-      <rect
-        width={width}
-        height={height}
-        rx={radius}
-        fill={`url(#${ids.shade})`}
-      />
+      {metal.map((layer, index) => (
+        <rect
+          key={index}
+          width={width}
+          height={height}
+          rx={radius}
+          fill={layer.fill}
+          className={layer.className}
+        />
+      ))}
 
-      {/* Anodized aluminium is a mid gray; the muted role alone is near
-          white in the light theme. */}
-      <rect
-        width={width}
-        height={height}
-        rx={radius}
-        className="fill-foreground opacity-[0.12] dark:opacity-0"
-      />
+      {side === "front" ? (
+        <Raised
+          depth={[0.7, 0.8]}
+          metal={metal}
+          x={14}
+          y={height - 16}
+          fontSize={50}
+          className="font-serif"
+        >
+          {wordmark}
+        </Raised>
+      ) : (
+        <Raised
+          depth={[0.35, 0.4]}
+          metal={metal}
+          x={width / 2}
+          y={height - 12}
+          fontSize={7.5}
+          letterSpacing={1.2}
+          textAnchor="middle"
+          className="font-sans font-semibold"
+        >
+          TORI BRYAN
+        </Raised>
+      )}
       <rect
         width={width}
         height={height}
         rx={radius}
         filter={`url(#${ids.pits})`}
-        className="fill-foreground opacity-20"
+        className="fill-black opacity-[0.14] dark:opacity-40"
       />
       <rect
         width={width}
         height={height}
         rx={radius}
         filter={`url(#${ids.glints})`}
-        className="fill-background opacity-35"
+        className="fill-white opacity-40 dark:opacity-[0.08]"
       />
 
-      {side === "front" ? (
-        // The lettering's edges again, over the grain, which would otherwise
-        // break up the only thing that says the letters are raised. Drawn by
-        // a filter from the word's merged shape, so where letters overlap,
-        // as the f and i do, no edge shows inside the join.
-        <text
-          x={14}
-          y={height - 16}
-          fontSize={50}
-          filter={`url(#${ids.edges})`}
-          className="font-serif"
-        >
-          {wordmark}
-        </text>
-      ) : (
+      {side === "back" ? (
         // A magnet ring pressed into the back, lit from above: dark on its
-        // upper wall, bright on its lower one. Then a line of small print.
+        // upper wall, bright on its lower one.
         <g fill="none" strokeWidth={1.4}>
           <circle
             cx={width / 2}
             cy={height / 2 - 4}
             r={28}
-            className="stroke-foreground opacity-25"
+            className="stroke-black opacity-[0.18] dark:opacity-60"
             transform="translate(0 -0.6)"
           />
           <circle
             cx={width / 2}
             cy={height / 2 - 4}
             r={28}
-            className="stroke-background opacity-80"
+            className="stroke-white opacity-80 dark:opacity-[0.14]"
             transform="translate(0 0.6)"
           />
-          <text
-            x={width / 2}
-            y={height - 12}
-            fontSize={5.2}
-            letterSpacing={0.8}
-            textAnchor="middle"
-            stroke="none"
-            className="fill-foreground font-mono opacity-40"
-          >
-            VOICE MEMO · FIBO.TORIBRYAN.COM
-          </text>
         </g>
-      )}
+      ) : null}
 
-      {/* The reflection, moved along by --sheen as the device turns. */}
+      {/* The reflection, placed by useSheen as the device turns. */}
       <g clipPath={`url(#${ids.clip})`}>
-        <g style={{ transform: "translateX(var(--sheen, 0px))" }}>
-          <rect
-            x={-20}
-            y={-height}
-            width={36}
-            height={height * 3}
-            fill={`url(#${ids.sheen})`}
-            transform={`rotate(24 ${width / 2} ${height / 2})`}
-          />
+        <g className="opacity-100 dark:opacity-40">
+          <g
+            style={{
+              opacity: "var(--sheen-o, 0)",
+              transform: "translate(var(--sheen-x, 0px), var(--sheen-y, 0px))",
+            }}
+          >
+            <rect
+              x={width / 2 - 35}
+              y={-height}
+              width={70}
+              height={height * 3}
+              fill={`url(#${ids.sheen})`}
+              transform={`rotate(24 ${width / 2} ${height / 2})`}
+            />
+          </g>
         </g>
       </g>
 
@@ -617,7 +855,8 @@ function Face({
         rx={radius - 0.9}
         fill="none"
         strokeWidth={1.2}
-        className="stroke-background opacity-80"
+        stroke={`url(#${ids.rim})`}
+        className="opacity-90 dark:opacity-25"
       />
       <rect
         width={width}
@@ -625,26 +864,29 @@ function Face({
         rx={radius}
         fill="none"
         strokeWidth={0.75}
-        className="stroke-foreground opacity-15"
+        className="stroke-black opacity-20 dark:opacity-70"
       />
 
       {side === "front" ? (
-        <circle
-          cx={width - 16}
-          cy={16}
-          r={1.8}
-          className="fill-foreground opacity-50"
-        />
+        <g>
+          <circle
+            cx={width - 16}
+            cy={16.4}
+            r={1.9}
+            className="fill-white opacity-70 dark:opacity-15"
+          />
+          <circle
+            cx={width - 16}
+            cy={16}
+            r={1.8}
+            className="fill-black opacity-55 dark:opacity-80"
+          />
+        </g>
       ) : null}
       {/* The pinhole glows while it listens. */}
       {side === "front" && recording ? (
         <g className="animate-pulse motion-reduce:animate-none">
-          <circle
-            cx={width - 16}
-            cy={16}
-            r={5}
-            className="fill-destructive blur-[3px]"
-          />
+          <circle cx={width - 16} cy={16} r={7} fill={`url(#${ids.glow})`} />
           <circle
             cx={width - 16}
             cy={16}

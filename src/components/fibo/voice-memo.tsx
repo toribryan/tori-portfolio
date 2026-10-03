@@ -65,6 +65,12 @@ type VoiceMemoProps = Omit<
   device?: React.ReactNode
   /** Classes for the transcript, to place it when `device` changes the layout. */
   panelClassName?: string
+  /** Called once the transcript is on the clipboard, such as to show a toast. */
+  onCopy?: (transcript: string) => void
+  /** Called as the transcript's close button is pressed, before it leaves. */
+  onDismiss?: () => void
+  /** Called once the transcript has gone, in the same render that removes it. */
+  onDismissed?: () => void
 }
 
 const voiceMemoVariants = cva(
@@ -129,6 +135,34 @@ function join(...parts: string[]) {
     .map((part) => part.trim())
     .filter(Boolean)
     .join(" ")
+}
+
+const FILLERS = /,?\s*\b(?:u+m+|u+h+|e+r+m+|h+m+|u+h+m+)\b,?/gi
+const ASKS =
+  /^(?:who|what|when|where|why|how|which|whose|is|are|am|was|were|can|could|would|should|shall|will|do|does|did|have|has|had|may|might|isn't|aren't|can't|won't|don't|doesn't|didn't)\b/i
+
+/*
+ * Light grammar for a settled phrase, since browser recognisers mostly
+ * return lowercase words with no punctuation. Drops filler sounds and a
+ * word said twice in a row, capitalises "I" and each sentence, and ends
+ * the phrase with a full stop, or a question mark when it opens like a
+ * question. Punctuation the recogniser already added is kept.
+ */
+function tidy(phrase: string) {
+  let text = phrase
+    .replace(FILLERS, " ")
+    .replace(/\b(?!(?:had|that)\b)(\w+)(\s+\1\b)+/gi, "$1")
+    .replace(/\bi\b(?=$|\s|'|’)/g, "I")
+    .replace(/\s+([,.?!])/g, "$1")
+    .replace(/\s+/g, " ")
+    .replace(/^[\s,]+|[\s,]+$/g, "")
+  if (!text) return ""
+  text = text.replace(
+    /(^|[.?!]\s+)(\p{Ll})/gu,
+    (_, lead, letter) => lead + letter.toUpperCase()
+  )
+  if (!/[.?!…]$/.test(text)) text += ASKS.test(text) ? "?" : "."
+  return text
 }
 
 function countWords(text: string) {
@@ -211,6 +245,9 @@ function VoiceMemo({
   size = "default",
   device,
   panelClassName,
+  onCopy,
+  onDismiss,
+  onDismissed,
   className,
   ...props
 }: VoiceMemoProps) {
@@ -224,6 +261,25 @@ function VoiceMemo({
   const interim = external ? (interimProp ?? "") : guess
 
   const [dismissed, setDismissed] = React.useState(false)
+  // Closing plays the panel's exit before it's removed, so it shrinks away
+  // into the device rather than vanishing.
+  const [closing, setClosing] = React.useState(false)
+  const deviceRef = React.useRef<HTMLButtonElement>(null)
+  const panelRef = React.useRef<HTMLDivElement>(null)
+  const finishClosing = () => {
+    // Focus was on the close button, which is going; the device keeps it.
+    if (panelRef.current?.contains(document.activeElement))
+      deviceRef.current?.focus()
+    setClosing(false)
+    setDismissed(true)
+    onDismissed?.()
+  }
+  React.useEffect(() => {
+    if (!closing) return
+    // In case the exit doesn't run, such as with transitions turned off.
+    const id = window.setTimeout(finishClosing, 400)
+    return () => window.clearTimeout(id)
+  })
   const [failure, setFailure] = React.useState("")
   // The server can't tell, so it assumes support and the browser corrects it.
   const supported = React.useSyncExternalStore(
@@ -273,6 +329,7 @@ function VoiceMemo({
       setGuess("")
       setFailure("")
       setDismissed(false)
+      setClosing(false)
       setAnnouncement("Listening")
     } else {
       // Whatever was still being worked out is the best guess there is.
@@ -324,7 +381,7 @@ function VoiceMemo({
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i]!
         if (result.isFinal) {
-          const text = result[0]!.transcript.trim()
+          const text = tidy(result[0]!.transcript)
           settled = join(settled, text)
           if (text) segments.current.push({ at: elapsed(), text })
         } else pending = join(pending, result[0]!.transcript)
@@ -431,6 +488,7 @@ function VoiceMemo({
       {...props}
     >
       <button
+        ref={deviceRef}
         type="button"
         aria-pressed={recording}
         aria-label="Transcribe"
@@ -440,7 +498,7 @@ function VoiceMemo({
         className={
           device === undefined
             ? voiceMemoVariants({ size })
-            : "group/device relative block rounded-2xl outline-none select-none focus-visible:ring-[3px] focus-visible:ring-ring-subtle"
+            : "group/device relative block outline-none select-none"
         }
       >
         {device ?? <Device wordmark={wordmark} recording={recording} />}
@@ -448,7 +506,17 @@ function VoiceMemo({
 
       {open ? (
         <div
+          ref={panelRef}
           id={transcriptId}
+          data-closing={closing ? "" : undefined}
+          onTransitionEnd={(event) => {
+            if (
+              closing &&
+              event.target === event.currentTarget &&
+              event.propertyName === "opacity"
+            )
+              finishClosing()
+          }}
           role="region"
           aria-label="Transcript"
           data-slot="voice-memo-transcript"
@@ -456,6 +524,8 @@ function VoiceMemo({
             "absolute z-10 flex w-72 max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-border bg-popover text-popover-foreground shadow-lg",
             // Grows out of the device, and holds still under reduced motion.
             "origin-left transition-[opacity,scale,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-opacity starting:scale-95 starting:opacity-0 motion-reduce:starting:scale-100",
+            // Leaves faster than it came, shrinking back the way it grew.
+            "data-closing:pointer-events-none data-closing:scale-95 data-closing:opacity-0 data-closing:duration-200 data-closing:ease-in motion-reduce:data-closing:scale-100",
             // A notch pointing back at the device.
             "before:absolute before:size-3 before:rotate-45 before:border-border before:bg-popover",
             side === "right"
@@ -489,31 +559,40 @@ function VoiceMemo({
                 00:00
               </span>
             ) : (
-              <span className="-my-1 -mr-1.5 flex items-center">
+              <span className="-my-1 -mr-1.5 flex items-center gap-0.5">
                 {transcript ? (
                   <Button
                     variant="ghost"
-                    size="icon-xs"
+                    size="xs"
                     aria-label={copied ? "Copied" : "Copy transcript"}
                     data-slot="voice-memo-copy"
                     onClick={() => {
                       void navigator.clipboard
                         ?.writeText(transcript)
-                        .then(() => setCopied(true))
+                        .then(() => {
+                          setCopied(true)
+                          onCopy?.(transcript)
+                        })
                     }}
                   >
-                    {copied ? <CheckIcon /> : <CopyIcon />}
+                    {copied ? (
+                      <CheckIcon data-icon="inline-start" />
+                    ) : (
+                      <CopyIcon data-icon="inline-start" />
+                    )}
+                    {copied ? "Copied" : "Copy"}
                   </Button>
                 ) : null}
                 {memo && transcript ? (
                   <Button
                     variant="ghost"
-                    size="icon-xs"
-                    aria-label="Download as Markdown"
+                    size="xs"
+                    aria-label="Download .md file"
                     data-slot="voice-memo-download"
                     onClick={() => download(memo.markdown, memo.filename)}
                   >
-                    <FileDownIcon />
+                    <FileDownIcon data-icon="inline-start" />
+                    Download .md
                   </Button>
                 ) : null}
                 <Button
@@ -521,7 +600,10 @@ function VoiceMemo({
                   size="icon-xs"
                   aria-label="Close transcript"
                   data-slot="voice-memo-close"
-                  onClick={() => setDismissed(true)}
+                  onClick={() => {
+                    setClosing(true)
+                    onDismiss?.()
+                  }}
                 >
                   <XIcon />
                 </Button>
