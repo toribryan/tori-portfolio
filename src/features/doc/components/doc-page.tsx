@@ -258,7 +258,7 @@ export async function DocPage({
         {facts.length > 0 && (
           <dl
             className={cn(
-              "not-prose my-6 grid grid-cols-1 gap-x-6 gap-y-3 rounded-xl bg-surface-warm p-4 text-sm sm:grid-cols-2",
+              "not-prose my-6 grid grid-cols-1 gap-x-6 gap-y-3 rounded-xl p-4 text-sm sm:grid-cols-2",
               "inset-ring-1 inset-ring-border/64"
             )}
           >
@@ -279,7 +279,7 @@ export async function DocPage({
               <li
                 key={skill}
                 className={cn(
-                  "rounded-md bg-surface-warm px-2 py-0.5 font-mono text-xs text-muted-foreground",
+                  "rounded-md px-2 py-0.5 font-mono text-xs text-muted-foreground",
                   "inset-ring-1 inset-ring-border/64"
                 )}
               >

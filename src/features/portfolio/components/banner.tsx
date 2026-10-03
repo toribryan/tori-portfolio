@@ -1,8 +1,6 @@
 "use client"
 
-import { celebrationSound } from "@/lib/soundcn/celebration"
 import { notificationSound } from "@/lib/soundcn/notification"
-import { isAudioReady } from "@/lib/soundcn/sound-engine"
 import { useSound } from "@/hooks/soundcn/use-sound"
 import { ShaderBackground } from "@/components/ui/hero"
 import { haptic } from "@/registry/lib/haptic"
@@ -28,12 +26,6 @@ export function Banner({ className }: { className?: string }) {
     volume: 0.3,
     interrupt: true,
   })
-  // The sweep clip runs three seconds, so `interrupt` matters more here: a
-  // second pass restarts it rather than playing over the tail of the first.
-  const [playSweep] = useSound(celebrationSound, {
-    volume: 0.25,
-    interrupt: true,
-  })
 
   return (
     <ShaderBackground
@@ -41,13 +33,6 @@ export function Banner({ className }: { className?: string }) {
       onTap={() => {
         playPress()
         haptic()
-      }}
-      onSweep={() => {
-        // A moving cursor is not a gesture a browser unblocks audio for, and
-        // playing into a suspended context only queues the clip up to fire at
-        // some later click. Skip the pass instead.
-        if (!isAudioReady()) return
-        playSweep()
       }}
     />
   )
