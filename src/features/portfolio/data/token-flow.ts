@@ -1,4 +1,4 @@
-import type { TokenRow } from "@/components/ui/token-flow"
+import type { TokenRow } from "@/components/fibo/token-flow"
 
 /** The site's own color tokens, one row per tier walk, as the token flow draws them. */
 export const TOKEN_ROWS: TokenRow[] = [
