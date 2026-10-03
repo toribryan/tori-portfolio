@@ -328,7 +328,7 @@ export function StorybookKitCover({ loop = false }: { loop?: boolean }) {
         style={{
           backgroundImage:
             "radial-gradient(circle, var(--foreground) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundSize: "12px 12px",
         }}
         aria-hidden
       />
