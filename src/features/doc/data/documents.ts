@@ -103,8 +103,13 @@ export function getLatestPosts() {
   return getDocsByCategory(LATEST_CATEGORY)
 }
 
-/** Case studies — docs under the `work/` content folder. */
+/** Case studies — docs under the `work/` content folder, archived ones left out. */
 export function getWorkDocs() {
+  return getAllWorkDocs().filter((doc) => !doc.metadata.archived)
+}
+
+/** Every case study, archived ones too, for building their pages. */
+export function getAllWorkDocs() {
   return getDocsByCategory(WORK_CATEGORY)
 }
 
