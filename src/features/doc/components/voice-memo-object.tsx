@@ -9,7 +9,8 @@ import {
   type PointerEvent,
   type SVGProps,
 } from "react"
-import { RotateCwIcon } from "lucide-react"
+import Link from "next/link"
+import { Maximize2Icon, RotateCwIcon } from "lucide-react"
 import {
   animate,
   motion,
@@ -34,7 +35,7 @@ import {
   maximizeSound,
 } from "@/lib/soundcn/voice-memo"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/base/ui/button"
+import { Button, buttonVariants } from "@/components/base/ui/button"
 import { VoiceMemo } from "@/components/fibo/voice-memo"
 
 /*
@@ -242,7 +243,14 @@ const SMALL = "[--w:min(44cqw,13rem)]"
  * Markdown. Drag it to turn it over. In a narrow column the transcript opens
  * underneath instead.
  */
-export function VoiceMemoHero({ className }: { className?: string }) {
+export function VoiceMemoHero({
+  className,
+  stageHref,
+}: {
+  className?: string
+  /** Where the device has a page to itself, linked beside Flip. */
+  stageHref?: "/voice-memo"
+}) {
   const reduceMotion = useReducedMotion()
   // Quiet under reduced motion, like the site's other sounds.
   const play = (sound: SoundAsset) => {
@@ -368,12 +376,26 @@ export function VoiceMemoHero({ className }: { className?: string }) {
           <RotateCwIcon data-icon="inline-start" />
           Flip
         </Button>
+        {stageHref ? (
+          <Link
+            href={stageHref}
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+          >
+            <Maximize2Icon data-icon="inline-start" />
+            Full view
+          </Link>
+        ) : null}
         <span role="status" className="sr-only">
           {back ? "Showing the back" : "Showing the front"}
         </span>
       </div>
     </div>
   )
+}
+
+// On the project page, with a way to the larger, bare page of its own.
+export function VoiceMemoProjectHero() {
+  return <VoiceMemoHero stageHref="/voice-memo" />
 }
 
 /**
