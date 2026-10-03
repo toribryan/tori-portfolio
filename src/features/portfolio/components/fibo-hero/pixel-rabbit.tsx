@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 
+import { usePageVisible } from "@/hooks/use-page-visible"
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 
 /*
@@ -490,6 +491,11 @@ type PixelRabbitSpriteProps = {
    * back up.
    */
   burst?: boolean
+  /**
+   * Holds him in his resting pose instead of idling, for a paused or
+   * offscreen scene. Replies and the build-up still play.
+   */
+  still?: boolean
   /** Called for each sound a reply makes. */
   onSound?: (sound: RabbitSound) => void
   transform?: string
@@ -507,11 +513,13 @@ function PixelRabbitSprite({
   assembleDelay,
   onAssemble,
   burst = false,
+  still = false,
   onSound,
   transform,
   className,
 }: PixelRabbitSpriteProps) {
   const reduced = usePrefersReducedMotion()
+  const visible = usePageVisible()
   const assembly = useAssemble(assembleDelay, reduced)
   const [finished, setFinished] = useState<number | null>(null)
   const acting = !!action && action.id !== finished && !reduced
@@ -519,7 +527,7 @@ function PixelRabbitSprite({
 
   const steps = acting
     ? ACTIONS[action.kind]
-    : whole && !look && !reduced
+    : whole && !look && !reduced && !still && visible
       ? IDLE
       : null
   const step = usePlayer(
