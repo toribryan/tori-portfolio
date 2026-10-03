@@ -388,6 +388,10 @@ function Fibo({
   const burstDone = useRef(false)
   // True from the burst until he says "WOAH"; clicks on him wait it out.
   const bursting = useRef(false)
+  // Kept outside the click effect, whose re-runs must not cancel a burst
+  // midway and leave him in pieces, but cleared once the hero unmounts.
+  const burstTimer = useRef(0)
+  useEffect(() => () => window.clearTimeout(burstTimer.current), [])
 
   // A click anywhere in the hero gets a line, bar the buttons and links,
   // which keep their own jobs.
@@ -411,7 +415,7 @@ function Fibo({
         bursting.current = true
         sfx.burst()
         setBurst("apart")
-        window.setTimeout(() => {
+        burstTimer.current = window.setTimeout(() => {
           setBuild((b) => b + 1)
           setBurst("rebuilding")
         }, FIBO_BURST_MS)
