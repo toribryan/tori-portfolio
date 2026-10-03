@@ -14,6 +14,8 @@ import {
 } from "react"
 
 import { cn } from "@/lib/utils"
+import { MoonIcon } from "@/components/animated-icons/moon-icon"
+import { SunMediumIcon } from "@/components/animated-icons/sun-medium-icon"
 import { Badge } from "@/components/fibo/badge"
 
 /*
@@ -391,13 +393,11 @@ function Segmented<T extends string>({
   options,
   value,
   onChange,
-  disabled = [],
 }: {
   label: string
   options: readonly T[]
   value: T
   onChange: (value: T) => void
-  disabled?: T[]
 }) {
   return (
     <div
@@ -410,9 +410,8 @@ function Segmented<T extends string>({
           key={option}
           type="button"
           aria-pressed={value === option}
-          disabled={disabled.includes(option)}
           onClick={() => onChange(option)}
-          className="rounded-md px-3 py-1 text-sm text-muted-foreground capitalize outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring-subtle disabled:pointer-events-none disabled:opacity-40 aria-pressed:bg-muted aria-pressed:text-foreground"
+          className="rounded-md px-3 py-1 text-sm text-muted-foreground capitalize outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring-subtle aria-pressed:bg-muted aria-pressed:text-foreground"
         >
           {option}
         </button>
@@ -513,7 +512,7 @@ export function TokenVisualizer() {
             >
               <span
                 className={cn(
-                  "text-center leading-tight text-balance",
+                  "flex h-7 items-end justify-center text-center leading-tight text-balance sm:h-6",
                   system === "before"
                     ? "text-sm font-medium text-foreground sm:text-base"
                     : "text-[11px] text-muted-foreground sm:text-xs"
@@ -620,13 +619,29 @@ export function TokenVisualizer() {
               setSystem(next)
             }}
           />
-          <Segmented
-            label="Mode"
-            options={["light", "dark"] as const}
-            value={mode}
-            onChange={setMode}
-            disabled={system === "before" ? ["dark"] : []}
-          />
+          {/* The site's own theme icon, for this exhibit's mode alone. */}
+          <button
+            type="button"
+            aria-label={
+              system === "before"
+                ? "No dark mode before the rebuild"
+                : `Switch to ${mode === "light" ? "dark" : "light"} mode`
+            }
+            title={
+              system === "before"
+                ? "The old system had no dark mode"
+                : undefined
+            }
+            disabled={system === "before"}
+            onClick={() => setMode(mode === "light" ? "dark" : "light")}
+            className="inline-flex size-[34px] items-center justify-center rounded-lg border border-border text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring-subtle disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            {mode === "dark" ? (
+              <MoonIcon aria-hidden className="size-4" />
+            ) : (
+              <SunMediumIcon aria-hidden className="size-4" />
+            )}
+          </button>
         </div>
       </div>
 
