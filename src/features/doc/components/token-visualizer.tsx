@@ -575,6 +575,7 @@ export function TokenVisualizer() {
     <button
       key={token}
       type="button"
+      aria-label={nameOf(token)}
       ref={(node) => {
         if (node) calloutNodes.current.set(token, node)
         else calloutNodes.current.delete(token)
