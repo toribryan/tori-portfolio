@@ -40,7 +40,7 @@ export function ModernCareHomesCover({ loop = false }: { loop?: boolean }) {
             <div
               key={src}
               className={cn(
-                "absolute rounded-[22px] bg-[#101114] p-[3px] shadow-[0_12px_32px_rgb(0_0_0/0.5)] ring-1 ring-white/15",
+                "absolute rounded-[22px] bg-[#101114] p-[3px] shadow-[0_8px_20px_rgb(0_0_0/0.16)] ring-1 ring-white/15",
                 className
               )}
             >
