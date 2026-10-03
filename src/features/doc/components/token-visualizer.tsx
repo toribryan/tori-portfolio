@@ -18,6 +18,8 @@ import { MoonIcon } from "@/components/animated-icons/moon-icon"
 import { SunMediumIcon } from "@/components/animated-icons/sun-medium-icon"
 import { Badge } from "@/components/fibo/badge"
 
+import { BeforeAfterToggle } from "./before-after-toggle"
+
 /*
  * fibo's color-scale visualizer, ported from its Storybook Colors page, with
  * a before state added: the same card as the legacy system colored it,
@@ -377,38 +379,6 @@ function useAnnotations(
 
 type Active = { token: string } | { step: number } | null
 
-function Segmented<T extends string>({
-  label,
-  options,
-  value,
-  onChange,
-}: {
-  label: string
-  options: readonly T[]
-  value: T
-  onChange: (value: T) => void
-}) {
-  return (
-    <div
-      role="group"
-      aria-label={label}
-      className="inline-flex rounded-lg border border-border p-0.5"
-    >
-      {options.map((option) => (
-        <button
-          key={option}
-          type="button"
-          aria-pressed={value === option}
-          onClick={() => onChange(option)}
-          className="rounded-md px-3 py-1 text-sm text-muted-foreground capitalize outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring-subtle aria-pressed:bg-muted aria-pressed:text-foreground"
-        >
-          {option}
-        </button>
-      ))}
-    </div>
-  )
-}
-
 /**
  * fibo's neutrals as a twelve-step scale above a card whose parts are
  * labeled with the tokens that color them. After shows the semantic roles
@@ -416,7 +386,7 @@ function Segmented<T extends string>({
  * unrelated parts and there was no dark mode to switch to.
  */
 export function TokenVisualizer() {
-  const [system, setSystem] = useState<System>("after")
+  const [system, setSystem] = useState<System>("before")
   const [chosenMode, setMode] = useState<Mode>("light")
   const mode: Mode = system === "before" ? "light" : chosenMode
   const primitives = primitivesFor(system, mode)
@@ -599,14 +569,13 @@ export function TokenVisualizer() {
               : "Slate, semantic tokens"}
           </Badge>
         </figcaption>
-        <div className="flex flex-wrap gap-2">
-          <Segmented
+        <div className="flex flex-wrap items-center gap-2">
+          <BeforeAfterToggle
             label="System"
-            options={["before", "after"] as const}
-            value={system}
-            onChange={(next) => {
+            isAfter={system === "after"}
+            onChange={(isAfter) => {
               setActive(null)
-              setSystem(next)
+              setSystem(isAfter ? "after" : "before")
             }}
           />
           {/* The site's own theme icon, for this exhibit's mode alone. */}
@@ -624,12 +593,12 @@ export function TokenVisualizer() {
             }
             disabled={system === "before"}
             onClick={() => setMode(mode === "light" ? "dark" : "light")}
-            className="inline-flex size-[34px] items-center justify-center rounded-lg border border-border text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring-subtle disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex size-[26px] items-center justify-center rounded-md border border-line text-muted-foreground outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring-subtle disabled:cursor-not-allowed disabled:opacity-40"
           >
             {mode === "dark" ? (
-              <MoonIcon aria-hidden className="size-4" />
+              <MoonIcon aria-hidden size={14} />
             ) : (
-              <SunMediumIcon aria-hidden className="size-4" />
+              <SunMediumIcon aria-hidden size={14} />
             )}
           </button>
         </div>

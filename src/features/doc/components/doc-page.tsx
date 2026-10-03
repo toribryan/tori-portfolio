@@ -326,9 +326,7 @@ export async function DocPage({
           )
         )}
 
-        {!m.hideLead && (
-          <p className="lead text-muted-foreground">{m.description}</p>
-        )}
+        {!m.hideLead && <p>{m.description}</p>}
 
         {brief.length > 0 && (
           <div className="not-prose my-6 flex flex-col gap-4 border-l-2 border-line pl-4">

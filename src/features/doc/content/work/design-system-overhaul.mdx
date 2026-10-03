@@ -5,10 +5,10 @@ claim: "587 card variants down to 32, with a token layer underneath so they stay
 image: "/cover-dsoverhaul.svg"
 order: 1
 createdAt: "2025-11-01"
-updatedAt: "2026-10-02"
+updatedAt: "2026-10-03"
 company: "Proctorio"
-role: "Staff Designer, system owner"
-team: "Two engineers building, across three product suites"
+role: "Staff Designer, design system owner"
+team: "2 front-end engineers"
 type: "Design System"
 period: "Q4 2025 to Q1 2026"
 skills:
@@ -27,7 +27,7 @@ results:
   - value: "37"
     label: "Components rebuilt"
   - value: "60 days"
-    label: "From start to MVP, across three product suites"
+    label: "From start to MVP"
 ---
 
 <Phases>
@@ -46,11 +46,19 @@ results:
   <Phase title="Rollout" detail="One product at a time" icon="rocket" />
 </Phases>
 
-## Working inside the old system
+## Started as a contributor
 
-When I took over the design system, I started by counting what was in it. I
-went through the library by hand, listed every variant of every component, and
-checked how many of them appeared anywhere in the product. Very few did.
+I contributed to Proctorio's original design system for two years. It had no
+formal owner, so every product designer shared the job of maintaining it. In
+those two years I saw firsthand how quickly component design can go from being
+a tool to being a bottleneck in the product lifecycle.
+
+I also learned how much design and engineering need an efficient way to talk to
+each other, so designers aren't spending time and creative energy guessing what
+engineers actually need. Those lessons, and plenty of others, became the guiding
+principles for the overhaul and for the governance decisions that protect it.
+
+## Working inside the old system
 
 <Numbered>
   <Item title="No semantic tokens.">
@@ -77,32 +85,13 @@ checked how many of them appeared anywhere in the product. Very few did.
   <Item title="Nobody deciding what belonged.">
     Anyone could add to the system, and nobody could say no.
   </Item>
+  <Item title="Bloated, looks-first documentation.">
+    Designers wrote long handoff documents for every feature, polished to look
+    good more than to be used. They were slow to write and slow to read, and
+    they spelled out everything a well-built component would have shown on its
+    own.
+  </Item>
 </Numbered>
-
-## The variant count
-
-| Component | Before | After | Change |
-| --------- | -----: | ----: | -----: |
-| Button    |  1,160 |   480 |   −59% |
-| Card      |    587 |    32 |   −94% |
-
-The card had 587 variants because designers had no way to build a new card
-from parts. Each time someone needed one, they added a variant. The count
-measures how often people worked around the system they were meant to use.
-
-<VariantWall />
-
-The cause was the component's switches. Every new need became one more on/off
-option, and options multiply: ten of them allow over a thousand cards.
-
-<SwitchSprawl />
-
-## Handoff documents filled the gaps
-
-Designers wrote long handoff documents for every feature. They were slow to
-write and slow to read. Engineering didn't work in Figma Dev Mode, so designers
-wrote down everything a well-built component would have shown on its own. The
-documents were doing the design system's job.
 
 ## Pitching the rebuild
 
@@ -130,13 +119,41 @@ own discipline.
 </Side>
 </Sides>
 
-## Building from the tokens up
+## Three rules
 
-I built in layers: tokens, then foundations, then base components, then the
-larger components made from them. Each layer uses only the one below it, so a
-change at the bottom reaches everything above.
+Once the overhaul was approved and I had mapped the pain points in the legacy
+system, I set three rules and held every component to them.
 
-### Tokens
+<Principles>
+  <Principle title="No product logic in components">
+    If a component knows which product it is in, it isn't a system component.
+    That knowledge belongs to the screen that uses it.
+  </Principle>
+  <Principle title="Build only for real use">
+    An option or variant goes in when someone needs it on a screen. Nothing gets
+    built for a need someone might have later.
+  </Principle>
+  <Principle title="Start from the system, and let it grow">
+    Designers begin from the shared library, never a blank file. When a pattern
+    keeps turning up in a product, it joins the system.
+  </Principle>
+</Principles>
+
+## Pain point: No semantic tokens
+
+The legacy color tokens had no meaning or standards behind them, so what
+designers and engineers used for what drifted apart. Should the error state of
+this text be red/ruby or red/crimson? Questions like that wasted time, and the
+guesses wore down design quality across surfaces.
+
+The token architecture also made a theme-aware light and dark mode impossible
+for the products.
+
+The card below is colored both ways. Under the old names, one shade colored
+unrelated parts, so no part could change on its own. The new tokens also move
+the grays from neutral to a slate.
+
+<TokenVisualizer />
 
 I rebuilt the tokens before I touched a component. Every component takes its
 color, spacing and type from them, so fixing components first would have meant
@@ -147,51 +164,65 @@ whichever green the theme has set.
 
 <TokenRoles />
 
-I also moved the grays from neutral to a slate. The card below is
-colored both ways: under the old names, one shade colored unrelated parts, so
-no part could change on its own.
-
-<TokenVisualizer />
-
 Our engineers build everything in-house, so I also wrote the CSS framework the
 tokens live in. It uses the same names as the Figma library, so designers and
 engineers describe the system in the same words.
 
-### Foundations and accessibility
+### Status colors
 
-Color, type and spacing came next. I set WCAG AAA as the standard and checked
-every color pair for contrast as I defined it, so the palette is accessible
-before anyone uses it. Every component carries an accessibility contract from
-its first version, and tests on our component documentation site check that it
-holds.
+Status colors had it worse. The old palette had five reds and nothing saying
+which one meant an error, so designers and engineers each picked one that
+looked right. A single screen could show four different reds, and a field's
+border and its error message could disagree.
 
-### Three rules
+<StatusColors />
 
-A rebuild fixes the system as it stands. To keep it from drifting back, I wrote
-three rules and held every component to them.
+Now each meaning has one role, backed by its tokens: an error asks for danger,
+and danger decides the red. Success, warning and info work the same way, so a
+warning looks the same on every component and in every product.
 
-<Principles>
-  <Principle title="No product logic in components">
-    If a component knows which product it is in, it isn't a system component.
-    That knowledge belongs to the screen that uses it.
-  </Principle>
-  <Principle title="Build only for real use">
-    An option or variant goes in when someone needs it on a screen.
-  </Principle>
-  <Principle title="Start from the system, and let it grow">
-    Designers begin from the shared library, never a blank file. When a pattern
-    keeps turning up in a product, it joins the system.
-  </Principle>
-</Principles>
+### Checked for contrast from the start
 
-### One vocabulary
+I set WCAG AAA as the standard and checked every color pair for contrast as I
+defined it, so the palette is accessible before anyone uses it. Every component
+carries an accessibility contract from its first version, and tests on our
+component documentation site check that it holds.
+
+## Pain point: Variants for needs nobody had
+
+Components had grown unmanageably bloated, so I wanted only the use cases we
+actually had in the product to make it into the new version. I audited the
+design system in Figma and partnered with engineering to find where each
+component was actually used. The verdict:
+
+- The system was doing more work now to avoid work later, fitting as much as
+  possible into each component and everything it could do.
+- Components like cards and modals didn't use slots, which led to wild
+  combinations of variants, props and booleans.
+- Engineers struggled to make the system work for them, so they built their own
+  components as bandaid fixes, and design and engineering had no consistent
+  language between them.
+
+The card had 587 variants because designers had no way to build a new card
+from parts. Each time someone needed one, they added a variant, and every new
+need became one more on/off option. Options multiply: ten of them allow over a
+thousand cards.
+
+<SwitchSprawl />
+
+### One shared language
+
+When I rebuilt the base components, I set one standard language for components
+and tokens, shared by the Figma library and the codebase. Engineers rarely had
+to follow up to ask what a design meant.
 
 The old library had no naming rules, so each component used whatever its
 builder chose. Button's sizes ran XXS to XL, Input's were S, M and L, and Card's
 was Compact. Button's Type held everything at once, so Primary, Outline,
 Danger and Danger Outline sat in one list. Disabled was an on/off option on one
-component and a state on another. Status colors were named by hue on some components and by meaning
-on others, so Red, Error and Danger all meant the same thing.
+component and a state on another. Status colors were named by hue on some
+components and by meaning on others, so Red, Error and Danger all meant the
+same thing.
 
 I gave every component the same property names:
 
@@ -218,47 +249,82 @@ A designer who knows Button's properties already knows Input's.
   />
 </Plate>
 
-Status colors had it worse. The old palette had five reds and nothing saying
-which one meant an error, so designers and engineers each picked one that
-looked right. A single screen could show four different reds, and a field's
-border and its error message could disagree.
+### Slots
 
-<StatusColors />
+I worked with our engineer to bring slots into our components: open areas a
+designer fills with whatever the screen needs. Slots gave the design team the
+flexibility it had been asking for without creating massive components. Two
+concerns came up.
 
-Now each meaning has one role, backed by its tokens: an error asks for danger,
-and danger decides the red. Success, warning and info work the same way, so a
-warning looks the same on every component and in every product.
+**How do slots work in Figma?** This was before Figma released its own slot
+feature. I made a slot component to place inside something like a card, with
+an instance swap property attached, so designers could swap in a component from
+their own project or another one from the design system.
 
-### Base components and slots
+**If anything can go in a slot, how do designers stay consistent?** For every
+component that uses slots, I made preferred-value components. A base component
+called Modal actions, for example, holds every variant of how a modal's actions
+can appear, with those properties nested.
 
-The base components are the small parts every larger component is built from.
-The larger ones, such as Card, use slots: open areas a designer fills with
-whatever the screen needs. A new need means filling a slot, and the component
-stays the same size. Designers can vary a card without making a variant, and
-engineers get the same freedom in code.
+Designers got the freedom to put a new design inside an existing component
+while staying consistent with little effort, and engineers got leaner code.
 
 <SlotComposition />
 
-Slots also kept the parts consistent. Each slot lists its preferred parts, the
-components it accepts, and anything else gets flagged. A modal's body takes
-text, media or an input; its footer takes a set of actions or a single button.
-The old modal did the same job with 22 on/off options, each named by whoever
-added it.
+Each slot lists its preferred parts, and anything else gets flagged. A modal's
+body takes text, media or an input; its footer takes a set of actions or a
+single button. The old modal did the same job with 22 on/off options, each
+named by whoever added it.
 
 <Video
   src="/case-studies/ds-overhaul-slots-vs-booleans.mp4"
   caption="The same modal built both ways in Figma. Before, every part is an option to switch on; after, each slot offers only its preferred parts."
 />
 
-## Rollout, one product at a time
+### Lean machine results
+
+| Component | Before | After | Change |
+| --------- | -----: | ----: | -----: |
+| Button    |  1,160 |   480 |   −59% |
+| Card      |    587 |    32 |   −94% |
+
+<VariantWall />
+
+## Simplifying handoffs
+
+I replaced our original documentation approach with a lean single-page doc that
+sits beside every component in the Figma library, plus a simple usage guide for
+designers. Our front-end engineers collaborated with me in Figma, and Figma
+stayed the source of truth for how things should look.
+
+## Governance and sustainability
 
 Product surfaces moved to the new system one at a time, and product work went
-on while they did. Each surface had to be redesigned to fit. Teams used that
-redesign to refresh their screens and fix problems they had been living with.
+on while they did. Each surface had to be redesigned to fit, and teams used
+that redesign to fix problems they had been living with.
 
-I own the question of what belongs in the system. I review how designers and
-engineers use components and slots, coach designers through the system, and
-keep the Figma library in step with the code.
+Getting designers to adopt the system was a part of the work I enjoyed. With
+the right setup, designers no longer had to detach components to make them work
+in their designs. The cases that did come up were often a designer feeling that
+a component's styling or feel didn't suit their use case.
+
+A healthy, useful system has to be able to grow and change, because it only
+succeeds when people use it. That means staying open-minded enough to hear when
+a real change is the right move and when it isn't needed.
+
+When a designer hit one of these cases, I'd ask them to show me a version of
+the component they felt fit their design, overriding it however they wanted.
+Then I judged it case by case:
+
+- Does it fit our design language?
+- Could this style fit anywhere else in the product?
+- If it fits, should it be a new variant, or should we update the current
+  styling, as long as that doesn't break anything?
+- Do we have time for this change?
+
+Other times a designer was using a component for something it wasn't designed
+for. If they didn't know, I showed them why and how to use it. If they didn't
+like the component, we went back to those questions.
 
 ## What changed
 

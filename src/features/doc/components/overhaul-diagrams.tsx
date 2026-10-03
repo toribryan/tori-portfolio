@@ -195,21 +195,18 @@ const TOKEN_ROWS: TokenRow[] = [
     base: "#218358",
     primitive: "green-700",
     semantic: "action-primary",
-    use: "Primary buttons",
     dark: { base: "#3DD68C", primitive: "green-400" },
   },
   {
     base: "#FFFFFF",
     primitive: "neutral-0",
     semantic: "surface-card",
-    use: "Card backgrounds",
     dark: { base: "#171717", primitive: "neutral-900" },
   },
   {
     base: "#B91C1C",
     primitive: "red-700",
     semantic: "status-danger",
-    use: "Errors",
     dark: { base: "#F87171", primitive: "red-400" },
   },
 ]
@@ -226,7 +223,6 @@ export function TokenRoles() {
     >
       <TokenFlow
         rows={TOKEN_ROWS}
-        showUse
         className="rounded-none border-0 bg-transparent py-6 [&>div:first-child]:hidden"
       />
     </Plate>

@@ -3,8 +3,7 @@
 import { useState, type CSSProperties, type ReactNode } from "react"
 import { CircleAlertIcon, TriangleAlertIcon } from "lucide-react"
 
-import { cn } from "@/lib/utils"
-
+import { BeforeAfterToggle } from "./before-after-toggle"
 import { Plate } from "./fibo-blocks"
 
 /*
@@ -125,37 +124,15 @@ function Spot({
 export function StatusColors() {
   const [isAfter, setAfter] = useState(false)
   const paint = isAfter ? after : before
-  const choices = [
-    { label: "Before", value: false },
-    { label: "After", value: true },
-  ]
-
   return (
     <Plate
       background="none"
       meta={
-        <span
-          role="group"
-          aria-label="Status colors"
-          className="flex rounded-md border border-line p-0.5 font-sans"
-        >
-          {choices.map(({ label, value }) => (
-            <button
-              key={label}
-              type="button"
-              aria-pressed={isAfter === value}
-              onClick={() => setAfter(value)}
-              className={cn(
-                "rounded-[5px] px-2.5 py-0.5 text-xs transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring-subtle",
-                isAfter === value
-                  ? "bg-foreground text-background"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </span>
+        <BeforeAfterToggle
+          label="Status colors"
+          isAfter={isAfter}
+          onChange={setAfter}
+        />
       }
       caption={
         isAfter
