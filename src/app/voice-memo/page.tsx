@@ -28,7 +28,7 @@ export default function VoiceMemoStage() {
       <VoiceMemoHero
         className={[
           // Larger than on the project page, to fill a recording.
-          "max-w-6xl [--w:min(34cqw,26rem)] @xl:[&_[data-slot=voice-memo]]:gap-20",
+          "max-w-6xl [--w:min(72vw,22rem)] sm:[--w:min(34cqw,26rem)] @xl:[&_[data-slot=voice-memo]]:gap-20",
           "[&_[data-slot=voice-memo-transcript]]:w-[26rem]",
           "[&_[data-slot=voice-memo-text]]:max-h-80 [&_[data-slot=voice-memo-text]]:text-lg",
           "[&_[data-slot=voice-memo-header]]:text-sm",
