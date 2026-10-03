@@ -609,11 +609,6 @@ export function TokenVisualizer() {
               ? "Neutral gray, a name per shade"
               : "Slate, semantic tokens"}
           </Badge>
-          <span className="text-sm text-muted-foreground">
-            {system === "before"
-              ? "Every shade had its own name, and nothing said which to use where. Point at grey/graphite: it colors the headline and the button, and there is no dark mode."
-              : "Named for their jobs. Pick a token or a step to trace it, and switch modes to watch the ramp turn over."}
-          </span>
         </figcaption>
         <div className="flex flex-wrap gap-2">
           <Segmented
