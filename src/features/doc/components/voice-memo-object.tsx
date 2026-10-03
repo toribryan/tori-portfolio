@@ -7,6 +7,8 @@ import {
   useState,
   type MouseEvent,
   type PointerEvent,
+  type ReactNode,
+  type SVGProps,
 } from "react"
 import { RotateCwIcon } from "lucide-react"
 import {
@@ -343,18 +345,27 @@ export function VoiceMemoObject({
   )
 }
 
-// The shadow on the ground narrows as the device goes edge-on.
+// The shadow on the ground narrows as the device goes edge-on. With the
+// light at the top left it falls a little to the right: a soft, wide one,
+// and a tighter, darker one right under the device.
 function Shadow({ ry }: { ry: MotionValue<number> }) {
   const scaleX = useTransform(
     ry,
     (y) => 0.45 + 0.55 * Math.abs(Math.cos((y * Math.PI) / 180))
   )
   return (
-    <motion.span
-      aria-hidden
-      className="pointer-events-none absolute top-[calc(100%+var(--w)*0.06)] left-1/2 h-[calc(var(--w)*0.1)] w-(--w) -translate-x-1/2 rounded-[50%] bg-black/25 blur-xl dark:bg-black/60"
-      style={{ scaleX }}
-    />
+    <>
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute top-[calc(100%+var(--w)*0.06)] left-[53%] h-[calc(var(--w)*0.12)] w-(--w) -translate-x-1/2 rounded-[50%] bg-black/20 blur-xl dark:bg-black/60"
+        style={{ scaleX }}
+      />
+      <motion.span
+        aria-hidden
+        className="pointer-events-none absolute top-[calc(100%+var(--w)*0.075)] left-[52%] h-[calc(var(--w)*0.04)] w-[calc(var(--w)*0.8)] -translate-x-1/2 rounded-[50%] bg-black/25 blur-md dark:bg-black/70"
+        style={{ scaleX }}
+      />
+    </>
   )
 }
 
@@ -445,6 +456,70 @@ function Body({
 }
 
 /*
+ * Lettering raised off the metal, lit from the top left: a bright rim on
+ * the edges facing the light, a shadow along the far ones and a softer one
+ * cast beyond. Drawn as plain shapes, the word in light and a shifted copy
+ * in shade, with the metal put back where the two overlap. An SVG filter
+ * draws the same thing, but Chrome rasterises filtered content apart from
+ * the rest, so it slid against the face while the device turned. Built
+ * from the word's own outline, letters that overlap, as the f and i do,
+ * show no edge inside the join.
+ */
+function Raised({
+  id,
+  depth: [dx, dy],
+  metal,
+  children,
+  ...text
+}: SVGProps<SVGTextElement> & {
+  id: string
+  /** How far the shadow falls, in face units, across and down. */
+  depth: [number, number]
+  /** The bare metal, shown on the letters' faces. */
+  metal: ReactNode
+}) {
+  const shifted = (by: number) => `translate(${dx * by} ${dy * by})`
+  return (
+    <g stroke="none">
+      <clipPath id={`${id}-word`}>
+        <text {...text}>{children}</text>
+      </clipPath>
+      <clipPath id={`${id}-shifted`}>
+        <text {...text} transform={shifted(1)}>
+          {children}
+        </text>
+      </clipPath>
+      <text
+        {...text}
+        transform={shifted(2)}
+        className={cn(
+          text.className,
+          "fill-black opacity-[0.06] dark:opacity-25"
+        )}
+      >
+        {children}
+      </text>
+      <text
+        {...text}
+        transform={shifted(1)}
+        className={cn(text.className, "fill-black opacity-20 dark:opacity-50")}
+      >
+        {children}
+      </text>
+      <text
+        {...text}
+        className={cn(text.className, "fill-white opacity-90 dark:opacity-30")}
+      >
+        {children}
+      </text>
+      <g clipPath={`url(#${id}-word)`}>
+        <g clipPath={`url(#${id}-shifted)`}>{metal}</g>
+      </g>
+    </g>
+  )
+}
+
+/*
  * One face of the aluminium, drawn rather than photographed so it takes the
  * theme: silver in light, space gray in dark. The front carries the raised
  * wordmark and the microphone pinhole, the back a debossed magnet ring.
@@ -460,14 +535,47 @@ function Face({
   const ids = {
     pits: `${id}-pits`,
     glints: `${id}-glints`,
-    shade: `${id}-shade`,
+    light: `${id}-light`,
+    dark: `${id}-dark`,
+    rim: `${id}-rim`,
+    glow: `${id}-glow`,
     sheen: `${id}-sheen`,
     clip: `${id}-clip`,
-    edges: `${id}-edges`,
-    raised: `${id}-raised`,
+    wordmark: `${id}-wordmark`,
+    name: `${id}-name`,
   }
   const { width, height, radius } = FACE
   const wordmark = "fibo"
+  // The bare metal, lit from the top left. Anodized aluminium is a mid
+  // gray, and the muted role alone is near white in the light theme and
+  // near black in the dark one, so each is pulled toward the middle. The
+  // light and the shade are white and black in both themes, only stronger
+  // or weaker, so the light falls the same way on silver and space gray.
+  const metal = (
+    <>
+      <rect width={width} height={height} rx={radius} className="fill-muted" />
+      <rect
+        width={width}
+        height={height}
+        rx={radius}
+        className="fill-black opacity-[0.13] dark:fill-white dark:opacity-[0.07]"
+      />
+      <rect
+        width={width}
+        height={height}
+        rx={radius}
+        fill={`url(#${ids.light})`}
+        className="opacity-100 dark:opacity-25"
+      />
+      <rect
+        width={width}
+        height={height}
+        rx={radius}
+        fill={`url(#${ids.dark})`}
+        className="opacity-50 dark:opacity-70"
+      />
+    </>
+  )
 
   return (
     <svg
@@ -503,226 +611,132 @@ function Face({
             <feComposite in="SourceGraphic" operator="in" />
           </filter>
         ))}
+        {/* A broad wash of light from the top left, falling away by the
+            middle, and the shade gathering toward the bottom right. */}
+        <radialGradient
+          id={ids.light}
+          gradientUnits="userSpaceOnUse"
+          cx={width * 0.05}
+          cy={-height * 0.15}
+          r={width * 0.95}
+        >
+          <stop offset="0" stopColor="white" stopOpacity={0.55} />
+          <stop offset="0.55" stopColor="white" stopOpacity={0.12} />
+          <stop offset="1" stopColor="white" stopOpacity={0} />
+        </radialGradient>
         <linearGradient
-          id={ids.shade}
+          id={ids.dark}
+          gradientUnits="userSpaceOnUse"
+          x1={width * 0.35}
+          y1={height * 0.3}
+          x2={width}
+          y2={height}
+        >
+          <stop offset="0" stopColor="black" stopOpacity={0} />
+          <stop offset="1" stopColor="black" stopOpacity={0.32} />
+        </linearGradient>
+        {/* The chamfer round the face catches the light on its top and left
+            and turns dark on its bottom and right. */}
+        <linearGradient
+          id={ids.rim}
           gradientUnits="userSpaceOnUse"
           x1="0"
           y1="0"
-          x2={width * 0.6}
+          x2={width}
           y2={height}
         >
-          <stop
-            offset="0"
-            style={{ stopColor: "var(--background)", stopOpacity: 0.6 }}
-          />
-          <stop
-            offset="0.45"
-            style={{ stopColor: "var(--background)", stopOpacity: 0 }}
-          />
-          <stop
-            offset="1"
-            style={{ stopColor: "var(--foreground)", stopOpacity: 0.13 }}
-          />
+          <stop offset="0" stopColor="white" stopOpacity={1} />
+          <stop offset="0.5" stopColor="white" stopOpacity={0.35} />
+          <stop offset="1" stopColor="white" stopOpacity={0} />
         </linearGradient>
         <linearGradient id={ids.sheen} x1="0" y1="0" x2="1" y2="0">
-          <stop
-            offset="0"
-            style={{ stopColor: "var(--background)", stopOpacity: 0 }}
-          />
-          <stop
-            offset="0.5"
-            style={{ stopColor: "var(--background)", stopOpacity: 0.5 }}
-          />
+          <stop offset="0" stopColor="white" stopOpacity={0} />
+          <stop offset="0.5" stopColor="white" stopOpacity={0.4} />
+          <stop offset="1" stopColor="white" stopOpacity={0} />
+        </linearGradient>
+        <radialGradient id={ids.glow}>
+          <stop offset="0" style={{ stopColor: "var(--destructive)" }} />
           <stop
             offset="1"
-            style={{ stopColor: "var(--background)", stopOpacity: 0 }}
+            style={{ stopColor: "var(--destructive)", stopOpacity: 0 }}
           />
-        </linearGradient>
-        {/* The same raised rim for the small print on the back, at a scale
-            its thin strokes can carry. */}
-        <filter
-          id={ids.raised}
-          x="-10%"
-          y="-30%"
-          width="120%"
-          height="160%"
-          colorInterpolationFilters="sRGB"
-        >
-          <feOffset in="SourceAlpha" dx="0.35" dy="0.4" result="down" />
-          <feComposite
-            in="SourceAlpha"
-            in2="down"
-            operator="out"
-            result="top"
-          />
-          <feComposite
-            in="down"
-            in2="SourceAlpha"
-            operator="out"
-            result="under"
-          />
-          <feFlood
-            style={{ floodColor: "var(--background)", floodOpacity: 0.9 }}
-          />
-          <feComposite in2="top" operator="in" result="lit" />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.35 }}
-          />
-          <feComposite in2="under" operator="in" result="shade" />
-          <feGaussianBlur in="down" stdDeviation="0.5" result="soft" />
-          <feComposite
-            in="soft"
-            in2="SourceAlpha"
-            operator="out"
-            result="cast"
-          />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.14 }}
-          />
-          <feComposite in2="cast" operator="in" result="glow" />
-          <feMerge>
-            <feMergeNode in="glow" />
-            <feMergeNode in="shade" />
-            <feMergeNode in="lit" />
-          </feMerge>
-        </filter>
-        {/* The rim of raised lettering lit from the top left: a bright line
-            along the edges facing the light, where the shape shifted away
-            from it leaves them uncovered, a hard shadow along the far edges
-            and a soft one cast beyond them. */}
-        <filter
-          id={ids.edges}
-          x="-5%"
-          y="-20%"
-          width="110%"
-          height="140%"
-          colorInterpolationFilters="sRGB"
-        >
-          <feOffset in="SourceAlpha" dx="0.7" dy="0.8" result="down" />
-          <feComposite
-            in="SourceAlpha"
-            in2="down"
-            operator="out"
-            result="top"
-          />
-          <feComposite
-            in="down"
-            in2="SourceAlpha"
-            operator="out"
-            result="under"
-          />
-          <feFlood
-            style={{ floodColor: "var(--background)", floodOpacity: 0.85 }}
-          />
-          <feComposite in2="top" operator="in" result="lit" />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.3 }}
-          />
-          <feComposite in2="under" operator="in" result="shade" />
-          <feGaussianBlur in="down" stdDeviation="0.9" result="soft" />
-          <feComposite
-            in="soft"
-            in2="SourceAlpha"
-            operator="out"
-            result="cast"
-          />
-          <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.12 }}
-          />
-          <feComposite in2="cast" operator="in" result="glow" />
-          <feMerge>
-            <feMergeNode in="glow" />
-            <feMergeNode in="shade" />
-            <feMergeNode in="lit" />
-          </feMerge>
-        </filter>
+        </radialGradient>
         <clipPath id={ids.clip}>
           <rect width={width} height={height} rx={radius} />
         </clipPath>
       </defs>
 
-      <rect width={width} height={height} rx={radius} className="fill-muted" />
-      <rect
-        width={width}
-        height={height}
-        rx={radius}
-        fill={`url(#${ids.shade})`}
-      />
+      {metal}
 
-      {/* Anodized aluminium is a mid gray; the muted role alone is near
-          white in the light theme. */}
-      <rect
-        width={width}
-        height={height}
-        rx={radius}
-        className="fill-foreground opacity-[0.12] dark:opacity-0"
-      />
+      {side === "front" ? (
+        <Raised
+          id={ids.wordmark}
+          depth={[0.7, 0.8]}
+          metal={metal}
+          x={14}
+          y={height - 16}
+          fontSize={50}
+          className="font-serif"
+        >
+          {wordmark}
+        </Raised>
+      ) : (
+        <Raised
+          id={ids.name}
+          depth={[0.35, 0.4]}
+          metal={metal}
+          x={width / 2}
+          y={height - 12}
+          fontSize={7.5}
+          letterSpacing={1.2}
+          textAnchor="middle"
+          className="font-sans font-semibold"
+        >
+          TORI BRYAN
+        </Raised>
+      )}
       <rect
         width={width}
         height={height}
         rx={radius}
         filter={`url(#${ids.pits})`}
-        className="fill-foreground opacity-20"
+        className="fill-black opacity-[0.14] dark:opacity-40"
       />
       <rect
         width={width}
         height={height}
         rx={radius}
         filter={`url(#${ids.glints})`}
-        className="fill-background opacity-35"
+        className="fill-white opacity-40 dark:opacity-[0.08]"
       />
 
-      {side === "front" ? (
-        // The lettering's edges again, over the grain, which would otherwise
-        // break up the only thing that says the letters are raised. Drawn by
-        // a filter from the word's merged shape, so where letters overlap,
-        // as the f and i do, no edge shows inside the join.
-        <text
-          x={14}
-          y={height - 16}
-          fontSize={50}
-          filter={`url(#${ids.edges})`}
-          className="font-serif"
-        >
-          {wordmark}
-        </text>
-      ) : (
+      {side === "back" ? (
         // A magnet ring pressed into the back, lit from above: dark on its
-        // upper wall, bright on its lower one. Then the owner's name, raised.
+        // upper wall, bright on its lower one.
         <g fill="none" strokeWidth={1.4}>
           <circle
             cx={width / 2}
             cy={height / 2 - 4}
             r={28}
-            className="stroke-foreground opacity-25"
+            className="stroke-black opacity-[0.18] dark:opacity-60"
             transform="translate(0 -0.6)"
           />
           <circle
             cx={width / 2}
             cy={height / 2 - 4}
             r={28}
-            className="stroke-background opacity-80"
+            className="stroke-white opacity-80 dark:opacity-[0.14]"
             transform="translate(0 0.6)"
           />
-          <text
-            x={width / 2}
-            y={height - 12}
-            fontSize={7.5}
-            letterSpacing={1.2}
-            textAnchor="middle"
-            stroke="none"
-            fill="black"
-            filter={`url(#${ids.raised})`}
-            className="font-sans font-semibold"
-          >
-            TORI BRYAN
-          </text>
         </g>
-      )}
+      ) : null}
 
       {/* The reflection, moved along by --sheen as the device turns. */}
       <g clipPath={`url(#${ids.clip})`}>
-        <g style={{ transform: "translateX(var(--sheen, 0px))" }}>
+        <g
+          className="opacity-100 dark:opacity-40"
+          style={{ transform: "translateX(var(--sheen, 0px))" }}
+        >
           <rect
             x={-20}
             y={-height}
@@ -742,7 +756,8 @@ function Face({
         rx={radius - 0.9}
         fill="none"
         strokeWidth={1.2}
-        className="stroke-background opacity-80"
+        stroke={`url(#${ids.rim})`}
+        className="opacity-90 dark:opacity-25"
       />
       <rect
         width={width}
@@ -750,26 +765,29 @@ function Face({
         rx={radius}
         fill="none"
         strokeWidth={0.75}
-        className="stroke-foreground opacity-15"
+        className="stroke-black opacity-20 dark:opacity-70"
       />
 
       {side === "front" ? (
-        <circle
-          cx={width - 16}
-          cy={16}
-          r={1.8}
-          className="fill-foreground opacity-50"
-        />
+        <g>
+          <circle
+            cx={width - 16}
+            cy={16.4}
+            r={1.9}
+            className="fill-white opacity-70 dark:opacity-15"
+          />
+          <circle
+            cx={width - 16}
+            cy={16}
+            r={1.8}
+            className="fill-black opacity-55 dark:opacity-80"
+          />
+        </g>
       ) : null}
       {/* The pinhole glows while it listens. */}
       {side === "front" && recording ? (
         <g className="animate-pulse motion-reduce:animate-none">
-          <circle
-            cx={width - 16}
-            cy={16}
-            r={5}
-            className="fill-destructive blur-[3px]"
-          />
+          <circle cx={width - 16} cy={16} r={7} fill={`url(#${ids.glow})`} />
           <circle
             cx={width - 16}
             cy={16}
