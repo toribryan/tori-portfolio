@@ -54,23 +54,15 @@ function Plate({ name }: { name: keyof typeof PLATES }) {
   )
 }
 
-/** Plates side by side, stacked on phones. */
-function Plates({ names }: { names: (keyof typeof PLATES)[] }) {
-  return (
-    <div className="grid gap-6 sm:grid-cols-2">
-      {names.map((name) => (
-        <Plate key={name} name={name} />
-      ))}
-    </div>
-  )
-}
-
 function Chapter({
   title,
+  aside,
   after,
   children,
 }: {
   title?: string
+  /** Beside the copy, in the smaller cut. */
+  aside?: ReactNode
   /** Full width, under the copy. */
   after?: ReactNode
   children: ReactNode
@@ -84,6 +76,7 @@ function Chapter({
           {title ? <h3>{title}</h3> : null}
           {children}
         </div>
+        {aside}
       </div>
       {after ? <div className="mt-6">{after}</div> : null}
     </PanelContent>
@@ -101,7 +94,7 @@ export function FiboStory() {
         </PanelTitle>
       </PanelHeader>
 
-      <Chapter>
+      <Chapter aside={<Plate name="bunny" />}>
         <p>
           For the past year I&apos;ve been studying the history of the golden
           ratio, and whether it still holds up today as a blueprint for
@@ -151,7 +144,7 @@ export function FiboStory() {
 
       <Chapter
         title="Organic and mechanical"
-        after={<Plates names={["bunny", "sunflower"]} />}
+        aside={<Plate name="sunflower" />}
       >
         <p>
           The golden ratio comes from nature. It&apos;s nature&apos;s own
