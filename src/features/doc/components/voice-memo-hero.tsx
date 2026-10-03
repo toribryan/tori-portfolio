@@ -34,6 +34,8 @@ import {
   QUICK,
   Shadow,
   SIZE,
+  SPIN,
+  SPIN_TURNS,
   SPRING,
   type Axis,
   type Pose,
@@ -45,9 +47,6 @@ const STRAIGHT: Pose = { x: 0, y: 0 }
 // Degrees a millisecond at release, about 1,800 pixels a second, past which
 // a flick spins the device through a few fast turns.
 const SPIN_SPEED = 1
-// Two and a half turns lands it on its other face.
-const SPIN_TURNS = 900
-const SPIN = { duration: 0.8, ease: [0.16, 1, 0.3, 1] } as const
 
 /**
  * Rotation for the device, with a drag that turns it, coasts when let go and
