@@ -56,7 +56,10 @@ command menu doc mid-page on load). Its preview pane also shows by the dialog's 
 (`@xl/command-menu`) rather than the viewport's, so the pane stays in the
 scaled cover on a phone. `voice-memo.tsx` has a `device` prop that puts
 any element inside its record button in place of the flat drawing, and a
-`panelClassName` for placing the transcript, and an `onCopy` callback;
+`panelClassName` for placing the transcript, and an `onCopy` callback,
+and its copy and download buttons carry words ("Copy", "Download .md")
+beside their icons, and closing the transcript plays an exit before it's
+removed and hands focus back to the device;
 with a custom device the button draws no focus ring, so the device draws
 its own. The Voice memo project page (`/work/voice-memo`) and its bare
 `/voice-memo` page use all three for the 3D device, in

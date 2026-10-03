@@ -241,7 +241,10 @@ export function VoiceMemoHero({ className }: { className?: string }) {
         panelClassName={cn(
           "relative top-auto left-auto w-80 max-w-full origin-top before:left-1/2 before:-translate-x-1/2",
           // Beside the device, its notch points right, back at it.
-          "@xl:origin-right @xl:before:top-1/2 @xl:before:right-[-7px] @xl:before:left-auto @xl:before:translate-x-0 @xl:before:-translate-y-1/2 @xl:before:border-t @xl:before:border-r @xl:before:border-b-0 @xl:before:border-l-0 @xl:starting:translate-x-2 @xl:starting:translate-y-0"
+          "@xl:origin-right @xl:before:top-1/2 @xl:before:right-[-7px] @xl:before:left-auto @xl:before:translate-x-0 @xl:before:-translate-y-1/2 @xl:before:border-t @xl:before:border-r @xl:before:border-b-0 @xl:before:border-l-0 @xl:starting:translate-x-2 @xl:starting:translate-y-0",
+          // Leaving, it slips back toward the device: up when it sits below,
+          // right when it sits beside.
+          "data-closing:-translate-y-2 motion-reduce:data-closing:translate-0 @xl:data-closing:translate-x-2 @xl:data-closing:translate-y-0"
         )}
         device={
           // `layout` glides the device to wherever the row puts it, so it

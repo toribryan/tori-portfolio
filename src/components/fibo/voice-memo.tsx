@@ -227,6 +227,24 @@ function VoiceMemo({
   const interim = external ? (interimProp ?? "") : guess
 
   const [dismissed, setDismissed] = React.useState(false)
+  // Closing plays the panel's exit before it's removed, so it shrinks away
+  // into the device rather than vanishing.
+  const [closing, setClosing] = React.useState(false)
+  const deviceRef = React.useRef<HTMLButtonElement>(null)
+  const panelRef = React.useRef<HTMLDivElement>(null)
+  const finishClosing = () => {
+    // Focus was on the close button, which is going; the device keeps it.
+    if (panelRef.current?.contains(document.activeElement))
+      deviceRef.current?.focus()
+    setClosing(false)
+    setDismissed(true)
+  }
+  React.useEffect(() => {
+    if (!closing) return
+    // In case the exit doesn't run, such as with transitions turned off.
+    const id = window.setTimeout(finishClosing, 400)
+    return () => window.clearTimeout(id)
+  })
   const [failure, setFailure] = React.useState("")
   // The server can't tell, so it assumes support and the browser corrects it.
   const supported = React.useSyncExternalStore(
@@ -276,6 +294,7 @@ function VoiceMemo({
       setGuess("")
       setFailure("")
       setDismissed(false)
+      setClosing(false)
       setAnnouncement("Listening")
     } else {
       // Whatever was still being worked out is the best guess there is.
@@ -434,6 +453,7 @@ function VoiceMemo({
       {...props}
     >
       <button
+        ref={deviceRef}
         type="button"
         aria-pressed={recording}
         aria-label="Transcribe"
@@ -451,7 +471,17 @@ function VoiceMemo({
 
       {open ? (
         <div
+          ref={panelRef}
           id={transcriptId}
+          data-closing={closing ? "" : undefined}
+          onTransitionEnd={(event) => {
+            if (
+              closing &&
+              event.target === event.currentTarget &&
+              event.propertyName === "opacity"
+            )
+              finishClosing()
+          }}
           role="region"
           aria-label="Transcript"
           data-slot="voice-memo-transcript"
@@ -459,6 +489,8 @@ function VoiceMemo({
             "absolute z-10 flex w-72 max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-border bg-popover text-popover-foreground shadow-lg",
             // Grows out of the device, and holds still under reduced motion.
             "origin-left transition-[opacity,scale,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-opacity starting:scale-95 starting:opacity-0 motion-reduce:starting:scale-100",
+            // Leaves faster than it came, shrinking back the way it grew.
+            "data-closing:pointer-events-none data-closing:scale-95 data-closing:opacity-0 data-closing:duration-200 data-closing:ease-in motion-reduce:data-closing:scale-100",
             // A notch pointing back at the device.
             "before:absolute before:size-3 before:rotate-45 before:border-border before:bg-popover",
             side === "right"
@@ -492,11 +524,11 @@ function VoiceMemo({
                 00:00
               </span>
             ) : (
-              <span className="-my-1 -mr-1.5 flex items-center">
+              <span className="-my-1 -mr-1.5 flex items-center gap-0.5">
                 {transcript ? (
                   <Button
                     variant="ghost"
-                    size="icon-xs"
+                    size="xs"
                     aria-label={copied ? "Copied" : "Copy transcript"}
                     data-slot="voice-memo-copy"
                     onClick={() => {
@@ -508,18 +540,24 @@ function VoiceMemo({
                         })
                     }}
                   >
-                    {copied ? <CheckIcon /> : <CopyIcon />}
+                    {copied ? (
+                      <CheckIcon data-icon="inline-start" />
+                    ) : (
+                      <CopyIcon data-icon="inline-start" />
+                    )}
+                    {copied ? "Copied" : "Copy"}
                   </Button>
                 ) : null}
                 {memo && transcript ? (
                   <Button
                     variant="ghost"
-                    size="icon-xs"
-                    aria-label="Download as Markdown"
+                    size="xs"
+                    aria-label="Download .md file"
                     data-slot="voice-memo-download"
                     onClick={() => download(memo.markdown, memo.filename)}
                   >
-                    <FileDownIcon />
+                    <FileDownIcon data-icon="inline-start" />
+                    Download .md
                   </Button>
                 ) : null}
                 <Button
@@ -527,7 +565,7 @@ function VoiceMemo({
                   size="icon-xs"
                   aria-label="Close transcript"
                   data-slot="voice-memo-close"
-                  onClick={() => setDismissed(true)}
+                  onClick={() => setClosing(true)}
                 >
                   <XIcon />
                 </Button>
