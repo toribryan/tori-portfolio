@@ -11,7 +11,6 @@ updatedAt: "2026-10-02"
 company: "Iron Diamond Media"
 reach: "Seven sister bridal publications"
 role: "Product design + front-end build"
-team: "An engineer who scoped the data and built the first shell, two digital editors"
 type: "Product Redesign"
 period: "Q3 2026"
 # QUESTION: is the wedding-submission-form flag open in production? Add status: "Shipped" or "Behind a feature flag".
@@ -29,13 +28,6 @@ task: "Turn the engineer's nine-step shell and data requirements into a submissi
 process: "Audited the editors' feedback thread against the shipped shell, wrote a copy deck from it, mapped three submitter journeys in FigJam, prototyped the revised flow at low fidelity with AI, then swapped in the design system and built the front end with coding agents."
 # QUESTION: outcome. Live or not? Any submissions, editor reactions, or fewer follow-ups? Leave this out rather than guess.
 outcome: ""
-results:
-  - value: "3"
-    label: "Places where the form rejected the answer the editors told people to give"
-  - value: "9 → 8"
-    label: "Steps, once the publication came from the site you started on"
-  - value: "11"
-    label: "Reviewable PRs the build was split into for merge"
 ---
 
 <Pipeline>
@@ -83,24 +75,11 @@ number of submissions was about to grow past what that process could handle.
 
 {/* QUESTION: who submits most often (photographers, planners, couples) and what made this harder than "build a multi-step form"? One or two sentences in your words. */}
 
-The engineer had already scoped the data editorial needed and built a
-nine-step shell behind a feature flag. It validated every field. Nothing
-was stored behind it yet, and the last step was a "coming soon" stub. My job
-was the rest: research, design, and the front end.
-
 {/* QUESTION: confirm the role line. "I researched and designed the flow and built the front end. The engineer scoped the data model, split my branch into reviewable PRs, and owns the backend." */}
 
 ## Reading the editors against the build
 
-The digital editors had already sent feedback on the shell. The editorial
-director wrote structural questions; the digital editor answered with a full
-copy draft. I held every line of both against what the code actually did.
-
 {/* QUESTION: confirm you're comfortable naming Lara and Megan, or keep them as roles. */}
-
-The audit came back with 3 conflicts, 11 missing items, 10 rewordings and 5
-things to leave alone. The conflicts mattered most, because in each one the
-form rejected the exact answer the editors told people to give:
 
 <Numbered>
 
@@ -128,10 +107,6 @@ form rejected the exact answer the editors told people to give:
 
 {/* SCREENSHOT: redlines / Capture: the top of real-wed-form-redlines.html, the four counts and the first conflict card / Specs: 1440px, crop to the counts plus one conflict / Tip: export from the HTML file, not Figma */}
 
-From the audit I wrote a copy deck covering every screen. Each line is
-tagged by where it came from: the digital editor's draft, already built and
-worth keeping, written by me, or waiting on an editor's decision.
-
 {/* Section: Competitors (hidden until written) */}
 
 {/* QUESTION: which submission forms did you study (The Knot, Junebug, Style Me Pretty, others)? What did you take, and what did you decide against? This section is cut if you skip it. */}
@@ -145,10 +120,6 @@ worth keeping, written by me, or waiting on an editor's decision.
 ## The flow
 
 <SubmissionJourney caption="Each answer to the first question gets its own step order, and all four meet at review. Pink marks the step that differs from the vendor's order." />
-
-The flow went from nine steps to eight, and every heading became a question
-the submitter answers: "Who is submitting this wedding?", "How can we reach
-you?", "Who photographed this wedding?", down to "One last look."
 
 <ImagePan
   src="/case-studies/real-wedding-flow.webp"
