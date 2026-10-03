@@ -50,6 +50,11 @@ export type DocMetadata = {
    * body opens on its own. It still describes the doc everywhere else.
    */
   hideLead?: boolean
+  /**
+   * Takes a case study off the home page, /projects, the sitemap and the
+   * next and previous arrows. Its page still builds, so a shared link works.
+   */
+  archived?: boolean
   /** Pins the doc to the top of its list, above the date-sorted rest. */
   pinned?: boolean
   /**

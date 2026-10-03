@@ -102,7 +102,10 @@ export async function DocPage({
   // should never land a reader on a redirect or a placeholder.
   const category = m.category ?? ""
   const siblings = getDocsByCategory(category).filter(
-    (sibling) => !sibling.metadata.href && !sibling.metadata.comingSoon
+    (sibling) =>
+      !sibling.metadata.href &&
+      !sibling.metadata.comingSoon &&
+      !sibling.metadata.archived
   )
   const { previous, next } = findNeighbor(siblings, doc.slug)
   const noun = NEIGHBOUR_NOUN[category] ?? "page"
