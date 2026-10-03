@@ -1,16 +1,17 @@
 ---
 title: "Modern Care Homes"
 description: "A senior living marketplace for families, and the platform agents use to list their homes. I design both and ship their front end."
+hideLead: true
 claim: "I design the interfaces and ship the front end for both sides of it, the site families search and the platform agents run."
 image: "/cover-moderncare.webp"
 createdAt: "2026-01-01"
-updatedAt: "2026-09-28"
+updatedAt: "2026-10-03"
 order: 4
 new: true
 company: "Modern Care Homes"
 role: "Design Engineer"
 team: "With Spencer Grzincich, Software Engineer"
-type: "Ongoing partnership"
+type: "Ongoing contract"
 period: "2024 to now"
 liveUrl: "https://www.moderncarehomes.com/"
 liveLabel: "Visit Modern Care Homes"
@@ -28,34 +29,9 @@ skills:
   - "Storybook"
   - "Mobbin"
   - "PostHog"
-outcome: "Live in the Phoenix metro, with both products on one design system and an AA contrast floor on every surface."
-results:
-  - value: "2"
-    label: "Products on one design system"
-  - value: "6"
-    label: "Cities families can search"
-  - value: "18px"
-    label: "Base type size"
-  - value: "AA"
-    label: "Contrast floor on every surface"
 ---
 
-<Phases>
-  <Phase
-    title="Pattern research"
-    detail="Marketplaces, in Mobbin"
-    icon="search"
-  />
-  <Phase title="Figma" detail="Foundations, tokens, components" icon="figma" />
-  <Phase
-    title="Storybook"
-    detail="Every state, in isolation"
-    icon="storybook"
-  />
-  <Phase title="Shipped" detail="Marketplace and agent platform" icon="react" />
-</Phases>
-
-## Two people, one search
+## Overview
 
 Modern Care Homes is a senior living marketplace for the Phoenix metro.
 Families search independent and assisted living homes across six cities,
@@ -65,6 +41,8 @@ on a second product, the agent platform.
 <Plate background="none" caption="The grid families land on after a search.">
   <Video src="/case-studies/home-grid-mch.mp4" />
 </Plate>
+
+## Users
 
 Two very different people use the marketplace for the same task, and neither
 has patience for an interface that gets in the way.
@@ -87,10 +65,58 @@ has patience for an interface that gets in the way.
 Both stall at the same step. The flow is search, compare, contact, and families
 are mostly ruling homes out, so compare is where I put the work.
 
-## Studying the marketplaces that already solved it
+## My role
+
+<Phases>
+  <Phase
+    title="Pattern research"
+    detail="Marketplaces, in Mobbin"
+    icon="search"
+  />
+  <Phase title="Figma" detail="Foundations, tokens, components" icon="figma" />
+  <Phase
+    title="Storybook"
+    detail="Every state, in isolation"
+    icon="storybook"
+  />
+  <Phase title="Shipped" detail="Marketplace and agent platform" icon="react" />
+</Phases>
+
+### One design system, two products
+
+Every component runs in both the marketplace and the agent platform, so a
+change to a button changes two products.
+
+<TwoJobs />
+
+### Working with Spencer
+
+I design and build the front end. Spencer Grzincich, our software engineer,
+owns the data layer, so we split the work along that line.
+
+<Sides>
+<Side label="Me" title="Everything families and agents see">
+
+- Components, layout, responsive behavior and motion, shipped as code
+- Accessibility tested on the real build: contrast, focus, keyboard, zoom, targets
+- What I learn shipping goes back into the system
+
+</Side>
+<Side label="Spencer Grzincich" title="The data layer">
+
+- How home data is modeled, stored and served
+- The integrations, and keeping it all running
+- The only work I hand off is work that touches his side
+
+</Side>
+</Sides>
+
+## Marketplace research
 
 Senior living is a marketplace problem first and a healthcare problem second,
-so I study real estate marketplaces, not other care sites.
+so I studied real estate marketplaces alongside care sites. I used Mobbin to
+study Airbnb's and Zillow's listing editors and activation flows, and
+researched competitors like Seniorly on my own.
 
 <Sides>
 <Side label="Marketplace" title="Real estate search, in Mobbin">
@@ -116,7 +142,53 @@ so I study real estate marketplaces, not other care sites.
   <Video src="/case-studies/airbnb-research-mch.mp4" />
 </Plate>
 
-## What changed
+## Marketplace design
+
+<Plate
+  background="none"
+  caption="From search results to a home profile, on desktop."
+>
+  <Video src="/case-studies/marketplace-tour-mch.mp4" />
+</Plate>
+
+### Filter controls
+
+Families narrow by price, accepted payments and care type, and can save a
+search to run again later.
+
+<Plate
+  background="none"
+  caption="Filtering by price and care type, then saving the search."
+>
+  <Video src="/case-studies/filters-saved-search-mch.mp4" />
+</Plate>
+
+### On a phone
+
+<Plate caption="Left, the filters as a sheet. Right, a home profile's room gallery.">
+  <div className="mx-auto grid max-w-lg grid-cols-2 gap-4 p-4">
+    <Video src="/case-studies/mobile-filters-mch.mp4" className="my-0" />
+    <Video src="/case-studies/home-profile-mobile-mch.mp4" className="my-0" />
+  </div>
+</Plate>
+
+### Documented in Figma
+
+Each component gets a documentation page in the Figma library, with its
+variants, usage rules, tokens and the code files it maps to.
+
+<Plate
+  background="none"
+  caption="The Home Nav page: the in-page navigation on a home profile, static and stuck."
+>
+  <img
+    src="/case-studies/figma-home-nav-mch.webp"
+    alt="Figma documentation for the Home Nav component: a description, its static and stuck variants, usage notes and the tokens it uses"
+    className="block w-full"
+  />
+</Plate>
+
+## Component redesigns
 
 ### The home card shows what differs
 
@@ -152,29 +224,7 @@ the Airbnb study.
   />
 </Plate>
 
-### Around the main screens
-
-<Principles>
-  <Principle title="The screens nobody screenshots">
-    Filters, empty results and half-filled listings make up most real sessions,
-    so I design them as carefully as the main screens.
-  </Principle>
-  <Principle title="Words families are still learning">
-    Independent living, assisted living, levels of care. A page that assumes
-    families know the difference has failed them.
-  </Principle>
-  <Principle title="A place, not a spreadsheet">
-    I own the brand, type scale and photography, from marketing pages to search
-    results, on a phone in a parking lot or a desktop at 200% zoom.
-  </Principle>
-</Principles>
-
-## One design system, two products
-
-Every component runs in both the marketplace and the agent platform, so a
-change to a button changes two products.
-
-<TwoJobs caption="Building the system, and using it in context. Hover a hub for a glimpse of each." />
+## Design system
 
 ### Tokens
 
@@ -198,36 +248,6 @@ level.
 <Plate caption="Every frame is a live story: click one to change its state, or open it in Storybook.">
   <AtomicDesign through="Organisms" omit="Sidebar" />
 </Plate>
-
-### A template, live
-
-Filters, results and the map come together before any listing is real.
-
-<Plate caption="The filter form, live from the Storybook.">
-  <MchStory
-    id="components-search-filterform--in-dialog-chrome"
-    label="Filter form"
-  />
-</Plate>
-
-## Shipping it
-
-<Sides>
-<Side label="Me" title="Everything families and agents see">
-
-- Components, layout, responsive behavior and motion, shipped as code
-- Accessibility tested on the real build: contrast, focus, keyboard, zoom, targets
-- What I learn shipping goes back into the system
-
-</Side>
-<Side label="Spencer Grzincich" title="The data layer">
-
-- How home data is modeled, stored and served
-- The integrations, and keeping it all running
-- The only work I hand off is work that touches his side
-
-</Side>
-</Sides>
 
 ## The stack
 
