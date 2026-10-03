@@ -41,11 +41,8 @@ src/components/fibo`); re-run that to update one, and check its imports still
 point at `@/components/fibo/`; the install also drops a stray `utils.ts`
 and a `cn` package, and writes dark values for fibo's extra roles into
 `globals.css` that this site mixes itself, so revert those, but keep `--warning` and the two `--sticker-*` tokens
-that Sticker avatar needs, which this site declares itself. Five parts carry
-local changes. `filter-menu.tsx`
-has a `container` prop for where its popup renders, and keeps focus and
-scrolling inside the menu so opening it never scrolls the page; the home
-page cover needs both. `token-flow.tsx` carries an `orientation` prop so the
+that Sticker avatar needs, which this site declares itself. Four parts carry
+local changes. `token-flow.tsx` carries an `orientation` prop so the
 Design System Overhaul card cover can stack its tiers at any width. `chapter-scrubber.tsx` fits its preview to the screen: on a
 narrow one it opens on the side with more room and narrows to fit, and it
 closes once the rail scrolls out of view. It also keeps `preview="none"`,
@@ -70,8 +67,9 @@ its own. The Voice memo project page (`/work/voice-memo`) and its bare
 `features/doc/components/voice-memo-hero.tsx` (the device itself, which the
 card cover also draws, is in `voice-memo-device.tsx`). It isn't in
 `fibo-niche.ts`, so it has no `/components` doc yet. Put
-these back after reinstalling; fibo's own filter menu has since gained a
-`container` prop, so check what it already covers first. `src/features/portfolio/data/fibo-niche.ts`
+these back after reinstalling. `filter-menu.tsx` matches fibo again: its
+`container` prop and scrolling the list rather than the page, which the
+home page cover needs, are both in fibo now. `src/features/portfolio/data/fibo-niche.ts`
 lists them, which drives the home page section, `/components` and the
 docs; `home: false` keeps a part off the home page (Token flow, Reactions, whose slot Floating nav took, Pixel snail, whose slot Sticker avatar took, and Integration visual, whose slot the Command menu took after Data table joined). Each has a doc at `/components/[slug]`, ported from fibo's Storybook:
 `src/features/components/content/<slug>.mdx` is the body,
