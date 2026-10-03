@@ -109,24 +109,31 @@ export function FiboStory() {
 
       <Chapter title="Where he comes from" after={<FiboFarm />}>
         <p>
-          fibo is short for Fibonacci, the Italian mathematician. In 1202 he
-          wrote a book called <em>Liber Abaci</em>, and tucked inside it is a
-          puzzle about rabbits.
+          fibo is named after Leonardo of Pisa, the Italian mathematician better
+          known as Fibonacci. The nickname came centuries after him, short for{" "}
+          <em>filius Bonacci</em>, &ldquo;son of Bonacci.&rdquo; He grew up
+          partly in North Africa, where his father worked as a merchant
+          official, and there he learned the Hindu-Arabic numerals that traders
+          were already using.
         </p>
-        <p>The puzzle has four rules:</p>
-        <ol>
-          <li>Start with one pair of baby rabbits.</li>
-          <li>A pair takes a month to grow up.</li>
-          <li>
-            From the month after that, it has one new baby pair every month.
-          </li>
-          <li>Nobody ever dies. (It&apos;s a math puzzle, not a farm.)</li>
-        </ol>
         <p>
-          How many pairs are there after a year? Below, each row is a month and
-          each rabbit is a pair. A brace joins a pair to the baby pair it just
-          had, and a single line follows a pair still too young. Watch the first
-          six months play out.
+          In 1202 he published <em>Liber Abaci</em>, the &ldquo;Book of
+          Calculation,&rdquo; which made the case to Europe for those numerals
+          over Roman ones. Among its worked problems is a thought experiment
+          about rabbits. Start with one newborn pair. Each pair takes a month to
+          grow up, then has a new pair every month after that, and none of them
+          ever die. How many pairs are there after a year?
+        </p>
+        <p>
+          The answer grows into a famous sequence of numbers. Mathematicians in
+          India had described the same numbers centuries earlier, in the study
+          of poetic meter, but the rabbits are how Europe met them. They were
+          named after Fibonacci in the 1870s.
+        </p>
+        <p>
+          Below, each row is a month and each rabbit is a pair. A brace joins a
+          pair to the baby pair it just had, and a single line follows a pair
+          still too young. Watch the first six months play out.
         </p>
       </Chapter>
 
