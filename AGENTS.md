@@ -60,7 +60,8 @@ any element inside its record button in place of the flat drawing, and a
 and its copy and download buttons carry words ("Copy", "Download .md")
 beside their icons, and closing the transcript plays an exit before it's
 removed and hands focus back to the device, with `onDismiss` as it starts
-and `onDismissed` once it's gone;
+and `onDismissed` once it's gone, and it tidies each settled phrase
+(`tidy`: drops fillers and repeated words, capitalises, ends sentences);
 with a custom device the button draws no focus ring, so the device draws
 its own. The Voice memo project page (`/work/voice-memo`) and its bare
 `/voice-memo` page use all three for the 3D device, in
