@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 type Themed = { light: string; dark: string }
 
 /** A pair of images, one shown in each of the site's themes. */
-export function ThemedImage({
+function ThemedImage({
   src,
   className,
   width,
