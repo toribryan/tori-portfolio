@@ -1,13 +1,13 @@
 ---
 title: "Agentic Design System"
 description: "Where I started with agentic design systems, where I am now, and what works best today."
+hideLead: true
 claim: "I started by telling a model how to use our design system. Now I build systems it can't pass without using correctly."
 image: "/cover-agenticds.webp"
 order: 5
 createdAt: "2026-01-01"
-updatedAt: "2026-10-02"
+updatedAt: "2026-10-03"
 company: "Proctorio, then fibo"
-reach: "8 million test takers"
 role: "Staff Designer, research lead"
 team: "Research run with Proctorio's lead front-end engineer; fibo built solo with Claude Code"
 type: "Internal R&D, then open source"
@@ -23,15 +23,7 @@ skills:
 problem: "Engineers were generating code from designs and designers were prototyping in code. Both used the same design system, and neither got it right."
 task: "Find out whether a model can use a design system, then build one where it has to."
 process: "Tested it with Figma MCP and fixed prompts at Proctorio, then rebuilt my own system, fibo, around checks an agent can run."
-outcome: "The research found the cause. fibo adds the missing piece: five checks gate every change, so agent pull requests arrive complete."
 pinned: true
-results:
-  - value: "The finding"
-    label: "A model reads a design but cannot infer the system behind it"
-  - value: "5"
-    label: "Checks every fibo change has to pass, from a person or an agent"
-  - value: "1"
-    label: "Metadata file the docs, catalog, registry and llms.txt all read"
 ---
 
 <IsoCards columns="2">
@@ -101,6 +93,9 @@ see.
 </IsoCards>
 
 ## What I found
+
+The research showed us quickly that any inconsistency between what the model
+read in Figma and what actually existed in the codebase confused it.
 
 A model reads a design fine. It can't look at a rectangle and know it's your
 Button. Left alone, it rebuilt components from scratch, hardcoded the colors it
