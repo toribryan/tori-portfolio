@@ -10,6 +10,7 @@ import {
 } from "react"
 
 import { cn } from "@/lib/utils"
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 import arcContracts from "@/features/doc/data/iso/arc-contracts.json"
 import arcNow from "@/features/doc/data/iso/arc-now.json"
 import arcStart from "@/features/doc/data/iso/arc-start.json"
@@ -102,6 +103,7 @@ function IsoCanvas({
   field: Field
 }) {
   const ref = useRef<HTMLCanvasElement>(null)
+  const reduced = usePrefersReducedMotion()
 
   useEffect(() => {
     const canvas = ref.current
@@ -126,8 +128,12 @@ function IsoCanvas({
     const level = (i: number) =>
       grid.rows[Math.floor(i / grid.width)]![i % grid.width]
 
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
-    let shown = reduced.matches ? filled.length : 0
+    // Each cell's place in the arrival order, so a draw can tell what has
+    // arrived without building a set from `filled`.
+    const order = new Int32Array(grid.width * grid.height)
+    filled.forEach((cell, n) => (order[cell] = n))
+
+    let shown = reduced ? filled.length : 0
     let flipped = new Set<number>()
     let colors = { ink: "", faint: "" }
 
@@ -139,21 +145,27 @@ function IsoCanvas({
       }
     }
 
-    const draw = () => {
-      const pitch = canvas.clientWidth / field.w
+    // Setting a canvas's size reallocates and clears it, so it happens only
+    // when the canvas resizes, not on every frame of the build-up.
+    let pitch = 0
+    const size = () => {
+      pitch = canvas.clientWidth / field.w
       const dpr = window.devicePixelRatio || 1
       canvas.width = Math.round(canvas.clientWidth * dpr)
       canvas.height = Math.round(pitch * field.h * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, pitch * field.w, pitch * field.h)
       const dot = pitch * 0.62
-      const visible = new Set(filled.slice(0, shown))
       for (let fy = 0; fy < field.h; fy++) {
         for (let fx = 0; fx < field.w; fx++) {
           const x = fx - ox
           const y = fy - oy
           const inside = x >= 0 && y >= 0 && x < grid.width && y < grid.height
           const i = y * grid.width + x
-          const v = inside && visible.has(i) ? level(i) : "0"
+          const v = inside && order[i]! < shown ? level(i) : "0"
           let n = Number(v)
           if (n > 0 && n < 4 && flipped.has(i)) n += 1
           ctx.fillStyle = n === 0 ? colors.faint : colors.ink
@@ -166,6 +178,7 @@ function IsoCanvas({
     }
 
     readColors()
+    size()
     draw()
 
     let frame = 0
@@ -197,7 +210,7 @@ function IsoCanvas({
 
     const observer = new IntersectionObserver(([entry]) => {
       onScreen = !!entry?.isIntersecting
-      if (reduced.matches) return
+      if (reduced) return
       if (onScreen && shown === 0) build(performance.now())
       else if (onScreen && shown === filled.length && !timer)
         timer = window.setInterval(flicker, FLICKER_MS)
@@ -215,8 +228,14 @@ function IsoCanvas({
       readColors()
       draw()
     })
-    theme.observe(document.documentElement, { attributes: true })
-    const resize = new ResizeObserver(draw)
+    theme.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    })
+    const resize = new ResizeObserver(() => {
+      size()
+      draw()
+    })
     resize.observe(canvas)
 
     return () => {
@@ -226,7 +245,7 @@ function IsoCanvas({
       theme.disconnect()
       resize.disconnect()
     }
-  }, [art, seed, field.w, field.h])
+  }, [art, seed, field.w, field.h, reduced])
 
   return <canvas ref={ref} className="block w-full" aria-hidden />
 }
