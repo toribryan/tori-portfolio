@@ -464,6 +464,7 @@ function Face({
     sheen: `${id}-sheen`,
     clip: `${id}-clip`,
     edges: `${id}-edges`,
+    engrave: `${id}-engrave`,
   }
   const { width, height, radius } = FACE
   const wordmark = "fibo"
@@ -537,6 +538,49 @@ function Face({
             style={{ stopColor: "var(--background)", stopOpacity: 0 }}
           />
         </linearGradient>
+        {/* Lettering cut into the face, lit from the top left: its floor
+            a shade darker, a shadow under the wall facing the light and a
+            bright ledge along the far one. */}
+        <filter
+          id={ids.engrave}
+          x="-10%"
+          y="-30%"
+          width="120%"
+          height="160%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feOffset in="SourceAlpha" dx="0.35" dy="0.4" result="down" />
+          <feOffset in="SourceAlpha" dx="-0.35" dy="-0.4" result="up" />
+          <feComposite
+            in="SourceAlpha"
+            in2="down"
+            operator="out"
+            result="wall"
+          />
+          <feComposite
+            in="SourceAlpha"
+            in2="up"
+            operator="out"
+            result="ledge"
+          />
+          <feFlood
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.16 }}
+          />
+          <feComposite in2="SourceAlpha" operator="in" result="floor" />
+          <feFlood
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.45 }}
+          />
+          <feComposite in2="wall" operator="in" result="shade" />
+          <feFlood
+            style={{ floodColor: "var(--background)", floodOpacity: 0.9 }}
+          />
+          <feComposite in2="ledge" operator="in" result="lit" />
+          <feMerge>
+            <feMergeNode in="floor" />
+            <feMergeNode in="shade" />
+            <feMergeNode in="lit" />
+          </feMerge>
+        </filter>
         {/* The rim of raised lettering lit from the top left: a bright line
             along the edges facing the light, where the shape shifted away
             from it leaves them uncovered, a hard shadow along the far edges
@@ -639,7 +683,7 @@ function Face({
         </text>
       ) : (
         // A magnet ring pressed into the back, lit from above: dark on its
-        // upper wall, bright on its lower one. Then a line of small print.
+        // upper wall, bright on its lower one. Then the owner's name, engraved.
         <g fill="none" strokeWidth={1.4}>
           <circle
             cx={width / 2}
@@ -658,13 +702,15 @@ function Face({
           <text
             x={width / 2}
             y={height - 12}
-            fontSize={5.2}
-            letterSpacing={0.8}
+            fontSize={10}
+            letterSpacing={0.3}
             textAnchor="middle"
             stroke="none"
-            className="fill-foreground font-mono opacity-40"
+            fill="black"
+            filter={`url(#${ids.engrave})`}
+            className="font-serif"
           >
-            VOICE MEMO · FIBO.TORIBRYAN.COM
+            Tori Bryan
           </text>
         </g>
       )}
