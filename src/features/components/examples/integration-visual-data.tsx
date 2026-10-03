@@ -49,7 +49,6 @@ export const args = {
   background: "dots",
   routes: "solid",
   pulse: "inward",
-  size: "default",
   halo: true,
 } satisfies Partial<ComponentProps<typeof IntegrationVisual>>
 

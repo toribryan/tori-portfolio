@@ -59,7 +59,6 @@ Each `title` names its tile for screen readers.
 | `background`  | `"dots" \| "grid" \| "none"`                   | `"dots"`         | The plate behind the diagram.                                                                                                                                                                          |
 | `routes`      | `"solid" \| "dashed"`                          | `"solid"`        | Route stroke.                                                                                                                                                                                          |
 | `pulse`       | `"inward" \| "outward" \| "through" \| "none"` | `"inward"`       | Which way the pulse travels along each active route. `through` runs left to right, into the hub from the left and out of it on the right, so `sides` reads as a pipeline.                              |
-| `size`        | `"sm" \| "default" \| "lg"`                    | `"default"`      | Scales the tiles and the hub.                                                                                                                                                                          |
 | `halo`        | `boolean`                                      | `true`           | A slow ring breathing out from the hub.                                                                                                                                                                |
 | `label`       | `string`                                       | `"Integrations"` | Accessible name for the diagram.                                                                                                                                                                       |
 | `centerLabel` | `string`                                       |                  | Accessible name for the hub, which becomes a button when there's a preview. Defaults to `center` when that's text, otherwise to `label`.                                                               |
@@ -457,26 +456,6 @@ Routes are a solid hairline, or dashed for a lighter touch.
 </ExhibitCode>
 </Exhibit>
 </ExhibitGrid>
-
-### Sizes
-
-Size scales the tiles and the hub. The plate always fills its container.
-
-<Exhibit
-  of="integration-visual.Sizes"
-  title="Sizes"
-  description="Small, default and large at the same width."
->
-<ExhibitCode>
-
-```tsx
-<IntegrationVisual size="sm" items={items} />
-<IntegrationVisual size="default" items={items} />
-<IntegrationVisual size="lg" items={items} />
-```
-
-</ExhibitCode>
-</Exhibit>
 
 ## Usage
 

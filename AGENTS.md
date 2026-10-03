@@ -48,7 +48,9 @@ scrolling inside the menu so opening it never scrolls the page; the home
 page cover needs both. `token-flow.tsx` carries an `orientation` prop so the
 Design System Overhaul card cover can stack its tiers at any width. `chapter-scrubber.tsx` fits its preview to the screen: on a
 narrow one it opens on the side with more room and narrows to fit, and it
-closes once the rail scrolls out of view. `command-menu.tsx` has a `modal` prop:
+closes once the rail scrolls out of view. It also keeps `preview="none"`,
+which fibo dropped, for a rail with no preview at all; the home page cover
+and its doc use it. `command-menu.tsx` has a `modal` prop:
 `false` opens it without locking the page's scroll or moving focus, which the
 home page cover needs, and then opening an item's page doesn't pull focus
 into it either (focusing scrolls the page to the menu, which dropped the

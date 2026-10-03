@@ -253,7 +253,6 @@ export function Plates() {
             <IntegrationVisual
               {...args}
               background={background}
-              size="sm"
               items={tools.slice(0, 4)}
             />
           </div>
@@ -271,27 +270,6 @@ export function DashedRoutes() {
     <Frame>
       <IntegrationVisual {...args} routes="dashed" items={tools.slice(0, 4)} />
     </Frame>
-  )
-}
-
-export function Sizes() {
-  return (
-    <div className="grid w-full max-w-5xl gap-4 sm:grid-cols-3">
-      {(["sm", "default", "lg"] as const).map((size) => (
-        <div key={size} className="flex flex-col gap-2">
-          <div className="overflow-hidden rounded-xl border border-border">
-            <IntegrationVisual
-              {...args}
-              size={size}
-              items={tools.slice(0, 4)}
-            />
-          </div>
-          <span className="font-mono text-xs text-muted-foreground">
-            {size}
-          </span>
-        </div>
-      ))}
-    </div>
   )
 }
 
@@ -341,7 +319,6 @@ export function DoIdle() {
     <RuleFrame>
       <IntegrationVisual
         {...args}
-        size="sm"
         items={tools
           .slice(0, 4)
           .map((tool, i) =>
@@ -355,7 +332,7 @@ export function DoIdle() {
 export function DontSparse() {
   return (
     <RuleFrame>
-      <IntegrationVisual {...args} size="sm" items={tools.slice(0, 2)} />
+      <IntegrationVisual {...args} items={tools.slice(0, 2)} />
     </RuleFrame>
   )
 }
@@ -363,12 +340,7 @@ export function DontSparse() {
 export function DoShortHub() {
   return (
     <RuleFrame>
-      <IntegrationVisual
-        {...args}
-        size="sm"
-        center="12"
-        items={tools.slice(0, 4)}
-      />
+      <IntegrationVisual {...args} center="12" items={tools.slice(0, 4)} />
     </RuleFrame>
   )
 }
@@ -378,7 +350,6 @@ export function DontLongHub() {
     <RuleFrame>
       <IntegrationVisual
         {...args}
-        size="sm"
         center="All your integrations"
         items={tools.slice(0, 4)}
       />
@@ -391,7 +362,6 @@ export function DoThrough() {
     <RuleFrame>
       <IntegrationVisual
         {...args}
-        size="sm"
         layout="sides"
         pulse="through"
         items={pipeline}
@@ -405,7 +375,6 @@ export function DontInward() {
     <RuleFrame>
       <IntegrationVisual
         {...args}
-        size="sm"
         layout="sides"
         pulse="inward"
         items={pipeline}
