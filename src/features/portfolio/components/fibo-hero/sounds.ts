@@ -1,18 +1,23 @@
+import { getAudioContext } from "@/lib/soundcn/sound-engine"
+
 import type { FiboLine } from "./lines"
 
 /*
- * fibo's chiptune sounds, synthesized so there is nothing to load. Browsers
- * keep audio off until the visitor clicks or presses a key, so the context
- * is made on the first of those anywhere on the page, and any sound asked
- * for before then is skipped. Sounds asked for while it is still waking are
- * scheduled anyway and play as it starts, so a first click is not silent.
+ * fibo's chiptune sounds, synthesized so there is nothing to load. They play
+ * on the site's shared audio context. Browsers keep audio off until the
+ * visitor clicks or presses a key, so any sound asked for before the first of
+ * those anywhere on the page is skipped rather than queued. Sounds asked for
+ * while it is still waking are scheduled anyway and play as it starts, so a
+ * first click is not silent.
  */
 let audio: AudioContext | null = null
 let listening = false
 
 function unlock() {
-  audio ??= new AudioContext()
-  void audio.resume()
+  audio = getAudioContext()
+  audio.resume().catch(() => {
+    // Still blocked; the engine resumes it on the next gesture.
+  })
 }
 
 /** Wakes the audio on the visitor's first click or key press on the page. */
@@ -35,7 +40,9 @@ type Tone = {
 
 // One oscillator sliding between two pitches and fading out.
 function tone({ from, to = from, ms, volume, wave = "square", at = 0 }: Tone) {
-  if (!audio) return
+  // Quiet under reduced motion, like the site's other sounds.
+  if (!audio || window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+    return
   const start = audio.currentTime + at
   const end = start + ms / 1000
   const osc = audio.createOscillator()
