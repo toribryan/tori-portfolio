@@ -779,7 +779,7 @@ function Pitch({
               size="lg"
               variant="outline"
               nativeButton={false}
-              className="h-[round(up,1.5rem,var(--u))] w-[round(up,6rem,var(--u))]"
+              className="h-[round(up,1.5rem,var(--u))]"
               render={<Link href="/fibo" />}
             >
               <RabbitIcon data-icon="inline-start" />
