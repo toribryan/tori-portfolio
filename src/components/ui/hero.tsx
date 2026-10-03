@@ -327,7 +327,6 @@ const pendingContextReleases = new WeakMap<HTMLCanvasElement, number>()
 export function ShaderBackground({
   className,
   onTap,
-  onSweep,
 }: {
   className?: string
   /**
@@ -337,13 +336,6 @@ export function ShaderBackground({
    * also get the tap ripple below.
    */
   onTap?: () => void
-  /**
-   * Fired once when a pointer travels far enough across the field to read as
-   * a gesture rather than a nudge: a cursor crossing it, or a finger swiping
-   * over it. Rearms when the pointer leaves or the swipe ends, so one pass
-   * fires once however long it lingers.
-   */
-  onSweep?: () => void
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   // Held in a ref so the render effect keeps its empty dep list; re-running it
@@ -354,10 +346,6 @@ export function ShaderBackground({
   useEffect(() => {
     onTapRef.current = onTap
   }, [onTap])
-  const onSweepRef = useRef(onSweep)
-  useEffect(() => {
-    onSweepRef.current = onSweep
-  }, [onSweep])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -510,61 +498,16 @@ export function ShaderBackground({
       targetPresence = 1
       requestRender()
     }
-    // How far a pointer has to travel inside the field before it counts as a
-    // sweep. Short enough that crossing the banner trips it, long enough that
-    // settling the cursor on the way to something else doesn't.
-    const SWEEP_DISTANCE = 160
-    let sweepTravel = 0
-    let sweepArmed = true
-    let sweepTracking = false
-    let sweepLastX = 0
-    let sweepLastY = 0
-
-    const resetSweep = () => {
-      sweepTracking = false
-      sweepTravel = 0
-      sweepArmed = true
-    }
-
-    const trackSweep = (clientX: number, clientY: number) => {
-      const inside =
-        clientX >= bounds.left &&
-        clientX <= bounds.right &&
-        clientY >= bounds.top &&
-        clientY <= bounds.bottom
-      if (!inside) {
-        resetSweep()
-        return
-      }
-      if (sweepTracking) {
-        sweepTravel += Math.hypot(clientX - sweepLastX, clientY - sweepLastY)
-      }
-      sweepTracking = true
-      sweepLastX = clientX
-      sweepLastY = clientY
-      if (sweepArmed && sweepTravel >= SWEEP_DISTANCE) {
-        sweepArmed = false
-        sweepTravel = 0
-        onSweepRef.current?.()
-      }
-    }
-
     const onPointerMove = (event: PointerEvent) => {
       pointerKnown = true
       pointerClientX = event.clientX
       pointerClientY = event.clientY
       bounds = canvas.getBoundingClientRect()
       updatePointerTarget()
-      trackSweep(event.clientX, event.clientY)
-    }
-    // Lifting a finger ends its swipe, so the next one can fire again.
-    const onPointerUp = () => {
-      resetSweep()
     }
     const onPointerLeave = () => {
       pointerKnown = false
       targetPresence = 0
-      resetSweep()
       requestRender()
     }
     // Touch has no hover, so on a phone the ripple has nothing to follow.
@@ -587,8 +530,6 @@ export function ShaderBackground({
       // ripple straight to the touch point instead of sliding in from wherever
       // it last sat.
       updatePointerTarget()
-      resetSweep()
-      trackSweep(event.clientX, event.clientY)
       onTapRef.current?.()
       tapFade = window.setTimeout(() => {
         targetPresence = 0
@@ -605,7 +546,6 @@ export function ShaderBackground({
     if (UNIFORMS.cursorEnabled) {
       window.addEventListener("pointermove", onPointerMove, { passive: true })
       canvas.addEventListener("pointerdown", onPointerDown, { passive: true })
-      window.addEventListener("pointerup", onPointerUp, { passive: true })
       window.addEventListener("pointercancel", onPointerLeave)
       window.addEventListener("scroll", updateLayout, true)
       window.addEventListener("blur", onPointerLeave)
@@ -688,7 +628,6 @@ export function ShaderBackground({
         window.clearTimeout(tapFade)
         canvas.removeEventListener("pointerdown", onPointerDown)
         window.removeEventListener("pointermove", onPointerMove)
-        window.removeEventListener("pointerup", onPointerUp)
         window.removeEventListener("pointercancel", onPointerLeave)
         window.removeEventListener("scroll", updateLayout, true)
         window.removeEventListener("blur", onPointerLeave)

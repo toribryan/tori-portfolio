@@ -255,12 +255,7 @@ export async function DocPage({
         <TOCInline className="mt-0" items={toc} />
 
         {facts.length > 0 && (
-          <dl
-            className={cn(
-              "not-prose my-6 grid grid-cols-1 gap-x-6 gap-y-3 rounded-xl bg-surface-warm p-4 text-sm sm:grid-cols-2",
-              "inset-ring-1 inset-ring-border/64"
-            )}
-          >
+          <dl className="not-prose my-6 grid grid-cols-1 gap-x-6 gap-y-3 text-sm sm:grid-cols-2">
             {facts.map(([label, value]) => (
               <div key={label} className="flex flex-col gap-0.5">
                 <dt className="font-mono text-xs tracking-wide text-muted-foreground uppercase">
