@@ -151,6 +151,37 @@ function useTurn(rest: Pose) {
   return { rx, ry, back, flip, handlers }
 }
 
+/*
+ * Two soft notes as recording starts, rising, and the same two falling as it
+ * stops, synthesized so there is nothing to load. They play from the press
+ * itself, which is what lets a browser make sound at all.
+ */
+let audio: AudioContext | null = null
+
+function chime(notes: number[]) {
+  audio ??= new AudioContext()
+  void audio.resume()
+  notes.forEach((frequency, index) => {
+    if (!audio) return
+    const start = audio.currentTime + index * 0.09
+    const osc = audio.createOscillator()
+    const gain = audio.createGain()
+    osc.type = "sine"
+    osc.frequency.setValueAtTime(frequency, start)
+    // A quick swell, so the note starts without a click, then a ring out.
+    gain.gain.setValueAtTime(0.0001, start)
+    gain.gain.exponentialRampToValueAtTime(0.08, start + 0.012)
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22)
+    osc.connect(gain).connect(audio.destination)
+    osc.start(start)
+    osc.stop(start + 0.24)
+  })
+}
+
+// A fifth apart, E5 and B5.
+const START_NOTES = [659.25, 987.77]
+const STOP_NOTES = [987.77, 659.25]
+
 // Small on its page, so the transcript has room beside it.
 const SMALL = "[--w:min(44cqw,13rem)]"
 
@@ -184,7 +215,11 @@ export function VoiceMemoHero({ className }: { className?: string }) {
       <VoiceMemo
         title="Voice memo"
         recording={recording}
-        onRecordingChange={setRecording}
+        onRecordingChange={(next) => {
+          setRecording(next)
+          // Quiet under reduced motion, like the site's other sounds.
+          if (!reduceMotion) chime(next ? START_NOTES : STOP_NOTES)
+        }}
         side="bottom"
         // Device first, then the transcript: a column when narrow, and from
         // @xl a row run right to left, so the transcript opens on the left.
