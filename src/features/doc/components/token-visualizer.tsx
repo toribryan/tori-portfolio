@@ -5,7 +5,6 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  useSyncExternalStore,
   type CSSProperties,
   type FocusEvent as ReactFocusEvent,
   type MouseEvent as ReactMouseEvent,
@@ -14,6 +13,7 @@ import {
 } from "react"
 
 import { cn } from "@/lib/utils"
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 import { MoonIcon } from "@/components/animated-icons/moon-icon"
 import { SunMediumIcon } from "@/components/animated-icons/sun-medium-icon"
 import { Badge } from "@/components/fibo/badge"
@@ -230,13 +230,6 @@ function rampIndex(
 }
 
 const NOISE = "_!X$0-+*#"
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)"
-
-function subscribeToReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION)
-  query.addEventListener("change", onChange)
-  return () => query.removeEventListener("change", onChange)
-}
 
 /*
  * Text that runs as noise for a moment when it changes, resolving left to
@@ -249,11 +242,7 @@ function Scramble({
   text: string
   duration?: number
 }) {
-  const reduced = useSyncExternalStore(
-    subscribeToReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => false
-  )
+  const reduced = usePrefersReducedMotion()
   const settled = useRef<string | null>(null)
   const [noise, setNoise] = useState<string | null>(null)
 

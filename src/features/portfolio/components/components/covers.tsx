@@ -344,6 +344,8 @@ function FilterMenuCover({ active }: CoverProps) {
       timers.push(window.setTimeout(() => uninerted(stage, act), ms))
 
     const run = () => {
+      // Every timer from the last run has fired by now.
+      timers.length = 0
       at(700, () => trigger()?.click())
       at(1600, () =>
         stage
@@ -429,6 +431,8 @@ function CommandMenuCover({ active }: CoverProps) {
       timers.push(window.setTimeout(() => uninerted(stage, act), ms))
 
     const run = () => {
+      // Every timer from the last run has fired by now.
+      timers.length = 0
       // New file is highlighted to start; four steps down is Assign to.
       ;[0, 1, 2, 3].forEach((i) => at(1000 + i * 420, () => press("ArrowDown")))
       at(3000, () =>

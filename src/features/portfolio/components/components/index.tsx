@@ -6,7 +6,11 @@ import { NICHE_PARTS } from "@/features/portfolio/data/fibo-niche"
 
 import { Panel, PanelHeader, PanelTitle, PanelTitleSup } from "../panel"
 import { PanelTitleCopy } from "../panel-title-copy"
-import { ComponentCardList } from "./component-card-list"
+import {
+  ComponentCardList,
+  CoversPauseProvider,
+  CoversPauseToggle,
+} from "./component-card-list"
 
 const ID = "components"
 
@@ -17,15 +21,18 @@ const ID = "components"
 export function Components() {
   return (
     <Panel id={ID} className="screen-line-top-none">
-      <PanelHeader>
-        <PanelTitle>
-          <a href={`#${ID}`}>Components</a>
-          <PanelTitleSup>({NICHE_PARTS.length})</PanelTitleSup>
-          <PanelTitleCopy id={ID} />
-        </PanelTitle>
-      </PanelHeader>
+      <CoversPauseProvider>
+        <PanelHeader className="flex items-center justify-between gap-2">
+          <PanelTitle>
+            <a href={`#${ID}`}>Components</a>
+            <PanelTitleSup>({NICHE_PARTS.length})</PanelTitleSup>
+            <PanelTitleCopy id={ID} />
+          </PanelTitle>
+          <CoversPauseToggle />
+        </PanelHeader>
 
-      <ComponentCardList home />
+        <ComponentCardList home />
+      </CoversPauseProvider>
 
       <div className="screen-line-top flex justify-center py-4">
         <Button

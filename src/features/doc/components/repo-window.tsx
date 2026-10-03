@@ -173,17 +173,17 @@ export function RepoWindow({
         </nav>
 
         <div className="flex min-h-0 flex-col">
-          <div
+          {/* Picks a document like the file tree it stands in for on a
+              phone, so it marks the open one the same way. */}
+          <nav
             className="not-prose flex gap-1 overflow-x-auto border-b border-line px-2 py-1.5 sm:hidden"
-            role="tablist"
             aria-label={`Documents in ${name}`}
           >
             {Object.keys(documents).map((file) => (
               <button
                 key={file}
                 type="button"
-                role="tab"
-                aria-selected={file === current}
+                aria-current={file === current ? "page" : undefined}
                 onClick={() => show(file)}
                 className={cn(
                   "shrink-0 rounded-md px-2 py-1 font-mono text-xs",
@@ -195,7 +195,7 @@ export function RepoWindow({
                 {file.split("/").pop()}
               </button>
             ))}
-          </div>
+          </nav>
 
           <div
             ref={pane}

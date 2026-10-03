@@ -5,6 +5,7 @@ import { PauseIcon, PlayIcon } from "lucide-react"
 import { motion, useInView } from "motion/react"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { usePageVisible } from "@/hooks/use-page-visible"
 import { Button } from "@/components/base/ui/button"
 
 import { PixelRabbitSprite } from "./fibo-hero/pixel-rabbit"
@@ -104,6 +105,7 @@ export function FiboFarm() {
   // Matches the server on the first render, then switches, so hydration
   // doesn't trip over the month.
   const reduced = useMediaQuery("(prefers-reduced-motion: reduce)")
+  const visible = usePageVisible()
   const [started, setStarted] = useState(false)
   const [playing, setPlaying] = useState(true)
   const [step, setStep] = useState(1)
@@ -116,7 +118,7 @@ export function FiboFarm() {
   const rows = started || reduced ? MONTHS.slice(0, month) : []
 
   useEffect(() => {
-    if (reduced || !started || !playing || !inView) return
+    if (reduced || !started || !playing || !inView || !visible) return
     const id = window.setTimeout(
       () => {
         if (step < LAST_MONTH) return setStep(step + 1)
@@ -126,7 +128,7 @@ export function FiboFarm() {
       step === LAST_MONTH ? HOLD_MS : MONTH_MS
     )
     return () => window.clearTimeout(id)
-  }, [reduced, started, playing, inView, step, cycle])
+  }, [reduced, started, playing, inView, visible, step, cycle])
 
   return (
     <div
@@ -181,6 +183,8 @@ export function FiboFarm() {
                   key={pair.id}
                   pixel={RABBIT / 20}
                   assembleDelay={reduced ? undefined : lead + i * stagger}
+                  // Pause holds every rabbit, not just the months.
+                  still={!playing || !inView}
                   transform={`translate(${at.get(pair.id)} ${base})`}
                 />
               ))}

@@ -12,19 +12,24 @@ import { cn } from "@/lib/utils"
  *
  * Props are strings because expression attributes don't survive the MDX
  * pipeline (see `mdx-figure.tsx`): `srcs` is a comma-separated list, all the
- * same size, and `interval` is milliseconds.
+ * same size, and `interval` is milliseconds. `width` and `height` are that
+ * size in pixels, so the frame keeps its room while the images load.
  */
 export function ImageCycle({
   srcs,
   alt,
   caption,
   interval = "2600",
+  width,
+  height,
   className,
 }: {
   srcs: string
   alt: string
   caption?: React.ReactNode
   interval?: string
+  width?: string
+  height?: string
   className?: string
 }) {
   const frames = srcs.split(",").map((src) => src.trim())
@@ -56,10 +61,12 @@ export function ImageCycle({
           <img
             key={src}
             className={cn(
-              "col-start-1 row-start-1 w-full transition-opacity duration-500 ease-in-out",
+              "col-start-1 row-start-1 h-auto w-full transition-opacity duration-500 ease-in-out",
               index === active ? "opacity-100" : "opacity-0"
             )}
             src={src}
+            width={width}
+            height={height}
             alt=""
             loading="lazy"
           />

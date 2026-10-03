@@ -4,7 +4,6 @@ import {
   useEffect,
   useRef,
   useState,
-  useSyncExternalStore,
   type ComponentType,
   type CSSProperties,
   type ReactNode,
@@ -14,6 +13,7 @@ import Link from "next/link"
 import { RabbitIcon, Volume2Icon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 import { ArrowRightIcon } from "@/components/animated-icons/arrow-right-icon"
 import { Button } from "@/components/base/ui/button"
 
@@ -146,22 +146,6 @@ const TALL: Geometry = {
   fibo: { x: 30, y: 340 },
   stroke: 0.9,
   open: { x: -400, y: 210, width: 1000, height: 600 },
-}
-
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)"
-
-function subscribeToReducedMotion(onChange: () => void) {
-  const query = window.matchMedia(REDUCED_MOTION)
-  query.addEventListener("change", onChange)
-  return () => query.removeEventListener("change", onChange)
-}
-
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(
-    subscribeToReducedMotion,
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => false
-  )
 }
 
 type Rect = Geometry["rects"][number]
@@ -404,6 +388,10 @@ function Fibo({
   const burstDone = useRef(false)
   // True from the burst until he says "WOAH"; clicks on him wait it out.
   const bursting = useRef(false)
+  // Kept outside the click effect, whose re-runs must not cancel a burst
+  // midway and leave him in pieces, but cleared once the hero unmounts.
+  const burstTimer = useRef(0)
+  useEffect(() => () => window.clearTimeout(burstTimer.current), [])
 
   // A click anywhere in the hero gets a line, bar the buttons and links,
   // which keep their own jobs.
@@ -427,7 +415,7 @@ function Fibo({
         bursting.current = true
         sfx.burst()
         setBurst("apart")
-        window.setTimeout(() => {
+        burstTimer.current = window.setTimeout(() => {
           setBuild((b) => b + 1)
           setBurst("rebuilding")
         }, FIBO_BURST_MS)
