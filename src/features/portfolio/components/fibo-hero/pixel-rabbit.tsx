@@ -479,6 +479,8 @@ type PixelRabbitSpriteProps = {
   pixel?: number
   /** Watch a point: eyes toward it, ears up, turned to face it. */
   look?: RabbitLook | null
+  /** Holds him in this pose instead of idling or watching. Replies still play. */
+  pose?: Pose
   /** A reply to play once. A new `id` plays it again. */
   action?: { kind: RabbitAction; id: number } | null
   /** Builds him up from coarse blocks after this many milliseconds. */
@@ -509,6 +511,7 @@ type PixelRabbitSpriteProps = {
 function PixelRabbitSprite({
   pixel = 1,
   look = null,
+  pose: held,
   action = null,
   assembleDelay,
   onAssemble,
@@ -527,7 +530,7 @@ function PixelRabbitSprite({
 
   const steps = acting
     ? ACTIONS[action.kind]
-    : whole && !look && !reduced && !still && visible
+    : whole && !look && !held && !reduced && !still && visible
       ? IDLE
       : null
   const step = usePlayer(
@@ -560,14 +563,16 @@ function PixelRabbitSprite({
 
   // He is drawn facing left; `look.facing` of 1 turns him right.
   const facing = look?.facing ?? 1
-  const pose: Pose =
-    acting || !look
-      ? step.pose
-      : {
-          dx: look.x === 0 ? 0 : look.x === 1 ? -1 : 1,
-          dy: look.y,
-          ears: "perk",
-        }
+  const pose: Pose = acting
+    ? step.pose
+    : (held ??
+      (look
+        ? {
+            dx: look.x === 0 ? 0 : look.x === 1 ? -1 : 1,
+            dy: look.y,
+            ears: "perk",
+          }
+        : step.pose))
   const grid = compose(pose)
   // The pose at the moment the burst starts, held while it flies apart.
   const [burstFrom, setBurstFrom] = useState<Grid | null>(null)
@@ -617,4 +622,4 @@ function PixelRabbitSprite({
 }
 
 export { PixelRabbitSprite }
-export type { RabbitAction, RabbitLook, RabbitSound }
+export type { Pose as RabbitPose, RabbitAction, RabbitLook, RabbitSound }

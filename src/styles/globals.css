@@ -156,21 +156,22 @@
     }
   }
 
-  /* The Agentic Design System cover's question mark: a hop of two grid
-     cells, then one, in whole steps, then a rest before it asks again. */
-  --animate-mark-hop: mark-hop 1.4s steps(1, end) infinite;
+  /* A cover sprite's hop: two of its pixels, then one, in whole steps, then
+     a rest. Each sprite sets --hop-cell to one pixel as a share of its
+     height. */
+  --animate-cover-hop: cover-hop 1.4s steps(1, end) infinite;
 
-  @keyframes mark-hop {
+  @keyframes cover-hop {
     0%,
     45%,
     100% {
       translate: 0 0;
     }
     15% {
-      translate: 0 -4.8%;
+      translate: 0 calc(var(--hop-cell) * -2);
     }
     30% {
-      translate: 0 -2.4%;
+      translate: 0 calc(var(--hop-cell) * -1);
     }
   }
 

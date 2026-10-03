@@ -2,6 +2,7 @@ import type { ComponentType } from "react"
 
 import { AgenticDesignSystemCover } from "./agentic-design-system-cover"
 import { DesignSystemOverhaulCover } from "./design-system-overhaul-cover"
+import { FiboCover } from "./fibo-cover"
 import { ModernCareHomesCover } from "./modern-care-homes-cover"
 import { StorybookKitCover } from "./storybook-kit-cover"
 import { VoiceMemoCover } from "./voice-memo-cover"
@@ -13,6 +14,7 @@ import { VoiceMemoCover } from "./voice-memo-cover"
 export const DOC_COVERS: Record<string, ComponentType<{ loop?: boolean }>> = {
   "agentic-design-system": AgenticDesignSystemCover,
   "design-system-overhaul": DesignSystemOverhaulCover,
+  fibo: FiboCover,
   "modern-care-homes": ModernCareHomesCover,
   "storybook-kit": StorybookKitCover,
   "voice-memo": VoiceMemoCover,
