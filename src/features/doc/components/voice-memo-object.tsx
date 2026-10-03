@@ -702,13 +702,13 @@ function Face({
           <text
             x={width / 2}
             y={height - 12}
-            fontSize={10}
-            letterSpacing={0.3}
+            fontSize={8.5}
+            letterSpacing={0.2}
             textAnchor="middle"
             stroke="none"
             fill="black"
             filter={`url(#${ids.engrave})`}
-            className="font-serif"
+            className="font-sans font-medium"
           >
             Tori Bryan
           </text>
