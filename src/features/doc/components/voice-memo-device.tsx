@@ -33,20 +33,25 @@ const FACE = { width: 170, height: 110, radius: 12 }
 export const SPRING = { type: "spring", stiffness: 120, damping: 17 } as const
 export const QUICK = { duration: 0.25, ease: "easeOut" } as const
 
+// A fast spin: two and a half turns, which lands it on its other face.
+export const SPIN_TURNS = 900
+export const SPIN = { duration: 0.8, ease: [0.16, 1, 0.3, 1] } as const
+
 // Sizes the device from the width it's given, and its edge from that.
 export const SIZE = "[--w:min(62cqw,24rem)] [--t:calc(var(--w)*0.055)]"
 
 export type Axis = "x" | "y"
 
 /**
- * The device for a card's cover: three-quarters on, turned `turns`
- * half-turns from rest, so 1 shows its back.
+ * The device for a card's cover: three-quarters on, and spun `spins` fast
+ * spins from rest. Each spin lands it on its other face, so an odd count
+ * shows its back.
  */
 export function VoiceMemoObject({
-  turns = 0,
+  spins = 0,
   className,
 }: {
-  turns?: number
+  spins?: number
   className?: string
 }) {
   const reduceMotion = useReducedMotion()
@@ -56,11 +61,11 @@ export function VoiceMemoObject({
   useEffect(() => {
     const controls = animate(
       ry,
-      ANGLED.y + turns * 180,
-      reduceMotion ? QUICK : { ...SPRING, stiffness: 70 }
+      ANGLED.y + spins * SPIN_TURNS,
+      reduceMotion ? QUICK : SPIN
     )
     return () => controls.stop()
-  }, [turns, ry, reduceMotion])
+  }, [spins, ry, reduceMotion])
 
   return (
     <div
