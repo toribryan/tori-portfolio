@@ -5,7 +5,7 @@ claim: "587 card variants down to 32, with a token layer underneath so they stay
 image: "/cover-dsoverhaul.svg"
 order: 1
 createdAt: "2025-11-01"
-updatedAt: "2026-09-28"
+updatedAt: "2026-10-02"
 company: "Proctorio"
 role: "Staff Designer, system owner"
 team: "Two engineers building, across three product suites"
@@ -120,9 +120,12 @@ own discipline.
 </Side>
 <Side label="Engineering" title="What our front-end lead argued">
 
-- Better version control
-- Components that are easier to implement
-- Less time from idea to release
+- Every product pulls from one versioned library, so a fix lands everywhere at
+  once instead of being copied by hand
+- Components share Figma's names and are built from tokens, so engineers
+  assemble screens instead of rebuilding parts
+- Each component carries its own spec, so handoff documents shrink and ideas
+  reach release sooner
 
 </Side>
 </Sides>
@@ -181,6 +184,51 @@ three rules and held every component to them.
   </Principle>
 </Principles>
 
+### One vocabulary
+
+The old library had no naming rules, so each component used whatever its
+builder chose. Button's sizes ran XXS to XL, Input's were S, M and L, and Card's
+was Compact. Button's Type held everything at once, so Primary, Outline,
+Danger and Danger Outline sat in one list. Disabled was an on/off option on one
+component and a state on another. Status colors were named by hue on some components and by meaning
+on others, so Red, Error and Danger all meant the same thing.
+
+I gave every component the same property names:
+
+- `size` on one scale, and `state` for hover, focus and disabled.
+- `status` for meaning: success, warning, danger or info, the same on every
+  component.
+- On Button, `kind` for how it's drawn: filled, outlined, tonal or text, and
+  `shape` for its corners: square, rounded or pill, which the old Button called
+  Edge. Kind and status are separate, so a danger button can be any kind.
+- `prefix` and `suffix` for an icon before or after the text, and `label` for
+  the text itself, on every component that has them.
+
+A designer who knows Button's properties already knows Input's.
+
+<Plate caption="Button's properties in Figma. The old Type held how a button looked and what it meant in one list; the new Button splits them into kind and status, and calls its icons prefix and suffix.">
+  <Compare
+    layout="columns"
+    before="/case-studies/ds-overhaul-button-properties-before.webp"
+    after="/case-studies/ds-overhaul-button-properties-after.webp"
+    beforeAlt="The old Button's Figma properties: Type with Primary, Secondary and more; Size from XXS to XL; Icon Position; Edge with Sharp, Soft and Round; Text; Icon?; Disabled; Tooltip Text; and Tooltip"
+    afterAlt="The new Button's Figma properties: kind with filled, outlined, tonal and text; status; size sm, md and lg; state; shape with square, rounded and pill; label; prefix; prefixIcon; suffix; and suffixIcon"
+    beforeLabel="Before"
+    afterLabel="After"
+  />
+</Plate>
+
+Status colors had it worse. The old palette had five reds and nothing saying
+which one meant an error, so designers and engineers each picked one that
+looked right. A single screen could show four different reds, and a field's
+border and its error message could disagree.
+
+<StatusColors />
+
+Now each meaning has one role, backed by its tokens: an error asks for danger,
+and danger decides the red. Success, warning and info work the same way, so a
+warning looks the same on every component and in every product.
+
 ### Base components and slots
 
 The base components are the small parts every larger component is built from.
@@ -190,6 +238,17 @@ stays the same size. Designers can vary a card without making a variant, and
 engineers get the same freedom in code.
 
 <SlotComposition />
+
+Slots also kept the parts consistent. Each slot lists its preferred parts, the
+components it accepts, and anything else gets flagged. A modal's body takes
+text, media or an input; its footer takes a set of actions or a single button.
+The old modal did the same job with 22 on/off options, each named by whoever
+added it.
+
+<Video
+  src="/case-studies/ds-overhaul-slots-vs-booleans.mp4"
+  caption="The same modal built both ways in Figma. Before, every part is an option to switch on; after, each slot offers only its preferred parts."
+/>
 
 ## Rollout, one product at a time
 
