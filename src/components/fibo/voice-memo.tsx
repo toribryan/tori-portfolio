@@ -67,6 +67,8 @@ type VoiceMemoProps = Omit<
   panelClassName?: string
   /** Called once the transcript is on the clipboard, such as to show a toast. */
   onCopy?: (transcript: string) => void
+  /** Called as the transcript's close button is pressed, before it leaves. */
+  onDismiss?: () => void
 }
 
 const voiceMemoVariants = cva(
@@ -214,6 +216,7 @@ function VoiceMemo({
   device,
   panelClassName,
   onCopy,
+  onDismiss,
   className,
   ...props
 }: VoiceMemoProps) {
@@ -565,7 +568,10 @@ function VoiceMemo({
                   size="icon-xs"
                   aria-label="Close transcript"
                   data-slot="voice-memo-close"
-                  onClick={() => setClosing(true)}
+                  onClick={() => {
+                    setClosing(true)
+                    onDismiss?.()
+                  }}
                 >
                   <XIcon />
                 </Button>

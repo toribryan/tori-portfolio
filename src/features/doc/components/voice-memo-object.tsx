@@ -26,6 +26,7 @@ import {
 } from "@/lib/soundcn/sound-engine"
 import type { SoundAsset } from "@/lib/soundcn/sound-types"
 import {
+  cardSlideSound,
   click8bitSound,
   dropSound,
   maximizeSound,
@@ -206,7 +207,12 @@ export function VoiceMemoHero({ className }: { className?: string }) {
 
   // Decoded ahead, so the first press sounds at once.
   useEffect(() => {
-    for (const sound of [dropSound, click8bitSound, maximizeSound]) {
+    for (const sound of [
+      dropSound,
+      click8bitSound,
+      maximizeSound,
+      cardSlideSound,
+    ]) {
       decodeAudioData(soundSource(sound)).catch(() => {})
     }
   }, [])
@@ -234,6 +240,7 @@ export function VoiceMemoHero({ className }: { className?: string }) {
           play(next ? dropSound : click8bitSound)
         }}
         onCopy={() => toast.success("Transcript copied")}
+        onDismiss={() => play(cardSlideSound)}
         side="bottom"
         // Device first, then the transcript: a column when narrow, and from
         // @xl a row run right to left, so the transcript opens on the left.

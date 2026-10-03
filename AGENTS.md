@@ -59,7 +59,8 @@ any element inside its record button in place of the flat drawing, and a
 `panelClassName` for placing the transcript, and an `onCopy` callback,
 and its copy and download buttons carry words ("Copy", "Download .md")
 beside their icons, and closing the transcript plays an exit before it's
-removed and hands focus back to the device;
+removed and hands focus back to the device, with an `onDismiss` callback
+as it starts;
 with a custom device the button draws no focus ring, so the device draws
 its own. The Voice memo project page (`/work/voice-memo`) and its bare
 `/voice-memo` page use all three for the 3D device, in
