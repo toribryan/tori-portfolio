@@ -161,7 +161,7 @@ const SMALL = "[--w:min(44cqw,13rem)]"
  * Markdown. Drag it to turn it over. In a narrow column the transcript opens
  * underneath instead.
  */
-export function VoiceMemoHero() {
+export function VoiceMemoHero({ className }: { className?: string }) {
   const { rx, ry, back, flip, handlers } = useTurn(STRAIGHT)
   const [recording, setRecording] = useState(false)
   const reduceMotion = useReducedMotion()
@@ -171,7 +171,8 @@ export function VoiceMemoHero() {
       className={cn(
         "not-prose @container flex w-full flex-col items-center gap-6 px-4 pt-14 pb-2",
         SIZE,
-        SMALL
+        SMALL,
+        className
       )}
       onKeyDown={(event) => {
         if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
