@@ -7,7 +7,6 @@ import {
   useState,
   type MouseEvent,
   type PointerEvent,
-  type ReactNode,
   type SVGProps,
 } from "react"
 import { RotateCwIcon } from "lucide-react"
@@ -508,66 +507,58 @@ function Body({
 /*
  * Lettering raised off the metal, lit from the top left: a bright rim on
  * the edges facing the light, a shadow along the far ones and a softer one
- * cast beyond. Drawn as plain shapes, the word in light and a shifted copy
- * in shade, with the metal put back where the two overlap. An SVG filter
- * draws the same thing, but Chrome rasterises filtered content apart from
- * the rest, so it slid against the face while the device turned. Built
- * from the word's own outline, letters that overlap, as the f and i do,
- * show no edge inside the join.
+ * cast beyond. Drawn only as filled copies of the word, the light nudged up
+ * and left, the shade down and right, then the word itself in the same
+ * layers as the bare metal, so its face matches the face around it.
+ *
+ * An SVG filter draws this too, but Chrome rasterises filtered content
+ * apart from the rest, so it slid against the face as the device turned.
+ * Clipping the metal back onto a word drawn in light fared no better: in a
+ * fast spin Chrome skipped the clip on some tiles and showed the light.
+ * Plain fills have neither to go wrong. Built from the word's own outline,
+ * letters that overlap, as the f and i do, show no edge inside the join.
  */
 function Raised({
-  id,
   depth: [dx, dy],
   metal,
   children,
   ...text
 }: SVGProps<SVGTextElement> & {
-  id: string
   /** How far the shadow falls, in face units, across and down. */
   depth: [number, number]
-  /** The bare metal, shown on the letters' faces. */
-  metal: ReactNode
+  /** The layers of the bare metal, painted on the letters' faces. */
+  metal: MetalLayer[]
 }) {
   const shifted = (by: number) => `translate(${dx * by} ${dy * by})`
+  const copy = (key: string, className: string, extra = {}) => (
+    <text
+      key={key}
+      {...text}
+      {...extra}
+      className={cn(text.className, className)}
+    >
+      {children}
+    </text>
+  )
   return (
     <g stroke="none">
-      <clipPath id={`${id}-word`}>
-        <text {...text}>{children}</text>
-      </clipPath>
-      <clipPath id={`${id}-shifted`}>
-        <text {...text} transform={shifted(1)}>
-          {children}
-        </text>
-      </clipPath>
-      <text
-        {...text}
-        transform={shifted(2)}
-        className={cn(
-          text.className,
-          "fill-black opacity-[0.06] dark:opacity-25"
-        )}
-      >
-        {children}
-      </text>
-      <text
-        {...text}
-        transform={shifted(1)}
-        className={cn(text.className, "fill-black opacity-20 dark:opacity-50")}
-      >
-        {children}
-      </text>
-      <text
-        {...text}
-        className={cn(text.className, "fill-white opacity-90 dark:opacity-30")}
-      >
-        {children}
-      </text>
-      <g clipPath={`url(#${id}-word)`}>
-        <g clipPath={`url(#${id}-shifted)`}>{metal}</g>
-      </g>
+      {copy("cast", "fill-black opacity-[0.06] dark:opacity-25", {
+        transform: shifted(2),
+      })}
+      {copy("shade", "fill-black opacity-20 dark:opacity-50", {
+        transform: shifted(1),
+      })}
+      {copy("light", "fill-white opacity-90 dark:opacity-30", {
+        transform: shifted(-0.6),
+      })}
+      {metal.map((layer, index) =>
+        copy(`metal-${index}`, layer.className, { fill: layer.fill })
+      )}
     </g>
   )
 }
+
+type MetalLayer = { className: string; fill?: string }
 
 /*
  * One face of the aluminium, drawn rather than photographed so it takes the
@@ -591,8 +582,6 @@ function Face({
     glow: `${id}-glow`,
     sheen: `${id}-sheen`,
     clip: `${id}-clip`,
-    wordmark: `${id}-wordmark`,
-    name: `${id}-name`,
   }
   const { width, height, radius } = FACE
   const wordmark = "fibo"
@@ -601,31 +590,15 @@ function Face({
   // near black in the dark one, so each is pulled toward the middle. The
   // light and the shade are white and black in both themes, only stronger
   // or weaker, so the light falls the same way on silver and space gray.
-  const metal = (
-    <>
-      <rect width={width} height={height} rx={radius} className="fill-muted" />
-      <rect
-        width={width}
-        height={height}
-        rx={radius}
-        className="fill-black opacity-[0.13] dark:fill-white dark:opacity-[0.07]"
-      />
-      <rect
-        width={width}
-        height={height}
-        rx={radius}
-        fill={`url(#${ids.light})`}
-        className="opacity-100 dark:opacity-25"
-      />
-      <rect
-        width={width}
-        height={height}
-        rx={radius}
-        fill={`url(#${ids.dark})`}
-        className="opacity-50 dark:opacity-70"
-      />
-    </>
-  )
+  const metal: MetalLayer[] = [
+    { className: "fill-muted" },
+    {
+      className:
+        "fill-black opacity-[0.13] dark:fill-white dark:opacity-[0.07]",
+    },
+    { fill: `url(#${ids.light})`, className: "opacity-100 dark:opacity-25" },
+    { fill: `url(#${ids.dark})`, className: "opacity-50 dark:opacity-70" },
+  ]
 
   return (
     <svg
@@ -718,11 +691,19 @@ function Face({
         </clipPath>
       </defs>
 
-      {metal}
+      {metal.map((layer, index) => (
+        <rect
+          key={index}
+          width={width}
+          height={height}
+          rx={radius}
+          fill={layer.fill}
+          className={layer.className}
+        />
+      ))}
 
       {side === "front" ? (
         <Raised
-          id={ids.wordmark}
           depth={[0.7, 0.8]}
           metal={metal}
           x={14}
@@ -734,7 +715,6 @@ function Face({
         </Raised>
       ) : (
         <Raised
-          id={ids.name}
           depth={[0.35, 0.4]}
           metal={metal}
           x={width / 2}
