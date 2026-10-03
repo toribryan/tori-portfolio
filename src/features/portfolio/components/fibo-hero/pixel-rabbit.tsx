@@ -1,10 +1,6 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type CSSProperties,
-} from "react"
+import { useEffect, useRef, useState, type CSSProperties } from "react"
+
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 
 /*
  * fibo, a pixel rabbit, as an SVG sprite for the fibo hero. He is drawn
@@ -348,20 +344,6 @@ function usePlayer(
   return steps ? (steps[index] ?? REST) : REST
 }
 
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)"
-
-function useReducedMotion() {
-  return useSyncExternalStore(
-    (onChange) => {
-      const query = window.matchMedia(REDUCED_MOTION)
-      query.addEventListener("change", onChange)
-      return () => query.removeEventListener("change", onChange)
-    },
-    () => window.matchMedia(REDUCED_MOTION).matches,
-    () => false
-  )
-}
-
 // The build-up: coarse blocks arriving, holding, then halving, then whole.
 const ASSEMBLE_STAGES = [
   { block: 4, ms: 400, reveal: true },
@@ -529,7 +511,7 @@ function PixelRabbitSprite({
   transform,
   className,
 }: PixelRabbitSpriteProps) {
-  const reduced = useReducedMotion()
+  const reduced = usePrefersReducedMotion()
   const assembly = useAssemble(assembleDelay, reduced)
   const [finished, setFinished] = useState<number | null>(null)
   const acting = !!action && action.id !== finished && !reduced
