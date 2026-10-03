@@ -1,12 +1,21 @@
 "use client"
 
-import { useRef, useState } from "react"
+import {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react"
 import type { Route } from "next"
 import Link from "next/link"
+import { PauseIcon, PlayIcon } from "lucide-react"
 import { useInView, useReducedMotion } from "motion/react"
 
 import { cn } from "@/lib/utils"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { usePageVisible } from "@/hooks/use-page-visible"
+import { Button } from "@/components/base/ui/button"
 import {
   NICHE_PARTS,
   type NichePart,
@@ -17,6 +26,41 @@ import { COVERS } from "./covers"
 // Parts whose cover is a one-off gesture rather than a loop, so it waits for
 // the pointer instead of repeating on its own.
 const PLAYS_ON_HOVER = new Set(["reactions"])
+
+const CoversPaused = createContext<{
+  paused: boolean
+  setPaused: (paused: boolean) => void
+}>({ paused: false, setPaused: () => {} })
+
+/** Shares one pause between the covers below it and `CoversPauseToggle`. */
+export function CoversPauseProvider({ children }: { children: ReactNode }) {
+  const [paused, setPaused] = useState(false)
+  return (
+    <CoversPaused.Provider value={{ paused, setPaused }}>
+      {children}
+    </CoversPaused.Provider>
+  )
+}
+
+/**
+ * Stops every looping cover, since they otherwise loop for as long as
+ * they're on screen. Under reduced motion nothing loops, so it hides.
+ */
+export function CoversPauseToggle({ className }: { className?: string }) {
+  const { paused, setPaused } = useContext(CoversPaused)
+  return (
+    <Button
+      size="icon-sm"
+      variant="ghost"
+      className={cn("text-muted-foreground motion-reduce:hidden", className)}
+      aria-label="Pause animations"
+      aria-pressed={paused}
+      onClick={() => setPaused(!paused)}
+    >
+      {paused ? <PlayIcon /> : <PauseIcon />}
+    </Button>
+  )
+}
 
 /**
  * fibo's parts as cover cards, two across on phones and three from md up,
@@ -59,17 +103,24 @@ export function ComponentCardList({
 /**
  * Loops the cover while the card is on screen. A hover-only cover plays while
  * the pointer is over the card or its link has focus, and while the card is
- * on screen where nothing can hover. Nothing plays under reduced motion.
+ * on screen where nothing can hover. Nothing plays under reduced motion,
+ * while paused or while the tab is hidden.
  */
 function ComponentCard({ part }: { part: NichePart }) {
   const card = useRef<HTMLDivElement>(null)
   const noHover = useMediaQuery("(hover: none)")
   const reduceMotion = useReducedMotion()
+  const { paused } = useContext(CoversPaused)
+  const visible = usePageVisible()
   const inView = useInView(card, { amount: 0.4 })
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
   const onHover = PLAYS_ON_HOVER.has(part.name) && !noHover
-  const active = !reduceMotion && (onHover ? hovered || focused : inView)
+  const active =
+    !reduceMotion &&
+    !paused &&
+    visible &&
+    (onHover ? hovered || focused : inView)
   const Cover = COVERS[part.name]
 
   return (

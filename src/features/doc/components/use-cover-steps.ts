@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect, useState, type RefObject } from "react"
-import { useInView, useReducedMotion } from "motion/react"
+import { useInView } from "motion/react"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { usePageVisible } from "@/hooks/use-page-visible"
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion"
 
 /**
  * Steps a live cover through a short sequence. `stepAt` gives each step's
@@ -12,7 +14,8 @@ import { useMediaQuery } from "@/hooks/use-media-query"
  * screen, where nothing can hover, it plays on its own while in view,
  * holding the last step for `hold` before starting over. With `repeat` a
  * hovered card starts over the same way rather than holding. With reduced
- * motion the cover shows the last step, still.
+ * motion the cover shows the last step, still. Nothing plays while the tab
+ * is hidden.
  */
 export function useCoverSteps(
   frame: RefObject<HTMLElement | null>,
@@ -26,10 +29,13 @@ export function useCoverSteps(
   const [engaged, setEngaged] = useState(false)
   const [step, setStep] = useState(0)
   const inView = useInView(frame, { amount: 0.5 })
-  const reduceMotion = useReducedMotion()
+  // Settles after hydration, unlike motion's, so a reduced-motion reader's
+  // last step never mismatches the server's rest step.
+  const reduceMotion = usePrefersReducedMotion()
+  const visible = usePageVisible()
   const touch = useMediaQuery("(hover: none)")
   const autoplay = loop || touch
-  const active = autoplay ? inView : engaged
+  const active = visible && (autoplay ? inView : engaged)
   const last = stepAt.length - 1
   const timing = stepAt.join()
 
@@ -38,6 +44,8 @@ export function useCoverSteps(
     const starts = timing.split(",").map(Number)
     const timers: number[] = []
     const play = () => {
+      // The last run's timers have all fired by the time the next starts.
+      timers.length = 0
       starts.forEach((at, index) => {
         timers.push(window.setTimeout(() => setStep(index), at))
       })
@@ -72,5 +80,5 @@ export function useCoverSteps(
     }
   }, [frame, autoplay])
 
-  return !active ? 0 : reduceMotion ? last : step
+  return reduceMotion ? last : active ? step : 0
 }
