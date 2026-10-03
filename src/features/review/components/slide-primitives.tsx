@@ -163,12 +163,15 @@ export function StatRow({ children }: { children: React.ReactNode }) {
  */
 export function HairlineGrid({
   columns = 2,
+  linesOnTop = false,
   className,
   children,
   ...props
 }: React.ComponentProps<"div"> & {
   /** A count of equal columns, or a `grid-template-columns` value. */
   columns?: 2 | 3 | 4 | string
+  /** Draw the lines over the cells, for cells with a background of their own. */
+  linesOnTop?: boolean
 }) {
   const template =
     typeof columns === "number" ? `repeat(${columns}, minmax(0, 1fr))` : columns
@@ -185,7 +188,10 @@ export function HairlineGrid({
       style={{ "--cols": template } as React.CSSProperties}
     >
       <div
-        className="pointer-events-none absolute inset-0 -z-1 grid gap-4 max-md:hidden md:grid-cols-(--cols)"
+        className={cn(
+          "pointer-events-none absolute inset-0 grid gap-4 max-md:hidden md:grid-cols-(--cols)",
+          linesOnTop ? "z-1" : "-z-1"
+        )}
         aria-hidden
       >
         {Array.from({ length: count }, (_, i) => (

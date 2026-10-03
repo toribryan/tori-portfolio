@@ -156,6 +156,24 @@
     }
   }
 
+  /* The Agentic Design System cover's question mark: a hop of two grid
+     cells, then one, in whole steps, then a rest before it asks again. */
+  --animate-mark-hop: mark-hop 1.4s steps(1, end) infinite;
+
+  @keyframes mark-hop {
+    0%,
+    45%,
+    100% {
+      translate: 0 0;
+    }
+    15% {
+      translate: 0 -4.8%;
+    }
+    30% {
+      translate: 0 -2.4%;
+    }
+  }
+
   /* A two-bounce hop in whole steps, so the pixel portrait moves like a
      sprite rather than sliding. */
   --animate-pixel-hop: pixel-hop 0.6s steps(1, end) 1;

@@ -9,23 +9,30 @@ import { useMediaQuery } from "@/hooks/use-media-query"
 /**
  * A card's cover clip that stays hidden behind the still image until the
  * card is hovered or focused, then fades in and plays from the start. Touch
- * screens have no hover, so there it plays on its own while in view.
+ * screens have no hover, so there it plays on its own while in view, as it
+ * does everywhere with `autoplay`.
  */
 export function CoverVideo({
   src,
+  start = 0,
+  autoplay = false,
   className,
 }: {
   src: string
+  /** Seconds into the clip to start from. */
+  start?: number
+  autoplay?: boolean
   className?: string
 }) {
   const video = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
   const touch = useMediaQuery("(hover: none)")
   const inView = useInView(video, { amount: 0.5 })
+  const playsAlone = autoplay || touch
 
   useEffect(() => {
     const element = video.current
-    if (!element || !touch) return
+    if (!element || !playsAlone) return
     if (!inView) {
       element.pause()
       return
@@ -34,15 +41,15 @@ export function CoverVideo({
     const start = () => setPlaying(true)
     element.addEventListener("playing", start)
     return () => element.removeEventListener("playing", start)
-  }, [touch, inView])
+  }, [playsAlone, inView])
 
   // The video is aria-hidden and inert, so it listens on the card around it.
   useEffect(() => {
     const element = video.current
     const card = element?.closest("[data-cover-host]")
-    if (!element || !card || touch) return
+    if (!element || !card || playsAlone) return
     const on = () => {
-      element.currentTime = 0
+      element.currentTime = start
       element.play().catch(() => {})
       setPlaying(true)
     }
@@ -60,7 +67,7 @@ export function CoverVideo({
       card.removeEventListener("focusin", on)
       card.removeEventListener("focusout", off)
     }
-  }, [touch])
+  }, [playsAlone, start])
 
   return (
     <video
@@ -70,7 +77,7 @@ export function CoverVideo({
         playing ? "opacity-100" : "opacity-0",
         className
       )}
-      src={src}
+      src={start ? `${src}#t=${start}` : src}
       loop
       muted
       playsInline

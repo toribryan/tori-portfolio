@@ -88,7 +88,7 @@ function Job({
  */
 export function TwoJobs({ className }: { className?: string }) {
   return (
-    <HairlineGrid className={className}>
+    <HairlineGrid linesOnTop className={className}>
       <Job
         number="01"
         title="Building the design system"
