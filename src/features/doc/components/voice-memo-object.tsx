@@ -549,8 +549,8 @@ function Face({
           height="160%"
           colorInterpolationFilters="sRGB"
         >
-          <feOffset in="SourceAlpha" dx="0.35" dy="0.4" result="down" />
-          <feOffset in="SourceAlpha" dx="-0.35" dy="-0.4" result="up" />
+          <feOffset in="SourceAlpha" dx="0.55" dy="0.65" result="down" />
+          <feOffset in="SourceAlpha" dx="-0.4" dy="-0.45" result="up" />
           <feComposite
             in="SourceAlpha"
             in2="down"
@@ -564,11 +564,11 @@ function Face({
             result="ledge"
           />
           <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.16 }}
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.26 }}
           />
           <feComposite in2="SourceAlpha" operator="in" result="floor" />
           <feFlood
-            style={{ floodColor: "var(--foreground)", floodOpacity: 0.45 }}
+            style={{ floodColor: "var(--foreground)", floodOpacity: 0.6 }}
           />
           <feComposite in2="wall" operator="in" result="shade" />
           <feFlood
@@ -702,15 +702,15 @@ function Face({
           <text
             x={width / 2}
             y={height - 12}
-            fontSize={8.5}
-            letterSpacing={0.2}
+            fontSize={7.5}
+            letterSpacing={1.2}
             textAnchor="middle"
             stroke="none"
             fill="black"
             filter={`url(#${ids.engrave})`}
-            className="font-sans font-medium"
+            className="font-sans font-semibold"
           >
-            Tori Bryan
+            TORI BRYAN
           </text>
         </g>
       )}
