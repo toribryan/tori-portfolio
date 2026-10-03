@@ -53,7 +53,7 @@ export function DocCard({
       <div className="relative select-none [--image-radius:var(--radius-xl)]">
         {Cover ? (
           <div
-            className="relative aspect-1200/630 overflow-hidden rounded-(--image-radius) bg-muted/60 transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 [@media(hover:hover)]:grayscale"
+            className="relative aspect-1200/630 overflow-hidden rounded-(--image-radius) bg-cover-plate transition-[filter] duration-300 ease-[cubic-bezier(0.42,0,0.58,1)] group-hover/doc-card:grayscale-0 [@media(hover:hover)]:grayscale"
             aria-hidden
             inert
           >

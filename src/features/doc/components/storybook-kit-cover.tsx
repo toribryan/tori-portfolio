@@ -321,14 +321,14 @@ export function StorybookKitCover({ loop = false }: { loop?: boolean }) {
   return (
     <div
       ref={frame}
-      className="absolute inset-0 bg-[color-mix(in_oklab,var(--muted)_60%,var(--background))] text-foreground"
+      className="absolute inset-0 bg-cover-plate text-foreground"
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-20"
         style={{
           backgroundImage:
             "radial-gradient(circle, var(--foreground) 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundSize: "12px 12px",
         }}
         aria-hidden
       />
