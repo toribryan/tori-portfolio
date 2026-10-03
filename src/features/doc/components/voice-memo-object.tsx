@@ -208,6 +208,21 @@ export function VoiceMemoHero({ className }: { className?: string }) {
   const [recording, setRecording] = useState(false)
   const [, setDismissals] = useState(0)
 
+  // A press knocks the device and it rocks back to rest: starting tips its
+  // top away, like a button pushed in, and stopping gives it a little twist.
+  // Thrown from where it rests, with the knock as the spring's speed, so it
+  // settles on the face it shows even if it was still turning.
+  const nudge = (starting: boolean) => {
+    if (reduceMotion) return
+    const knock = { type: "spring", stiffness: 380, damping: 11 } as const
+    if (starting) {
+      animate(rx, STRAIGHT.x, { ...knock, velocity: -140 })
+    } else {
+      const face = Math.round((ry.get() - STRAIGHT.y) / 180) * 180 + STRAIGHT.y
+      animate(ry, face, { ...knock, velocity: 160 })
+    }
+  }
+
   // Decoded ahead, so the first press sounds at once.
   useEffect(() => {
     for (const sound of [
@@ -241,6 +256,7 @@ export function VoiceMemoHero({ className }: { className?: string }) {
         onRecordingChange={(next) => {
           setRecording(next)
           play(next ? dropSound : click8bitSound)
+          nudge(next)
         }}
         onCopy={() => toast.success("Transcript copied")}
         onDismiss={() => play(cardSlideSound)}
