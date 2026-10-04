@@ -101,14 +101,14 @@ type CommandMenuProps = {
   labels?: Partial<CommandMenuLabels>
   /** Whether to show the row of keyboard hints under the list. */
   hints?: boolean
-  /** Where the dialog portals to. Defaults to the body. */
-  container?: DialogPrimitive.Portal.Props["container"]
   /**
    * `false` opens the dialog without trapping focus, locking the page's
    * scroll or moving focus into it, for a menu shown inside a card or cover
    * rather than over the page.
    */
   modal?: boolean
+  /** Where the dialog portals to. Defaults to the body. */
+  container?: DialogPrimitive.Portal.Props["container"]
   /** Classes for the trigger. */
   className?: string
   /** Classes for the dialog. */
@@ -141,7 +141,7 @@ function useControllable<T>(
     if (value === undefined) setOwn(next)
     onChange?.(next)
   }
-  return [current, set] as const
+  return [current, set, setOwn] as const
 }
 
 const noSubscription = () => () => {}
@@ -234,21 +234,25 @@ function CommandMenu({
   label = "Command menu",
   labels,
   hints = true,
-  container,
   modal = true,
+  container,
   className,
   popupClassName,
 }: CommandMenuProps) {
   const text = { ...DEFAULT_LABELS, ...labels }
   const [open, setOpen] = useControllable(openProp, defaultOpen, onOpenChange)
-  const [initialRecent] = React.useState(
-    () => readStored(storageKey) ?? defaultRecent
-  )
-  const [recent, setRecent] = useControllable(
+  const [recent, setRecent, restoreRecent] = useControllable(
     recentProp,
-    initialRecent,
+    defaultRecent,
     onRecentChange
   )
+  // Read after mount: the server has no storage, so reading it while
+  // rendering would make the first client render differ from the server's.
+  const restore = React.useEffectEvent(() => {
+    const stored = readStored(storageKey)
+    if (stored) restoreRecent(stored)
+  })
+  React.useEffect(() => restore(), [storageKey])
   const [query, setQuery] = React.useState("")
   const [path, setPath] = React.useState<CommandMenuItem[]>([])
   // Null until the first page change, so opening the menu doesn't also
@@ -427,8 +431,8 @@ function CommandMenu({
 
   return (
     <DialogPrimitive.Root
-      modal={modal}
       open={open}
+      modal={modal}
       onOpenChange={(next, details) => {
         // Escape steps back before it closes: first it clears the search,
         // then it leaves the open page.

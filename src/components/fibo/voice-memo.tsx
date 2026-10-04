@@ -300,7 +300,12 @@ function VoiceMemo({
     recording ||
     (!dismissed && (memo !== null || transcript !== "" || error !== ""))
 
+  // The settled text as it stands, so a recogniser rebuilt mid-session for a
+  // new language carries on from it rather than starting the page over.
+  const said = React.useRef("")
+
   const settle = React.useEffectEvent((text: string) => {
+    said.current = text
     setHeard(text)
     onTranscriptChange?.(text)
   })
@@ -320,6 +325,7 @@ function VoiceMemo({
     started.current = { at: performance.now(), date: new Date() }
     failed.current = false
     setMemo(null)
+    said.current = ""
     setHeard("")
     setGuess("")
     setFailure("")
@@ -399,7 +405,7 @@ function VoiceMemo({
     recogniser.continuous = true
     recogniser.interimResults = true
     recogniser.lang = lang
-    let settled = ""
+    let settled = said.current
     let stopped = false
     recogniser.onresult = (event) => {
       let pending = ""
@@ -598,12 +604,17 @@ function VoiceMemo({
                     aria-label={copied ? "Copied" : "Copy transcript"}
                     data-slot="voice-memo-copy"
                     onClick={() => {
-                      void navigator.clipboard
-                        ?.writeText(transcript)
-                        .then(() => {
-                          setCopied(true)
-                          onCopy?.(transcript)
-                        })
+                      // A browser without the clipboard, or one that refuses
+                      // it, says so rather than leaving the press unanswered.
+                      void Promise.resolve()
+                        .then(() => navigator.clipboard.writeText(transcript))
+                        .then(
+                          () => {
+                            setCopied(true)
+                            onCopy?.(transcript)
+                          },
+                          () => setAnnouncement("Couldn't copy")
+                        )
                     }}
                   >
                     {copied ? (

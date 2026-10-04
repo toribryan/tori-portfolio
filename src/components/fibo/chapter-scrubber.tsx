@@ -57,8 +57,8 @@ const SIZES: Record<
 const CARD_WIDTH = 248
 const LABEL_MAX_WIDTH = 220
 const GAP = 16
-// The card flips to the rail's other side when it would come closer than
-// this to the viewport's edge.
+// The preview keeps this far from the viewport's edge, flipping to the
+// rail's other side, narrowing or sliding along it to do so.
 const VIEWPORT_MARGIN = 8
 // Measured sizes stand in for these until the card first renders.
 const CARD_FALLBACK_HEIGHT = 120
@@ -313,9 +313,9 @@ function ChapterScrubber({
     reportActive(chapter, index)
   }, [engaged, activeIndex, chapters])
 
+  const [previewWidth, setPreviewWidth] = React.useState(0)
   // The preview is clamped to the rail's length, which needs its size along
   // the rail.
-  const [previewWidth, setPreviewWidth] = React.useState(0)
   React.useLayoutEffect(() => {
     const node = previewRef.current
     if (!node) return
@@ -404,6 +404,18 @@ function ChapterScrubber({
   const previewScale = useTransform(strength, [0, 1], [0.97, 1])
   const drift = resolvedSide === "right" || resolvedSide === "bottom" ? -6 : 6
   const previewShift = useTransform(strength, [0, 1], [drift, 0])
+  // A horizontal rail's preview runs along it from the rail's start, so near
+  // either screen edge it is nudged back inside.
+  const alongShift = useTransform(previewOffset, (offset) => {
+    if (vertical || !anchor) return offset
+    const start = anchor.rect.left + offset
+    const end = start + previewWidth
+    if (end > anchor.width - VIEWPORT_MARGIN) {
+      return offset - (end - (anchor.width - VIEWPORT_MARGIN))
+    }
+    if (start < VIEWPORT_MARGIN) return offset + (VIEWPORT_MARGIN - start)
+    return offset
+  })
 
   const engageAt = (pointerRow: number, activeAt: number) => {
     rawPointer.set(pointerRow)
@@ -486,18 +498,6 @@ function ChapterScrubber({
         : "end"
 
   const chapter = chapters[activeIndex]
-  // A horizontal rail's preview runs along it from the rail's start, so near
-  // either screen edge it is nudged back inside.
-  const alongShift = useTransform(previewOffset, (offset) => {
-    if (vertical || !anchor) return offset
-    const start = anchor.rect.left + offset
-    const end = start + previewWidth
-    if (end > anchor.width - VIEWPORT_MARGIN) {
-      return offset - (end - (anchor.width - VIEWPORT_MARGIN))
-    }
-    if (start < VIEWPORT_MARGIN) return offset + (VIEWPORT_MARGIN - start)
-    return offset
-  })
   const placement = anchor
     ? {
         right: { top: anchor.rect.top, left: anchor.rect.right + GAP },
@@ -531,7 +531,6 @@ function ChapterScrubber({
         role="listbox"
         aria-label={label}
         aria-orientation={orientation}
-        aria-activedescendant={engaged ? optionId(activeIndex) : undefined}
         className={cn("flex", vertical ? "w-full flex-col" : "h-full flex-row")}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
